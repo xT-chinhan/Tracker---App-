@@ -25,20 +25,24 @@ Dưới 1280px sidebar thu thành rail icon 72px.
 
 ## Cài đặt
 
+Cách nhanh: ở thư mục gốc `npm run setup` rồi `npm run dev` (chạy cả backend). Chạy riêng admin:
+
 ```bash
 cd admin
 npm install
 cp .env.example .env   # sửa VITE_API_URL nếu backend không chạy ở :3000
-npm run dev            # http://localhost:5173
+npm run dev            # http://localhost:5173  — đăng nhập admin@thuchi.vn / admin123
 ```
 
 Backend phải cho phép origin của trang admin qua `CORS_ORIGINS` (vd: `http://localhost:5173`).
+
+Production: `docker compose --profile app up -d --build` ở thư mục gốc => `admin/Dockerfile` build với `VITE_API_URL=/api`, nginx (`nginx.conf`) phục vụ bản tĩnh ở http://localhost:8080 (SPA fallback, cache `/assets`) và proxy `/api`, `/docs` sang container api, nên không cần CORS.
 
 ## Biến môi trường
 
 | Biến | Mặc định | Ý nghĩa |
 |---|---|---|
-| `VITE_API_URL` | `http://localhost:3000/api` | URL gốc của API (có `/api`) |
+| `VITE_API_URL` | `http://localhost:3000/api` | URL gốc của API (có `/api`); có thể là đường dẫn tương đối `/api` khi chạy sau reverse proxy |
 
 ## Scripts
 
@@ -52,15 +56,17 @@ Backend phải cho phép origin của trang admin qua `CORS_ORIGINS` (vd: `http:
 
 ## Kiểm thử E2E (Playwright)
 
-Test tự seed dữ liệu qua API (người dùng, ví, giao dịch, mục tiêu; mỗi lần chạy dùng hậu tố riêng nên chạy lại được), tự bật dev server ở `:5174`, chụp màn hình vào `/tmp/admin-shots/`. `e2e/10-visual.spec.ts` chụp từng màn 1440×900 vào `/tmp/admin-real-shots/` để so với `design/admin-mockup/shots/`. Cần một backend riêng đang chạy với `NODE_ENV=test` (nới rate limit đăng nhập), ví dụ DB `tracker_admin_e2e` ở cổng 3001:
+Test tự seed dữ liệu qua API (người dùng, ví, giao dịch, mục tiêu; mỗi lần chạy dùng hậu tố riêng nên chạy lại được), tự bật dev server ở `:5174`, chụp màn hình vào `/tmp/admin-shots/`. `e2e/10-visual.spec.ts` chụp từng màn 1440×900 vào `/tmp/admin-real-shots/` để so với `design/admin-mockup/shots/`. Số liệu kỳ vọng tính theo "nền + phần seed" nên chạy được trên DB đã có dữ liệu demo.
+
+Cách nhanh: ở thư mục gốc `npm run test` (tự tạo DB test có dữ liệu demo, bật API `:3001`, chạy cả backend e2e lẫn admin e2e, dọn dẹp). Chạy tay cần một backend riêng đang chạy với `NODE_ENV=test` (nới rate limit đăng nhập), ví dụ DB `tracker_admin_e2e` ở cổng 3001:
 
 ```bash
-# 1 lần: tạo DB + migrate + seed (tạo admin@tracker.local / admin123)
+# 1 lần: tạo DB + migrate + seed (tạo admin@thuchi.vn / admin123)
 docker compose exec -T db createdb -U tracker tracker_admin_e2e
 cd backend
 npm run build
 export DATABASE_URL='postgresql://tracker:tracker@localhost:5433/tracker_admin_e2e?schema=public'
-npx prisma migrate deploy && ADMIN_EMAIL=admin@tracker.local ADMIN_PASSWORD=admin123 npx prisma db seed
+npx prisma migrate deploy && ADMIN_EMAIL=admin@thuchi.vn ADMIN_PASSWORD=admin123 npx prisma db seed
 PORT=3001 CORS_ORIGINS=http://localhost:5174 NODE_ENV=test node dist/main &
 
 # chạy test
@@ -69,6 +75,6 @@ npx playwright install chromium   # lần đầu
 npm run test:e2e
 ```
 
-Tùy chỉnh: `E2E_API_URL` (mặc định `http://localhost:3001/api`), `E2E_PORT` (5174), `E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD`, `E2E_SHOTS`, `E2E_REAL_SHOTS`.
+Tùy chỉnh: `E2E_API_URL` (mặc định `http://localhost:3001/api`), `E2E_PORT` (5174), `E2E_ADMIN_EMAIL` (admin@thuchi.vn), `E2E_ADMIN_PASSWORD` (admin123), `E2E_SHOTS`, `E2E_REAL_SHOTS`.
 
-Bộ test (37): đăng nhập/phiên/429, tổng quan (đối chiếu số học + bảng + skeleton), người dùng (tìm, phân trang, lọc, khóa → token 403 → mở khóa → token cũ 401, Hoàn tác, cấp/hạ quyền, tự khóa bị chặn, tablet), chi tiết (ví và số dư từng ví), giao dịch (lọc người dùng/ví/loại/tháng/từ khóa, CSV, empty state), danh mục (thứ tự tiếng Việt, CRUD, lưu trữ/Hoàn tác/khôi phục), tài khoản (đổi mật khẩu vẫn giữ phiên), bố cục 1440/1024 không tràn ngang, thông báo (người nhận = user đang hoạt động, user bị khóa không nhận, lịch sử), ảnh so sánh.
+Bộ test (37): đăng nhập/phiên/429, tổng quan (đối chiếu số học + bảng + skeleton), người dùng (tìm, phân trang, lọc, khóa → token 403 → mở khóa → token cũ 401, Hoàn tác, cấp/hạ quyền, tự khóa bị chặn, tablet), chi tiết (ví và số dư từng ví), giao dịch (lọc người dùng/ví/loại/tháng/từ khóa, CSV, empty state), danh mục (thứ tự tiếng Việt, CRUD, lưu trữ/Hoàn tác/khôi phục), tài khoản (đổi mật khẩu vẫn giữ phiên), bố cục 1440/1024 không tràn ngang (hàng KPI tổng quan xuống dòng dưới 1280px), thông báo (người nhận = user đang hoạt động, user bị khóa không nhận, lịch sử), ảnh so sánh.

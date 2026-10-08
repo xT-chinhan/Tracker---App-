@@ -1,170 +1,154 @@
-# App Tracker — Quản lý thu/chi cá nhân
+# Thu Chi — Quản lý thu chi cá nhân
+
+Nền tảng giúp người Việt ghi chép thu chi hằng ngày: nhiều ví (tiền mặt, ngân hàng, ví điện tử), chuyển tiền giữa ví, ngân sách tháng có cảnh báo 80% / 100%, mục tiêu tiết kiệm, giao dịch định kỳ, mẫu nhập nhanh, báo cáo và dự báo. Người dùng dùng app di động; quản trị viên dùng trang admin web.
 
 ## Kiến trúc
 
-| Thành phần | Thư mục | Công nghệ | Trạng thái |
-|---|---|---|---|
-| Backend API | `backend/` | NestJS 11 + Prisma 6 + PostgreSQL 16 | v1 |
-| Admin web | `admin/` | — | Đang làm |
-| Mobile | — | Flutter | Dự kiến |
-
-Backend: mỗi module một file `src/<module>/<module>.module.ts` (DTO + service + controller). Dùng chung: `src/common/` (auth guard JWT, DTO, giờ VN, filter lỗi Prisma), `src/prisma/`. Tiền lưu `BigInt` (VND), trả ra JSON dạng number. Cron (`@nestjs/schedule`) sinh giao dịch định kỳ. Rate limit các route đăng nhập/đăng ký/OTP bằng `@nestjs/throttler`.
-
-## Chạy
-
-```bash
-docker compose up -d            # Postgres ở localhost:5433
-cd backend
-npm i
-cp .env.example .env
-npx prisma migrate deploy
-npm run db:seed                 # 14 danh mục hệ thống + admin (ADMIN_EMAIL / ADMIN_PASSWORD trong .env)
-npm run dev                     # http://localhost:3000/api
+```
+                ┌──────────────────────────┐
+  App mobile    │  Flutter (dự kiến)       │──┐
+  (người dùng)  │  design/mockup, tokens.md│  │
+                └──────────────────────────┘  │  HTTPS / JSON, JWT
+                ┌──────────────────────────┐  │
+  Admin web     │  admin/  Vite + React    │──┤
+  (quản trị)    │  shadcn/ui, TanStack     │  │   (Docker: nginx phục vụ tĩnh,
+                └──────────────────────────┘  │    /api proxy => cùng origin)
+                                              ▼
+                ┌───────────────────────────────────────────┐
+                │ backend/  NestJS 11 + Prisma 6 (/api)     │
+                │ auth · ví · giao dịch · chuyển tiền ·      │
+                │ ngân sách · tiết kiệm · định kỳ (cron) ·   │
+                │ thông báo · thống kê · CSV · admin         │
+                └───────────────────────┬───────────────────┘
+                                        ▼
+                               PostgreSQL 16 (Docker)
 ```
 
-- Swagger UI: http://localhost:3000/docs — OpenAPI JSON: http://localhost:3000/docs/openapi.json
-- Health: `GET /api/health` (công khai) → `{status, db, version}`; DB không kết nối được → 503.
-- Gửi OTP quên mật khẩu qua SMTP (`SMTP_*` trong `.env`). Bỏ trống `SMTP_HOST` thì OTP được in ra log server.
+| Thành phần | Thư mục | Công nghệ | Trạng thái | Tài liệu |
+|---|---|---|---|---|
+| Backend API | `backend/` | NestJS 11, Prisma 6, PostgreSQL 16 | v1 | [backend/README.md](backend/README.md) |
+| Admin web | `admin/` | Vite, React 19, Tailwind 4, shadcn/ui, Recharts | v1 | [admin/README.md](admin/README.md) |
+| Thiết kế | `design/` | Mockup HTML đã duyệt (mobile 25 màn, admin), `tokens.md`, `DESIGN.md` | Đã duyệt | [design/DESIGN.md](design/DESIGN.md) |
+| App mobile | — | Flutter | Dự kiến | xem Lộ trình |
 
-### Biến môi trường (`backend/.env`)
+## Chạy nhanh (3 lệnh)
+
+Cần Node 22+, npm, Docker (compose v2).
+
+```bash
+npm run setup     # cài dependency, tạo .env, bật PostgreSQL (Docker :5433), migrate, seed, nạp dữ liệu demo (~30s)
+npm run dev       # API http://localhost:3000/api (Swagger /docs) + Admin http://localhost:5173
+npm run test      # toàn bộ kiểm thử (backend e2e + admin e2e) trên DB test riêng có dữ liệu demo
+```
+
+`npm run setup` chạy lại được (không ghi đè `.env` đã có, seed idempotent). Lần đầu muốn đổi cổng / tên DB: `DB_PORT=5543 API_DB=tracker2 API_PORT=3100 npm run setup`.
+
+| Lệnh gốc | Việc |
+|---|---|
+| `npm run setup` | Như trên |
+| `npm run dev` | Bật DB nếu chưa chạy, chạy backend (watch) + admin (Vite) cùng lúc |
+| `npm run test` | Xem [Kiểm thử](#kiểm-thử) |
+| `npm run build` | Build backend (`backend/dist`) + admin (`admin/dist`) |
+| `npm run db:seed:demo` | Nạp lại dữ liệu demo (chỉ user demo) |
+| `npm run demo:verify` | Kiểm tra bất biến dữ liệu demo qua API đang chạy |
+| `npm run docker:app` / `docker:down` | Bật / tắt stack Docker đầy đủ |
+
+## Tài khoản demo
+
+| Tài khoản | Mật khẩu | Ghi chú |
+|---|---|---|
+| `admin@thuchi.vn` | `admin123` | Admin web (đổi trong `.env`: `ADMIN_EMAIL` / `ADMIN_PASSWORD`) |
+| `demo@thuchi.vn` | `demo123` | Nguyễn Minh Anh — dữ liệu khớp mockup mobile: 4 ví tổng 26.022.000đ, chi tháng này ~60% ngân sách 14 triệu, 3 mục tiêu tiết kiệm, 5 định kỳ, mẫu Cà phê 45k / Cơm trưa 55k / Grab 38k |
+| `<tên>@demo.thuchi.vn` | `demo123` | ~39 user khác (vd `hung.vu89@demo.thuchi.vn`), 3 bị khóa, 1 là admin (`bao.tran91@demo.thuchi.vn`) |
+
+Dữ liệu demo: 12 tháng, ~41.000 giao dịch, ~3.000 lần chuyển tiền, 76 mục tiêu đủ 4 trạng thái, 116 quy tắc định kỳ, ~340 ngân sách, 3 broadcast. Mọi bất biến nghiệp vụ được giữ (xem [backend/README.md](backend/README.md#dữ-liệu-demo-prismaseed-demots)). `npm run db:seed:demo` chỉ xóa/tạo lại user demo, không đụng user thật.
+
+## Triển khai bằng Docker
+
+```bash
+cp .env.example .env              # đặt JWT_SECRET >= 16 ký tự (npm run setup tự sinh)
+docker compose --profile app up -d --build
+#   Admin: http://localhost:8080   (nginx phục vụ bản build tĩnh, /api và /docs proxy sang container api)
+#   API:   http://localhost:3000/api   (truy cập trực tiếp, vd cho app mobile)
+docker compose exec api npm run db:seed:demo    # (tùy chọn) nạp dữ liệu demo; hoặc SEED_DEMO=true trong .env
+docker compose --profile app down               # dừng, giữ dữ liệu (thêm -v để xóa volume)
+```
+
+- `docker compose up -d` (không profile): chỉ PostgreSQL cho dev. `--profile api`: DB + API (không có admin).
+- Container api: chờ DB → `prisma migrate deploy` → seed (danh mục + admin từ `ADMIN_*`) → `SEED_DEMO=true` thì nạp lại demo → chạy API. Có healthcheck cho cả 3 service.
+- Admin gọi API qua `/api` cùng origin nên không cần CORS; nginx ghi đè `X-Forwarded-For` bằng IP thật và API đặt `TRUST_PROXY=1` để rate limit đếm đúng IP.
+
+### Biến môi trường (`.env` gốc, dùng cho Docker + `npm run setup`)
 
 | Biến | Mặc định | Ý nghĩa |
 |---|---|---|
-| `DATABASE_URL` | — | PostgreSQL |
-| `PORT` | 3000 | |
-| `JWT_SECRET` | — | Bắt buộc; `NODE_ENV=production` thì phải ≥ 16 ký tự (không thì API không khởi động) |
-| `JWT_EXPIRES_IN` | 30d | |
-| `CORS_ORIGINS` | — | Danh sách origin, phân cách bằng dấu phẩy |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | — | Seed tạo/nâng quyền admin này (bỏ trống = không tạo) |
-| `NODE_ENV` | — | `production`: tắt các endpoint run-due (404). `test`: nới rate limit cho e2e |
-| `SMTP_HOST` `SMTP_PORT` `SMTP_SECURE` `SMTP_USER` `SMTP_PASS` `SMTP_FROM` | | Gửi OTP; `SMTP_HOST` trống → OTP ra log |
-| `THROTTLE_TTL_SEC` | 60 (test: 10) | Cửa sổ rate limit (giây) |
-| `THROTTLE_AUTH_LIMIT` | 10 (test: 200) | Số request / cửa sổ / IP cho mỗi route login, register, reset-password |
-| `THROTTLE_FORGOT_LIMIT` | 3 (test: 20) | Như trên cho forgot-password |
-| `TRUST_PROXY` | — | Chạy sau reverse proxy: `1` (số hop), `true` hoặc danh sách IP, để rate limit đếm theo IP thật |
+| `DB_PORT` | 5433 | Cổng PostgreSQL trên máy host |
+| `API_PORT` | 3000 | Cổng API |
+| `ADMIN_PORT` | 8080 | Cổng admin (nginx, profile `app`) |
+| `API_DB` | tracker | Tên database (dev và container dùng chung) |
+| `JWT_SECRET` | — | Bắt buộc với container, ≥ 16 ký tự |
+| `JWT_EXPIRES_IN` | 30d | Hạn token |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | admin@thuchi.vn / admin123 | Admin được seed tạo / nâng quyền |
+| `SEED_DEMO` | false | `true`: mỗi lần container api khởi động nạp lại dữ liệu demo |
+| `CORS_ORIGINS` | — | Origin gọi API trực tiếp (admin qua nginx không cần) |
+| `TRUST_PROXY` | 1 | API đứng sau nginx; để trống nếu API ra Internet trực tiếp |
+| `SMTP_HOST` `SMTP_PORT` `SMTP_SECURE` `SMTP_USER` `SMTP_PASS` `SMTP_FROM` | | Gửi OTP quên mật khẩu; `SMTP_HOST` trống → OTP in ra log |
 
-### Chạy bằng Docker (DB + API)
+Biến riêng khi dev: `backend/.env` (xem [backend/README.md](backend/README.md#biến-môi-trường-backendenv)), `admin/.env` (`VITE_API_URL`).
 
-```bash
-# .env ở thư mục gốc repo (cạnh docker-compose.yml), tối thiểu:
-#   JWT_SECRET=<chuỗi ngẫu nhiên >= 16 ký tự>
-#   ADMIN_EMAIL=admin@tracker.local
-#   ADMIN_PASSWORD=...
-# Tùy chọn: API_PORT (mặc định 3000), API_DB (tên DB, mặc định tracker), CORS_ORIGINS, SMTP_*, TRUST_PROXY
-docker compose --profile api up -d --build      # http://localhost:3000/api/health
-docker compose --profile api down               # dừng (giữ dữ liệu; thêm -v để xóa volume)
+## Kiểm thử
+
+`npm run test` chạy tuần tự, tự lo server và DB rồi dọn dẹp:
+
+1. Tạo lại DB `tracker_test` (cổng `DB_PORT`) → migrate → seed → **nạp dữ liệu demo** (để chứng minh test không cần DB rỗng).
+2. Bật API `NODE_ENV=test TZ=UTC` ở `:3001` → `verify-demo` (bất biến dữ liệu demo qua API, ~560 kiểm tra) → **backend e2e: 549 kiểm tra**.
+3. Khởi động lại API → **admin e2e Playwright: 37 test** (tự bật Vite ở `:5174`).
+4. Dừng API, xóa DB test (`KEEP_TEST_DB=1` để giữ). Tùy chọn: `TEST_DB`, `TEST_API_PORT`, `E2E_PORT`, `SKIP_BACKEND=1`, `SKIP_ADMIN=1`.
+
+Kết quả gần nhất: verify-demo 0 lỗi, backend e2e 549/549, admin e2e 37/37 (~4 phút).
+
+## Cấu trúc thư mục
+
+```
+.
+├── package.json            # script gốc: setup / dev / test / build (concurrently)
+├── scripts/                # setup.mjs, test.mjs, lib.mjs (chỉ dùng Node có sẵn)
+├── docker-compose.yml      # db | profile api | profile app (db + api + admin nginx)
+├── .env.example            # biến cho Docker + setup
+├── backend/
+│   ├── src/<module>/<module>.module.ts   # auth, wallets, transactions, transfers, budgets, saving-goals,
+│   │                                     # recurring, quick-templates, notifications, stats, export, admin, health
+│   ├── src/common/         # JWT guard, DTO, giờ VN, filter lỗi Prisma
+│   ├── prisma/             # schema, migrations, seed.ts, seed-demo.ts
+│   ├── scripts/            # e2e.mjs (549 kiểm tra), verify-demo.mjs
+│   └── Dockerfile
+├── admin/
+│   ├── src/pages/          # Đăng nhập, Tổng quan, Người dùng, Chi tiết, Giao dịch, Danh mục, Thông báo, Tài khoản
+│   ├── src/components/     # layout, biểu đồ, shadcn/ui đã chỉnh theo mockup
+│   ├── e2e/                # Playwright (37 test)
+│   ├── Dockerfile, nginx.conf
+└── design/
+    ├── mockup/             # mockup mobile 25 màn (390×844) + ảnh chụp
+    ├── admin-mockup/       # mockup admin + ảnh chụp
+    ├── tokens.md           # design token (màu, chữ, bo góc, khoảng cách)
+    └── DESIGN.md
 ```
 
-Image `backend/Dockerfile`: multi-stage node 22-alpine, `prisma generate` lúc build. Khi khởi động: chờ DB (tối đa ~30s) → `prisma migrate deploy` → seed (idempotent: 14 danh mục hệ thống + admin nếu có `ADMIN_*`) → `node dist/main`. Có `HEALTHCHECK` gọi `/api/health`. Không bật profile `api` thì `docker compose up -d` vẫn chỉ chạy DB như cũ.
+## Nghiệp vụ chính
 
-### E2E
+Chi tiết đầy đủ + danh sách endpoint: [backend/README.md](backend/README.md#nghiệp-vụ-v1).
 
-Server phải chạy với `NODE_ENV=test` (bật endpoint run-due và nới rate limit: cửa sổ 10s, 200 req/route, forgot 20), log ghi ra file để script đọc OTP:
+- **Giờ Việt Nam** cho mọi nhóm theo ngày/tháng; tiền là số nguyên VND (BigInt).
+- **Ví**: số dư luôn tính từ dữ liệu = ban đầu + thu − chi ± chuyển tiền ∓ tiết kiệm. Ví có phát sinh chỉ lưu trữ được khi số dư 0.
+- **Chuyển tiền / nạp tiết kiệm** không bao giờ làm ví âm (kiểm tra cả khi sửa/xóa); thu/chi thì ghi nhận thực tế, không chặn. Chuyển tiền không tính vào thu/chi.
+- **Ngân sách** theo danh mục + ngân sách tổng mỗi tháng; vượt 80% / 100% sinh 1 thông báo mỗi ngưỡng, tụt dưới ngưỡng thì reset.
+- **Tiết kiệm**: nạp bị cắt về số còn thiếu, đủ thì `COMPLETED`; rút trả hết về ví → `WITHDRAWN` / `EARLY_WITHDRAWN`.
+- **Định kỳ**: ngày/tuần/tháng/năm × interval, giữ ngày neo (31 → cuối tháng), cron 15 phút, sinh bù, idempotent; ví/danh mục lưu trữ hoặc user bị khóa → tự tạm dừng + thông báo.
+- **Tài khoản**: JWT có `tokenVersion` (đổi mật khẩu / khóa / đăng xuất mọi nơi → token cũ hết hạn), OTP quên mật khẩu, rate limit đăng nhập.
+- **Admin**: tổng quan, khóa/mở + phân quyền user, giao dịch toàn hệ thống + CSV, danh mục hệ thống, broadcast tới mọi user đang hoạt động.
 
-```bash
-npm run build && NODE_ENV=test node dist/main > /tmp/tracker-api.log 2>&1 &
-npm run test:e2e              # API_URL=http://host:port/api  API_LOG=/đường/dẫn/log
-```
+## Lộ trình
 
-- Email ngẫu nhiên nên chạy lặp được không cần reset DB. Mất khoảng 90 giây: 1 lần chờ 61s (giới hạn gửi lại OTP) và ~11s chờ hết khóa 429 ở cuối (nên 2 lần chạy liền nhau vẫn qua).
-- Có thể chạy server với `TZ=UTC` để chắc chắn không phụ thuộc múi giờ máy chủ (e2e đã chạy như vậy).
-- In ra ma trận test theo nhóm; exit code 1 nếu có lỗi.
-
-## Endpoint (prefix `/api`; trừ register / login / forgot / reset / health, còn lại đều cần `Authorization: Bearer <token>`)
-
-Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (không lộ sự tồn tại); id tham chiếu trong **body** (ví, danh mục) không thuộc user → 400; route admin với user thường → 403; token cũ/hết hiệu lực → 401; tài khoản bị khóa → 403; vượt rate limit → 429 (kèm `Retry-After`).
-
-| Module | Method | Path | Mô tả |
-|---|---|---|---|
-| health | GET | `/health` | Công khai: `{status, db, version}`, DB lỗi → 503 |
-| auth | POST | `/auth/register` | Đăng ký, tự tạo ví "Tiền mặt" (rate limit) |
-| | POST | `/auth/login` | Đăng nhập (tài khoản khóa → 403; rate limit) |
-| | POST | `/auth/forgot-password` | Luôn 204; gửi OTP 6 số nếu email tồn tại (rate limit chặt hơn) |
-| | POST | `/auth/reset-password` | `{email, otp, newPassword}`; mọi phiên cũ hết hiệu lực (rate limit) |
-| | POST | `/auth/logout-all` | 204; đăng xuất mọi thiết bị, kể cả token đang dùng |
-| | GET / PATCH | `/me` | Xem / đổi tên |
-| | DELETE | `/me` | `{password}`: xóa tài khoản và toàn bộ dữ liệu |
-| | POST | `/me/password` | Đổi mật khẩu → 200 `{accessToken, user}`; token cũ ở mọi thiết bị hết hiệu lực |
-| wallets | GET | `/wallets` | Mọi ví kèm `balance` + `totalBalance` |
-| | GET / POST / PATCH / DELETE | `/wallets[/:id]` | Xóa: chưa phát sinh → xóa hẳn; có phát sinh → lưu trữ (số dư phải = 0) |
-| | POST | `/wallets/:id/restore` | Khôi phục ví đã lưu trữ |
-| categories | GET | `/categories?type=` | Danh mục hệ thống + của mình (xếp theo tiếng Việt) |
-| | POST / PATCH / DELETE | `/categories[/:id]` | Xóa danh mục đã dùng → lưu trữ |
-| transactions | GET | `/transactions?month=&from=&to=&type=&categoryId=&walletId=&q=&page=&limit=` | Có cờ `recurring` |
-| | GET / PATCH / DELETE | `/transactions/:id` | |
-| | POST | `/transactions` | `walletId` bắt buộc |
-| | POST | `/transactions/bulk` | 1–100 giao dịch, tất cả hoặc không |
-| transfers | GET | `/transfers?month=&from=&to=&walletId=&page=&limit=` | |
-| | GET / POST / PATCH / DELETE | `/transfers[/:id]` | Chuyển tiền giữa 2 ví |
-| budgets | GET | `/budgets?month=YYYY-MM` | `overall` (ngân sách tổng) + `items` theo danh mục |
-| | POST / PATCH / DELETE | `/budgets[/:id]` | Bỏ trống `categoryId` → ngân sách tổng |
-| | POST | `/budgets/copy` | `fromMonth` → `toMonth` |
-| saving-goals | GET | `/saving-goals?status=` | |
-| | GET / POST / PATCH / DELETE | `/saving-goals[/:id]` | Chi tiết kèm sổ nạp/rút |
-| | POST | `/saving-goals/:id/deposit` | `{amount, walletId, date?}` |
-| | POST | `/saving-goals/:id/withdraw` | `{walletId}` nhận tiền |
-| quick-templates | GET / POST / PATCH / DELETE | `/quick-templates[/:id]` | Mẫu nhập nhanh |
-| | POST | `/quick-templates/:id/use` | `{occurredAt?, amount?}` → tạo giao dịch thật |
-| recurring | GET / POST / PATCH / DELETE | `/recurring[/:id]` | Giao dịch định kỳ |
-| | POST | `/recurring/:id/pause`, `/recurring/:id/resume` | |
-| | GET | `/recurring/:id/preview?count=5` | Các kỳ sắp chạy |
-| | POST | `/recurring/run-due?now=ISO` | Chỉ dev/test (`NODE_ENV` khác `production`): chạy ngay các kỳ đến hạn của user hiện tại |
-| notifications | GET | `/notifications?unread=&page=&limit=` | |
-| | GET | `/notifications/unread-count` | |
-| | POST | `/notifications/:id/read`, `/notifications/read-all` | |
-| stats | GET | `/stats/balance` | Tổng + từng ví |
-| | GET | `/stats/summary?month=\|from=&to=&walletId=` | Thu/chi + số dư (của ví nếu lọc) |
-| | GET | `/stats/by-category?month=&type=&walletId=` | |
-| | GET | `/stats/daily?month=&walletId=` | |
-| | GET | `/stats/trend?month=&months=&walletId=` | |
-| | GET | `/stats/report?month=&observationMonths=&walletId=` | Báo cáo tháng |
-| export | GET | `/export/transactions.csv?month=\|from=&to=&walletId=` | CSV UTF-8 BOM, stream theo lô 1000 dòng |
-| admin (role ADMIN) | GET | `/admin/overview` | |
-| | GET | `/admin/users?q=&status=&role=&page=&limit=` | |
-| | GET / PATCH | `/admin/users/:id` | Chi tiết + tài chính + ví; khóa/mở, đổi quyền. Khóa → mọi token của user hết hiệu lực |
-| | POST | `/admin/recurring/run-due?now=ISO` | Chỉ dev/test (`production` → 404): chạy đúng đường của cron cho mọi user tới mốc `now` |
-| | GET | `/admin/transactions?userId=&walletId=&...` | Kèm user + ví |
-| | GET / POST | `/admin/broadcasts` | Lịch sử (số người nhận / đã đọc) / gửi cho mọi user ACTIVE |
-| | GET / POST / PATCH / DELETE | `/admin/categories[/:id]` | Danh mục hệ thống |
-| | POST | `/admin/categories/:id/restore` | |
-
-## Nghiệp vụ v1
-
-- **Múi giờ**: mọi nhóm theo ngày/tháng dùng Asia/Ho_Chi_Minh (UTC+7). `month=YYYY-MM`; `from` tính bao gồm, `to` không bao gồm, `from` phải trước `to`.
-  - Ngày giờ client gửi lên không kèm múi giờ (`2026-09-01`, `2026-09-01T08:00`) được hiểu là giờ VN, không phụ thuộc TZ của máy chủ. Ngày ngoài năm 2000 – 2099 → 400.
-- **Phân trang**: `page` 1 – 10000, `limit` 1 – 200.
-- **Số tiền**: số nguyên 1 – 10 nghìn tỷ mỗi giao dịch / hạn mức / mục tiêu (số dư ban đầu 0 – 10 nghìn tỷ).
-- **Ví**: loại CASH / BANK / EWALLET, `initialBalance` ≥ 0. Số dư ví = ban đầu + thu − chi + chuyển vào − chuyển ra − nạp tiết kiệm + rút tiết kiệm, luôn tính từ dữ liệu, không lưu cộng dồn. Số dư tổng = tổng các ví.
-  - Phát sinh gồm giao dịch, chuyển tiền, sổ tiết kiệm và giao dịch định kỳ. Xóa ví chưa có phát sinh thì xóa hẳn, mẫu nhập nhanh dùng ví đó bị xóa theo. Ví có phát sinh chỉ lưu trữ được khi số dư = 0, ngược lại trả 409.
-  - Ví lưu trữ không dùng được cho phát sinh mới, và phát sinh cũ của nó không sửa/xóa được cho tới khi khôi phục ví.
-- **Giao dịch**: bắt buộc ví và danh mục của user, chưa lưu trữ. Loại INCOME/EXPENSE lấy theo danh mục. Mọi đường tạo giao dịch (API, bulk, mẫu nhập nhanh, định kỳ) đều chạy cùng logic, kể cả cảnh báo ngân sách.
-- **Chuyển tiền**: 2 ví khác nhau của cùng user. Tạo / sửa / xóa không được làm ví nào bị trừ xuống dưới 0: hoàn tác giao dịch cũ rồi áp giao dịch mới, ví bị giảm tiền phải còn đủ (vd xóa A→B khi B đã chuyển tiếp số tiền đó đi → 400). Số dư không phụ thuộc ngày nên đổi ngày/ghi chú luôn được. Chuyển tiền không tính vào thu/chi, thống kê hay ngân sách.
-  - Thu/chi thì không chặn âm (ghi nhận thực tế, vd thẻ thấu chi); sửa/xóa giao dịch thu hay đổi số dư ban đầu cũng vậy. Chỉ chuyển tiền và nạp tiết kiệm (tiền đi giữa các "túi" của chính user) mới bắt buộc đủ số dư.
-  - Ví đã lưu trữ không đổi được số dư ban đầu (409) để luôn giữ số dư 0; đổi tên/màu vẫn được.
-- **Danh mục**: `userId = null` là danh mục hệ thống. Tên không trùng (không phân biệt hoa thường) trong phạm vi hệ thống + của user, theo từng loại. Danh mục đã dùng (giao dịch hoặc định kỳ) khi xóa sẽ bị lưu trữ; chưa dùng thì xóa hẳn, ngân sách + mẫu nhập nhanh của nó xóa theo. Riêng danh mục hệ thống: ngân sách / mẫu nhập nhanh của bất kỳ user nào cũng tính là "đã dùng" → admin xóa chỉ lưu trữ, không làm mất dữ liệu của user. Danh sách xếp theo tiếng Việt.
-- **Ngân sách**: theo danh mục chi tiêu, hoặc ngân sách tổng (`categoryId = null`, mỗi user/tháng 1, spent = tổng chi của tháng). `status`: `ok`, `warning` (≥ 80%), `exceeded` (≥ 100%).
-  - Tạo/sửa giao dịch chi làm ngân sách vượt 80% / 100% thì sinh 1 thông báo. Mỗi ngưỡng báo 1 lần, dấu đã báo lưu ở `warnedAt` / `exceededAt`.
-  - Đổi hạn mức, hoặc xóa / sửa / dời giao dịch (đổi tháng, danh mục, số tiền) làm tỷ lệ tụt dưới ngưỡng thì dấu được xóa, để lần vượt sau báo lại. Sửa giao dịch tính lại cả ngân sách cũ lẫn mới.
-  - Ngân sách chỉ tạo cho danh mục chi chưa lưu trữ; ngân sách cũ của danh mục đã lưu trữ vẫn hiển thị nhưng không được sao chép sang tháng khác.
-- **Mục tiêu tiết kiệm**: nạp từ một ví, bị cắt về số còn thiếu; số dư của ví đó phải đủ. Nạp/rút khóa theo user nên các lần nạp đồng thời không làm âm ví.
-  - Đủ mục tiêu thì chuyển `COMPLETED`. Rút trả toàn bộ về ví được chọn: `WITHDRAWN` nếu đã hoàn thành, ngược lại `EARLY_WITHDRAWN`.
-  - Mục tiêu đã rút không nạp thêm được; mục tiêu còn tiền không xóa được. Xóa mục tiêu vẫn giữ sổ nạp/rút (`goalId = null`) nên số dư từng ví không đổi.
-- **Mẫu nhập nhanh**: `use` tạo giao dịch thật, có thể ghi đè ngày và số tiền. Danh mục hoặc ví của mẫu bị lưu trữ thì `use` trả 409 kèm thông báo rõ ràng.
-- **Giao dịch định kỳ**: DAILY / WEEKLY / MONTHLY / YEARLY × `interval`. Ngày và giờ theo giờ VN, lấy từ `startDate`.
-  - MONTHLY/YEARLY giữ `anchorDay`: ngày 31 rơi vào ngày cuối của tháng thiếu ngày, tháng sau quay lại 31 (31/1 → 28 hoặc 29/2 → 31/3).
-  - Cron chạy 15 phút/lần và chạy bù ngay khi khởi động. Mọi kỳ ≤ hiện tại đều được sinh, kể cả kỳ lỡ lúc server tắt; `startDate` ở quá khứ cũng được sinh bù. Mỗi lần chạy sinh tối đa 500 kỳ cho mỗi quy tắc.
-  - Idempotent nhờ `unique(recurringRuleId, scheduledFor)` cùng việc đẩy `nextRunAt` có điều kiện, nên chạy lặp hay nhiều instance cũng không sinh trùng.
-  - Ví hoặc danh mục bị lưu trữ, hay user bị khóa: kỳ đó bị bỏ qua, quy tắc tự tạm dừng và user nhận thông báo `RECURRING_PAUSED`. Mở khóa không tự bật lại quy tắc; user resume (không sinh bù).
-  - Dev/test: `POST /recurring/run-due` (chỉ quy tắc của user hiện tại) và `POST /admin/recurring/run-due` (mọi user, cùng hàm `runAll` mà cron gọi).
-  - Quá `endDate` (tính đến cuối ngày VN) thì `isActive = false`. Resume không sinh bù: `nextRunAt` nhảy tới kỳ đầu tiên sau hiện tại.
-  - Sửa quy tắc chỉ ảnh hưởng các kỳ tương lai. Xóa quy tắc vẫn giữ giao dịch đã sinh (`recurringRuleId = null`, cờ `recurring` vẫn true).
-- **Thông báo**: BUDGET_WARNING, BUDGET_EXCEEDED, BROADCAST, RECURRING_PAUSED. Admin broadcast gửi cho mọi user ACTIVE và lưu lịch sử cùng số người nhận.
-- **Tài khoản**:
-  - Phiên đăng nhập: JWT mang `tv` = `User.tokenVersion`. Đổi mật khẩu, đặt lại bằng OTP, bị admin khóa, `POST /auth/logout-all` đều tăng `tokenVersion` → mọi token cũ bị 401. Đổi mật khẩu trả token mới cho thiết bị hiện tại. Token của user đang bị khóa trả 403 "Tài khoản đã bị khóa"; mở khóa xong phải đăng nhập lại. Đổi quyền không cần đăng nhập lại (quyền đọc từ DB mỗi request).
-  - Rate limit theo IP + route: login / register / reset-password 10 lần/phút, forgot-password 3 lần/phút (cấu hình `THROTTLE_*`), quá → 429 + `Retry-After`. Lưu trong bộ nhớ của từng instance. Đăng nhập với email không tồn tại vẫn chạy bcrypt (không dò email qua thời gian phản hồi).
-  - Quên mật khẩu luôn trả 204 và xử lý nền, nên không dò được email nào tồn tại. OTP 6 số được lưu dạng hash, hạn 10 phút; mã mới thay mã cũ; gửi lại tối thiểu sau 60 giây; sai 5 lần thì mã bị hủy. Tài khoản bị khóa không nhận OTP.
-  - Xóa tài khoản cần mật khẩu và xóa cascade toàn bộ dữ liệu. Admin cuối cùng không tự xóa được.
-- **Báo cáo**: so với tháng trước (|thay đổi| ≤ 5% = `stable`), cơ cấu theo danh mục, giao dịch lớn/nhỏ nhất, dự báo tháng sau bằng trung bình có trọng số (≥ 3 tháng quan sát, ngược lại trung bình cộng). Mọi thống kê đều lọc được theo ví.
-- **Xuất CSV**: UTF-8 có BOM, cột Ngày (giờ VN), Loại, Danh mục, Ví, Tiêu đề, Ghi chú, Số tiền. Escape theo RFC 4180 (dấu phẩy, ngoặc kép, xuống dòng). Đọc DB theo lô 1000 dòng (keyset) và stream ra response nên khoảng thời gian lớn không dồn hết vào RAM; lỗi tham số (ví lạ, from ≥ to) vẫn trả 4xx trước khi stream.
-- **Admin**: user bị khóa thì token đang có bị 403, không đăng nhập được, và mọi token cũ vô hiệu vĩnh viễn. Admin không tự khóa hay tự hạ quyền được.
-- **Để sau**: vay/nợ, push FCM.
+1. **App mobile Flutter** (tiếp theo): thiết kế đã sẵn trong `design/mockup/` (25 màn, có ảnh chụp từng màn), `design/tokens.md` ánh xạ thẳng sang `ThemeData` (ColorScheme, TextTheme, bo góc, khoảng cách); API đã đủ cho mọi màn (Swagger `/docs`). Tài khoản `demo@thuchi.vn` có dữ liệu khớp mockup để dựng màn hình.
+2. **Push FCM**: thông báo ngân sách, định kỳ, broadcast đang lưu trong app → thêm đẩy qua Firebase Cloud Messaging.
+3. **Vay / nợ**: ghi khoản cho vay / đi vay, nhắc hạn, tất toán.
