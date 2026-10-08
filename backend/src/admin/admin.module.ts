@@ -1,15 +1,16 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Injectable, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 import { Prisma, Role, TxType, UserStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser, Roles } from '../common/auth';
-import { PageQuery, paged } from '../common/dto';
+import { PageQuery, paged, Trim } from '../common/dto';
 import { monthOf } from '../common/time';
 import { publicUser } from '../auth/auth.module';
 import { CategoriesModule, CategoriesService, CreateCategoryDto, UpdateCategoryDto } from '../categories/categories.module';
 import { StatsModule, StatsService } from '../stats/stats.module';
-import { buildTxWhere, TransactionFilter, TX_CATEGORY_SELECT } from '../transactions/transactions.module';
+import { buildTxWhere, TransactionFilter, TX_CATEGORY_SELECT, TX_WALLET_SELECT, withFlags } from '../transactions/transactions.module';
+import { WalletsModule, WalletsService } from '../wallets/wallets.module';
 
 class UserListQuery extends PageQuery {
   /** Tìm theo email / tên */
@@ -27,6 +28,11 @@ class AdminTxFilter extends TransactionFilter {
   @IsOptional() @IsUUID() userId?: string;
 }
 
+class BroadcastDto {
+  @Trim() @IsString() @MinLength(1) @MaxLength(120) title: string;
+  @Trim() @IsString() @MinLength(1) @MaxLength(2000) body: string;
+}
+
 class SystemCategoryQuery {
   @IsOptional() @IsEnum(TxType) type?: TxType;
 }
@@ -35,7 +41,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly prisma: PrismaService, private readonly stats: StatsService) {}
+  constructor(private readonly prisma: PrismaService, private readonly stats: StatsService, private readonly wallets: WalletsService) {}
 
   async overview() {
     const since30d = new Date(Date.now() - 30 * DAY_MS);
@@ -94,6 +100,7 @@ export class AdminService {
     return {
       ...publicUser(user),
       finance: await this.stats.balance(id),
+      wallets: (await this.wallets.list(id)).items,
       trend: await this.stats.monthlyTotals(id, monthOf(new Date()), 6),
     };
   }
@@ -110,14 +117,39 @@ export class AdminService {
     const [items, total] = await this.prisma.$transaction([
       this.prisma.transaction.findMany({
         where,
-        include: { category: TX_CATEGORY_SELECT, user: { select: { id: true, email: true, name: true } } },
+        include: { category: TX_CATEGORY_SELECT, wallet: TX_WALLET_SELECT, user: { select: { id: true, email: true, name: true } } },
         orderBy: [{ occurredAt: 'desc' }, { createdAt: 'desc' }],
         skip: (f.page - 1) * f.limit,
         take: f.limit,
       }),
       this.prisma.transaction.count({ where }),
     ]);
-    return paged(items, total, f);
+    return paged(items.map(withFlags), total, f);
+  }
+
+  /** Gửi thông báo cho mọi user ACTIVE, lưu lịch sử + số người nhận. */
+  async broadcast(actor: AuthUser, dto: BroadcastDto) {
+    return this.prisma.$transaction(async (db) => {
+      const users = await db.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true } });
+      const b = await db.broadcast.create({ data: { title: dto.title, body: dto.body, createdById: actor.id, recipients: users.length } });
+      await db.notification.createMany({
+        data: users.map((u) => ({ userId: u.id, type: 'BROADCAST' as const, title: dto.title, body: dto.body, broadcastId: b.id })),
+      });
+      return b;
+    });
+  }
+
+  async broadcasts(q: PageQuery) {
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.broadcast.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip: (q.page - 1) * q.limit,
+        take: q.limit,
+        include: { _count: { select: { notifications: { where: { readAt: { not: null } } } } } },
+      }),
+      this.prisma.broadcast.count(),
+    ]);
+    return paged(items.map(({ _count, ...b }) => ({ ...b, readCount: _count.notifications })), total, q);
   }
 }
 
@@ -154,6 +186,18 @@ export class AdminController {
     return this.admin.transactions(f);
   }
 
+  /** Gửi thông báo trong app cho mọi user ACTIVE */
+  @Post('broadcasts')
+  broadcast(@CurrentUser() actor: AuthUser, @Body() dto: BroadcastDto) {
+    return this.admin.broadcast(actor, dto);
+  }
+
+  /** Lịch sử broadcast: số người nhận + số người đã đọc */
+  @Get('broadcasts')
+  broadcasts(@Query() q: PageQuery) {
+    return this.admin.broadcasts(q);
+  }
+
   /** Danh mục hệ thống (dùng chung cho mọi user), kèm số giao dịch đang dùng */
   @Get('categories')
   listCategories(@Query() q: SystemCategoryQuery) {
@@ -182,5 +226,5 @@ export class AdminController {
   }
 }
 
-@Module({ imports: [CategoriesModule, StatsModule], controllers: [AdminController], providers: [AdminService] })
+@Module({ imports: [CategoriesModule, StatsModule, WalletsModule], controllers: [AdminController], providers: [AdminService] })
 export class AdminModule {}
