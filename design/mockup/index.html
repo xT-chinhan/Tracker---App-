@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thu Chi — Mockup UI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap&subset=vietnamese" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="gallery">
+  <header class="gallery-head">
+    <h1>Thu Chi · Mockup giao diện</h1>
+    <p>25 màn hình, khung 390×844. Dữ liệu mẫu nhất quán: ngày Thứ Ba 22/09/2026, 4 ví tổng 26.022.000đ, chi tháng 9 là 8.680.000đ trên ngân sách 14.000.000đ (62%).
+    Điều hướng (giống ảnh mẫu): <b>Trang chủ · Lịch sử · [＋ Ghi giao dịch] · Báo cáo · Cài đặt</b>. Cài đặt chứa Ví, Ngân sách, Tiết kiệm, Định kỳ, Danh mục, Mẫu nhập nhanh, Thông báo, CSV, mật khẩu. Các màn con giữ tab Cài đặt active và nút ‹ Cài đặt. Ví và Ngân sách còn mở được từ thẻ số dư ở Trang chủ; Thông báo mở từ chuông.<br>Nút ＋: <b>chạm 1 lần</b> mở màn Ghi giao dịch (mặc định Khoản chi, con trỏ ở ô số tiền); <b>nhấn giữ</b> mở menu nhanh (Thu nhập, Chuyển tiền, 3 mẫu nhập nhanh), nút ＋ chuyển thành ✕ để đóng.</p>
+  </header>
+
+  <!-- ===================== A. XÁC THỰC ===================== -->
+  <section class="section">
+    <div class="section-label"><b>A</b> Xác thực</div>
+    <div class="row-phones">
+
+      <!-- 01 Đăng nhập -->
+      <div class="frame"><div class="phone" data-shot="01-dang-nhap">
+        <div class="screen">
+          <div class="pad" style="padding-top:36px">
+            <div class="logo">₫</div>
+            <h1 class="headline mt-6">Chào mừng trở lại</h1>
+            <p class="body-m muted mt-2">Đăng nhập để tiếp tục ghi chép thu chi.</p>
+            <div class="mt-8">
+              <label class="field-label">Email</label>
+              <div class="input"><i data-lucide="mail"></i><span>minhanh.nguyen@gmail.com</span></div>
+            </div>
+            <div class="mt-4">
+              <label class="field-label">Mật khẩu</label>
+              <div class="input focus"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span><i data-lucide="eye-off"></i></div>
+            </div>
+            <div style="text-align:right" class="mt-2"><span class="link" style="padding-right:0;font-size:14px">Quên mật khẩu?</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Đăng nhập</button>
+            <div class="or mt-4">hoặc</div>
+            <button class="btn btn-secondary mt-4">Tạo tài khoản mới</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>01</span>Đăng nhập</div></div>
+
+      <!-- 02 Quên mật khẩu -->
+      <div class="frame"><div class="phone" data-shot="02-quen-mat-khau">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Đăng nhập</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Quên mật khẩu</h1>
+            <p class="body-m muted mt-2">Nhập email đã đăng ký. Chúng tôi sẽ gửi mã OTP gồm 6 số để bạn đặt lại mật khẩu.</p>
+            <div class="mt-8">
+              <label class="field-label">Email</label>
+              <div class="input focus"><i data-lucide="mail"></i><span>minhanh.nguyen@gmail.com</span></div>
+            </div>
+            <div class="note mt-4"><i data-lucide="info"></i><span>Mã có hiệu lực trong 5 phút. Kiểm tra cả hộp thư Spam nếu chưa thấy.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Gửi mã OTP</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>02</span>Quên mật khẩu</div></div>
+
+      <!-- 03 OTP -->
+      <div class="frame"><div class="phone" data-shot="03-nhap-otp">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Nhập mã xác thực</h1>
+            <p class="body-m muted mt-2">Mã 6 số đã được gửi tới <span style="color:var(--color-on-surface);font-weight:600">minh•••@gmail.com</span></p>
+            <div class="otp mt-8 num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div class="cur"></div></div>
+            <div class="between mt-4 body-s"><span class="muted">Chưa nhận được mã?</span><span class="muted num">Gửi lại sau 00:42</span></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:30px" class="pad">
+            <div class="keypad">
+              <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div></div><div>0</div><div class="fn"><i data-lucide="delete"></i></div>
+            </div>
+            <button class="btn btn-primary mt-3" disabled>Xác nhận</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>03</span>Nhập OTP 6 số</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== B. TRANG CHỦ & GHI CHÉP ===================== -->
+  <section class="section">
+    <div class="section-label"><b>B</b> Trang chủ &amp; ghi giao dịch</div>
+    <div class="row-phones">
+
+      <!-- 04 Trang chủ -->
+      <div class="frame"><div class="phone" data-shot="04-trang-chu" data-tab="home">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:48px">
+              <div class="logo sm">₫</div>
+              <span class="icon-btn filled"><i data-lucide="bell"></i><span class="dot-badge" style="top:8px;right:9px"></span></span>
+            </div>
+            <h1 class="headline mt-2">Thứ Ba, 22 tháng 9</h1>
+
+            <div class="card mt-4">
+              <div class="between">
+                <span class="label-s hstack" style="--gap:6px">Tổng số dư · 4 ví <i data-lucide="eye" class="ic-16" style="width:16px;height:16px"></i></span>
+                <span class="label-s hstack" style="--gap:2px">Ví <i data-lucide="chevron-right" style="width:16px;height:16px"></i></span>
+              </div>
+              <div class="display num mt-2">26.022.000đ</div>
+              <div class="progress mt-3"><i style="width:62%"></i></div>
+              <div class="between mt-2 body-s"><span class="muted">Ngân sách tháng đã dùng <b style="color:var(--color-on-surface);font-weight:600">62%</b></span><span class="muted num">còn 5.320.000đ</span></div>
+              <div class="divider"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr">
+                <div><div class="label-s">Hôm nay</div><div class="title-m num mt-1" style="margin-top:2px">120.000đ</div></div>
+                <div style="border-left:1px solid var(--color-outline-variant);padding-left:16px"><div class="label-s">Tháng này</div><div class="title-m num" style="margin-top:2px">8.680.000đ</div></div>
+              </div>
+            </div>
+
+            <div class="hstack mt-4" style="--gap:10px">
+              <button class="btn btn-primary" style="flex:1.45"><i data-lucide="plus"></i>Ghi giao dịch</button>
+              <button class="btn btn-secondary" style="flex:1"><i data-lucide="arrow-left-right"></i>Chuyển tiền</button>
+            </div>
+
+            <div class="label-s mt-5" style="margin-bottom:8px">Nhập nhanh</div>
+            <div class="chips" style="margin-right:-20px">
+              <span class="chip"><i data-lucide="coffee"></i>Cà phê <span class="amt-s num">45k</span></span>
+              <span class="chip"><i data-lucide="utensils"></i>Cơm trưa <span class="amt-s num">55k</span></span>
+              <span class="chip"><i data-lucide="car-taxi-front"></i>Grab <span class="amt-s num">38k</span></span>
+              <span class="chip"><i data-lucide="square-parking"></i>Gửi xe <span class="amt-s num">5k</span></span>
+            </div>
+
+            <div class="between mt-5"><span class="title-m">Gần đây</span><span class="label-s">Xem tất cả</span></div>
+            <div class="card flush list mt-2">
+              <div class="row"><span class="bubble"><i data-lucide="utensils"></i></span><div class="grow"><div class="t">Cơm trưa văn phòng</div><div class="s">Ăn uống · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>55.000đ</div><div class="time">12:10</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="coffee"></i></span><div class="grow"><div class="t">Cà phê sáng</div><div class="s">Ăn uống · MoMo</div></div><div class="r"><div class="amt num"><span class="sign">−</span>45.000đ</div><div class="time">08:15</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="square-parking"></i></span><div class="grow"><div class="t">Gửi xe tháng</div><div class="s">Di chuyển · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>20.000đ</div><div class="time">07:50</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>04</span>Trang chủ</div></div>
+
+      <!-- 05 Ghi giao dịch -->
+      <div class="frame"><div class="phone" data-shot="05-ghi-giao-dich">
+        <div class="screen">
+          <div class="appbar"><span class="icon-btn left"><i data-lucide="x"></i></span><span class="title">Ghi giao dịch</span><span class="right"><span class="icon-btn"><i data-lucide="bookmark-plus"></i></span></span></div>
+          <div class="pad">
+            <div class="seg" style="width:220px;margin:4px auto 0"><div class="on">Khoản chi</div><div>Thu nhập</div></div>
+            <div class="amount-big num mt-6">55.000<span class="caret"></span><span class="cur">đ</span></div>
+            <div class="center body-s muted" style="margin-top:2px">Năm mươi lăm nghìn đồng</div>
+            <div class="card flush form mt-5">
+              <div class="frow"><span class="ico"><i data-lucide="shapes"></i></span><span class="lbl">Danh mục</span><span class="val"><span class="bubble sm" style="width:26px;height:26px"><i data-lucide="utensils" style="width:14px;height:14px"></i></span>Ăn uống<i data-lucide="chevron-right" class="chev"></i></span></div>
+              <div class="frow"><span class="ico"><i data-lucide="wallet"></i></span><span class="lbl">Ví</span><span class="val">Tiền mặt<i data-lucide="chevron-right" class="chev"></i></span></div>
+              <div class="frow"><span class="ico"><i data-lucide="calendar"></i></span><span class="lbl">Ngày</span><span class="val">Hôm nay, 22/09<i data-lucide="chevron-right" class="chev"></i></span></div>
+              <div class="frow"><span class="ico"><i data-lucide="notebook-pen"></i></span><span class="lbl">Ghi chú</span><span class="val ph">Cơm trưa văn phòng</span></div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:30px" class="pad">
+            <div class="keypad">
+              <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div class="fn">000</div><div>0</div><div class="fn"><i data-lucide="delete"></i></div>
+            </div>
+            <button class="btn btn-primary mt-3">Lưu khoản chi</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>05</span>Ghi giao dịch</div></div>
+
+      <!-- 05b Nhấn giữ nút ＋ -->
+      <div class="frame"><div class="phone" data-shot="05b-menu-nut-cong" data-tab="home">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:48px">
+              <div class="logo sm">₫</div>
+              <span class="icon-btn filled"><i data-lucide="bell"></i><span class="dot-badge" style="top:8px;right:9px"></span></span>
+            </div>
+            <h1 class="headline mt-2">Thứ Ba, 22 tháng 9</h1>
+
+            <div class="card mt-4">
+              <div class="between">
+                <span class="label-s hstack" style="--gap:6px">Tổng số dư · 4 ví <i data-lucide="eye" class="ic-16" style="width:16px;height:16px"></i></span>
+                <span class="label-s hstack" style="--gap:2px">Ví <i data-lucide="chevron-right" style="width:16px;height:16px"></i></span>
+              </div>
+              <div class="display num mt-2">26.022.000đ</div>
+              <div class="progress mt-3"><i style="width:62%"></i></div>
+              <div class="between mt-2 body-s"><span class="muted">Ngân sách tháng đã dùng <b style="color:var(--color-on-surface);font-weight:600">62%</b></span><span class="muted num">còn 5.320.000đ</span></div>
+              <div class="divider"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr">
+                <div><div class="label-s">Hôm nay</div><div class="title-m num mt-1" style="margin-top:2px">120.000đ</div></div>
+                <div style="border-left:1px solid var(--color-outline-variant);padding-left:16px"><div class="label-s">Tháng này</div><div class="title-m num" style="margin-top:2px">8.680.000đ</div></div>
+              </div>
+            </div>
+
+            <div class="hstack mt-4" style="--gap:10px">
+              <button class="btn btn-primary" style="flex:1.45"><i data-lucide="plus"></i>Ghi giao dịch</button>
+              <button class="btn btn-secondary" style="flex:1"><i data-lucide="arrow-left-right"></i>Chuyển tiền</button>
+            </div>
+
+            <div class="label-s mt-5" style="margin-bottom:8px">Nhập nhanh</div>
+            <div class="chips" style="margin-right:-20px">
+              <span class="chip"><i data-lucide="coffee"></i>Cà phê <span class="amt-s num">45k</span></span>
+              <span class="chip"><i data-lucide="utensils"></i>Cơm trưa <span class="amt-s num">55k</span></span>
+              <span class="chip"><i data-lucide="car-taxi-front"></i>Grab <span class="amt-s num">38k</span></span>
+              <span class="chip"><i data-lucide="square-parking"></i>Gửi xe <span class="amt-s num">5k</span></span>
+            </div>
+
+            <div class="between mt-5"><span class="title-m">Gần đây</span><span class="label-s">Xem tất cả</span></div>
+            <div class="card flush list mt-2">
+              <div class="row"><span class="bubble"><i data-lucide="utensils"></i></span><div class="grow"><div class="t">Cơm trưa văn phòng</div><div class="s">Ăn uống · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>55.000đ</div><div class="time">12:10</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="coffee"></i></span><div class="grow"><div class="t">Cà phê sáng</div><div class="s">Ăn uống · MoMo</div></div><div class="r"><div class="amt num"><span class="sign">−</span>45.000đ</div><div class="time">08:15</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="square-parking"></i></span><div class="grow"><div class="t">Gửi xe tháng</div><div class="s">Di chuyển · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>20.000đ</div><div class="time">07:50</div></div></div>
+            </div>
+          </div>
+        </div>
+      <div class="scrim" style="background:rgba(17,17,17,.38)"></div>
+        <div class="quick-menu">
+          <div class="qrow"><span class="bubble sm ok"><i data-lucide="arrow-down-left"></i></span><span class="grow">Thu nhập</span></div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="arrow-left-right"></i></span><span class="grow">Chuyển tiền</span></div>
+          <div class="qsep"></div>
+          <div class="qlabel">Mẫu nhập nhanh</div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="coffee"></i></span><span class="grow">Cà phê</span><span class="qv num">45.000đ</span></div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="utensils"></i></span><span class="grow">Cơm trưa</span><span class="qv num">55.000đ</span></div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="car-taxi-front"></i></span><span class="grow">Grab</span><span class="qv num">38.000đ</span></div>
+        </div>
+        <span class="fab-open" aria-label="Đóng"><i data-lucide="x"></i></span>
+      </div><div class="frame-cap"><span>05b</span>Nhấn giữ nút ＋: menu nhanh</div></div>
+
+      <!-- 06 Chọn danh mục (sheet) -->
+      <div class="frame"><div class="phone" data-shot="06-chon-danh-muc">
+        <div class="screen">
+          <div class="appbar"><span class="icon-btn left"><i data-lucide="x"></i></span><span class="title">Ghi giao dịch</span><span class="right"><span class="icon-btn"><i data-lucide="bookmark-plus"></i></span></span></div>
+          <div class="pad">
+            <div class="seg" style="width:220px;margin:4px auto 0"><div class="on">Khoản chi</div><div>Thu nhập</div></div>
+            <div class="amount-big num mt-6">55.000<span class="cur">đ</span></div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="between"><span class="sheet-title">Chọn danh mục</span><span class="link muted" style="padding-right:0">Sửa</span></div>
+          <div class="seg mt-3"><div class="on">Khoản chi</div><div>Thu nhập</div></div>
+          <div class="cat-grid mt-5">
+            <div class="cat on"><span class="bubble lg ink"><i data-lucide="utensils"></i></span>Ăn uống</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="coffee"></i></span>Cà phê</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="shopping-cart"></i></span>Đi chợ</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="car"></i></span>Di chuyển</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="house"></i></span>Nhà ở</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="receipt-text"></i></span>Hóa đơn</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="shopping-bag"></i></span>Mua sắm</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="clapperboard"></i></span>Giải trí</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="heart-pulse"></i></span>Sức khỏe</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="graduation-cap"></i></span>Giáo dục</div>
+            <div class="cat"><span class="bubble lg"><i data-lucide="gift"></i></span>Quà tặng</div>
+            <div class="cat"><span class="bubble lg dashed-b"><i data-lucide="plus"></i></span>Thêm mới</div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>06</span>Bottom sheet chọn danh mục</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== C. LỊCH SỬ ===================== -->
+  <section class="section">
+    <div class="section-label"><b>C</b> Lịch sử</div>
+    <div class="row-phones">
+
+      <!-- 07 Lịch sử -->
+      <div class="frame"><div class="phone" data-shot="07-lich-su" data-tab="history">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:56px"><h1 class="headline">Lịch sử</h1>
+              <span class="month"><span class="icon-btn"><i data-lucide="chevron-left"></i></span><span class="num">Tháng 9</span><span class="icon-btn"><i data-lucide="chevron-right"></i></span></span></div>
+            <div class="search mt-2"><i data-lucide="search"></i>Tìm người nhận, số tiền, ghi chú…</div>
+            <div class="between mt-3">
+              <div class="chips"><span class="chip on">Tất cả</span><span class="chip">Khoản chi</span><span class="chip">Thu nhập</span></div>
+              <span class="icon-btn filled" style="width:36px;height:36px"><i data-lucide="sliders-horizontal" style="width:17px;height:17px"></i></span>
+            </div>
+            <div class="body-s muted mt-3 num">Tháng 9: chi <b style="color:var(--color-on-surface)">8.680.000đ</b> · thu <b class="income">23.500.000đ</b></div>
+
+            <div class="group-h"><span>Hôm nay</span><span class="num"><span class="sign">−</span>120.000đ</span></div>
+            <div class="card flush list">
+              <div class="row"><span class="bubble"><i data-lucide="utensils"></i></span><div class="grow"><div class="t">Cơm trưa văn phòng</div><div class="s">Ăn uống · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>55.000đ</div><div class="time">12:10</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="coffee"></i></span><div class="grow"><div class="t">Cà phê sáng</div><div class="s">Ăn uống · MoMo</div></div><div class="r"><div class="amt num"><span class="sign">−</span>45.000đ</div><div class="time">08:15</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="square-parking"></i></span><div class="grow"><div class="t">Gửi xe tháng</div><div class="s">Di chuyển · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>20.000đ</div><div class="time">07:50</div></div></div>
+            </div>
+            <div class="group-h"><span>Hôm qua</span><span class="num"><span class="sign">−</span>358.000đ</span></div>
+            <div class="card flush list">
+              <div class="row"><span class="bubble"><i data-lucide="shopping-cart"></i></span><div class="grow"><div class="t">Siêu thị WinMart</div><div class="s">Mua sắm · MB Bank</div></div><div class="r"><div class="amt num"><span class="sign">−</span>320.000đ</div><div class="time">19:30</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="car-taxi-front"></i></span><div class="grow"><div class="t">Grab đi làm</div><div class="s">Di chuyển · MoMo</div></div><div class="r"><div class="amt num"><span class="sign">−</span>38.000đ</div><div class="time">08:05</div></div></div>
+            </div>
+            <div class="group-h"><span>2 ngày trước</span><span class="num income">+1.320.000đ</span></div>
+            <div class="card flush list">
+              <div class="row"><span class="bubble"><i data-lucide="briefcase"></i></span><div class="grow"><div class="t">Freelance thiết kế</div><div class="s">Thu nhập khác · MB Bank</div></div><div class="r"><div class="amt num income">+1.500.000đ</div><div class="time">16:20</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="clapperboard"></i></span><div class="grow"><div class="t">Xem phim CGV</div><div class="s">Giải trí · Techcombank</div></div><div class="r"><div class="amt num"><span class="sign">−</span>180.000đ</div><div class="time">20:45</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>07</span>Lịch sử</div></div>
+
+      <!-- 08 Chi tiết giao dịch -->
+      <div class="frame"><div class="phone" data-shot="08-chi-tiet-giao-dich">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Lịch sử</span><span></span><span class="right"><span class="link">Sửa</span></span></div>
+          <div class="pad">
+            <div style="display:flex;flex-direction:column;align-items:center;padding-top:12px">
+              <span class="bubble lg"><i data-lucide="house"></i></span>
+              <div class="body-m muted mt-3">Tiền nhà tháng 9</div>
+              <div class="display num" style="margin-top:2px"><span class="sign">−</span>2.500.000đ</div>
+              <span class="badge mt-3"><i data-lucide="repeat"></i>Tạo tự động · Định kỳ hằng tháng</span>
+            </div>
+            <div class="card flush form mt-6">
+              <div class="frow"><span class="lbl">Loại</span><span class="val">Khoản chi</span></div>
+              <div class="frow"><span class="lbl">Danh mục</span><span class="val"><span class="bubble sm" style="width:26px;height:26px"><i data-lucide="house" style="width:14px;height:14px"></i></span>Nhà ở</span></div>
+              <div class="frow"><span class="lbl">Ví</span><span class="val">MB Bank</span></div>
+              <div class="frow"><span class="lbl">Thời gian</span><span class="val num">08:00 · Thứ Ba, 01/09/2026</span></div>
+              <div class="frow"><span class="lbl">Ghi chú</span><span class="val">Chuyển khoản cho chủ nhà</span></div>
+            </div>
+            <div class="card tight mt-3">
+              <div class="hstack" style="--gap:12px"><span class="bubble sm"><i data-lucide="repeat"></i></span>
+                <div class="grow"><div class="title-m" style="font-size:15px">Tiền nhà hàng tháng</div><div class="body-s muted">Ngày 1 hằng tháng · lần tới 01/10</div></div>
+                <i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <p class="body-s muted mt-3" style="padding:0 4px">Sửa giao dịch này không làm thay đổi quy tắc định kỳ.</p>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-secondary btn-danger-text"><i data-lucide="trash-2"></i>Xóa giao dịch</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>08</span>Chi tiết giao dịch (từ quy tắc định kỳ)</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== D. BÁO CÁO & NGÂN SÁCH ===================== -->
+  <section class="section">
+    <div class="section-label"><b>D</b> Báo cáo &amp; ngân sách</div>
+    <div class="row-phones">
+
+      <!-- 09 Báo cáo -->
+      <div class="frame"><div class="phone" data-shot="09-bao-cao" data-tab="report">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:56px"><h1 class="headline">Báo cáo</h1>
+              <span class="month"><span class="icon-btn"><i data-lucide="chevron-left"></i></span><span class="num">Tháng 9</span><span class="icon-btn"><i data-lucide="chevron-right"></i></span></span></div>
+            <div class="card mt-2">
+              <div class="label-s">Chênh lệch thu chi</div>
+              <div class="num" style="font-size:32px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;margin-top:2px">+14.820.000đ</div>
+              <div class="divider"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr">
+                <div><div class="label-s hstack" style="--gap:6px"><span class="legend-dot" style="background:var(--color-income);border-radius:50%;width:8px;height:8px"></span>Thu nhập</div><div class="title-m num income" style="margin-top:2px">23.500.000đ</div></div>
+                <div style="border-left:1px solid var(--color-outline-variant);padding-left:16px"><div class="label-s hstack" style="--gap:6px"><span class="legend-dot" style="background:var(--color-expense);border-radius:50%;width:8px;height:8px"></span>Chi tiêu</div><div class="title-m num" style="margin-top:2px">8.680.000đ</div></div>
+              </div>
+            </div>
+            <div class="card mt-3">
+              <div class="between"><span class="title-m">Chi theo danh mục</span><span class="label-s">5 nhóm</span></div>
+              <div class="hstack mt-3" style="--gap:18px">
+                <svg class="chart" viewBox="0 0 160 160" width="132" height="132" role="img" aria-label="Biểu đồ tròn chi tiêu theo danh mục tháng 9" style="transform:rotate(-90deg);flex:none">
+                  <circle class="donut-seg" cx="80" cy="80" r="58" pathLength="100" stroke="var(--viz-1)" stroke-dasharray="35.40 64.60" stroke-dashoffset="0.00"><title>Ăn uống: 3.120.000đ (35,9%)</title></circle>
+                  <circle class="donut-seg" cx="80" cy="80" r="58" pathLength="100" stroke="var(--viz-2)" stroke-dasharray="28.25 71.75" stroke-dashoffset="-35.94"><title>Nhà ở: 2.500.000đ (28,8%)</title></circle>
+                  <circle class="donut-seg" cx="80" cy="80" r="58" pathLength="100" stroke="var(--viz-3)" stroke-dasharray="15.35 84.65" stroke-dashoffset="-64.75"><title>Mua sắm: 1.380.000đ (15,9%)</title></circle>
+                  <circle class="donut-seg" cx="80" cy="80" r="58" pathLength="100" stroke="var(--viz-4)" stroke-dasharray="8.90 91.10" stroke-dashoffset="-80.65"><title>Di chuyển: 820.000đ (9,4%)</title></circle>
+                  <circle class="donut-seg" cx="80" cy="80" r="58" pathLength="100" stroke="var(--viz-5)" stroke-dasharray="9.36 90.64" stroke-dashoffset="-90.09"><title>Khác: 860.000đ (9,9%)</title></circle>
+                </svg>
+                <div class="grow">
+                  <div class="label-s">Tổng chi</div>
+                  <div class="title-l num" style="margin-top:2px">8.680.000đ</div>
+                  <div class="body-s muted mt-2">Lớn nhất</div><div class="body-m w6">Ăn uống · 36%</div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <div class="legend-row"><span class="legend-dot" style="background:var(--viz-1)"></span><span class="grow">Ăn uống</span><span class="pct">36%</span><span class="v">3.120.000đ</span></div>
+                <div class="legend-row"><span class="legend-dot" style="background:var(--viz-2)"></span><span class="grow">Nhà ở</span><span class="pct">29%</span><span class="v">2.500.000đ</span></div>
+                <div class="legend-row"><span class="legend-dot" style="background:var(--viz-3)"></span><span class="grow">Mua sắm</span><span class="pct">16%</span><span class="v">1.380.000đ</span></div>
+                <div class="legend-row"><span class="legend-dot" style="background:var(--viz-4)"></span><span class="grow">Di chuyển</span><span class="pct">9%</span><span class="v">820.000đ</span></div>
+                <div class="legend-row"><span class="legend-dot" style="background:var(--viz-5)"></span><span class="grow">Khác</span><span class="pct">10%</span><span class="v">860.000đ</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>09</span>Báo cáo: tổng quan + danh mục</div></div>
+
+      <!-- 10 Báo cáo cuộn -->
+      <div class="frame"><div class="phone" data-shot="10-bao-cao-xu-huong" data-tab="report">
+        <div class="screen">
+          <div class="appbar" style="border-bottom:1px solid var(--color-outline)"><span></span><span class="title">Báo cáo · Tháng 9</span><span class="right"><span class="icon-btn"><i data-lucide="download"></i></span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <div class="card">
+              <div class="between"><span class="title-m">Thu chi 6 tháng</span>
+                <span class="hstack body-s muted" style="--gap:12px"><span class="hstack" style="--gap:5px"><span class="legend-dot" style="background:var(--color-income)"></span>Thu</span><span class="hstack" style="--gap:5px"><span class="legend-dot" style="background:var(--color-expense)"></span>Chi</span></span></div>
+              <svg class="chart mt-4" viewBox="0 0 318 150" width="100%" role="img" aria-label="Biểu đồ cột thu chi 6 tháng">
+                <line class="grid" x1="0" x2="288" y1="124" y2="124"/><text class="tick" x="318" y="128" text-anchor="end">0</text>
+<line class="grid" x1="0" x2="288" y1="77.6" y2="77.6"/><text class="tick" x="318" y="81.6" text-anchor="end">10 tr</text>
+<line class="grid" x1="0" x2="288" y1="31.19999999999999" y2="31.19999999999999"/><text class="tick" x="318" y="35.19999999999999" text-anchor="end">20 tr</text>
+<path class="bar-in" d="M11,124V25.9Q11,21.9 15,21.9H19Q23,21.9 23,25.9V124Z"><title>T4: Thu 22 tr</title></path>
+<path class="bar-out" d="M25,124V85.3Q25,81.3 29,81.3H33Q37,81.3 37,85.3V124Z"><title>T4: Chi 9,2 tr</title></path>
+<text class="tick" x="24" y="142" text-anchor="middle">T4</text>
+<path class="bar-in" d="M59,124V25.9Q59,21.9 63,21.9H67Q71,21.9 71,25.9V124Z"><title>T5: Thu 22 tr</title></path>
+<path class="bar-out" d="M73,124V86.5Q73,82.5 77,82.5H81Q85,82.5 85,86.5V124Z"><title>T5: Chi 8,95 tr</title></path>
+<text class="tick" x="72" y="142" text-anchor="middle">T5</text>
+<path class="bar-in" d="M107,124V19.0Q107,15.0 111,15.0H115Q119,15.0 119,19.0V124Z"><title>T6: Thu 23,5 tr</title></path>
+<path class="bar-out" d="M121,124V79.7Q121,75.7 125,75.7H129Q133,75.7 133,79.7V124Z"><title>T6: Chi 10,4 tr</title></path>
+<text class="tick" x="120" y="142" text-anchor="middle">T6</text>
+<path class="bar-in" d="M155,124V25.9Q155,21.9 159,21.9H163Q167,21.9 167,25.9V124Z"><title>T7: Thu 22 tr</title></path>
+<path class="bar-out" d="M169,124V82.8Q169,78.8 173,78.8H177Q181,78.8 181,82.8V124Z"><title>T7: Chi 9,75 tr</title></path>
+<text class="tick" x="168" y="142" text-anchor="middle">T7</text>
+<path class="bar-in" d="M203,124V15.7Q203,11.7 207,11.7H211Q215,11.7 215,15.7V124Z"><title>T8: Thu 24,2 tr</title></path>
+<path class="bar-out" d="M217,124V82.2Q217,78.2 221,78.2H225Q229,78.2 229,82.2V124Z"><title>T8: Chi 9,86 tr</title></path>
+<text class="tick" x="216" y="142" text-anchor="middle">T8</text>
+<path class="bar-in" d="M251,124V19.0Q251,15.0 255,15.0H259Q263,15.0 263,19.0V124Z"><title>T9: Thu 23,5 tr</title></path>
+<path class="bar-out" d="M265,124V87.7Q265,83.7 269,83.7H273Q277,83.7 277,87.7V124Z"><title>T9: Chi 8,68 tr</title></path>
+<text class="tick cur" x="264" y="142" text-anchor="middle">T9</text>
+              </svg>
+              <div class="body-s faint">Tháng 9 tính đến 22/09. Đơn vị: triệu đồng.</div>
+            </div>
+            <div class="card mt-3">
+              <div class="title-m">So với tháng 8</div>
+              <div class="list mt-1">
+                <div class="row" style="min-height:48px;padding:8px 0"><div class="grow"><div class="t">Chi tiêu</div><div class="s num">9.860.000đ → 8.680.000đ</div></div><span class="badge ok"><i data-lucide="arrow-down-right"></i>12%</span></div>
+                <div class="row" style="min-height:48px;padding:8px 0"><div class="grow"><div class="t">Thu nhập</div><div class="s num">24.200.000đ → 23.500.000đ</div></div><span class="badge"><i data-lucide="arrow-down-right"></i>3%</span></div>
+                <div class="row" style="min-height:48px;padding:8px 0"><div class="grow"><div class="t">Mua sắm</div><div class="s num">920.000đ → 1.380.000đ</div></div><span class="badge danger"><i data-lucide="arrow-up-right"></i>50%</span></div>
+              </div>
+            </div>
+            <div class="card mt-3">
+              <div class="title-m">Dự báo</div>
+              <div class="mt-3" style="display:grid;grid-template-columns:1fr 1fr">
+                <div><div class="label-s">Cuối tháng 9</div><div class="title-m num" style="margin-top:2px">≈ 11.840.000đ</div><div class="body-s warn-t">85% ngân sách</div></div>
+                <div style="border-left:1px solid var(--color-outline-variant);padding-left:16px"><div class="label-s">Tháng 10</div><div class="title-m num" style="margin-top:2px">≈ 10.000.000đ</div><div class="body-s muted">TB 3 tháng gần nhất</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>10</span>Báo cáo: 6 tháng, so sánh, dự báo</div></div>
+
+      <!-- 11 Ngân sách -->
+      <div class="frame"><div class="phone" data-shot="11-ngan-sach" data-tab="more">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span class="right"><span class="icon-btn"><i data-lucide="plus"></i></span></span></div>
+          <div class="pad">
+            <div class="between"><h1 class="headline">Ngân sách</h1><span class="month"><span class="icon-btn"><i data-lucide="chevron-left"></i></span><span>Tháng 9</span><span class="icon-btn"><i data-lucide="chevron-right"></i></span></span></div>
+            <div class="card mt-4">
+              <div class="between"><span class="label-s">Còn lại · 8 ngày nữa hết tháng</span><span class="label-s num">62%</span></div>
+              <div class="num" style="font-size:32px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;margin-top:2px">5.320.000đ</div>
+              <div class="progress thick mt-3"><i style="width:62%"></i></div>
+              <div class="between mt-2 body-s"><span class="muted num">Đã chi 8.680.000đ</span><span class="muted num">Hạn mức 14.000.000đ</span></div>
+              <div class="body-s muted mt-2">Mỗi ngày còn chi được <b style="color:var(--color-on-surface)">665.000đ</b></div>
+            </div>
+            <div class="group-h"><span>Theo danh mục</span><span>4 ngân sách</span></div>
+            <div class="card flush list">
+              <div class="brow">
+                <div class="hstack" style="--gap:12px"><span class="bubble"><i data-lucide="utensils"></i></span><div class="grow"><div class="t">Ăn uống</div><div class="s num">3.120.000 / 3.500.000đ</div></div><span class="badge warn"><i data-lucide="triangle-alert"></i>89%</span></div>
+                <div class="progress warn"><i style="width:89%"></i></div>
+              </div>
+              <div class="brow">
+                <div class="hstack" style="--gap:12px"><span class="bubble"><i data-lucide="shopping-bag"></i></span><div class="grow"><div class="t">Mua sắm</div><div class="s num danger-t">Vượt 180.000đ</div></div><span class="badge danger"><i data-lucide="circle-alert"></i>115%</span></div>
+                <div class="progress danger"><i style="width:100%"></i></div>
+              </div>
+              <div class="brow">
+                <div class="hstack" style="--gap:12px"><span class="bubble"><i data-lucide="car"></i></span><div class="grow"><div class="t">Di chuyển</div><div class="s num">820.000 / 1.200.000đ</div></div><span class="pct-t num">68%</span></div>
+                <div class="progress"><i style="width:68%"></i></div>
+              </div>
+              <div class="brow">
+                <div class="hstack" style="--gap:12px"><span class="bubble"><i data-lucide="clapperboard"></i></span><div class="grow"><div class="t">Giải trí</div><div class="s num">520.000 / 800.000đ</div></div><span class="pct-t num">65%</span></div>
+                <div class="progress"><i style="width:65%"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>11</span>Ngân sách (bình thường / cảnh báo 80% / vượt 100%)</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== E. TIẾT KIỆM ===================== -->
+  <section class="section">
+    <div class="section-label"><b>E</b> Mục tiêu tiết kiệm</div>
+    <div class="row-phones">
+
+      <!-- 12 Tiết kiệm -->
+      <div class="frame"><div class="phone" data-shot="12-tiet-kiem" data-tab="more">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span class="right"><span class="icon-btn"><i data-lucide="plus"></i></span></span></div>
+          <div class="pad">
+            <h1 class="headline">Tiết kiệm</h1>
+            <div class="card mt-4">
+              <div class="label-s">Đã tiết kiệm · 3 mục tiêu</div>
+              <div class="num" style="font-size:32px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;margin-top:2px">52.200.000đ</div>
+              <div class="body-s muted num mt-1">trên tổng mục tiêu 91.000.000đ</div>
+            </div>
+            <div class="card mt-3 goal">
+              <div class="hstack" style="--gap:12px"><span class="bubble"><i data-lucide="plane"></i></span><div class="grow"><div class="t">Du lịch Đà Lạt</div><div class="s">Hạn 15/12/2026 · còn 84 ngày</div></div><span class="pct-t num">70%</span></div>
+              <div class="progress mt-3"><i style="width:70%"></i></div>
+              <div class="between mt-2 body-s"><span class="num w6">4.200.000đ</span><span class="muted num">/ 6.000.000đ</span></div>
+            </div>
+            <div class="card mt-3 goal">
+              <div class="hstack" style="--gap:12px"><span class="bubble"><i data-lucide="laptop"></i></span><div class="grow"><div class="t">MacBook Air M4</div><div class="s">Hạn 31/03/2027</div></div><span class="pct-t num">51%</span></div>
+              <div class="progress mt-3"><i style="width:51%"></i></div>
+              <div class="between mt-2 body-s"><span class="num w6">18.000.000đ</span><span class="muted num">/ 35.000.000đ</span></div>
+            </div>
+            <div class="card mt-3 goal">
+              <div class="hstack" style="--gap:12px"><span class="bubble"><i data-lucide="shield-check"></i></span><div class="grow"><div class="t">Quỹ khẩn cấp</div><div class="s">Không đặt hạn</div></div><span class="pct-t num">60%</span></div>
+              <div class="progress mt-3"><i style="width:60%"></i></div>
+              <div class="between mt-2 body-s"><span class="num w6">30.000.000đ</span><span class="muted num">/ 50.000.000đ</span></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>12</span>Mục tiêu tiết kiệm</div></div>
+
+      <!-- 13 Chi tiết mục tiêu -->
+      <div class="frame"><div class="phone" data-shot="13-chi-tiet-muc-tieu">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Tiết kiệm</span><span></span><span class="right"><span class="icon-btn"><i data-lucide="pencil"></i></span></span></div>
+          <div class="pad">
+            <div style="display:flex;flex-direction:column;align-items:center;padding-top:8px">
+              <span class="bubble lg"><i data-lucide="plane"></i></span>
+              <div class="body-m muted mt-3">Du lịch Đà Lạt</div>
+              <div class="display num" style="margin-top:2px">4.200.000đ</div>
+              <div class="body-s muted num">trên 6.000.000đ · hạn 15/12/2026</div>
+            </div>
+            <div class="card mt-5">
+              <div class="between body-s"><span class="w6">70% hoàn thành</span><span class="muted num">còn 1.800.000đ</span></div>
+              <div class="progress thick mt-2"><i style="width:70%"></i></div>
+              <div class="body-s muted mt-3">Nạp khoảng <b style="color:var(--color-on-surface)">600.000đ/tháng</b> để kịp hạn.</div>
+            </div>
+            <div class="hstack mt-4" style="--gap:10px">
+              <button class="btn btn-primary" style="flex:1"><i data-lucide="plus"></i>Nạp tiền</button>
+              <button class="btn btn-secondary" style="flex:1"><i data-lucide="hand-coins"></i>Rút tiền</button>
+            </div>
+            <div class="group-h"><span>Lịch sử nạp rút</span></div>
+            <div class="card flush list">
+              <div class="row"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="t">Nạp từ MB Bank</div><div class="s">01/09/2026</div></div><div class="r"><div class="amt num">+1.000.000đ</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="smartphone"></i></span><div class="grow"><div class="t">Rút về MoMo</div><div class="s">18/08/2026</div></div><div class="r"><div class="amt num muted"><span class="sign">−</span>300.000đ</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="t">Nạp từ MB Bank</div><div class="s">01/08/2026</div></div><div class="r"><div class="amt num">+1.500.000đ</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>13</span>Chi tiết mục tiêu</div></div>
+
+      <!-- 14 Nạp tiền sheet -->
+      <div class="frame"><div class="phone" data-shot="14-nap-tien-muc-tieu">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Tiết kiệm</span><span></span><span class="right"><span class="icon-btn"><i data-lucide="pencil"></i></span></span></div>
+          <div class="pad">
+            <div style="display:flex;flex-direction:column;align-items:center;padding-top:8px">
+              <span class="bubble lg"><i data-lucide="plane"></i></span>
+              <div class="body-m muted mt-3">Du lịch Đà Lạt</div>
+              <div class="display num" style="margin-top:2px">4.200.000đ</div>
+            </div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="between"><span class="sheet-title">Nạp vào Du lịch Đà Lạt</span><span class="icon-btn" style="margin-right:-10px"><i data-lucide="x"></i></span></div>
+          <div class="amount-box mt-3">
+            <div class="label-s">Số tiền</div>
+            <div class="num" style="font-size:34px;font-weight:700;letter-spacing:-0.03em;line-height:1.25">1.000.000đ</div>
+          </div>
+          <div class="chips mt-3"><span class="chip">500.000</span><span class="chip on">1.000.000</span><span class="chip">1.800.000</span></div>
+          <div class="label-s mt-5" style="margin-bottom:4px">Từ ví</div>
+          <div class="list">
+            <div class="row" style="min-height:58px"><span class="bubble"><i data-lucide="banknote"></i></span><div class="grow"><div class="t">Tiền mặt</div><div class="s num">1.850.000đ</div></div><span class="radio"></span></div>
+            <div class="row" style="min-height:58px"><span class="bubble ink"><i data-lucide="landmark"></i></span><div class="grow"><div class="t">MB Bank</div><div class="s num">18.672.000đ → 17.672.000đ</div></div><span class="radio on"></span></div>
+            <div class="row" style="min-height:58px"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="t">Techcombank</div><div class="s num">4.000.000đ</div></div><span class="radio"></span></div>
+            <div class="row" style="min-height:58px"><span class="bubble"><i data-lucide="smartphone"></i></span><div class="grow"><div class="t">MoMo</div><div class="s num">1.500.000đ</div></div><span class="radio"></span></div>
+          </div>
+          <button class="btn btn-primary mt-4">Nạp 1.000.000đ</button>
+        </div>
+      </div><div class="frame-cap"><span>14</span>Bottom sheet nạp tiền (chọn ví)</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== F. VÍ ===================== -->
+  <section class="section">
+    <div class="section-label"><b>F</b> Ví &amp; chuyển tiền</div>
+    <div class="row-phones">
+
+      <!-- 15 Ví -->
+      <div class="frame"><div class="phone" data-shot="15-vi" data-tab="more">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span class="right"><span class="icon-btn"><i data-lucide="plus"></i></span></span></div>
+          <div class="pad">
+            <h1 class="headline">Ví</h1>
+            <div class="card mt-4">
+              <div class="label-s">Tổng số dư · 4 ví</div>
+              <div class="display num" style="margin-top:2px">26.022.000đ</div>
+              <div class="stackbar mt-3" title="Tỷ trọng số dư theo ví">
+                <i style="flex:18672"></i><i style="flex:4000"></i><i style="flex:1850"></i><i style="flex:1500"></i>
+              </div>
+              <div class="body-s muted mt-2">72% nằm ở MB Bank</div>
+            </div>
+            <div class="card flush list mt-3">
+              <div class="row"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="t">MB Bank</div><div class="s">Ngân hàng · ••0296</div></div><div class="r"><div class="amt num">18.672.000đ</div></div><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="row"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="t">Techcombank</div><div class="s">Ngân hàng · ••8841</div></div><div class="r"><div class="amt num">4.000.000đ</div></div><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="row"><span class="bubble"><i data-lucide="banknote"></i></span><div class="grow"><div class="t">Tiền mặt</div><div class="s">Tiền mặt</div></div><div class="r"><div class="amt num">1.850.000đ</div></div><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="row"><span class="bubble"><i data-lucide="smartphone"></i></span><div class="grow"><div class="t">MoMo</div><div class="s">Ví điện tử</div></div><div class="r"><div class="amt num">1.500.000đ</div></div><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <button class="btn btn-primary mt-4"><i data-lucide="arrow-left-right"></i>Chuyển tiền giữa ví</button>
+            <div class="group-h"><span>Chuyển gần đây</span></div>
+            <div class="card flush list">
+              <div class="row"><span class="bubble"><i data-lucide="arrow-left-right"></i></span><div class="grow"><div class="t">MB Bank → MoMo</div><div class="s">18/09 · Nạp ví</div></div><div class="r"><div class="amt num">500.000đ</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>15</span>Danh sách ví</div></div>
+
+      <!-- 16 Chuyển tiền -->
+      <div class="frame"><div class="phone" data-shot="16-chuyen-tien">
+        <div class="screen">
+          <div class="appbar"><span class="icon-btn left"><i data-lucide="x"></i></span><span class="title">Chuyển tiền giữa ví</span><span></span></div>
+          <div class="pad">
+            <div class="card flush" style="position:relative;padding:0 16px">
+              <div class="hstack" style="--gap:12px;min-height:68px"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="label-s">Từ</div><div class="title-m">MB Bank</div></div><span class="body-s muted num">18.672.000đ</span><i data-lucide="chevron-down" class="chev"></i></div>
+              <div style="height:1px;background:var(--color-outline-variant);margin-left:52px"></div>
+              <div class="hstack" style="--gap:12px;min-height:68px"><span class="bubble"><i data-lucide="smartphone"></i></span><div class="grow"><div class="label-s">Đến</div><div class="title-m">MoMo</div></div><span class="body-s muted num">1.500.000đ</span><i data-lucide="chevron-down" class="chev"></i></div>
+              <span class="swap"><i data-lucide="arrow-up-down"></i></span>
+            </div>
+            <div class="amount-big num mt-8" style="font-size:44px">500.000<span class="caret" style="height:40px"></span><span class="cur">đ</span></div>
+            <div class="center body-s muted num" style="margin-top:2px">Sau khi chuyển: MB Bank còn 18.172.000đ</div>
+            <div class="chips fit mt-5"><span class="chip">100.000</span><span class="chip">200.000</span><span class="chip on">500.000</span><span class="chip">1.000.000</span></div>
+            <div class="card flush form mt-4"><div class="frow"><span class="ico"><i data-lucide="notebook-pen"></i></span><span class="lbl">Ghi chú</span><span class="val">Nạp ví MoMo</span></div></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:30px" class="pad">
+            <div class="keypad">
+              <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div class="fn">000</div><div>0</div><div class="fn"><i data-lucide="delete"></i></div>
+            </div>
+            <button class="btn btn-primary mt-3">Chuyển 500.000đ</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>16</span>Chuyển tiền giữa ví</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== G. ĐỊNH KỲ ===================== -->
+  <section class="section">
+    <div class="section-label"><b>G</b> Giao dịch định kỳ</div>
+    <div class="row-phones">
+
+      <!-- 17 Định kỳ -->
+      <div class="frame"><div class="phone" data-shot="17-dinh-ky" data-tab="more">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span class="right"><span class="icon-btn"><i data-lucide="plus"></i></span></span></div>
+          <div class="pad">
+            <h1 class="headline">Định kỳ</h1>
+            <p class="body-s muted mt-1">Tự động ghi vào ngày đến hạn.</p>
+            <div class="group-h"><span>Đang chạy · 4</span></div>
+            <div class="card flush list">
+              <div class="row rrow"><span class="bubble"><i data-lucide="banknote"></i></span><div class="grow"><div class="t">Lương công ty</div><div class="s">Hằng tháng · ngày 5 · MB Bank</div><div class="s faint">Lần tới: Thứ Hai, 05/10</div></div><div class="r"><div class="amt num income">+22.000.000đ</div></div></div>
+              <div class="row rrow"><span class="bubble"><i data-lucide="house"></i></span><div class="grow"><div class="t">Tiền nhà</div><div class="s">Hằng tháng · ngày 1 · MB Bank</div><div class="s faint">Lần tới: Thứ Năm, 01/10</div></div><div class="r"><div class="amt num"><span class="sign">−</span>2.500.000đ</div></div></div>
+              <div class="row rrow"><span class="bubble"><i data-lucide="shopping-cart"></i></span><div class="grow"><div class="t">Đi chợ cuối tuần</div><div class="s">Hằng tuần · Chủ nhật · Tiền mặt</div><div class="s faint">Lần tới: Chủ nhật, 27/09</div></div><div class="r"><div class="amt num"><span class="sign">−</span>500.000đ</div></div></div>
+              <div class="row rrow"><span class="bubble"><i data-lucide="wifi"></i></span><div class="grow"><div class="t">Internet FPT</div><div class="s">Hằng tháng · ngày 10 · Techcombank</div><div class="s faint">Lần tới: Thứ Bảy, 10/10</div></div><div class="r"><div class="amt num"><span class="sign">−</span>245.000đ</div></div></div>
+            </div>
+            <div class="group-h"><span>Tạm dừng · 1</span></div>
+            <div class="card flush list">
+              <div class="row rrow" style="opacity:.85"><span class="bubble"><i data-lucide="circle-pause"></i></span><div class="grow"><div class="t">Spotify Premium</div><div class="s">Hằng tháng · ngày 15 · MoMo</div><div style="margin-top:6px"><span class="badge warn" style="height:22px;font-size:11.5px">Tạm dừng do ví không đủ số dư</span></div></div><div class="r"><div class="amt num muted"><span class="sign">−</span>59.000đ</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>17</span>Danh sách định kỳ</div></div>
+
+      <!-- 18 Tạo định kỳ -->
+      <div class="frame"><div class="phone" data-shot="18-tao-dinh-ky">
+        <div class="screen">
+          <div class="appbar"><span class="icon-btn left"><i data-lucide="x"></i></span><span class="title">Định kỳ mới</span><span></span></div>
+          <div class="pad">
+            <div class="seg" style="width:220px;margin:4px auto 0"><div class="on">Khoản chi</div><div>Thu nhập</div></div>
+            <div class="card flush form mt-4">
+              <div class="frow"><span class="lbl">Số tiền</span><span class="val num" style="font-size:17px">500.000đ</span></div>
+              <div class="frow"><span class="lbl">Tên</span><span class="val">Đi chợ cuối tuần</span></div>
+              <div class="frow"><span class="lbl">Danh mục</span><span class="val"><span class="bubble sm" style="width:26px;height:26px"><i data-lucide="shopping-cart" style="width:14px;height:14px"></i></span>Đi chợ<i data-lucide="chevron-right" class="chev"></i></span></div>
+              <div class="frow"><span class="lbl">Ví</span><span class="val">Tiền mặt<i data-lucide="chevron-right" class="chev"></i></span></div>
+            </div>
+            <div class="label-s mt-5" style="margin-bottom:8px">Tần suất</div>
+            <div class="seg seg-sm"><div>Hằng ngày</div><div class="on">Hằng tuần</div><div>Hằng tháng</div><div>Hằng năm</div></div>
+            <div class="label-s mt-5" style="margin-bottom:8px">Lặp vào</div>
+            <div class="days"><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div class="on">CN</div></div>
+            <div class="card flush form mt-5">
+              <div class="frow"><span class="lbl">Bắt đầu</span><span class="val num">27/09/2026<i data-lucide="chevron-right" class="chev"></i></span></div>
+              <div class="frow"><span class="lbl">Kết thúc</span><span class="val">Không giới hạn<i data-lucide="chevron-right" class="chev"></i></span></div>
+            </div>
+            <p class="body-s muted mt-3 num" style="padding:0 4px">Lần tới: Chủ nhật 27/09, sau đó 04/10, 11/10…</p>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Lưu quy tắc</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>18</span>Tạo giao dịch định kỳ</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== H. THÔNG BÁO & TÀI KHOẢN ===================== -->
+  <section class="section">
+    <div class="section-label"><b>H</b> Thông báo &amp; tài khoản</div>
+    <div class="row-phones">
+
+      <!-- 19 Thông báo -->
+      <div class="frame"><div class="phone" data-shot="19-thong-bao">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Trang chủ</span><span></span><span class="right"><span class="link">Đọc hết</span></span></div>
+          <div class="pad">
+            <h1 class="headline">Thông báo</h1>
+            <div class="group-h"><span>Hôm nay</span></div>
+            <div class="card flush list">
+              <div class="nrow"><span class="bubble warn"><i data-lucide="triangle-alert"></i></span><div class="grow"><div class="between"><span class="t">Ăn uống đã dùng 89% ngân sách</span><span class="unread"></span></div><div class="s">Đã chi 3.120.000đ / 3.500.000đ. Còn 380.000đ cho 8 ngày.</div><div class="time">12:10</div></div></div>
+              <div class="nrow"><span class="bubble danger"><i data-lucide="circle-alert"></i></span><div class="grow"><div class="between"><span class="t">Vượt ngân sách Mua sắm</span><span class="unread"></span></div><div class="s">Đã chi 1.380.000đ, vượt 180.000đ so với hạn mức.</div><div class="time">Hôm qua, 19:31</div></div></div>
+            </div>
+            <div class="group-h"><span>Trước đó</span></div>
+            <div class="card flush list">
+              <div class="nrow"><span class="bubble"><i data-lucide="megaphone"></i></span><div class="grow"><div class="t">Mới: xuất báo cáo ra CSV</div><div class="s">Vào Báo cáo, chạm biểu tượng tải xuống để xuất giao dịch theo tháng.</div><div class="time">20/09 · Từ đội ngũ Thu Chi</div></div></div>
+              <div class="nrow"><span class="bubble"><i data-lucide="circle-pause"></i></span><div class="grow"><div class="t">Đã tạm dừng: Spotify Premium</div><div class="s">Ví MoMo không đủ số dư vào ngày 15/09. Chạm để tiếp tục.</div><div class="time">15/09</div></div></div>
+              <div class="nrow"><span class="bubble"><i data-lucide="repeat"></i></span><div class="grow"><div class="t">Đã ghi tự động: Lương công ty</div><div class="s">+22.000.000đ vào MB Bank.</div><div class="time">05/09</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>19</span>Thông báo</div></div>
+
+      <!-- 20 Cài đặt -->
+      <div class="frame"><div class="phone" data-shot="20-cai-dat" data-tab="more">
+        <div class="screen">
+          <div class="pad">
+            <div style="height:56px;display:flex;align-items:center"><h1 class="headline">Cài đặt</h1></div>
+            <div class="card tight mt-2"><div class="hstack" style="--gap:12px"><span class="avatar">MA</span><div class="grow"><div class="title-m">Nguyễn Minh Anh</div><div class="body-s muted">minhanh.nguyen@gmail.com</div></div><span class="body-s muted">Sửa</span><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="group-h"><span>Quản lý tiền</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="wallet"></i></span><span class="grow">Ví</span><span class="sv num">26.022.000đ</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="target"></i></span><span class="grow">Ngân sách</span><span class="sv">Đã dùng 62%</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="piggy-bank"></i></span><span class="grow">Mục tiêu tiết kiệm</span><span class="sv">3 mục tiêu</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="repeat"></i></span><span class="grow">Giao dịch định kỳ</span><span class="sv">5</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="group-h"><span>Nhập liệu</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="shapes"></i></span><span class="grow">Danh mục</span><span class="sv">16</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="zap"></i></span><span class="grow">Mẫu nhập nhanh</span><span class="sv">4</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="group-h"><span>Ứng dụng</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="bell"></i></span><span class="grow">Thông báo</span><span class="count num">2</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="download"></i></span><span class="grow">Xuất dữ liệu CSV</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="lock-keyhole"></i></span><span class="grow">Đổi mật khẩu</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>20</span>Cài đặt</div></div>
+
+      <!-- 20b Cài đặt (cuộn xuống) -->
+      <div class="frame"><div class="phone" data-shot="20b-cai-dat-cuoi" data-tab="more">
+        <div class="screen">
+          <div class="appbar" style="border-bottom:1px solid var(--color-outline)"><span></span><span class="title">Cài đặt</span><span></span></div>
+          <div class="pad">
+            <div class="card flush set" style="margin-top:-8px;border-top-left-radius:0;border-top-right-radius:0;border-top:0">
+              <div class="srow"><span class="bubble sm"><i data-lucide="zap"></i></span><span class="grow">Mẫu nhập nhanh</span><span class="sv">4</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="group-h"><span>Ứng dụng</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="bell"></i></span><span class="grow">Thông báo</span><span class="count num">2</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="download"></i></span><span class="grow">Xuất dữ liệu CSV</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="lock-keyhole"></i></span><span class="grow">Đổi mật khẩu</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="card flush set mt-6">
+              <div class="srow"><span class="bubble sm"><i data-lucide="log-out"></i></span><span class="grow">Đăng xuất</span></div>
+            </div>
+            <div class="center mt-6"><span class="link danger-t" style="font-size:14px;font-weight:500">Xóa tài khoản</span></div>
+            <div class="center body-s faint mt-2">Thu Chi · phiên bản 1.0.0 (42)</div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>20b</span>Cài đặt (cuộn xuống cuối trang)</div></div>
+
+      <!-- 21 Xóa tài khoản -->
+      <div class="frame"><div class="phone" data-shot="21-xoa-tai-khoan" data-tab="more">
+        <div class="screen">
+          <div class="pad">
+            <div style="height:56px;display:flex;align-items:center"><h1 class="headline">Cài đặt</h1></div>
+            <div class="card tight mt-2"><div class="hstack" style="--gap:12px"><span class="avatar">MA</span><div class="grow"><div class="title-m">Nguyễn Minh Anh</div><div class="body-s muted">minhanh.nguyen@gmail.com</div></div></div></div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:8px">
+            <span class="bubble lg danger"><i data-lucide="trash-2"></i></span>
+            <div class="sheet-title mt-4" style="font-size:20px">Xóa tài khoản?</div>
+            <p class="body-m muted mt-2" style="max-width:320px">4 ví, 312 giao dịch, ngân sách và 3 mục tiêu tiết kiệm sẽ bị xóa vĩnh viễn, không thể khôi phục.</p>
+          </div>
+          <div class="note mt-4" style="align-items:center"><i data-lucide="download"></i><span class="grow">Muốn giữ lại dữ liệu?</span><span class="w6" style="color:var(--color-on-surface)">Xuất CSV</span></div>
+          <label class="field-label mt-4">Nhập mật khẩu để xác nhận</label>
+          <div class="input focus"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span></div>
+          <button class="btn btn-danger-soft mt-5">Xóa vĩnh viễn</button>
+          <button class="btn mt-2" style="background:none">Hủy</button>
+        </div>
+      </div><div class="frame-cap"><span>21</span>Xác nhận xóa tài khoản</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== I. TRẠNG THÁI ===================== -->
+  <section class="section">
+    <div class="section-label"><b>I</b> Trạng thái rỗng &amp; đang tải</div>
+    <div class="row-phones">
+
+      <!-- 22 Empty -->
+      <div class="frame"><div class="phone" data-shot="22-lich-su-trong" data-tab="history">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:56px"><h1 class="headline">Lịch sử</h1>
+              <span class="month"><span class="icon-btn"><i data-lucide="chevron-left"></i></span><span class="num">Tháng 9</span><span class="icon-btn"><i data-lucide="chevron-right"></i></span></span></div>
+            <div class="search mt-2"><i data-lucide="search"></i>Tìm người nhận, số tiền, ghi chú…</div>
+            <div class="chips mt-3"><span class="chip on">Tất cả</span><span class="chip">Khoản chi</span><span class="chip">Thu nhập</span></div>
+            <div class="empty">
+              <div class="ghost-stack">
+                <div class="ghost"><span class="g-b"></span><span class="g-l" style="width:46%"></span><span class="g-r"></span></div>
+                <div class="ghost front"><span class="bubble"><i data-lucide="receipt-text"></i></span><span class="g-l" style="width:52%;background:#E6E5E0"></span><span class="g-r" style="background:#E6E5E0"></span></div>
+              </div>
+              <div class="title-l mt-6">Chưa có giao dịch nào</div>
+              <p class="body-m muted mt-2" style="max-width:290px">Ghi khoản chi hoặc thu đầu tiên. Giao dịch sẽ hiện ở đây, nhóm theo từng ngày.</p>
+              <button class="btn btn-primary btn-sm mt-5" style="height:44px;padding:0 20px"><i data-lucide="plus"></i>Ghi giao dịch đầu tiên</button>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>22</span>Lịch sử trống (người dùng mới)</div></div>
+
+      <!-- 23 Skeleton -->
+      <div class="frame"><div class="phone" data-shot="23-dang-tai" data-tab="home">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:48px"><div class="logo sm">₫</div><span class="icon-btn filled"><i data-lucide="bell"></i></span></div>
+            <h1 class="headline mt-2">Thứ Ba, 22 tháng 9</h1>
+            <div class="card mt-4">
+              <div class="sk" style="width:120px;height:12px"></div>
+              <div class="sk mt-3" style="width:220px;height:36px;border-radius:10px"></div>
+              <div class="sk pill mt-4" style="height:6px"></div>
+              <div class="sk mt-2" style="width:180px;height:10px"></div>
+              <div class="divider"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div><div class="sk" style="width:56px;height:10px"></div><div class="sk mt-2" style="width:96px;height:16px"></div></div><div><div class="sk" style="width:64px;height:10px"></div><div class="sk mt-2" style="width:110px;height:16px"></div></div></div>
+            </div>
+            <div class="hstack mt-4" style="--gap:10px">
+              <button class="btn btn-primary" style="flex:1.45"><i data-lucide="plus"></i>Ghi giao dịch</button>
+              <button class="btn btn-secondary" style="flex:1"><i data-lucide="arrow-left-right"></i>Chuyển tiền</button>
+            </div>
+            <div class="sk mt-5" style="width:80px;height:10px"></div>
+            <div class="hstack mt-3" style="--gap:8px"><div class="sk pill" style="width:110px;height:34px"></div><div class="sk pill" style="width:120px;height:34px"></div><div class="sk pill" style="width:96px;height:34px"></div></div>
+            <div class="sk mt-5" style="width:72px;height:14px"></div>
+            <div class="card flush mt-2">
+              <div class="hstack" style="--gap:12px;height:64px"><div class="sk round" style="width:40px;height:40px"></div><div class="grow"><div class="sk" style="width:60%;height:12px"></div><div class="sk mt-2" style="width:38%;height:10px"></div></div><div class="sk" style="width:64px;height:12px"></div></div>
+              <div class="hstack" style="--gap:12px;height:64px"><div class="sk round" style="width:40px;height:40px"></div><div class="grow"><div class="sk" style="width:48%;height:12px"></div><div class="sk mt-2" style="width:34%;height:10px"></div></div><div class="sk" style="width:58px;height:12px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>23</span>Đang tải (skeleton)</div></div>
+    </div>
+  </section>
+</main>
+
+<script src="vendor/lucide.min.js"></script>
+<script>
+(function () {
+  var TABS = [
+    ['home', 'house', 'Trang chủ'], ['history', 'history', 'Lịch sử'], ['fab'],
+    ['report', 'chart-column', 'Báo cáo'], ['more', 'settings', 'Cài đặt']
+  ];
+  document.querySelectorAll('.phone').forEach(function (p) {
+    var sb = document.createElement('div');
+    sb.className = 'statusbar';
+    sb.innerHTML = '<span class="num">19:51</span><span class="island"></span><span class="sys"><i data-lucide="signal"></i><i data-lucide="wifi"></i><span class="batt"><i></i></span></span>';
+    p.prepend(sb);
+    var t = p.getAttribute('data-tab');
+    if (t) {
+      var bar = document.createElement('nav');
+      bar.className = 'tabbar';
+      bar.innerHTML = TABS.map(function (x) {
+        if (x[0] === 'fab') return '<span class="fab" aria-label="Ghi giao dịch"><i data-lucide="plus"></i></span>';
+        return '<span class="tab' + (x[0] === t ? ' on' : '') + '"><i data-lucide="' + x[1] + '"></i>' + x[2] + '</span>';
+      }).join('');
+      p.appendChild(bar);
+    }
+    var hi = document.createElement('div'); hi.className = 'home-ind'; p.appendChild(hi);
+  });
+  lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+})();
+</script>
+</body>
+</html>
