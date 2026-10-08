@@ -1,7 +1,8 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, ForbiddenException, Get, HttpCode, Injectable, Logger, Module, Patch, Post, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, ForbiddenException, Get, HttpCode, Injectable, Logger, Module, Patch, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { ApiBearerAuth, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcryptjs';
 import { randomInt } from 'crypto';
@@ -51,9 +52,11 @@ const OTP_TTL_MS = 10 * 60 * 1000;
 const OTP_RESEND_MS = 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
 const OTP_INVALID = 'Mã OTP không đúng hoặc đã hết hạn';
+/** Hash giả để email không tồn tại cũng tốn 1 lần bcrypt (không dò email qua thời gian phản hồi) */
+const DUMMY_HASH = bcrypt.hashSync('dummy-password', 10);
 
-export function publicUser<T extends { passwordHash: string }>(u: T): Omit<T, 'passwordHash'> {
-  const { passwordHash, ...rest } = u;
+export function publicUser<T extends { passwordHash: string; tokenVersion: number }>(u: T): Omit<T, 'passwordHash' | 'tokenVersion'> {
+  const { passwordHash, tokenVersion, ...rest } = u;
   return rest;
 }
 
@@ -114,7 +117,8 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({ where: { email: dto.email.toLowerCase().trim() } });
-    if (!user || !(await bcrypt.compare(dto.password, user.passwordHash))) {
+    const ok = await bcrypt.compare(dto.password, user?.passwordHash ?? DUMMY_HASH);
+    if (!user || !ok) {
       throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
     if (user.status === 'LOCKED') throw new ForbiddenException('Tài khoản đã bị khóa');
@@ -129,15 +133,22 @@ export class AuthService {
     return publicUser(await this.prisma.user.update({ where: { id: userId }, data: { name: dto.name } }));
   }
 
+  /** Đổi mật khẩu => mọi phiên cũ hết hiệu lực; trả token mới để thiết bị hiện tại vẫn đăng nhập. */
   async changePassword(userId: string, dto: ChangePasswordDto) {
     const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
     if (!(await bcrypt.compare(dto.currentPassword, user.passwordHash))) {
       throw new BadRequestException('Mật khẩu hiện tại không đúng');
     }
-    await this.prisma.user.update({
+    const updated = await this.prisma.user.update({
       where: { id: userId },
-      data: { passwordHash: await bcrypt.hash(dto.newPassword, 10) },
+      data: { passwordHash: await bcrypt.hash(dto.newPassword, 10), tokenVersion: { increment: 1 } },
     });
+    return this.issue(updated);
+  }
+
+  /** Đăng xuất mọi thiết bị (kể cả thiết bị hiện tại). */
+  async logoutAll(userId: string) {
+    await this.prisma.user.update({ where: { id: userId }, data: { tokenVersion: { increment: 1 } } });
   }
 
   /**
@@ -166,7 +177,7 @@ export class AuthService {
       throw new BadRequestException(OTP_INVALID);
     }
     await this.prisma.$transaction([
-      this.prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(dto.newPassword, 10) } }),
+      this.prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(dto.newPassword, 10), tokenVersion: { increment: 1 } } }),
       this.prisma.passwordReset.delete({ where: { userId: user.id } }),
     ]);
   }
@@ -187,7 +198,7 @@ export class AuthService {
 
   private async issue(user: User) {
     return {
-      accessToken: await this.jwt.signAsync({ sub: user.id, role: user.role }),
+      accessToken: await this.jwt.signAsync({ sub: user.id, role: user.role, tv: user.tokenVersion }),
       user: publicUser(user),
     };
   }
@@ -198,26 +209,33 @@ export class AuthService {
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
-  @Public() @Post('auth/register')
+  /** Giới hạn theo IP (THROTTLE_*), quá => 429 */
+  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/register')
   register(@Body() dto: RegisterDto) {
     return this.auth.register(dto);
   }
 
-  @Public() @Post('auth/login') @HttpCode(200)
+  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/login') @HttpCode(200)
   login(@Body() dto: LoginDto) {
     return this.auth.login(dto);
   }
 
-  /** Luôn 204 (chống dò email). Có tài khoản => gửi OTP 6 số, hạn 10 phút, gửi lại sau tối thiểu 60s. */
-  @Public() @Post('auth/forgot-password') @HttpCode(204)
+  /** Luôn 204 (chống dò email). Có tài khoản => gửi OTP 6 số, hạn 10 phút, gửi lại sau tối thiểu 60s. Giới hạn chặt hơn (THROTTLE_FORGOT_LIMIT). */
+  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/forgot-password') @HttpCode(204)
   forgotPassword(@Body() dto: ForgotPasswordDto) {
     this.auth.runForgot(dto);
   }
 
-  /** Đặt lại mật khẩu bằng OTP; sai 5 lần => OTP bị hủy */
-  @Public() @Post('auth/reset-password') @HttpCode(204)
+  /** Đặt lại mật khẩu bằng OTP; sai 5 lần => OTP bị hủy. Mọi phiên cũ hết hiệu lực. */
+  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/reset-password') @HttpCode(204)
   resetPassword(@Body() dto: ResetPasswordDto) {
     return this.auth.resetPassword(dto);
+  }
+
+  /** Đăng xuất mọi thiết bị: mọi token hiện có (kể cả token đang dùng) hết hiệu lực */
+  @ApiBearerAuth() @Post('auth/logout-all') @HttpCode(204)
+  logoutAll(@CurrentUser() u: AuthUser) {
+    return this.auth.logoutAll(u.id);
   }
 
   @ApiBearerAuth() @Get('me')
@@ -230,7 +248,8 @@ export class AuthController {
     return this.auth.updateProfile(u.id, dto);
   }
 
-  @ApiBearerAuth() @Post('me/password') @HttpCode(204)
+  /** Trả `{accessToken, user}` mới; mọi token cũ (thiết bị khác) hết hiệu lực */
+  @ApiBearerAuth() @Post('me/password') @HttpCode(200)
   changePassword(@CurrentUser() u: AuthUser, @Body() dto: ChangePasswordDto) {
     return this.auth.changePassword(u.id, dto);
   }

@@ -28,7 +28,7 @@ export const CurrentUser = createParamDecorator(
   (_: unknown, ctx: ExecutionContext): AuthUser => ctx.switchToHttp().getRequest().user,
 );
 
-/** Guard toàn cục: xác thực JWT, chặn user bị khóa, kiểm tra @Roles. */
+/** Guard toàn cục: xác thực JWT, chặn user bị khóa, token cũ (tokenVersion lệch), kiểm tra @Roles. */
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -45,7 +45,7 @@ export class AuthGuard implements CanActivate {
     const [scheme, token] = (req.headers.authorization ?? '').split(' ');
     if (scheme !== 'Bearer' || !token) throw new UnauthorizedException();
 
-    let payload: { sub: string };
+    let payload: { sub: string; tv?: number };
     try {
       payload = await this.jwt.verifyAsync(token);
     } catch {
@@ -54,10 +54,12 @@ export class AuthGuard implements CanActivate {
 
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
-      select: { id: true, email: true, role: true, status: true },
+      select: { id: true, email: true, role: true, status: true, tokenVersion: true },
     });
     if (!user) throw new UnauthorizedException();
     if (user.status === 'LOCKED') throw new ForbiddenException('Tài khoản đã bị khóa');
+    // Token cấp trước khi có tokenVersion không mang tv => coi như 0
+    if ((payload.tv ?? 0) !== user.tokenVersion) throw new UnauthorizedException('Phiên đăng nhập đã hết hiệu lực, hãy đăng nhập lại');
 
     const roles = this.reflector.getAllAndOverride<Role[]>(ROLES, targets);
     if (roles?.length && !roles.includes(user.role)) throw new ForbiddenException();

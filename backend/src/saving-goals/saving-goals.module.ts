@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser } from '../common/auth';
 import { MAX_AMOUNT, Trim } from '../common/dto';
 import { lockUser, WalletsModule, WalletsService } from '../wallets/wallets.module';
+import { parseDate } from '../common/time';
 
 class CreateGoalDto {
   @Trim() @IsString() @MinLength(1) @MaxLength(80) name: string;
@@ -76,8 +77,8 @@ export class SavingGoalsService {
   }
 
   async create(userId: string, dto: CreateGoalDto) {
-    const startDate = dto.startDate ? new Date(dto.startDate) : new Date();
-    const targetDate = new Date(dto.targetDate);
+    const startDate = dto.startDate ? parseDate(dto.startDate) : new Date();
+    const targetDate = parseDate(dto.targetDate);
     if (targetDate <= startDate) throw new BadRequestException('Ngày mục tiêu phải sau ngày bắt đầu');
     const goal = await this.prisma.savingGoal.create({
       data: {
@@ -95,8 +96,8 @@ export class SavingGoalsService {
 
   async update(userId: string, id: string, dto: UpdateGoalDto) {
     const goal = await this.findOwned(userId, id);
-    const startDate = dto.startDate ? new Date(dto.startDate) : goal.startDate;
-    const targetDate = dto.targetDate ? new Date(dto.targetDate) : goal.targetDate;
+    const startDate = dto.startDate ? parseDate(dto.startDate) : goal.startDate;
+    const targetDate = dto.targetDate ? parseDate(dto.targetDate) : goal.targetDate;
     if (targetDate <= startDate) throw new BadRequestException('Ngày mục tiêu phải sau ngày bắt đầu');
 
     let status = goal.status;
@@ -135,7 +136,7 @@ export class SavingGoalsService {
       if (balance < amount) throw new BadRequestException(`Số dư ví "${wallet.name}" không đủ để nạp (còn ${balance})`);
 
       await tx.savingEntry.create({
-        data: { userId, goalId: id, walletId: wallet.id, type: 'DEPOSIT', amount: BigInt(amount), date: dto.date ? new Date(dto.date) : new Date() },
+        data: { userId, goalId: id, walletId: wallet.id, type: 'DEPOSIT', amount: BigInt(amount), date: dto.date ? parseDate(dto.date) : new Date() },
       });
       const savedAmount = goal.savedAmount + BigInt(amount);
       const updated = await tx.savingGoal.update({

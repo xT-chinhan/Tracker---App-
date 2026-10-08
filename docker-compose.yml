@@ -11,5 +11,30 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  # Tùy chọn: docker compose --profile api up -d --build  => DB + API (http://localhost:${API_PORT:-3000}/api)
+  # Biến lấy từ .env cạnh file này (JWT_SECRET bắt buộc, >= 16 ký tự).
+  api:
+    profiles: ["api"]
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://tracker:tracker@db:5432/${API_DB:-tracker}?schema=public
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-30d}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-App Tracker <no-reply@tracker.local>}
+      TRUST_PROXY: ${TRUST_PROXY:-}
+    ports:
+      - "${API_PORT:-3000}:3000"
+
 volumes:
   db-data:

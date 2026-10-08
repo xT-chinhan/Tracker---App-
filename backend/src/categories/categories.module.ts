@@ -78,11 +78,17 @@ export class CategoriesService {
     });
   }
 
-  /** Đã có giao dịch / giao dịch định kỳ => lưu trữ (ẩn) để giữ lịch sử; chưa có => xóa hẳn (mẫu nhập nhanh, ngân sách xóa theo). */
+  /**
+   * Đã có giao dịch / giao dịch định kỳ => lưu trữ (ẩn) để giữ lịch sử; chưa có => xóa hẳn (mẫu nhập nhanh, ngân sách xóa theo).
+   * Danh mục hệ thống: ngân sách / mẫu nhập nhanh của user cũng tính là "đã dùng" => admin xóa không làm mất dữ liệu của user.
+   */
   async remove(ownerId: string | null, id: string) {
     await this.findOwned(ownerId, id);
     const used = (await this.prisma.transaction.count({ where: { categoryId: id } }))
-      + (await this.prisma.recurringRule.count({ where: { categoryId: id } }));
+      + (await this.prisma.recurringRule.count({ where: { categoryId: id } }))
+      + (ownerId === null
+        ? (await this.prisma.budget.count({ where: { categoryId: id } })) + (await this.prisma.quickTemplate.count({ where: { categoryId: id } }))
+        : 0);
     if (used > 0) {
       await this.prisma.category.update({ where: { id }, data: { isArchived: true } });
       return { archived: true };

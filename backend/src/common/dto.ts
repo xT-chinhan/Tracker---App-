@@ -3,7 +3,8 @@ import { IsDateString, IsInt, IsOptional, Matches, Max, Min } from 'class-valida
 import { MONTH_REGEX } from './time';
 
 export class PageQuery {
-  @IsOptional() @Type(() => Number) @IsInt() @Min(1)
+  /** Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng) */
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(10000)
   page: number = 1;
 
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(200)

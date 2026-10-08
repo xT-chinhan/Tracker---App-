@@ -3,7 +3,8 @@
 //   API_LOG   file log của server (đọc OTP quên mật khẩu khi chưa cấu hình SMTP), mặc định /tmp/tracker-api.log
 //   ADMIN_EMAIL / ADMIN_PASSWORD  mặc định theo .env.example
 // Email/tên ngẫu nhiên nên chạy lặp được không cần reset DB. Exit code 1 nếu có lỗi.
-// Server phải chạy với NODE_ENV != production (cần POST /recurring/run-due). Có 1 lần chờ 61s (giới hạn gửi lại OTP).
+// Server phải chạy với NODE_ENV=test (cần POST /recurring/run-due + giới hạn tần suất nới cho test: cửa sổ 10s).
+// Có 1 lần chờ 61s (giới hạn gửi lại OTP) và ~10s chờ hết khóa 429 ở cuối.
 import { readFileSync } from 'node:fs';
 
 const BASE = process.env.API_URL ?? 'http://localhost:3000/api';
@@ -84,7 +85,14 @@ check('change pw wrong current 400', r.status === 400, r);
 r = await req('POST', '/me/password', { token: tA, body: { currentPassword: 'secret1', newPassword: '123' } });
 check('change pw too short 400', r.status === 400, r);
 r = await req('POST', '/me/password', { token: tA, body: { currentPassword: 'secret1', newPassword: 'secret9' } });
-check('change pw 204', r.status === 204, r);
+check('change pw 200 + fresh token', r.status === 200 && r.data.accessToken && r.data.user.id === idA && !('tokenVersion' in r.data.user), r);
+{
+  const fresh = r.data.accessToken;
+  r = await req('GET', '/me', { token: tA });
+  check('old token after change pw 401', r.status === 401, r);
+  r = await req('GET', '/me', { token: fresh });
+  check('fresh token from change pw works', r.status === 200 && r.data.id === idA && !('tokenVersion' in r.data), r);
+}
 r = await req('POST', '/auth/login', { body: { email: emailA, password: 'secret1' } });
 check('login old pw 401', r.status === 401, r);
 r = await req('POST', '/auth/login', { body: { email: emailA, password: 'secret9' } });
@@ -1042,7 +1050,12 @@ r = await req('GET', '/admin/broadcasts', { token: tA });
 check('non-admin broadcast history 403', r.status === 403, r);
 r = await req('PATCH', `/admin/users/${idB}`, { token: tAd, body: { status: 'ACTIVE' } });
 r = await req('GET', '/me', { token: tB });
-check('unlocked B token works', r.status === 200, r);
+check('unlocked B: token issued before lock stays invalid 401', r.status === 401, r);
+r = await req('POST', '/auth/login', { body: { email: emailB, password: 'secret2' } });
+check('unlocked B can log in again', r.status === 200, r);
+tB = r.data.accessToken;
+r = await req('GET', '/me', { token: tB });
+check('unlocked B new token works', r.status === 200, r);
 r = await req('GET', '/notifications', { token: tB });
 check('locked user did not receive broadcast', !r.data.items.some((x) => x.broadcastId === bc.id), r.data);
 
@@ -1097,6 +1110,322 @@ check('non-admin create system cat 403', r.status === 403, r);
 r = await req('DELETE', `/transactions/${txCharity.id}`, { token: tB });
 r = await req('DELETE', `/admin/categories/${charity.id}`, { token: tAd });
 check('cleanup: unused system cat hard-deleted', r.status === 200 && r.data.archived === false, r.data);
+
+// ================= SESSION (tokenVersion) =================
+group('auth: phiên đăng nhập / tokenVersion');
+{
+  const s = await newUser('sess');
+  const t2 = (await req('POST', '/auth/login', { body: { email: s.email, password: 'secret1' } })).data.accessToken;
+  r = await req('GET', '/me', { token: t2 });
+  check('2 devices: both tokens valid', r.status === 200 && (await req('GET', '/me', { token: s.token })).status === 200, r);
+  r = await req('POST', '/me/password', { token: s.token, body: { currentPassword: 'secret1', newPassword: 'secret2' } });
+  check('change pw on device 1 => 200 + token', r.status === 200 && typeof r.data.accessToken === 'string', r);
+  const t3 = r.data.accessToken;
+  r = await req('GET', '/wallets', { token: t2 });
+  check('device 2 token rejected 401 with message', r.status === 401 && /hết hiệu lực/.test(r.data.message), r);
+  r = await req('GET', '/wallets', { token: s.token });
+  check('device 1 old token rejected 401', r.status === 401, r);
+  r = await req('GET', '/wallets', { token: t3 });
+  check('device 1 keeps session with fresh token', r.status === 200, r);
+  // Đăng xuất mọi thiết bị
+  const t4 = (await req('POST', '/auth/login', { body: { email: s.email, password: 'secret2' } })).data.accessToken;
+  r = await req('POST', '/auth/logout-all');
+  check('logout-all without token 401', r.status === 401, r);
+  r = await req('POST', '/auth/logout-all', { token: t3 });
+  check('logout-all 204', r.status === 204 && r.text === '', r);
+  r = await req('GET', '/me', { token: t3 });
+  check('logout-all: calling token invalid', r.status === 401, r);
+  r = await req('GET', '/me', { token: t4 });
+  check('logout-all: other device invalid', r.status === 401, r);
+  r = await req('POST', '/auth/logout-all', { token: t4 });
+  check('logout-all again with dead token 401', r.status === 401, r);
+  r = await req('POST', '/auth/login', { body: { email: s.email, password: 'secret2' } });
+  check('login after logout-all works', r.status === 200 && (await req('GET', '/me', { token: r.data.accessToken })).status === 200, r);
+  const t5 = r.data.accessToken;
+  // Admin khóa => token cũ 403 (khóa) rồi sau mở khóa thành 401; đăng nhập lại được
+  r = await req('PATCH', `/admin/users/${s.id}`, { token: tAd, body: { status: 'LOCKED' } });
+  check('admin lock => 200, tokenVersion not exposed', r.status === 200 && !('tokenVersion' in r.data), r.data);
+  r = await req('GET', '/me', { token: t5 });
+  check('locked: old token 403 "bị khóa"', r.status === 403 && /bị khóa/.test(r.data.message), r);
+  await req('PATCH', `/admin/users/${s.id}`, { token: tAd, body: { status: 'ACTIVE' } });
+  r = await req('GET', '/me', { token: t5 });
+  check('unlocked: token from before lock 401', r.status === 401, r);
+  r = await req('POST', '/auth/login', { body: { email: s.email, password: 'secret2' } });
+  const t6 = r.data.accessToken;
+  r = await req('PATCH', `/admin/users/${s.id}`, { token: tAd, body: { role: 'ADMIN' } });
+  r = await req('GET', '/admin/overview', { token: t6 });
+  check('role change (not lock) keeps token valid, role read from DB', r.status === 200, r);
+  await req('PATCH', `/admin/users/${s.id}`, { token: tAd, body: { role: 'USER' } });
+  r = await req('GET', '/admin/overview', { token: t6 });
+  check('demoted: same token loses admin 403', r.status === 403, r);
+  r = await req('GET', '/admin/users?q=' + encodeURIComponent(s.email), { token: tAd });
+  check('admin user list hides tokenVersion', r.data.items.length === 1 && !('tokenVersion' in r.data.items[0]), r.data);
+}
+
+// ================= ADMIN RECURRING RUN-DUE (đường cron) =================
+group('admin: chạy định kỳ cho mọi user (đường cron) / user bị khóa');
+{
+  const L = await newUser('lock');
+  const N = await newUser('norm');
+  const start = iso(Date.now() + DAY);
+  const ruleL = (await req('POST', '/recurring', { token: L.token, body: { walletId: L.cash, categoryId: C('Hóa đơn'), amount: 100, title: 'Điện', frequency: 'DAILY', startDate: start } })).data;
+  const ruleN = (await req('POST', '/recurring', { token: N.token, body: { walletId: N.cash, categoryId: C('Hóa đơn'), amount: 100, title: 'Nước', frequency: 'DAILY', startDate: start } })).data;
+  check('rules created', ruleL.id && ruleN.id, { ruleL, ruleN });
+  const now = encodeURIComponent(new Date(Date.now() + DAY + 3600000).toISOString());
+  r = await req('POST', `/admin/recurring/run-due?now=${now}`, { token: L.token });
+  check('non-admin => 403', r.status === 403, r);
+  r = await req('POST', '/admin/recurring/run-due?now=bad', { token: tAd });
+  check('bad now 400', r.status === 400, r);
+  await req('PATCH', `/admin/users/${L.id}`, { token: tAd, body: { status: 'LOCKED' } });
+  r = await req('POST', `/admin/recurring/run-due?now=${now}`, { token: tAd });
+  check('admin run-due (all users) 200', r.status === 200 && r.data.skipped === false && r.data.rules >= 2 && r.data.created >= 1, r.data);
+  r = await req('POST', `/admin/recurring/run-due?now=${now}`, { token: tAd });
+  check('second run same now: nothing due for these rules', r.status === 200, r.data);
+  r = await req('GET', '/transactions', { token: N.token });
+  check('normal user: exactly 1 tx generated (idempotent)', r.data.total === 1 && r.data.items[0].recurring === true && r.data.items[0].title === 'Nước', r.data);
+  r = await req('GET', `/recurring/${ruleN.id}`, { token: N.token });
+  check('normal user rule still active, nextRunAt advanced 1 day', r.data.isActive === true && new Date(r.data.nextRunAt).getTime() === new Date(start).getTime() + DAY, r.data);
+  await req('PATCH', `/admin/users/${L.id}`, { token: tAd, body: { status: 'ACTIVE' } });
+  const tL = (await req('POST', '/auth/login', { body: { email: L.email, password: 'secret1' } })).data.accessToken;
+  r = await req('GET', '/transactions', { token: tL });
+  check('locked user: no tx generated', r.data.total === 0, r.data);
+  r = await req('GET', `/recurring/${ruleL.id}`, { token: tL });
+  check('locked user rule auto-paused, skipped occurrence passed', r.data.isActive === false && r.data._count.transactions === 0 && new Date(r.data.nextRunAt) > new Date(start), r.data);
+  r = await req('GET', '/notifications', { token: tL });
+  check('locked user got RECURRING_PAUSED (reason: account locked)', r.data.total === 1 && r.data.items[0].type === 'RECURRING_PAUSED' && r.data.items[0].data.ruleId === ruleL.id && /bị khóa/.test(r.data.items[0].body), r.data);
+  r = await req('POST', `/recurring/${ruleL.id}/resume`, { token: tL });
+  check('after unlock user can resume (no back-fill)', r.status === 200 && r.data.isActive === true && new Date(r.data.nextRunAt) > new Date(), r.data);
+  r = await req('POST', `/admin/recurring/run-due?now=${now}`, { token: tAd });
+  r = await req('GET', '/transactions', { token: tL });
+  check('resumed rule: skipped period not back-filled', r.data.total === 0, r.data);
+}
+
+// ================= NGHIỆP VỤ: các lỗ hổng đã vá =================
+group('nghiệp vụ: chuyển tiền không làm âm ví khi sửa / xóa');
+{
+  const u = await newUser('ovd');
+  const mk = async (name, initialBalance = 0) => (await req('POST', '/wallets', { token: u.token, body: { name, type: 'BANK', initialBalance } })).data.id;
+  const w1 = await mk('W1', 1000), w2 = await mk('W2'), w3 = await mk('W3');
+  const t1 = (await req('POST', '/transfers', { token: u.token, body: { fromWalletId: w1, toWalletId: w2, amount: 1000 } })).data;
+  const t2 = (await req('POST', '/transfers', { token: u.token, body: { fromWalletId: w2, toWalletId: w3, amount: 1000 } })).data;
+  const bal = async () => Object.fromEntries((await req('GET', '/wallets', { token: u.token })).data.items.map((w) => [w.name, w.balance]));
+  check('chain W1->W2->W3', JSON.stringify(await bal()) === JSON.stringify({ 'Tiền mặt': 0, W1: 0, W2: 0, W3: 1000 }), await bal());
+  r = await req('DELETE', `/transfers/${t1.id}`, { token: u.token });
+  check('delete W1->W2 when W2 already forwarded => 400 (W2 không đủ)', r.status === 400 && /W2/.test(r.data.message), r);
+  r = await req('PATCH', `/transfers/${t1.id}`, { token: u.token, body: { amount: 10 } });
+  check('shrink W1->W2 amount => 400', r.status === 400 && /W2/.test(r.data.message), r);
+  r = await req('PATCH', `/transfers/${t1.id}`, { token: u.token, body: { toWalletId: w3 } });
+  check('redirect W1->W2 to W3 => 400 (W2 loses money)', r.status === 400 && /W2/.test(r.data.message), r);
+  r = await req('PATCH', `/transfers/${t1.id}`, { token: u.token, body: { occurredAt: '2026-01-01T00:00:00Z', note: 'đổi ngày' } });
+  check('change date/note only => ok (số dư không phụ thuộc ngày)', r.status === 200 && r.data.note === 'đổi ngày', r);
+  r = await req('PATCH', `/transfers/${t2.id}`, { token: u.token, body: { amount: 1001 } });
+  check('grow W2->W3 beyond W2 => 400 với số còn khả dụng', r.status === 400 && /còn 1000/.test(r.data.message), r);
+  r = await req('PATCH', `/transfers/${t2.id}`, { token: u.token, body: { amount: 400 } });
+  check('shrink W2->W3 (W3 still >= 0) ok', r.status === 200, r);
+  r = await req('PATCH', `/transfers/${t1.id}`, { token: u.token, body: { amount: 400 } });
+  check('now shrink W1->W2 to 400 ok (W2 = 0)', r.status === 200, r);
+  check('balances', JSON.stringify(await bal()) === JSON.stringify({ 'Tiền mặt': 0, W1: 600, W2: 0, W3: 400 }), await bal());
+  r = await req('DELETE', `/transfers/${t2.id}`, { token: u.token });
+  check('delete W2->W3 ok', r.status === 204, r);
+  r = await req('DELETE', `/transfers/${t1.id}`, { token: u.token });
+  check('then delete W1->W2 ok', r.status === 204, r);
+  check('balances restored', JSON.stringify(await bal()) === JSON.stringify({ 'Tiền mặt': 0, W1: 1000, W2: 0, W3: 0 }), await bal());
+  // Ví lưu trữ phải giữ số dư 0
+  await req('POST', '/transactions', { token: u.token, body: { categoryId: C('Lương'), walletId: w3, amount: 5, title: 'x' } });
+  await req('POST', '/transactions', { token: u.token, body: { categoryId: C('Chi khác'), walletId: w3, amount: 5, title: 'x' } });
+  r = await req('DELETE', `/wallets/${w3}`, { token: u.token });
+  check('W3 archived (activity, balance 0)', r.data.archived === true, r.data);
+  r = await req('PATCH', `/wallets/${w3}`, { token: u.token, body: { initialBalance: 500 } });
+  check('archived wallet: change initialBalance 409', r.status === 409, r);
+  r = await req('PATCH', `/wallets/${w3}`, { token: u.token, body: { name: 'W3 cũ', color: '#000000' } });
+  check('archived wallet: cosmetic edit ok, balance still 0', r.status === 200 && r.data.balance === 0 && r.data.name === 'W3 cũ', r.data);
+}
+
+group('nghiệp vụ: ngân sách báo lại sau khi chi giảm / tháng theo giờ VN');
+{
+  const u = await newUser('bud');
+  const food = C('Ăn uống');
+  const b = (await req('POST', '/budgets', { token: u.token, body: { categoryId: food, month: '2026-12', limitAmount: 1000 } })).data;
+  const types = async () => (await req('GET', '/notifications?limit=100', { token: u.token })).data.items.map((x) => x.type);
+  let t = (await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 900, title: 'a', occurredAt: '2026-12-10T05:00:00Z' } })).data;
+  check('90% => 1 warning', JSON.stringify(await types()) === '["BUDGET_WARNING"]', await types());
+  await req('DELETE', `/transactions/${t.id}`, { token: u.token });
+  t = (await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 850, title: 'b', occurredAt: '2026-12-11T05:00:00Z' } })).data;
+  check('delete re-arms: crossing 80% again => 2nd warning', (await types()).filter((x) => x === 'BUDGET_WARNING').length === 2, await types());
+  r = await req('PATCH', `/transactions/${t.id}`, { token: u.token, body: { amount: 1000 } });
+  check('100% => exceeded', (await types())[0] === 'BUDGET_EXCEEDED', await types());
+  r = await req('PATCH', `/transactions/${t.id}`, { token: u.token, body: { occurredAt: '2026-11-11T05:00:00Z' } });
+  r = await req('GET', '/budgets?month=2026-12', { token: u.token });
+  check('moved to Nov: Dec spent 0, status ok', r.data.items[0].spent === 0 && r.data.items[0].status === 'ok' && r.data.items[0].warnedAt === null && r.data.items[0].exceededAt === null, r.data.items[0]);
+  r = await req('PATCH', `/transactions/${t.id}`, { token: u.token, body: { occurredAt: '2026-12-12T05:00:00Z' } });
+  check('moved back => exceeded notified again', (await types()).filter((x) => x === 'BUDGET_EXCEEDED').length === 2, await types());
+  r = await req('PATCH', `/transactions/${t.id}`, { token: u.token, body: { categoryId: C('Di chuyển') } });
+  r = await req('GET', '/budgets?month=2026-12', { token: u.token });
+  check('category change re-checks old category budget (spent 0, flags cleared)', r.data.items[0].spent === 0 && r.data.items[0].exceededAt === null, r.data.items[0]);
+  r = await req('PATCH', `/transactions/${t.id}`, { token: u.token, body: { categoryId: C('Lương') } });
+  check('expense -> income category ok', r.status === 200 && r.data.type === 'INCOME', r.data);
+  // Mốc tháng theo giờ VN: 23:59:59 VN 31/12 thuộc tháng 12; 00:00 VN 1/1 thuộc tháng 1
+  await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 300, title: 'giao thừa', occurredAt: '2026-12-31T16:59:59Z' } });
+  await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 700, title: 'năm mới', occurredAt: '2026-12-31T17:00:00Z' } });
+  await req('POST', '/budgets', { token: u.token, body: { categoryId: food, month: '2027-01', limitAmount: 1000 } });
+  r = await req('GET', '/budgets?month=2026-12', { token: u.token });
+  check('Dec budget: 23:59:59 VN 31/12 counted (300)', r.data.items[0].spent === 300, r.data.items[0]);
+  r = await req('GET', '/budgets?month=2027-01', { token: u.token });
+  check('Jan budget: 00:00 VN 1/1 counted (700)', r.data.items[0].spent === 700, r.data.items[0]);
+  r = await req('GET', '/stats/report?month=2026-12', { token: u.token });
+  check('Dec report expense 300, income 1000', r.data.expense === 300 && r.data.income === 1000, r.data);
+  r = await req('GET', '/stats/report?month=2027-01', { token: u.token });
+  check('Jan report expense 700, compares with Dec', r.data.expense === 700 && r.data.comparison.expense.previous === 300, r.data.comparison);
+  r = await req('GET', '/stats/daily?month=2026-12', { token: u.token });
+  check('daily: last row 2026-12-31 = 300', r.data.at(-1).date === '2026-12-31' && r.data.at(-1).expense === 300, r.data);
+  r = await req('GET', '/stats/trend?month=2027-01&months=2', { token: u.token });
+  check('trend Dec/Jan split at VN midnight', r.data[0].expense === 300 && r.data[1].expense === 700, r.data);
+  // Ngày không kèm múi giờ => giờ VN (độc lập TZ máy chủ)
+  r = await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 1, title: 'no tz', occurredAt: '2027-01-31T23:30:00' } });
+  check('datetime without offset = VN time', r.status === 201 && r.data.occurredAt === '2027-01-31T16:30:00.000Z', r.data);
+  r = await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 1, title: 'date only', occurredAt: '2027-02-01' } });
+  check('date-only = 00:00 VN', r.status === 201 && r.data.occurredAt === '2027-01-31T17:00:00.000Z', r.data);
+  r = await req('GET', '/transactions?from=2027-02-01&to=2027-02-02', { token: u.token });
+  check('from/to date-only = VN days', r.status === 200 && r.data.total === 1 && r.data.items[0].title === 'date only', r.data);
+  r = await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 1, title: 'x', occurredAt: '1999-12-31T00:00:00Z' } });
+  check('date before 2000 => 400', r.status === 400, r);
+  r = await req('POST', '/transactions', { token: u.token, body: { categoryId: food, walletId: u.cash, amount: 1, title: 'x', occurredAt: '2100-01-01T00:00:00+07:00' } });
+  check('date >= 2100 => 400', r.status === 400, r);
+  r = await req('GET', '/transactions?from=2027-02-02&to=2027-02-01', { token: u.token });
+  check('from >= to => 400', r.status === 400 && /from/.test(r.data.message), r);
+  r = await req('GET', '/stats/summary?from=2027-02-02&to=2027-02-02', { token: u.token });
+  check('stats from == to => 400', r.status === 400, r);
+}
+
+group('nghiệp vụ: phân trang / tràn số tiền');
+{
+  const u = await newUser('lim');
+  for (const [q, code] of [['page=0', 400], ['page=10001', 400], ['limit=0', 400], ['limit=201', 400], ['page=abc', 400], ['page=1e20', 400], ['page=10000&limit=200', 200]]) {
+    r = await req('GET', `/transactions?${q}`, { token: u.token });
+    check(`transactions ?${q} => ${code}`, r.status === code, r);
+  }
+  r = await req('GET', '/notifications?page=10001', { token: u.token });
+  check('notifications page cap 400', r.status === 400, r);
+  r = await req('GET', '/admin/users?page=10001', { token: tAd });
+  check('admin users page cap 400', r.status === 400, r);
+  const base = { categoryId: C('Lương'), walletId: u.cash, title: 'big' };
+  for (const [amount, code] of [[10000000000000, 201], [10000000000001, 400], [1e20, 400], ['1e3', 201], [1.5, 400], [-5, 400], [0, 400], ['abc', 400]]) {
+    r = await req('POST', '/transactions', { token: u.token, body: { ...base, amount } });
+    check(`amount ${JSON.stringify(amount)} => ${code}`, r.status === code, r);
+  }
+  r = await req('POST', '/transactions/bulk', { token: u.token, body: { items: Array.from({ length: 100 }, () => ({ ...base, amount: 10000000000000 })) } });
+  check('bulk 100 x max amount ok', r.status === 201 && r.data.created === 100, r.data);
+  r = await req('GET', '/wallets', { token: u.token });
+  check('balance 1.01e15 still exact (< 2^53)', r.data.totalBalance === 101 * 10000000000000 + 1000, r.data.totalBalance);
+  r = await req('POST', '/transactions/bulk', { token: u.token, body: { items: Array.from({ length: 101 }, () => ({ ...base, amount: 1 })) } });
+  check('bulk 101 items 400', r.status === 400, r);
+  r = await req('POST', '/wallets', { token: u.token, body: { name: 'big', type: 'BANK', initialBalance: 10000000000001 } });
+  check('initialBalance overflow 400', r.status === 400, r);
+  r = await req('POST', '/budgets', { token: u.token, body: { month: '2026-12', limitAmount: 10000000000001 } });
+  check('budget limit overflow 400', r.status === 400, r);
+  r = await req('POST', '/saving-goals', { token: u.token, body: { name: 'g', targetAmount: 10000000000001, targetDate: '2030-01-01' } });
+  check('goal target overflow 400', r.status === 400, r);
+}
+
+group('nghiệp vụ: 404 cho tài nguyên của user khác, 400 cho id tham chiếu');
+{
+  const o = await newUser('own');
+  const x = await newUser('oth');
+  const cat = (await req('POST', '/categories', { token: o.token, body: { name: 'Riêng', type: 'EXPENSE' } })).data;
+  const w = (await req('POST', '/wallets', { token: o.token, body: { name: 'Bank', type: 'BANK', initialBalance: 1000 } })).data;
+  const tx = (await req('POST', '/transactions', { token: o.token, body: { categoryId: cat.id, walletId: o.cash, amount: 1, title: 'x' } })).data;
+  const tr = (await req('POST', '/transfers', { token: o.token, body: { fromWalletId: w.id, toWalletId: o.cash, amount: 1 } })).data;
+  const bud = (await req('POST', '/budgets', { token: o.token, body: { month: '2026-12', limitAmount: 100 } })).data;
+  const g = (await req('POST', '/saving-goals', { token: o.token, body: { name: 'g', targetAmount: 100, targetDate: '2030-01-01' } })).data;
+  const tpl = (await req('POST', '/quick-templates', { token: o.token, body: { label: 'q', title: 'q', amount: 1, categoryId: cat.id, walletId: o.cash } })).data;
+  const rule = (await req('POST', '/recurring', { token: o.token, body: { walletId: o.cash, categoryId: cat.id, amount: 1, title: 'r', frequency: 'MONTHLY', startDate: iso(Date.now() + 5 * DAY) } })).data;
+  await req('POST', '/transactions', { token: o.token, body: { categoryId: cat.id, walletId: o.cash, amount: 100, title: 'trigger', occurredAt: '2026-12-05T05:00:00Z' } });
+  const notif = (await req('GET', '/notifications', { token: o.token })).data.items[0];
+  const paths = [
+    ['GET', `/wallets/${w.id}`], ['PATCH', `/wallets/${w.id}`, { name: 'h' }], ['DELETE', `/wallets/${w.id}`], ['POST', `/wallets/${w.id}/restore`],
+    ['PATCH', `/categories/${cat.id}`, { name: 'h' }], ['DELETE', `/categories/${cat.id}`],
+    ['GET', `/transactions/${tx.id}`], ['PATCH', `/transactions/${tx.id}`, { amount: 2 }], ['DELETE', `/transactions/${tx.id}`],
+    ['GET', `/transfers/${tr.id}`], ['PATCH', `/transfers/${tr.id}`, { amount: 2 }], ['DELETE', `/transfers/${tr.id}`],
+    ['PATCH', `/budgets/${bud.id}`, { limitAmount: 5 }], ['DELETE', `/budgets/${bud.id}`],
+    ['GET', `/saving-goals/${g.id}`], ['PATCH', `/saving-goals/${g.id}`, { name: 'h' }], ['POST', `/saving-goals/${g.id}/deposit`, { amount: 1, walletId: x.cash }],
+    ['POST', `/saving-goals/${g.id}/withdraw`, { walletId: x.cash }], ['DELETE', `/saving-goals/${g.id}`],
+    ['PATCH', `/quick-templates/${tpl.id}`, { label: 'h' }], ['POST', `/quick-templates/${tpl.id}/use`, {}], ['DELETE', `/quick-templates/${tpl.id}`],
+    ['GET', `/recurring/${rule.id}`], ['GET', `/recurring/${rule.id}/preview`], ['PATCH', `/recurring/${rule.id}`, { amount: 2 }],
+    ['POST', `/recurring/${rule.id}/pause`], ['POST', `/recurring/${rule.id}/resume`], ['DELETE', `/recurring/${rule.id}`],
+    ['POST', `/notifications/${notif.id}/read`],
+    ['GET', `/stats/summary?walletId=${w.id}`], ['GET', `/stats/report?walletId=${w.id}`], ['GET', `/export/transactions.csv?walletId=${w.id}`],
+  ];
+  const bad = [];
+  for (const [m, p, body] of paths) { const rr = await req(m, p, { token: x.token, body }); if (rr.status !== 404) bad.push([m, p, rr.status]); }
+  check(`other user's resource => 404 on all ${paths.length} routes`, bad.length === 0, bad);
+  const refs = [
+    ['POST', '/transactions', { categoryId: cat.id, walletId: x.cash, amount: 1, title: 'x' }],
+    ['POST', '/transactions', { categoryId: C('Ăn uống'), walletId: o.cash, amount: 1, title: 'x' }],
+    ['POST', '/transfers', { fromWalletId: x.cash, toWalletId: w.id, amount: 1 }],
+    ['POST', '/budgets', { categoryId: cat.id, month: '2026-12', limitAmount: 1 }],
+    ['POST', '/quick-templates', { label: 'q', title: 'q', amount: 1, categoryId: cat.id, walletId: x.cash }],
+    ['POST', '/recurring', { walletId: o.cash, categoryId: C('Ăn uống'), amount: 1, title: 'r', frequency: 'DAILY', startDate: iso(Date.now() + DAY) }],
+  ];
+  const bad2 = [];
+  for (const [m, p, body] of refs) { const rr = await req(m, p, { token: x.token, body }); if (rr.status !== 400) bad2.push([m, p, rr.status]); }
+  check(`foreign id in body => 400 on all ${refs.length} routes`, bad2.length === 0, bad2);
+  r = await req('GET', '/transactions', { token: o.token });
+  check('owner data untouched', r.data.total === 2, r.data.total);
+}
+
+group('nghiệp vụ: xóa danh mục hệ thống đang được ngân sách / mẫu dùng');
+{
+  const u = await newUser('sysc');
+  const c1 = (await req('POST', '/admin/categories', { token: tAd, body: { name: `NS ${S}`, type: 'EXPENSE' } })).data;
+  const c2 = (await req('POST', '/admin/categories', { token: tAd, body: { name: `Mẫu ${S}`, type: 'EXPENSE' } })).data;
+  const bud = (await req('POST', '/budgets', { token: u.token, body: { categoryId: c1.id, month: '2026-12', limitAmount: 100 } })).data;
+  const tpl = (await req('POST', '/quick-templates', { token: u.token, body: { label: 'q', title: 'q', amount: 1, categoryId: c2.id, walletId: u.cash } })).data;
+  r = await req('DELETE', `/admin/categories/${c1.id}`, { token: tAd });
+  check('system cat used only by a user budget => archived', r.status === 200 && r.data.archived === true, r.data);
+  r = await req('GET', '/budgets?month=2026-12', { token: u.token });
+  check('user budget kept', r.data.items.some((b) => b.id === bud.id), r.data);
+  r = await req('DELETE', `/admin/categories/${c2.id}`, { token: tAd });
+  check('system cat used only by a template => archived', r.status === 200 && r.data.archived === true, r.data);
+  r = await req('GET', '/quick-templates', { token: u.token });
+  check('user template kept (category archived flag)', r.data.some((t) => t.id === tpl.id && t.category.isArchived), r.data);
+  r = await req('POST', `/quick-templates/${tpl.id}/use`, { token: u.token, body: {} });
+  check('template on archived system cat => use 409', r.status === 409, r);
+  r = await req('POST', '/budgets', { token: u.token, body: { categoryId: c1.id, month: '2027-01', limitAmount: 100 } });
+  check('budget for archived category 400', r.status === 400, r);
+  r = await req('POST', '/budgets/copy', { token: u.token, body: { fromMonth: '2026-12', toMonth: '2027-02' } });
+  check('copy skips archived-category budget', r.status === 201 && r.data.copied === 0, r.data);
+  // User tự xóa danh mục riêng chưa có giao dịch => xóa hẳn, ngân sách đi theo (hành vi đã ghi trong README)
+  const own = (await req('POST', '/categories', { token: u.token, body: { name: 'Riêng', type: 'EXPENSE' } })).data;
+  await req('POST', '/budgets', { token: u.token, body: { categoryId: own.id, month: '2026-12', limitAmount: 100 } });
+  r = await req('DELETE', `/categories/${own.id}`, { token: u.token });
+  check('own unused category => hard delete', r.data.archived === false, r.data);
+  r = await req('GET', '/budgets?month=2026-12', { token: u.token });
+  check('its budget removed with it', r.data.items.length === 1, r.data.items.length);
+  // Ví đang được quy tắc định kỳ dùng => lưu trữ, không xóa
+  const w = (await req('POST', '/wallets', { token: u.token, body: { name: 'Ví RR', type: 'BANK' } })).data;
+  await req('POST', '/recurring', { token: u.token, body: { walletId: w.id, categoryId: C('Ăn uống'), amount: 1, title: 'r', frequency: 'DAILY', startDate: iso(Date.now() + 9 * DAY) } });
+  r = await req('DELETE', `/wallets/${w.id}`, { token: u.token });
+  check('wallet referenced by recurring => archived', r.data.archived === true, r.data);
+}
+
+group('export: CSV khoảng lớn (stream theo lô)');
+{
+  const u = await newUser('csv');
+  for (let b = 0; b < 25; b++) {
+    // Mỗi lô cùng 1 thời điểm => nhiều dòng trùng occurredAt vắt qua ranh giới lô 1000 dòng
+    const at = new Date(Date.UTC(2026, 0, 1 + b, 3)).toISOString();
+    await req('POST', '/transactions/bulk', { token: u.token, body: { items: Array.from({ length: 100 }, (_, i) => ({ categoryId: C('Ăn uống'), walletId: u.cash, amount: 1, title: `csv-${String(b * 100 + i).padStart(4, '0')}`, occurredAt: at })) } });
+  }
+  const res = await fetch(`${BASE}/export/transactions.csv?from=2026-01-01&to=2027-01-01`, { headers: { authorization: `Bearer ${u.token}` } });
+  const body = await res.text();
+  const lines = body.split('\r\n').filter(Boolean);
+  const titles = lines.slice(1).map((l) => l.split(',')[4]);
+  check('2500 rows + header, all unique (no dup/missing across batches)', lines.length === 2501 && new Set(titles).size === 2500 && titles.every((t) => /^csv-\d{4}$/.test(t)), { lines: lines.length, uniq: new Set(titles).size });
+  check('sorted by date asc', lines[1].startsWith('2026-01-01 10:00') && lines.at(-1).startsWith('2026-01-25 10:00'), [lines[1], lines.at(-1)]);
+  check('streamed (chunked, no content-length)', res.headers.get('transfer-encoding') === 'chunked' && !res.headers.get('content-length'), [...res.headers]);
+  r = await fetch(`${BASE}/export/transactions.csv?from=2027-01-01&to=2026-01-01`, { headers: { authorization: `Bearer ${u.token}` } });
+  check('CSV from > to => 400 (before stream starts)', r.status === 400, r.status);
+}
 
 // ================= DELETE ACCOUNT =================
 group('auth: xóa tài khoản');
@@ -1169,6 +1498,8 @@ group('auth: quên mật khẩu OTP');
   check('reset weak password 400', r.status === 400, r);
   r = await req('POST', '/auth/reset-password', { body: { email: f.email, otp: otp1, newPassword: 'newpass1' } });
   check('correct OTP on 5th try => 204', r.status === 204, r);
+  r = await req('GET', '/me', { token: f.token });
+  check('reset via OTP invalidates existing tokens 401', r.status === 401, r);
   r = await req('POST', '/auth/login', { body: { email: f.email, password: 'newpass1' } });
   check('login with new password', r.status === 200, r);
   r = await req('POST', '/auth/reset-password', { body: { email: f.email, otp: otp1, newPassword: 'newpass2' } });
@@ -1207,8 +1538,50 @@ group('swagger');
 r = await fetch(BASE.replace(/\/api$/, '') + '/docs/openapi.json');
 {
   const doc = r.status === 200 ? await r.json() : { paths: {}, components: { schemas: {} } };
-  check('openapi.json 51 paths', Object.keys(doc.paths).length === 51, Object.keys(doc.paths).length);
+  check('openapi.json 54 paths (+health, logout-all, admin run-due)', Object.keys(doc.paths).length === 54, Object.keys(doc.paths).length);
   check('DTO schemas populated', ['amount', 'categoryId', 'walletId', 'title'].every((k) => k in (doc.components.schemas.CreateTransactionDto?.properties ?? {})), doc.components.schemas.CreateTransactionDto);
+}
+
+// ================= HEALTH =================
+group('health');
+r = await req('GET', '/health');
+check('GET /health public 200 {status, db, version}', r.status === 200 && r.data.status === 'ok' && r.data.db === 'up' && /^\d+\.\d+\.\d+/.test(r.data.version), r);
+r = await req('GET', '/health', { token: 'garbage' });
+check('health ignores bad token', r.status === 200, r);
+
+// ================= RATE LIMIT (để cuối: làm cạn hạn mức rồi chờ hết khóa) =================
+group('rate limit: 429 theo IP + route');
+{
+  const routes = [['/auth/login', { email: 'x' }], ['/auth/register', { email: 'x' }], ['/auth/reset-password', { email: 'x' }], ['/auth/forgot-password', { email: 'x' }]];
+  const limits = {};
+  for (const [path, body] of routes) {
+    const first = await req('POST', path, { body });
+    const limit = Number(first.headers.get('x-ratelimit-limit'));
+    limits[path] = limit;
+    check(`${path}: X-RateLimit-Limit/Remaining headers`, limit > 0 && first.headers.get('x-ratelimit-remaining') !== null, [...first.headers]);
+    let last = first, n = 1;
+    while (last.status !== 429 && n < 2 * limit + 2) { last = await req('POST', path, { body }); n++; }
+    check(`${path}: 429 after exceeding limit ${limit}`, last.status === 429 && /quá nhiều/.test(last.data.message) && Number(last.headers.get('retry-after')) > 0, { n, status: last.status, data: last.data });
+    if (path === '/auth/login') {
+      r = await req('POST', '/auth/login', { body: { email: emailA, password: 'secret9' } });
+      check('blocked => even correct credentials get 429', r.status === 429, r);
+      r = await req('POST', '/auth/register', { body });
+      check('counters are per route: register not blocked by login', r.status === 400, r);
+    }
+  }
+  check('forgot-password limit stricter than login', limits['/auth/forgot-password'] < limits['/auth/login'], limits);
+  r = await req('GET', '/me', { token: tA });
+  check('authenticated routes not throttled (no rate-limit headers)', r.status === 200 && r.headers.get('x-ratelimit-limit') === null, [...r.headers]);
+  r = await req('GET', '/health');
+  check('health not throttled', r.status === 200, r);
+  let wait = 0;
+  for (const [path, body] of routes) wait = Math.max(wait, Number((await req('POST', path, { body })).headers.get('retry-after') ?? 0));
+  console.log(`… chờ ${wait + 1}s hết khóa 429`);
+  await sleep((wait + 1) * 1000);
+  r = await req('POST', '/auth/login', { body: { email: emailA, password: 'secret9' } });
+  check('after Retry-After: login works again', r.status === 200 && r.data.accessToken, r);
+  r = await req('POST', '/auth/forgot-password', { body: { email: `ghost${S}@test.local` } });
+  check('after Retry-After: forgot-password works again', r.status === 204, r);
 }
 
 console.log('\nMa trận test:');
