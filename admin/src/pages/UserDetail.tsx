@@ -103,6 +103,8 @@ export default function UserDetailPage() {
     ['Danh mục riêng', formatNumber(u._count.categories), 'count-categories'],
     ['Ngân sách', formatNumber(u._count.budgets), 'count-budgets'],
     ['Mục tiêu tiết kiệm', formatNumber(u._count.savingGoals), 'count-goals'],
+    ['Giao dịch định kỳ', formatNumber(u._count.recurringRules), 'count-recurring'],
+    ['Đăng nhập gần nhất', u.lastLoginAt ? (isToday(u.lastLoginAt) ? `${formatTime(u.lastLoginAt)} hôm nay` : formatDate(u.lastLoginAt)) : '—', 'last-login'],
     ['Giao dịch gần nhất', last ? (isToday(last.occurredAt) ? `${formatTime(last.occurredAt)} hôm nay` : formatDate(last.occurredAt)) : '—', 'last-activity'],
   ]
 

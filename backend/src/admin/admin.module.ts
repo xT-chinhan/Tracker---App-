@@ -95,7 +95,7 @@ export class AdminService {
   async user(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      include: { _count: { select: { transactions: true, categories: true, budgets: true, savingGoals: true } } },
+      include: { _count: { select: { transactions: true, categories: true, budgets: true, savingGoals: true, recurringRules: true } } },
     });
     if (!user) throw new NotFoundException('Không tìm thấy người dùng');
     return {
@@ -154,7 +154,19 @@ export class AdminService {
       }),
       this.prisma.broadcast.count(),
     ]);
-    return paged(items.map(({ _count, ...b }) => ({ ...b, readCount: _count.notifications })), total, q);
+    const senders = await this.prisma.user.findMany({
+      where: { id: { in: items.map((b) => b.createdById).filter((id): id is string => !!id) } },
+      select: { id: true, name: true, email: true },
+    });
+    return paged(
+      items.map(({ _count, ...b }) => ({
+        ...b,
+        readCount: _count.notifications,
+        createdBy: senders.find((s) => s.id === b.createdById) ?? null,
+      })),
+      total,
+      q,
+    );
   }
 }
 

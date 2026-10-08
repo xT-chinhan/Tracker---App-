@@ -1046,8 +1046,16 @@ check('A received broadcast', r.data.items[0].type === 'BROADCAST' && r.data.ite
 await req('POST', `/notifications/${r.data.items[0].id}/read`, { token: tA });
 r = await req('GET', '/admin/broadcasts', { token: tAd });
 check('broadcast history with recipients + readCount', r.status === 200 && r.data.items[0].id === bc.id && r.data.items[0].recipients === activeCount && r.data.items[0].readCount === 1, r.data.items[0]);
+check('broadcast history includes sender', r.data.items[0].createdBy?.email === ADMIN_EMAIL && !!r.data.items[0].createdBy?.name, r.data.items[0].createdBy);
 r = await req('GET', '/admin/broadcasts', { token: tA });
 check('non-admin broadcast history 403', r.status === 403, r);
+r = await req('GET', `/admin/users/${idA}`, { token: tAd });
+check('admin user detail: recurringRules count + lastLoginAt', typeof r.data._count?.recurringRules === 'number' && !!r.data.lastLoginAt && !('passwordHash' in r.data), { c: r.data._count, l: r.data.lastLoginAt });
+{
+  const res = await fetch(BASE + '/auth/login', { method: 'OPTIONS', headers: { origin: 'http://localhost:5173', 'access-control-request-method': 'POST' } });
+  const res2 = await fetch(BASE + '/health', { headers: { origin: 'http://localhost:5173' } });
+  check('CORS exposes Retry-After + Content-Disposition', /retry-after/i.test(res2.headers.get('access-control-expose-headers') ?? '') && /content-disposition/i.test(res2.headers.get('access-control-expose-headers') ?? '') && res.status < 300, res2.headers.get('access-control-expose-headers'));
+}
 r = await req('PATCH', `/admin/users/${idB}`, { token: tAd, body: { status: 'ACTIVE' } });
 r = await req('GET', '/me', { token: tB });
 check('unlocked B: token issued before lock stays invalid 401', r.status === 401, r);

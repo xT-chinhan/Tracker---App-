@@ -108,6 +108,7 @@ export class AuthService {
       data: {
         email,
         name: dto.name,
+        lastLoginAt: new Date(),
         passwordHash: await bcrypt.hash(dto.password, 10),
         wallets: { create: { name: 'Tiền mặt', type: 'CASH' } },
       },
@@ -122,7 +123,7 @@ export class AuthService {
       throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
     if (user.status === 'LOCKED') throw new ForbiddenException('Tài khoản đã bị khóa');
-    return this.issue(user);
+    return this.issue(await this.prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } }));
   }
 
   async me(userId: string) {

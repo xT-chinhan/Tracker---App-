@@ -61,6 +61,7 @@ model User {
   name         String
   role         Role       @default(USER)
   status       UserStatus @default(ACTIVE)
+  lastLoginAt  DateTime?
   /// Tăng lên => mọi JWT cũ (mang tv khác) bị từ chối: đổi/đặt lại mật khẩu, bị khóa, đăng xuất mọi thiết bị
   tokenVersion Int        @default(0)
   createdAt    DateTime   @default(now())

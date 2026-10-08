@@ -22,6 +22,8 @@ test('chi tiết người dùng: hồ sơ, số liệu, ví, xu hướng, giao d
   await expect(page.getByTestId('count-goals')).toHaveText(num(an.goals))
   await expect(page.getByTestId('count-categories')).toHaveText('0')
   await expect(page.getByTestId('last-activity')).not.toHaveText('—')
+  await expect(page.getByTestId('count-recurring')).toHaveText('0')
+  await expect(page.getByTestId('last-login')).not.toHaveText('—')
 
   // Ví: đúng số ví, đúng số dư từng ví, tổng = số dư
   const detail = await apiOk<{ trend: { month: string; income: number; expense: number; net: number }[]; wallets: { id: string; name: string; balance: number }[]; finance: { balance: number } }>(

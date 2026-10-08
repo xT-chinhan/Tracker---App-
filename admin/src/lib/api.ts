@@ -44,7 +44,8 @@ export interface Wallet {
 }
 
 export interface UserDetail extends User {
-  _count: { transactions: number; categories: number; budgets: number; savingGoals: number }
+  _count: { transactions: number; categories: number; budgets: number; savingGoals: number; recurringRules: number }
+  lastLoginAt: string | null
   finance: { balance: number; totalIncome: number; totalExpense: number; savings: number }
   wallets: Wallet[]
   trend: MonthTotal[]
@@ -55,6 +56,7 @@ export interface Broadcast {
   title: string
   body: string
   createdById: string | null
+  createdBy: { id: string; name: string; email: string } | null
   recipients: number
   readCount: number
   createdAt: string

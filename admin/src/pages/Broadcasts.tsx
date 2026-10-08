@@ -98,9 +98,6 @@ export default function BroadcastsPage() {
 
   const overview = useQuery({ queryKey: ['overview'], queryFn: api.overview })
   const history = useQuery({ queryKey: ['broadcasts', expanded], queryFn: () => api.broadcasts({ limit: expanded ? 100 : PAGE }) })
-  // API lịch sử chỉ trả createdById => tra tên người gửi trong danh sách quản trị viên
-  const admins = useQuery({ queryKey: ['users', { role: 'ADMIN', limit: 200 }], queryFn: () => api.users({ role: 'ADMIN', limit: 200 }) })
-  const senderName = (id: string | null) => admins.data?.items.find((a) => a.id === id)?.name ?? 'Quản trị viên'
 
   // Bản nháp tự lưu (debounce 600ms)
   useEffect(() => {
@@ -224,7 +221,7 @@ export default function BroadcastsPage() {
                         <p className="truncate text-body-s text-muted-foreground">{b.body}</p>
                       </TableCell>
                       <TableCell className="text-[13.5px] tabular-nums">{formatDayMonth(b.createdAt)} <span className="text-muted-foreground">· {formatTime(b.createdAt)}</span></TableCell>
-                      <TableCell className="text-muted-foreground">{senderName(b.createdById)}</TableCell>
+                      <TableCell className="text-muted-foreground">{b.createdBy?.name ?? 'Quản trị viên'}</TableCell>
                       <TableCell className="pr-4 text-right" title={`${formatNumber(b.readCount)} người đã đọc`}>
                         <span className="font-semibold tabular-nums" data-testid="bc-recipients">{formatNumber(b.recipients)}</span> <span className="text-body-s text-faint">người</span>
                       </TableCell>
