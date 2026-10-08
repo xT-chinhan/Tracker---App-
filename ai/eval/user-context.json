@@ -1,0 +1,93 @@
+{
+  "userId": "22f06e2f-b52b-47f4-a529-fc9ce18770a2",
+  "displayName": "Nguyễn Minh Anh",
+  "now": "2026-10-08T09:00:00+07:00",
+  "categories": [
+    {
+      "name": "Lương",
+      "type": "INCOME"
+    },
+    {
+      "name": "Thưởng",
+      "type": "INCOME"
+    },
+    {
+      "name": "Đầu tư",
+      "type": "INCOME"
+    },
+    {
+      "name": "Được tặng",
+      "type": "INCOME"
+    },
+    {
+      "name": "Thu khác",
+      "type": "INCOME"
+    },
+    {
+      "name": "Ăn uống",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Di chuyển",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Mua sắm",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Hóa đơn",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Nhà ở",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Sức khỏe",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Giáo dục",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Giải trí",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Chi khác",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Hiếu hỉ",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Du lịch",
+      "type": "EXPENSE"
+    },
+    {
+      "name": "Gia đình",
+      "type": "EXPENSE"
+    }
+  ],
+  "wallets": [
+    {
+      "name": "MB Bank",
+      "type": "BANK"
+    },
+    {
+      "name": "Techcombank",
+      "type": "BANK"
+    },
+    {
+      "name": "Tiền mặt",
+      "type": "CASH"
+    },
+    {
+      "name": "MoMo",
+      "type": "EWALLET"
+    }
+  ]
+}

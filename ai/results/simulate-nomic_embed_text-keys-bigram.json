@@ -1,0 +1,554 @@
+{
+ "embedModel": "nomic-embed-text",
+ "keyMode": "bigram",
+ "minSupport": 3,
+ "minPrecision": 0.85,
+ "curve": [
+  {
+   "interactions": 0,
+   "label": "V4@0",
+   "bank": 10,
+   "rules": 0,
+   "ruleHits": [],
+   "cases": 120,
+   "caseExact": 84.2,
+   "itemExact": 82.1,
+   "field": {
+    "title": 98.4,
+    "amount": 100,
+    "categoryName": 82.1,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  {
+   "interactions": 50,
+   "label": "V4@50",
+   "bank": 55,
+   "rules": 4,
+   "ruleHits": [
+    {
+     "text": "cắt tóc 60k",
+     "rule": "cat toc",
+     "ok": true
+    },
+    {
+     "text": "mua sữa cho bé 450k",
+     "rule": "cho be",
+     "ok": true
+    },
+    {
+     "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+     "rule": "rua xe",
+     "ok": true
+    },
+    {
+     "text": "mua bỉm cho con 380k",
+     "rule": "bim cho",
+     "ok": true
+    }
+   ],
+   "cases": 120,
+   "caseExact": 84.2,
+   "itemExact": 82.9,
+   "field": {
+    "title": 91.1,
+    "amount": 100,
+    "categoryName": 82.9,
+    "type": 95.9,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  {
+   "interactions": 100,
+   "label": "V4@100",
+   "bank": 88,
+   "rules": 11,
+   "ruleHits": [
+    {
+     "text": "hôm qua ăn lẩu với bạn 2 lít",
+     "rule": "an lau",
+     "ok": true
+    },
+    {
+     "text": "đi đám cưới Tuấn mừng 500k",
+     "rule": "cuoi tuan",
+     "ok": false
+    },
+    {
+     "text": "cắt tóc 60k",
+     "rule": "cat toc",
+     "ok": true
+    },
+    {
+     "text": "toi qua an oc 150k",
+     "rule": "an oc",
+     "ok": true
+    },
+    {
+     "text": "mua sữa cho bé 450k",
+     "rule": "cho be",
+     "ok": true
+    },
+    {
+     "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+     "rule": "rua xe",
+     "ok": true
+    },
+    {
+     "text": "lì xì cháu 200k",
+     "rule": "li xi",
+     "ok": true
+    },
+    {
+     "text": "cafe the coffee house 65k hôm thứ 3",
+     "rule": "the coffee",
+     "ok": true
+    },
+    {
+     "text": "mua bỉm cho con 380k",
+     "rule": "bim cho",
+     "ok": true
+    },
+    {
+     "text": "tiền mạng viettel 180k",
+     "rule": "tien mang",
+     "ok": true
+    }
+   ],
+   "cases": 120,
+   "caseExact": 86.7,
+   "itemExact": 85.4,
+   "field": {
+    "title": 87.8,
+    "amount": 100,
+    "categoryName": 85.4,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  {
+   "interactions": 200,
+   "label": "V4@200",
+   "bank": 123,
+   "rules": 38,
+   "ruleHits": [
+    {
+     "text": "tiền nhà tháng 10 4tr5 ck mb",
+     "rule": "tien nha",
+     "ok": true
+    },
+    {
+     "text": "hôm qua ăn lẩu với bạn 2 lít",
+     "rule": "an lau",
+     "ok": true
+    },
+    {
+     "text": "sáng nay bánh mì 25k, cà phê 30k",
+     "rule": "banh mi",
+     "ok": true
+    },
+    {
+     "text": "15/9 đóng học phí tiếng anh 2tr5",
+     "rule": "hoc phi",
+     "ok": true
+    },
+    {
+     "text": "đi đám cưới Tuấn mừng 500k",
+     "rule": "cuoi tuan",
+     "ok": false
+    },
+    {
+     "text": "netflix 260k",
+     "rule": "netflix",
+     "ok": true
+    },
+    {
+     "text": "cắt tóc 60k",
+     "rule": "cat toc",
+     "ok": true
+    },
+    {
+     "text": "chủ nhật đi karaoke 400k",
+     "rule": "karaoke",
+     "ok": true
+    },
+    {
+     "text": "toi qua an oc 150k",
+     "rule": "an oc",
+     "ok": true
+    },
+    {
+     "text": "mua sữa cho bé 450k",
+     "rule": "cho be",
+     "ok": true
+    },
+    {
+     "text": "vé máy bay đi Phú Quốc 3tr2",
+     "rule": "ve may",
+     "ok": true
+    },
+    {
+     "text": "hoàn tiền shopee 45k",
+     "rule": "hoan tien",
+     "ok": true
+    },
+    {
+     "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+     "rule": "rua xe",
+     "ok": true
+    },
+    {
+     "text": "lì xì cháu 200k",
+     "rule": "li xi",
+     "ok": true
+    },
+    {
+     "text": "học phí cho con 5tr",
+     "rule": "hoc phi",
+     "ok": true
+    },
+    {
+     "text": "tiền lãi chứng khoán 2tr3",
+     "rule": "lai chung",
+     "ok": true
+    },
+    {
+     "text": "an sang 30k, an trua 45k, an toi 120k",
+     "rule": "an sang",
+     "ok": true
+    },
+    {
+     "text": "mừng tân gia anh Hùng 500k",
+     "rule": "tan gia",
+     "ok": true
+    },
+    {
+     "text": "cafe the coffee house 65k hôm thứ 3",
+     "rule": "the coffee",
+     "ok": true
+    },
+    {
+     "text": "mua bỉm cho con 380k",
+     "rule": "bim cho",
+     "ok": true
+    },
+    {
+     "text": "lương 12 củ rưỡi",
+     "rule": "luong",
+     "ok": true
+    },
+    {
+     "text": "tiền mạng viettel 180k",
+     "rule": "tien mang",
+     "ok": true
+    },
+    {
+     "text": "ăn bún bò 40k thứ 7 tuần trước trả momo",
+     "rule": "bun bo",
+     "ok": true
+    },
+    {
+     "text": "đám giỗ ông 500k",
+     "rule": "dam gio",
+     "ok": true
+    },
+    {
+     "text": "nhận lương 15tr rồi trả tiền nhà 4tr",
+     "rule": "luong",
+     "ok": true
+    },
+    {
+     "text": "nhận lương 15tr rồi trả tiền nhà 4tr",
+     "rule": "tien nha",
+     "ok": true
+    },
+    {
+     "text": "45,000đ ăn sáng",
+     "rule": "an sang",
+     "ok": true
+    }
+   ],
+   "cases": 120,
+   "caseExact": 87.5,
+   "itemExact": 86.2,
+   "field": {
+    "title": 87,
+    "amount": 100,
+    "categoryName": 86.2,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  }
+ ],
+ "online": [
+  {
+   "block": "1-50",
+   "accepted": 26,
+   "total": 50
+  },
+  {
+   "block": "51-100",
+   "accepted": 29,
+   "total": 50
+  },
+  {
+   "block": "101-150",
+   "accepted": 32,
+   "total": 50
+  },
+  {
+   "block": "151-200",
+   "accepted": 38,
+   "total": 50
+  }
+ ],
+ "ablation": {
+  "onlyBank": {
+   "label": "chỉ kho kNN (không luật)",
+   "bank": 123,
+   "rules": 38,
+   "ruleHits": [],
+   "cases": 120,
+   "caseExact": 85.8,
+   "itemExact": 84.6,
+   "field": {
+    "title": 87,
+    "amount": 100,
+    "categoryName": 84.6,
+    "type": 95.9,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  "onlyRules": {
+   "label": "chỉ luật (kho 10 ban đầu)",
+   "bank": 123,
+   "rules": 38,
+   "ruleHits": [
+    {
+     "text": "tiền nhà tháng 10 4tr5 ck mb",
+     "rule": "tien nha",
+     "ok": true
+    },
+    {
+     "text": "hôm qua ăn lẩu với bạn 2 lít",
+     "rule": "an lau",
+     "ok": true
+    },
+    {
+     "text": "sáng nay bánh mì 25k, cà phê 30k",
+     "rule": "banh mi",
+     "ok": true
+    },
+    {
+     "text": "15/9 đóng học phí tiếng anh 2tr5",
+     "rule": "hoc phi",
+     "ok": true
+    },
+    {
+     "text": "đi đám cưới Tuấn mừng 500k",
+     "rule": "cuoi tuan",
+     "ok": false
+    },
+    {
+     "text": "netflix 260k",
+     "rule": "netflix",
+     "ok": true
+    },
+    {
+     "text": "cắt tóc 60k",
+     "rule": "cat toc",
+     "ok": true
+    },
+    {
+     "text": "chủ nhật đi karaoke 400k",
+     "rule": "karaoke",
+     "ok": true
+    },
+    {
+     "text": "toi qua an oc 150k",
+     "rule": "an oc",
+     "ok": true
+    },
+    {
+     "text": "mua sữa cho bé 450k",
+     "rule": "cho be",
+     "ok": true
+    },
+    {
+     "text": "vé máy bay đi Phú Quốc 3tr2",
+     "rule": "ve may",
+     "ok": true
+    },
+    {
+     "text": "hoàn tiền shopee 45k",
+     "rule": "hoan tien",
+     "ok": true
+    },
+    {
+     "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+     "rule": "rua xe",
+     "ok": true
+    },
+    {
+     "text": "lì xì cháu 200k",
+     "rule": "li xi",
+     "ok": true
+    },
+    {
+     "text": "học phí cho con 5tr",
+     "rule": "hoc phi",
+     "ok": true
+    },
+    {
+     "text": "tiền lãi chứng khoán 2tr3",
+     "rule": "lai chung",
+     "ok": true
+    },
+    {
+     "text": "an sang 30k, an trua 45k, an toi 120k",
+     "rule": "an sang",
+     "ok": true
+    },
+    {
+     "text": "mừng tân gia anh Hùng 500k",
+     "rule": "tan gia",
+     "ok": true
+    },
+    {
+     "text": "cafe the coffee house 65k hôm thứ 3",
+     "rule": "the coffee",
+     "ok": true
+    },
+    {
+     "text": "mua bỉm cho con 380k",
+     "rule": "bim cho",
+     "ok": true
+    },
+    {
+     "text": "lương 12 củ rưỡi",
+     "rule": "luong",
+     "ok": true
+    },
+    {
+     "text": "tiền mạng viettel 180k",
+     "rule": "tien mang",
+     "ok": true
+    },
+    {
+     "text": "ăn bún bò 40k thứ 7 tuần trước trả momo",
+     "rule": "bun bo",
+     "ok": true
+    },
+    {
+     "text": "đám giỗ ông 500k",
+     "rule": "dam gio",
+     "ok": true
+    },
+    {
+     "text": "nhận lương 15tr rồi trả tiền nhà 4tr",
+     "rule": "luong",
+     "ok": true
+    },
+    {
+     "text": "nhận lương 15tr rồi trả tiền nhà 4tr",
+     "rule": "tien nha",
+     "ok": true
+    },
+    {
+     "text": "45,000đ ăn sáng",
+     "rule": "an sang",
+     "ok": true
+    }
+   ],
+   "cases": 120,
+   "caseExact": 87.5,
+   "itemExact": 85.4,
+   "field": {
+    "title": 98.4,
+    "amount": 100,
+    "categoryName": 85.4,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  }
+ },
+ "ruleUses": 35,
+ "ruleRight": 35,
+ "activeRules": [
+  "bim cho → Gia đình (5)",
+  "cho be → Gia đình (6)",
+  "tu thien → Chi khác (5)",
+  "an lau → Ăn uống (4)",
+  "cat toc → Chi khác (6)",
+  "an oc → Ăn uống (4)",
+  "luong → Lương (3)",
+  "highlands → Ăn uống (3)",
+  "rua xe → Di chuyển (5)",
+  "thuong → Thưởng (9)",
+  "wifi → Hóa đơn (3)",
+  "the coffee → Ăn uống (4)",
+  "coffee house → Ăn uống (4)",
+  "karaoke → Giải trí (3)",
+  "phe cuoi → Giải trí (3)",
+  "cuoi tuan → Giải trí (6)",
+  "banh mi → Ăn uống (6)",
+  "mi thit → Ăn uống (3)",
+  "lai chung → Đầu tư (3)",
+  "chung khoan → Đầu tư (3)",
+  "winmart → Ăn uống (5)",
+  "tien mang → Hóa đơn (3)",
+  "netflix → Giải trí (3)",
+  "li xi → Chi khác (4)",
+  "ve may → Du lịch (4)",
+  "may bay → Du lịch (4)",
+  "cafe cuoi → Giải trí (3)",
+  "cashback → Thu khác (4)",
+  "shopeefood → Ăn uống (4)",
+  "dam gio → Hiếu hỉ (3)",
+  "tan gia → Hiếu hỉ (3)",
+  "tien nha → Nhà ở (4)",
+  "bun bo → Ăn uống (3)",
+  "nhau → Ăn uống (3)",
+  "hoan tien → Thu khác (3)",
+  "hoc phi → Giáo dục (4)",
+  "an sang → Ăn uống (5)",
+  "ve phim → Giải trí (3)"
+ ]
+}

@@ -1,0 +1,80 @@
+{
+ "rows": [
+  {
+   "label": "gemma2:2b V1 (1 lần gọi)",
+   "n": 30,
+   "p50": 1339,
+   "p95": 1961,
+   "mean": 1397
+  },
+  {
+   "label": "gemma2:2b V3 (kNN 5-shot, gồm embed)",
+   "n": 30,
+   "p50": 993,
+   "p95": 1272,
+   "mean": 1017
+  },
+  {
+   "label": "gemma2:2b V0 (model tự làm hết)",
+   "n": 15,
+   "p50": 2390,
+   "p95": 3882,
+   "mean": 2196
+  },
+  {
+   "label": "V1 không có stop \"\\n\\n\"",
+   "n": 15,
+   "p50": 1319,
+   "p95": 1413,
+   "mean": 1316
+  },
+  {
+   "label": "embed nomic-embed-text (1 câu, không cache)",
+   "n": 50,
+   "p50": 22,
+   "p95": 28,
+   "mean": 25
+  },
+  {
+   "label": "embed bge-m3 (1 câu, không cache)",
+   "n": 50,
+   "p50": 182,
+   "p95": 200,
+   "mean": 173
+  }
+ ],
+ "concurrency": [
+  {
+   "concurrency": 1,
+   "requests": 12,
+   "wall s": 12.7,
+   "req/s": 0.95,
+   "p50 ms": 1046,
+   "p95 ms": 1288
+  },
+  {
+   "concurrency": 2,
+   "requests": 12,
+   "wall s": 12.7,
+   "req/s": 0.95,
+   "p50 ms": 1982,
+   "p95 ms": 2430
+  },
+  {
+   "concurrency": 3,
+   "requests": 12,
+   "wall s": 11.4,
+   "req/s": 1.06,
+   "p50 ms": 2061,
+   "p95 ms": 3012
+  }
+ ],
+ "gpuMaxMiB": 3152,
+ "gpuLLMMiB": 2496,
+ "loaded": [
+  "gemma2:2b: 1835 MiB VRAM / 1835 MiB",
+  "bge-m3:latest: 633 MiB VRAM / 633 MiB",
+  "nomic-embed-text:latest: 308 MiB VRAM / 308 MiB"
+ ],
+ "numParallel": "mặc định service (log: 1)"
+}

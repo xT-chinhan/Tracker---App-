@@ -1,0 +1,2974 @@
+{
+ "luật": {
+  "dev": 80,
+  "test": 88,
+  "preds": [
+   {
+    "text": "ca phe 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mua áo sơ mi 1tr2 trả bằng momo",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "hôm qua ăn lẩu với bạn 2 lít",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "sáng nay bánh mì 25k, cà phê 30k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lương về 15tr",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mẹ cho 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tiền nhà tháng 10 4tr5 ck mb",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "nap dt 100k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "đi đám cưới Tuấn mừng 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "phở 50",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "thứ 4 nhậu với đồng nghiệp hết nửa củ",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ghi cho mình khoản tiền nước 120k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "thêm chi tiêu: cắt tóc 60k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "vừa đóng học phí 2tr5",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "an sang 30k, an trua 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "bán đồ cũ được 350k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "netflix 260k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ăn trưa",
+    "gold": "ghi-giao-dich",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "mua đồ hết nhiều tiền quá",
+    "gold": "ghi-giao-dich",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "hôm qua đổ xăng",
+    "gold": "ghi-giao-dich",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "1 trăm rưỡi tiền ăn tối",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lì xì cháu 200k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tối qua đi karaoke hết 400k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "được thưởng tết 10 củ",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "momo còn bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "số dư techcombank",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "trong ví còn nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "tổng số dư các tài khoản là bao nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "so du vi tien mat",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "mình đang có tổng cộng bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "check số dư giúp mình",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này mình tiêu bao nhiêu rồi",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tổng kết chi tiêu tháng trước",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tháng 9 thu chi thế nào",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "chi nhiều nhất vào khoản gì tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "báo cáo tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tuần này xài hết bao nhiêu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "thang nay tieu het bao nhieu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "so với tháng trước tháng này chi nhiều hơn không",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "ngân sách ăn uống tháng này còn bao nhiêu",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "mình có vượt hạn mức không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "budget giải trí còn không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "còn được tiêu bao nhiêu cho mua sắm",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "ngân sách tháng này sao rồi",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "khoản di chuyển sắp hết hạn mức chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "ngan sach an uong con nhieu khong",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này lố ngân sách chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "tìm khoản shopee tuần trước",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "hôm qua mình đã chi những khoản nào",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lần gần nhất trả tiền điện là bao giờ",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "liệt kê các khoản trên 500k",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "khoản 1tr2 hôm thứ 3 là gì vậy",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "xem các giao dịch momo",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này đi grab bao nhiêu lần",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tim giao dich ca phe",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mục tiêu mua xe tới đâu rồi",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "tiết kiệm du lịch Nhật được bao nhiêu phần trăm",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "bao giờ thì đủ tiền mua iphone",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "quỹ khẩn cấp hiện có bao nhiêu",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "các mục tiêu tiết kiệm của mình",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "muc tieu tiet kiem mua laptop",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này đã bỏ ống heo chưa",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "làm sao để thêm danh mục mới",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "cách đặt ngân sách cho ăn uống",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "hướng dẫn xuất file excel",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "quên mật khẩu thì làm thế nào",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "muốn xóa giao dịch thì bấm vào đâu",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "lam sao tao muc tieu tiet kiem",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "app có chế độ tối không",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "mai trời có mưa không",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "kể cho mình nghe chuyện vui",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "giá bitcoin bây giờ",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "viết bài thơ về mùa thu",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "có nên vay ngân hàng mua nhà không",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "ai là tổng thống mỹ",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "gợi ý quán ăn ngon ở quận 1",
+    "gold": "ngoai-pham-vi",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ừ đúng rồi",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "cái hồi nãy",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "thế còn",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "300k",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "làm luôn đi",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "rule"
+   },
+   {
+    "text": "hmm",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "rule"
+   }
+  ],
+  "confusions": [
+   [
+    "ngoai-pham-vi → hoi-lai",
+    6
+   ],
+   [
+    "ghi-giao-dich → hoi-lai",
+    3
+   ],
+   [
+    "ngoai-pham-vi → ghi-giao-dich",
+    1
+   ]
+  ]
+ },
+ "kNN nomic-embed-text": {
+  "dev": 60,
+  "test": 61.4,
+  "preds": [
+   {
+    "text": "ca phe 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.863,
+    "by": "ăn trưa 45k"
+   },
+   {
+    "text": "mua áo sơ mi 1tr2 trả bằng momo",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.866,
+    "by": "ví momo còn bao nhiêu"
+   },
+   {
+    "text": "hôm qua ăn lẩu với bạn 2 lít",
+    "gold": "ghi-giao-dich",
+    "pred": "ngoai-pham-vi",
+    "score": 0.816,
+    "by": "tỉ số trận MU tối qua"
+   },
+   {
+    "text": "sáng nay bánh mì 25k, cà phê 30k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.877,
+    "by": "ghi giúp mình cà phê 30k"
+   },
+   {
+    "text": "lương về 15tr",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.898,
+    "by": "nhận lương 14tr"
+   },
+   {
+    "text": "mẹ cho 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.936,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "tiền nhà tháng 10 4tr5 ck mb",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.812,
+    "by": "còn bao lâu nữa đủ tiền mua laptop"
+   },
+   {
+    "text": "nap dt 100k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.744,
+    "by": "tiền điện 800k"
+   },
+   {
+    "text": "đi đám cưới Tuấn mừng 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.925,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.85,
+    "by": "đổ xăng 70k hôm qua"
+   },
+   {
+    "text": "phở 50",
+    "gold": "ghi-giao-dich",
+    "pred": "ngoai-pham-vi",
+    "score": 0.752,
+    "by": "50k"
+   },
+   {
+    "text": "thứ 4 nhậu với đồng nghiệp hết nửa củ",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.846,
+    "by": "đổi mật khẩu ở đâu"
+   },
+   {
+    "text": "ghi cho mình khoản tiền nước 120k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.86,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "thêm chi tiêu: cắt tóc 60k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.816,
+    "by": "tổng tiền tất cả các ví"
+   },
+   {
+    "text": "vừa đóng học phí 2tr5",
+    "gold": "ghi-giao-dich",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.847,
+    "by": "mình sắp vượt hạn mức chưa"
+   },
+   {
+    "text": "an sang 30k, an trua 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.87,
+    "by": "ăn trưa 45k"
+   },
+   {
+    "text": "bán đồ cũ được 350k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.86,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "netflix 260k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.664,
+    "by": "ăn trưa 45k"
+   },
+   {
+    "text": "ăn trưa",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.801,
+    "by": "tuần này tiêu hết bao nhiêu"
+   },
+   {
+    "text": "mua đồ hết nhiều tiền quá",
+    "gold": "ghi-giao-dich",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.913,
+    "by": "tuần này tiêu hết bao nhiêu"
+   },
+   {
+    "text": "hôm qua đổ xăng",
+    "gold": "ghi-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.923,
+    "by": "đổ xăng 70k hôm qua"
+   },
+   {
+    "text": "1 trăm rưỡi tiền ăn tối",
+    "gold": "ghi-giao-dich",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.855,
+    "by": "mục tiêu mua xe được bao nhiêu phần trăm rồi"
+   },
+   {
+    "text": "lì xì cháu 200k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.785,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "tối qua đi karaoke hết 400k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.839,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "được thưởng tết 10 củ",
+    "gold": "ghi-giao-dich",
+    "pred": "huong-dan",
+    "score": 0.826,
+    "by": "hướng dẫn tạo mục tiêu tiết kiệm"
+   },
+   {
+    "text": "momo còn bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.958,
+    "by": "ví momo còn bao nhiêu"
+   },
+   {
+    "text": "số dư techcombank",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.917,
+    "by": "techcombank còn nhiêu"
+   },
+   {
+    "text": "trong ví còn nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.889,
+    "by": "ví momo còn bao nhiêu"
+   },
+   {
+    "text": "tổng số dư các tài khoản là bao nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.929,
+    "by": "tài khoản mb còn bao nhiêu tiền"
+   },
+   {
+    "text": "so du vi tien mat",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.893,
+    "by": "tiền mặt còn bao nhiêu"
+   },
+   {
+    "text": "mình đang có tổng cộng bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.93,
+    "by": "mình còn bao nhiêu tiền"
+   },
+   {
+    "text": "check số dư giúp mình",
+    "gold": "hoi-so-du",
+    "pred": "tim-giao-dich",
+    "score": 0.836,
+    "by": "hôm qua mình chi những gì"
+   },
+   {
+    "text": "tháng này mình tiêu bao nhiêu rồi",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.986,
+    "by": "tháng này tiêu bao nhiêu rồi"
+   },
+   {
+    "text": "tổng kết chi tiêu tháng trước",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.918,
+    "by": "so sánh chi tiêu tháng này với tháng trước"
+   },
+   {
+    "text": "tháng 9 thu chi thế nào",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.885,
+    "by": "tổng kết tháng 9"
+   },
+   {
+    "text": "chi nhiều nhất vào khoản gì tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.933,
+    "by": "tháng trước chi những gì nhiều nhất"
+   },
+   {
+    "text": "báo cáo tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.956,
+    "by": "báo cáo thu chi tháng này"
+   },
+   {
+    "text": "tuần này xài hết bao nhiêu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.971,
+    "by": "tuần này tiêu hết bao nhiêu"
+   },
+   {
+    "text": "thang nay tieu het bao nhieu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.967,
+    "by": "tháng này tiêu bao nhiêu rồi"
+   },
+   {
+    "text": "so với tháng trước tháng này chi nhiều hơn không",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.953,
+    "by": "so sánh chi tiêu tháng này với tháng trước"
+   },
+   {
+    "text": "ngân sách ăn uống tháng này còn bao nhiêu",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "tong-ket-thang",
+    "score": 0.972,
+    "by": "ngân sách ăn uống còn bao nhiêu"
+   },
+   {
+    "text": "mình có vượt hạn mức không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.935,
+    "by": "mình sắp vượt hạn mức chưa"
+   },
+   {
+    "text": "budget giải trí còn không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.831,
+    "by": "còn được tiêu bao nhiêu cho giải trí"
+   },
+   {
+    "text": "còn được tiêu bao nhiêu cho mua sắm",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "hoi-so-du",
+    "score": 0.942,
+    "by": "còn được tiêu bao nhiêu cho giải trí"
+   },
+   {
+    "text": "ngân sách tháng này sao rồi",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.929,
+    "by": "tháng này có vượt ngân sách không"
+   },
+   {
+    "text": "khoản di chuyển sắp hết hạn mức chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.94,
+    "by": "mình sắp vượt hạn mức chưa"
+   },
+   {
+    "text": "ngan sach an uong con nhieu khong",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.971,
+    "by": "ngân sách ăn uống còn bao nhiêu"
+   },
+   {
+    "text": "tháng này lố ngân sách chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.931,
+    "by": "tháng này có vượt ngân sách không"
+   },
+   {
+    "text": "tìm khoản shopee tuần trước",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.897,
+    "by": "tìm các khoản grab tuần trước"
+   },
+   {
+    "text": "hôm qua mình đã chi những khoản nào",
+    "gold": "tim-giao-dich",
+    "pred": "huong-dan",
+    "score": 0.938,
+    "by": "hôm qua mình chi những gì"
+   },
+   {
+    "text": "lần gần nhất trả tiền điện là bao giờ",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.892,
+    "by": "lần cuối đổ xăng là khi nào"
+   },
+   {
+    "text": "liệt kê các khoản trên 500k",
+    "gold": "tim-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.874,
+    "by": "khoản 500k hôm thứ 2 là gì"
+   },
+   {
+    "text": "khoản 1tr2 hôm thứ 3 là gì vậy",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.876,
+    "by": "khoản 500k hôm thứ 2 là gì"
+   },
+   {
+    "text": "xem các giao dịch momo",
+    "gold": "tim-giao-dich",
+    "pred": "huong-dan",
+    "score": 0.872,
+    "by": "xem lại giao dịch tiền điện"
+   },
+   {
+    "text": "tháng này đi grab bao nhiêu lần",
+    "gold": "tim-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.915,
+    "by": "tháng này dư được bao nhiêu"
+   },
+   {
+    "text": "tim giao dich ca phe",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.911,
+    "by": "tìm giao dịch trên 1 triệu"
+   },
+   {
+    "text": "mục tiêu mua xe tới đâu rồi",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.915,
+    "by": "mục tiêu mua xe được bao nhiêu phần trăm rồi"
+   },
+   {
+    "text": "tiết kiệm du lịch Nhật được bao nhiêu phần trăm",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.929,
+    "by": "mục tiêu mua xe được bao nhiêu phần trăm rồi"
+   },
+   {
+    "text": "bao giờ thì đủ tiền mua iphone",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.857,
+    "by": "còn bao lâu nữa đủ tiền mua laptop"
+   },
+   {
+    "text": "quỹ khẩn cấp hiện có bao nhiêu",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "hoi-so-du",
+    "score": 0.957,
+    "by": "quỹ khẩn cấp được bao nhiêu rồi"
+   },
+   {
+    "text": "các mục tiêu tiết kiệm của mình",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.962,
+    "by": "tiến độ các mục tiêu tiết kiệm"
+   },
+   {
+    "text": "muc tieu tiet kiem mua laptop",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.929,
+    "by": "còn bao lâu nữa đủ tiền mua laptop"
+   },
+   {
+    "text": "tháng này đã bỏ ống heo chưa",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tong-ket-thang",
+    "score": 0.918,
+    "by": "tháng này dư được bao nhiêu"
+   },
+   {
+    "text": "làm sao để thêm danh mục mới",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.909,
+    "by": "làm sao thêm ví mới"
+   },
+   {
+    "text": "cách đặt ngân sách cho ăn uống",
+    "gold": "huong-dan",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.917,
+    "by": "cách tạo ngân sách"
+   },
+   {
+    "text": "hướng dẫn xuất file excel",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.796,
+    "by": "hướng dẫn tạo mục tiêu tiết kiệm"
+   },
+   {
+    "text": "quên mật khẩu thì làm thế nào",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.9,
+    "by": "đổi mật khẩu ở đâu"
+   },
+   {
+    "text": "muốn xóa giao dịch thì bấm vào đâu",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.908,
+    "by": "làm thế nào để sửa giao dịch"
+   },
+   {
+    "text": "lam sao tao muc tieu tiet kiem",
+    "gold": "huong-dan",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.938,
+    "by": "hướng dẫn tạo mục tiêu tiết kiệm"
+   },
+   {
+    "text": "app có chế độ tối không",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.852,
+    "by": "cách xóa một khoản đã ghi"
+   },
+   {
+    "text": "mai trời có mưa không",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-so-du",
+    "score": 0.883,
+    "by": "tài khoản mb còn bao nhiêu tiền"
+   },
+   {
+    "text": "kể cho mình nghe chuyện vui",
+    "gold": "ngoai-pham-vi",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.939,
+    "by": "kể chuyện cười đi"
+   },
+   {
+    "text": "giá bitcoin bây giờ",
+    "gold": "ngoai-pham-vi",
+    "pred": "tim-giao-dich",
+    "score": 0.72,
+    "by": "còn cái kia thì sao"
+   },
+   {
+    "text": "viết bài thơ về mùa thu",
+    "gold": "ngoai-pham-vi",
+    "pred": "tong-ket-thang",
+    "score": 0.89,
+    "by": "tuần này tiêu hết bao nhiêu"
+   },
+   {
+    "text": "có nên vay ngân hàng mua nhà không",
+    "gold": "ngoai-pham-vi",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.904,
+    "by": "nên mua cổ phiếu nào"
+   },
+   {
+    "text": "ai là tổng thống mỹ",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-so-du",
+    "score": 0.803,
+    "by": "tổng tiền tất cả các ví"
+   },
+   {
+    "text": "gợi ý quán ăn ngon ở quận 1",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-so-du",
+    "score": 0.828,
+    "by": "tháng này tiêu bao nhiêu rồi"
+   },
+   {
+    "text": "ừ đúng rồi",
+    "gold": "hoi-lai",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.864,
+    "by": "tiết kiệm đi du lịch tới đâu rồi"
+   },
+   {
+    "text": "cái hồi nãy",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "score": 0.909,
+    "by": "cái lúc nãy ấy"
+   },
+   {
+    "text": "thế còn",
+    "gold": "hoi-lai",
+    "pred": "hoi-so-du",
+    "score": 0.686,
+    "by": "techcombank còn nhiêu"
+   },
+   {
+    "text": "300k",
+    "gold": "hoi-lai",
+    "pred": "ghi-giao-dich",
+    "score": 0.759,
+    "by": "50k"
+   },
+   {
+    "text": "làm luôn đi",
+    "gold": "hoi-lai",
+    "pred": "tim-giao-dich",
+    "score": 0.957,
+    "by": "làm đi"
+   },
+   {
+    "text": "hmm",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "score": 0.812,
+    "by": "ok"
+   }
+  ],
+  "confusions": [
+   [
+    "ghi-giao-dich → tong-ket-thang",
+    3
+   ],
+   [
+    "ngoai-pham-vi → hoi-so-du",
+    3
+   ],
+   [
+    "ghi-giao-dich → ngoai-pham-vi",
+    2
+   ],
+   [
+    "ghi-giao-dich → tien-do-tiet-kiem",
+    2
+   ],
+   [
+    "tim-giao-dich → huong-dan",
+    2
+   ],
+   [
+    "ngoai-pham-vi → kiem-tra-ngan-sach",
+    2
+   ],
+   [
+    "ghi-giao-dich → kiem-tra-ngan-sach",
+    1
+   ],
+   [
+    "ghi-giao-dich → tim-giao-dich",
+    1
+   ],
+   [
+    "ghi-giao-dich → huong-dan",
+    1
+   ],
+   [
+    "hoi-so-du → tim-giao-dich",
+    1
+   ],
+   [
+    "kiem-tra-ngan-sach → tong-ket-thang",
+    1
+   ],
+   [
+    "kiem-tra-ngan-sach → hoi-so-du",
+    1
+   ],
+   [
+    "tim-giao-dich → ghi-giao-dich",
+    1
+   ],
+   [
+    "tim-giao-dich → tong-ket-thang",
+    1
+   ],
+   [
+    "tien-do-tiet-kiem → hoi-so-du",
+    1
+   ],
+   [
+    "tien-do-tiet-kiem → tong-ket-thang",
+    1
+   ],
+   [
+    "huong-dan → kiem-tra-ngan-sach",
+    1
+   ],
+   [
+    "huong-dan → tien-do-tiet-kiem",
+    1
+   ],
+   [
+    "ngoai-pham-vi → tim-giao-dich",
+    1
+   ],
+   [
+    "ngoai-pham-vi → tong-ket-thang",
+    1
+   ],
+   [
+    "hoi-lai → tien-do-tiet-kiem",
+    1
+   ],
+   [
+    "hoi-lai → hoi-so-du",
+    1
+   ],
+   [
+    "hoi-lai → ghi-giao-dich",
+    1
+   ],
+   [
+    "hoi-lai → tim-giao-dich",
+    1
+   ]
+  ]
+ },
+ "luật + kNN nomic-embed-text": {
+  "dev": 88,
+  "test": 84.3,
+  "threshold": 0.75,
+  "preds": [
+   {
+    "text": "ca phe 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mua áo sơ mi 1tr2 trả bằng momo",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "hôm qua ăn lẩu với bạn 2 lít",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "sáng nay bánh mì 25k, cà phê 30k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lương về 15tr",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mẹ cho 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tiền nhà tháng 10 4tr5 ck mb",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "nap dt 100k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "đi đám cưới Tuấn mừng 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "phở 50",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "thứ 4 nhậu với đồng nghiệp hết nửa củ",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ghi cho mình khoản tiền nước 120k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "thêm chi tiêu: cắt tóc 60k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "vừa đóng học phí 2tr5",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "an sang 30k, an trua 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "bán đồ cũ được 350k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "netflix 260k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ăn trưa",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "by": "knn",
+    "score": 0.8005909284833895
+   },
+   {
+    "text": "mua đồ hết nhiều tiền quá",
+    "gold": "ghi-giao-dich",
+    "pred": "tien-do-tiet-kiem",
+    "by": "knn",
+    "score": 0.9131659655183992
+   },
+   {
+    "text": "hôm qua đổ xăng",
+    "gold": "ghi-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "knn",
+    "score": 0.9233104894188104
+   },
+   {
+    "text": "1 trăm rưỡi tiền ăn tối",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lì xì cháu 200k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tối qua đi karaoke hết 400k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "được thưởng tết 10 củ",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "momo còn bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "số dư techcombank",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "trong ví còn nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "tổng số dư các tài khoản là bao nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "so du vi tien mat",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "mình đang có tổng cộng bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "check số dư giúp mình",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này mình tiêu bao nhiêu rồi",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tổng kết chi tiêu tháng trước",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tháng 9 thu chi thế nào",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "chi nhiều nhất vào khoản gì tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "báo cáo tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tuần này xài hết bao nhiêu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "thang nay tieu het bao nhieu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "so với tháng trước tháng này chi nhiều hơn không",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "ngân sách ăn uống tháng này còn bao nhiêu",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "mình có vượt hạn mức không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "budget giải trí còn không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "còn được tiêu bao nhiêu cho mua sắm",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "ngân sách tháng này sao rồi",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "khoản di chuyển sắp hết hạn mức chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "ngan sach an uong con nhieu khong",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này lố ngân sách chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "tìm khoản shopee tuần trước",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "hôm qua mình đã chi những khoản nào",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lần gần nhất trả tiền điện là bao giờ",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "liệt kê các khoản trên 500k",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "khoản 1tr2 hôm thứ 3 là gì vậy",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "xem các giao dịch momo",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này đi grab bao nhiêu lần",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tim giao dich ca phe",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mục tiêu mua xe tới đâu rồi",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "tiết kiệm du lịch Nhật được bao nhiêu phần trăm",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "bao giờ thì đủ tiền mua iphone",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "quỹ khẩn cấp hiện có bao nhiêu",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "các mục tiêu tiết kiệm của mình",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "muc tieu tiet kiem mua laptop",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này đã bỏ ống heo chưa",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "làm sao để thêm danh mục mới",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "cách đặt ngân sách cho ăn uống",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "hướng dẫn xuất file excel",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "quên mật khẩu thì làm thế nào",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "muốn xóa giao dịch thì bấm vào đâu",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "lam sao tao muc tieu tiet kiem",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "app có chế độ tối không",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "mai trời có mưa không",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-so-du",
+    "by": "knn",
+    "score": 0.8833405463584779
+   },
+   {
+    "text": "kể cho mình nghe chuyện vui",
+    "gold": "ngoai-pham-vi",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "knn",
+    "score": 0.938824097304678
+   },
+   {
+    "text": "giá bitcoin bây giờ",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "fallback",
+    "score": 0.7202091022070861
+   },
+   {
+    "text": "viết bài thơ về mùa thu",
+    "gold": "ngoai-pham-vi",
+    "pred": "tong-ket-thang",
+    "by": "knn",
+    "score": 0.8901936694433107
+   },
+   {
+    "text": "có nên vay ngân hàng mua nhà không",
+    "gold": "ngoai-pham-vi",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "knn",
+    "score": 0.9036542643946474
+   },
+   {
+    "text": "ai là tổng thống mỹ",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-so-du",
+    "by": "knn",
+    "score": 0.8033997695984331
+   },
+   {
+    "text": "gợi ý quán ăn ngon ở quận 1",
+    "gold": "ngoai-pham-vi",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ừ đúng rồi",
+    "gold": "hoi-lai",
+    "pred": "tien-do-tiet-kiem",
+    "by": "knn",
+    "score": 0.864119251135617
+   },
+   {
+    "text": "cái hồi nãy",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.9087570540970215
+   },
+   {
+    "text": "thế còn",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "fallback",
+    "score": 0.6855981913887929
+   },
+   {
+    "text": "300k",
+    "gold": "hoi-lai",
+    "pred": "ghi-giao-dich",
+    "by": "knn",
+    "score": 0.7593305197261562
+   },
+   {
+    "text": "làm luôn đi",
+    "gold": "hoi-lai",
+    "pred": "tim-giao-dich",
+    "by": "knn",
+    "score": 0.956694645455342
+   },
+   {
+    "text": "hmm",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.8116900042528213
+   }
+  ],
+  "confusions": [
+   [
+    "ngoai-pham-vi → hoi-so-du",
+    2
+   ],
+   [
+    "ngoai-pham-vi → kiem-tra-ngan-sach",
+    2
+   ],
+   [
+    "ghi-giao-dich → tong-ket-thang",
+    1
+   ],
+   [
+    "ghi-giao-dich → tien-do-tiet-kiem",
+    1
+   ],
+   [
+    "ghi-giao-dich → tim-giao-dich",
+    1
+   ],
+   [
+    "ngoai-pham-vi → hoi-lai",
+    1
+   ],
+   [
+    "ngoai-pham-vi → tong-ket-thang",
+    1
+   ],
+   [
+    "ngoai-pham-vi → ghi-giao-dich",
+    1
+   ],
+   [
+    "hoi-lai → tien-do-tiet-kiem",
+    1
+   ],
+   [
+    "hoi-lai → ghi-giao-dich",
+    1
+   ],
+   [
+    "hoi-lai → tim-giao-dich",
+    1
+   ]
+  ]
+ },
+ "kNN bge-m3": {
+  "dev": 84,
+  "test": 71.1,
+  "preds": [
+   {
+    "text": "ca phe 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.7,
+    "by": "ăn trưa 45k"
+   },
+   {
+    "text": "mua áo sơ mi 1tr2 trả bằng momo",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.721,
+    "by": "mấy khoản trả bằng momo gần đây"
+   },
+   {
+    "text": "hôm qua ăn lẩu với bạn 2 lít",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.651,
+    "by": "hôm qua mình chi những gì"
+   },
+   {
+    "text": "sáng nay bánh mì 25k, cà phê 30k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.783,
+    "by": "ghi giúp mình cà phê 30k"
+   },
+   {
+    "text": "lương về 15tr",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.796,
+    "by": "nhận lương 14tr"
+   },
+   {
+    "text": "mẹ cho 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.969,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "tiền nhà tháng 10 4tr5 ck mb",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.654,
+    "by": "tháng này tiêu bao nhiêu rồi"
+   },
+   {
+    "text": "nap dt 100k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.59,
+    "by": "50k"
+   },
+   {
+    "text": "đi đám cưới Tuấn mừng 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.681,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.756,
+    "by": "đổ xăng 70k hôm qua"
+   },
+   {
+    "text": "phở 50",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.707,
+    "by": "50k"
+   },
+   {
+    "text": "thứ 4 nhậu với đồng nghiệp hết nửa củ",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.604,
+    "by": "tuần này tiêu hết bao nhiêu"
+   },
+   {
+    "text": "ghi cho mình khoản tiền nước 120k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.699,
+    "by": "mình còn bao nhiêu tiền"
+   },
+   {
+    "text": "thêm chi tiêu: cắt tóc 60k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.706,
+    "by": "thêm khoản chi ăn tối 150k"
+   },
+   {
+    "text": "vừa đóng học phí 2tr5",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.686,
+    "by": "hôm qua mình chi những gì"
+   },
+   {
+    "text": "an sang 30k, an trua 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.725,
+    "by": "ăn trưa 45k"
+   },
+   {
+    "text": "bán đồ cũ được 350k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.613,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "netflix 260k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.562,
+    "by": "50k"
+   },
+   {
+    "text": "ăn trưa",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.784,
+    "by": "ăn trưa 45k"
+   },
+   {
+    "text": "mua đồ hết nhiều tiền quá",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.709,
+    "by": "hôm qua mình chi những gì"
+   },
+   {
+    "text": "hôm qua đổ xăng",
+    "gold": "ghi-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.793,
+    "by": "đổ xăng 70k hôm qua"
+   },
+   {
+    "text": "1 trăm rưỡi tiền ăn tối",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.828,
+    "by": "thêm khoản chi ăn tối 150k"
+   },
+   {
+    "text": "lì xì cháu 200k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.705,
+    "by": "bánh mì 20k"
+   },
+   {
+    "text": "tối qua đi karaoke hết 400k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.675,
+    "by": "hôm qua mình chi những gì"
+   },
+   {
+    "text": "được thưởng tết 10 củ",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.569,
+    "by": "được mẹ cho 500k"
+   },
+   {
+    "text": "momo còn bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.877,
+    "by": "ví momo còn bao nhiêu"
+   },
+   {
+    "text": "số dư techcombank",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.862,
+    "by": "techcombank còn nhiêu"
+   },
+   {
+    "text": "trong ví còn nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.882,
+    "by": "mình còn bao nhiêu tiền"
+   },
+   {
+    "text": "tổng số dư các tài khoản là bao nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.779,
+    "by": "số dư hiện tại"
+   },
+   {
+    "text": "so du vi tien mat",
+    "gold": "hoi-so-du",
+    "pred": "hoi-lai",
+    "score": 0.58,
+    "by": "ok"
+   },
+   {
+    "text": "mình đang có tổng cộng bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "tong-ket-thang",
+    "score": 0.892,
+    "by": "mình còn bao nhiêu tiền"
+   },
+   {
+    "text": "check số dư giúp mình",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "score": 0.836,
+    "by": "số dư hiện tại"
+   },
+   {
+    "text": "tháng này mình tiêu bao nhiêu rồi",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.985,
+    "by": "tháng này tiêu bao nhiêu rồi"
+   },
+   {
+    "text": "tổng kết chi tiêu tháng trước",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.892,
+    "by": "so sánh chi tiêu tháng này với tháng trước"
+   },
+   {
+    "text": "tháng 9 thu chi thế nào",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.735,
+    "by": "tổng kết tháng 9"
+   },
+   {
+    "text": "chi nhiều nhất vào khoản gì tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.879,
+    "by": "tháng trước chi những gì nhiều nhất"
+   },
+   {
+    "text": "báo cáo tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.888,
+    "by": "báo cáo thu chi tháng này"
+   },
+   {
+    "text": "tuần này xài hết bao nhiêu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.965,
+    "by": "tuần này tiêu hết bao nhiêu"
+   },
+   {
+    "text": "thang nay tieu het bao nhieu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.56,
+    "by": "tháng này tiêu bao nhiêu rồi"
+   },
+   {
+    "text": "so với tháng trước tháng này chi nhiều hơn không",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "score": 0.893,
+    "by": "so sánh chi tiêu tháng này với tháng trước"
+   },
+   {
+    "text": "ngân sách ăn uống tháng này còn bao nhiêu",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.95,
+    "by": "ngân sách ăn uống còn bao nhiêu"
+   },
+   {
+    "text": "mình có vượt hạn mức không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.96,
+    "by": "mình sắp vượt hạn mức chưa"
+   },
+   {
+    "text": "budget giải trí còn không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.741,
+    "by": "còn được tiêu bao nhiêu cho giải trí"
+   },
+   {
+    "text": "còn được tiêu bao nhiêu cho mua sắm",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.896,
+    "by": "hạn mức mua sắm còn lại"
+   },
+   {
+    "text": "ngân sách tháng này sao rồi",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "tong-ket-thang",
+    "score": 0.948,
+    "by": "ngân sách tháng này thế nào"
+   },
+   {
+    "text": "khoản di chuyển sắp hết hạn mức chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.788,
+    "by": "mình sắp vượt hạn mức chưa"
+   },
+   {
+    "text": "ngan sach an uong con nhieu khong",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "hoi-lai",
+    "score": 0.558,
+    "by": "cái lúc nãy ấy"
+   },
+   {
+    "text": "tháng này lố ngân sách chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.877,
+    "by": "tháng này có vượt ngân sách không"
+   },
+   {
+    "text": "tìm khoản shopee tuần trước",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.804,
+    "by": "tìm các khoản grab tuần trước"
+   },
+   {
+    "text": "hôm qua mình đã chi những khoản nào",
+    "gold": "tim-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.967,
+    "by": "hôm qua mình chi những gì"
+   },
+   {
+    "text": "lần gần nhất trả tiền điện là bao giờ",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.754,
+    "by": "lần cuối đổ xăng là khi nào"
+   },
+   {
+    "text": "liệt kê các khoản trên 500k",
+    "gold": "tim-giao-dich",
+    "pred": "ghi-giao-dich",
+    "score": 0.692,
+    "by": "khoản 500k hôm thứ 2 là gì"
+   },
+   {
+    "text": "khoản 1tr2 hôm thứ 3 là gì vậy",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.757,
+    "by": "khoản 500k hôm thứ 2 là gì"
+   },
+   {
+    "text": "xem các giao dịch momo",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "score": 0.781,
+    "by": "mấy khoản trả bằng momo gần đây"
+   },
+   {
+    "text": "tháng này đi grab bao nhiêu lần",
+    "gold": "tim-giao-dich",
+    "pred": "tong-ket-thang",
+    "score": 0.721,
+    "by": "tìm các khoản grab tuần trước"
+   },
+   {
+    "text": "tim giao dich ca phe",
+    "gold": "tim-giao-dich",
+    "pred": "hoi-lai",
+    "score": 0.463,
+    "by": "kiểm tra ngân sách di chuyển"
+   },
+   {
+    "text": "mục tiêu mua xe tới đâu rồi",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.84,
+    "by": "mục tiêu mua xe được bao nhiêu phần trăm rồi"
+   },
+   {
+    "text": "tiết kiệm du lịch Nhật được bao nhiêu phần trăm",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.719,
+    "by": "tiết kiệm đi du lịch tới đâu rồi"
+   },
+   {
+    "text": "bao giờ thì đủ tiền mua iphone",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "hoi-so-du",
+    "score": 0.797,
+    "by": "còn bao lâu nữa đủ tiền mua laptop"
+   },
+   {
+    "text": "quỹ khẩn cấp hiện có bao nhiêu",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "hoi-so-du",
+    "score": 0.885,
+    "by": "quỹ khẩn cấp được bao nhiêu rồi"
+   },
+   {
+    "text": "các mục tiêu tiết kiệm của mình",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "score": 0.917,
+    "by": "mục tiêu tiết kiệm của mình thế nào"
+   },
+   {
+    "text": "muc tieu tiet kiem mua laptop",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "ghi-giao-dich",
+    "score": 0.604,
+    "by": "còn bao lâu nữa đủ tiền mua laptop"
+   },
+   {
+    "text": "tháng này đã bỏ ống heo chưa",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tong-ket-thang",
+    "score": 0.663,
+    "by": "tháng này góp tiết kiệm chưa"
+   },
+   {
+    "text": "làm sao để thêm danh mục mới",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.76,
+    "by": "làm sao thêm ví mới"
+   },
+   {
+    "text": "cách đặt ngân sách cho ăn uống",
+    "gold": "huong-dan",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.808,
+    "by": "ngân sách ăn uống còn bao nhiêu"
+   },
+   {
+    "text": "hướng dẫn xuất file excel",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.813,
+    "by": "xuất báo cáo ra excel thế nào"
+   },
+   {
+    "text": "quên mật khẩu thì làm thế nào",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.807,
+    "by": "đổi mật khẩu ở đâu"
+   },
+   {
+    "text": "muốn xóa giao dịch thì bấm vào đâu",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.796,
+    "by": "cách xóa một khoản đã ghi"
+   },
+   {
+    "text": "lam sao tao muc tieu tiet kiem",
+    "gold": "huong-dan",
+    "pred": "hoi-lai",
+    "score": 0.505,
+    "by": "cái lúc nãy ấy"
+   },
+   {
+    "text": "app có chế độ tối không",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "score": 0.653,
+    "by": "app này dùng sao"
+   },
+   {
+    "text": "mai trời có mưa không",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "score": 0.797,
+    "by": "thời tiết hôm nay thế nào"
+   },
+   {
+    "text": "kể cho mình nghe chuyện vui",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "score": 0.913,
+    "by": "kể chuyện cười đi"
+   },
+   {
+    "text": "giá bitcoin bây giờ",
+    "gold": "ngoai-pham-vi",
+    "pred": "ngoai-pham-vi",
+    "score": 0.718,
+    "by": "giá vàng hôm nay"
+   },
+   {
+    "text": "viết bài thơ về mùa thu",
+    "gold": "ngoai-pham-vi",
+    "pred": "ngoai-pham-vi",
+    "score": 0.544,
+    "by": "thời tiết hôm nay thế nào"
+   },
+   {
+    "text": "có nên vay ngân hàng mua nhà không",
+    "gold": "ngoai-pham-vi",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.544,
+    "by": "tháng này góp tiết kiệm chưa"
+   },
+   {
+    "text": "ai là tổng thống mỹ",
+    "gold": "ngoai-pham-vi",
+    "pred": "ngoai-pham-vi",
+    "score": 0.492,
+    "by": "bạn là ai"
+   },
+   {
+    "text": "gợi ý quán ăn ngon ở quận 1",
+    "gold": "ngoai-pham-vi",
+    "pred": "kiem-tra-ngan-sach",
+    "score": 0.505,
+    "by": "thêm khoản chi ăn tối 150k"
+   },
+   {
+    "text": "ừ đúng rồi",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "score": 0.847,
+    "by": "ừ"
+   },
+   {
+    "text": "cái hồi nãy",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "score": 0.926,
+    "by": "cái lúc nãy ấy"
+   },
+   {
+    "text": "thế còn",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "score": 0.746,
+    "by": "còn cái kia thì sao"
+   },
+   {
+    "text": "300k",
+    "gold": "hoi-lai",
+    "pred": "ghi-giao-dich",
+    "score": 0.753,
+    "by": "50k"
+   },
+   {
+    "text": "làm luôn đi",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "score": 0.902,
+    "by": "làm đi"
+   },
+   {
+    "text": "hmm",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "score": 0.767,
+    "by": "hả"
+   }
+  ],
+  "confusions": [
+   [
+    "ghi-giao-dich → tong-ket-thang",
+    4
+   ],
+   [
+    "tim-giao-dich → tong-ket-thang",
+    2
+   ],
+   [
+    "tien-do-tiet-kiem → hoi-so-du",
+    2
+   ],
+   [
+    "ngoai-pham-vi → hoi-lai",
+    2
+   ],
+   [
+    "ngoai-pham-vi → kiem-tra-ngan-sach",
+    2
+   ],
+   [
+    "ghi-giao-dich → tim-giao-dich",
+    1
+   ],
+   [
+    "hoi-so-du → hoi-lai",
+    1
+   ],
+   [
+    "hoi-so-du → tong-ket-thang",
+    1
+   ],
+   [
+    "kiem-tra-ngan-sach → tong-ket-thang",
+    1
+   ],
+   [
+    "kiem-tra-ngan-sach → hoi-lai",
+    1
+   ],
+   [
+    "tim-giao-dich → ghi-giao-dich",
+    1
+   ],
+   [
+    "tim-giao-dich → hoi-lai",
+    1
+   ],
+   [
+    "tien-do-tiet-kiem → ghi-giao-dich",
+    1
+   ],
+   [
+    "tien-do-tiet-kiem → tong-ket-thang",
+    1
+   ],
+   [
+    "huong-dan → kiem-tra-ngan-sach",
+    1
+   ],
+   [
+    "huong-dan → hoi-lai",
+    1
+   ],
+   [
+    "hoi-lai → ghi-giao-dich",
+    1
+   ]
+  ]
+ },
+ "luật + kNN bge-m3": {
+  "dev": 88,
+  "test": 91.6,
+  "threshold": 0.3,
+  "preds": [
+   {
+    "text": "ca phe 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mua áo sơ mi 1tr2 trả bằng momo",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "hôm qua ăn lẩu với bạn 2 lít",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "sáng nay bánh mì 25k, cà phê 30k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lương về 15tr",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mẹ cho 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tiền nhà tháng 10 4tr5 ck mb",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "nap dt 100k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "đi đám cưới Tuấn mừng 500k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "phở 50",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "thứ 4 nhậu với đồng nghiệp hết nửa củ",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ghi cho mình khoản tiền nước 120k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "thêm chi tiêu: cắt tóc 60k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "vừa đóng học phí 2tr5",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "an sang 30k, an trua 45k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "bán đồ cũ được 350k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "netflix 260k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ăn trưa",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "knn",
+    "score": 0.7839604463804263
+   },
+   {
+    "text": "mua đồ hết nhiều tiền quá",
+    "gold": "ghi-giao-dich",
+    "pred": "tong-ket-thang",
+    "by": "knn",
+    "score": 0.7088595389779123
+   },
+   {
+    "text": "hôm qua đổ xăng",
+    "gold": "ghi-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "knn",
+    "score": 0.7927460743415854
+   },
+   {
+    "text": "1 trăm rưỡi tiền ăn tối",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lì xì cháu 200k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tối qua đi karaoke hết 400k",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "được thưởng tết 10 củ",
+    "gold": "ghi-giao-dich",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "momo còn bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "số dư techcombank",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "trong ví còn nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "tổng số dư các tài khoản là bao nhiêu",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "so du vi tien mat",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "mình đang có tổng cộng bao nhiêu tiền",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "check số dư giúp mình",
+    "gold": "hoi-so-du",
+    "pred": "hoi-so-du",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này mình tiêu bao nhiêu rồi",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tổng kết chi tiêu tháng trước",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tháng 9 thu chi thế nào",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "chi nhiều nhất vào khoản gì tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "báo cáo tháng này",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "tuần này xài hết bao nhiêu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "thang nay tieu het bao nhieu",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "so với tháng trước tháng này chi nhiều hơn không",
+    "gold": "tong-ket-thang",
+    "pred": "tong-ket-thang",
+    "by": "rule"
+   },
+   {
+    "text": "ngân sách ăn uống tháng này còn bao nhiêu",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "mình có vượt hạn mức không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "budget giải trí còn không",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "còn được tiêu bao nhiêu cho mua sắm",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "ngân sách tháng này sao rồi",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "khoản di chuyển sắp hết hạn mức chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "ngan sach an uong con nhieu khong",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này lố ngân sách chưa",
+    "gold": "kiem-tra-ngan-sach",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "rule"
+   },
+   {
+    "text": "tìm khoản shopee tuần trước",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "hôm qua mình đã chi những khoản nào",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "lần gần nhất trả tiền điện là bao giờ",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "liệt kê các khoản trên 500k",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "khoản 1tr2 hôm thứ 3 là gì vậy",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "xem các giao dịch momo",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này đi grab bao nhiêu lần",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "tim giao dich ca phe",
+    "gold": "tim-giao-dich",
+    "pred": "tim-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "mục tiêu mua xe tới đâu rồi",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "tiết kiệm du lịch Nhật được bao nhiêu phần trăm",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "bao giờ thì đủ tiền mua iphone",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "quỹ khẩn cấp hiện có bao nhiêu",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "các mục tiêu tiết kiệm của mình",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "muc tieu tiet kiem mua laptop",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "tháng này đã bỏ ống heo chưa",
+    "gold": "tien-do-tiet-kiem",
+    "pred": "tien-do-tiet-kiem",
+    "by": "rule"
+   },
+   {
+    "text": "làm sao để thêm danh mục mới",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "cách đặt ngân sách cho ăn uống",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "hướng dẫn xuất file excel",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "quên mật khẩu thì làm thế nào",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "muốn xóa giao dịch thì bấm vào đâu",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "lam sao tao muc tieu tiet kiem",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "app có chế độ tối không",
+    "gold": "huong-dan",
+    "pred": "huong-dan",
+    "by": "rule"
+   },
+   {
+    "text": "mai trời có mưa không",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.7967044027453049
+   },
+   {
+    "text": "kể cho mình nghe chuyện vui",
+    "gold": "ngoai-pham-vi",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.913164797420742
+   },
+   {
+    "text": "giá bitcoin bây giờ",
+    "gold": "ngoai-pham-vi",
+    "pred": "ngoai-pham-vi",
+    "by": "knn",
+    "score": 0.7176203935284641
+   },
+   {
+    "text": "viết bài thơ về mùa thu",
+    "gold": "ngoai-pham-vi",
+    "pred": "ngoai-pham-vi",
+    "by": "knn",
+    "score": 0.5437129770974876
+   },
+   {
+    "text": "có nên vay ngân hàng mua nhà không",
+    "gold": "ngoai-pham-vi",
+    "pred": "kiem-tra-ngan-sach",
+    "by": "knn",
+    "score": 0.5443421061677715
+   },
+   {
+    "text": "ai là tổng thống mỹ",
+    "gold": "ngoai-pham-vi",
+    "pred": "ngoai-pham-vi",
+    "by": "knn",
+    "score": 0.49210410779956504
+   },
+   {
+    "text": "gợi ý quán ăn ngon ở quận 1",
+    "gold": "ngoai-pham-vi",
+    "pred": "ghi-giao-dich",
+    "by": "rule"
+   },
+   {
+    "text": "ừ đúng rồi",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.8469011899327447
+   },
+   {
+    "text": "cái hồi nãy",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.9263820317590151
+   },
+   {
+    "text": "thế còn",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.7457526453734419
+   },
+   {
+    "text": "300k",
+    "gold": "hoi-lai",
+    "pred": "ghi-giao-dich",
+    "by": "knn",
+    "score": 0.7528267239628937
+   },
+   {
+    "text": "làm luôn đi",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.9019879174331173
+   },
+   {
+    "text": "hmm",
+    "gold": "hoi-lai",
+    "pred": "hoi-lai",
+    "by": "knn",
+    "score": 0.7671921365598674
+   }
+  ],
+  "confusions": [
+   [
+    "ngoai-pham-vi → hoi-lai",
+    2
+   ],
+   [
+    "ghi-giao-dich → tong-ket-thang",
+    1
+   ],
+   [
+    "ghi-giao-dich → tim-giao-dich",
+    1
+   ],
+   [
+    "ngoai-pham-vi → kiem-tra-ngan-sach",
+    1
+   ],
+   [
+    "ngoai-pham-vi → ghi-giao-dich",
+    1
+   ],
+   [
+    "hoi-lai → ghi-giao-dich",
+    1
+   ]
+  ]
+ }
+}

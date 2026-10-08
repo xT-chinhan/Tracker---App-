@@ -1,0 +1,245 @@
+{
+ "embedModel": "nomic-embed-text",
+ "minSupport": 3,
+ "minPrecision": 0.85,
+ "curve": [
+  {
+   "interactions": 0,
+   "label": "V4@0",
+   "bank": 10,
+   "rules": 0,
+   "cases": 120,
+   "caseExact": 84.2,
+   "itemExact": 82.1,
+   "field": {
+    "title": 98.4,
+    "amount": 100,
+    "categoryName": 82.1,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  {
+   "interactions": 50,
+   "label": "V4@50",
+   "bank": 55,
+   "rules": 11,
+   "cases": 120,
+   "caseExact": 85,
+   "itemExact": 83.7,
+   "field": {
+    "title": 91.1,
+    "amount": 100,
+    "categoryName": 83.7,
+    "type": 95.1,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  {
+   "interactions": 100,
+   "label": "V4@100",
+   "bank": 88,
+   "rules": 29,
+   "cases": 120,
+   "caseExact": 87.5,
+   "itemExact": 86.2,
+   "field": {
+    "title": 87.8,
+    "amount": 100,
+    "categoryName": 86.2,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  {
+   "interactions": 200,
+   "label": "V4@200",
+   "bank": 123,
+   "rules": 80,
+   "cases": 120,
+   "caseExact": 83.3,
+   "itemExact": 82.9,
+   "field": {
+    "title": 87,
+    "amount": 100,
+    "categoryName": 82.9,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  }
+ ],
+ "online": [
+  {
+   "block": "1-50",
+   "accepted": 26,
+   "total": 50
+  },
+  {
+   "block": "51-100",
+   "accepted": 29,
+   "total": 50
+  },
+  {
+   "block": "101-150",
+   "accepted": 32,
+   "total": 50
+  },
+  {
+   "block": "151-200",
+   "accepted": 40,
+   "total": 50
+  }
+ ],
+ "ablation": {
+  "onlyBank": {
+   "label": "chỉ kho kNN (không luật)",
+   "bank": 123,
+   "rules": 80,
+   "cases": 120,
+   "caseExact": 85.8,
+   "itemExact": 84.6,
+   "field": {
+    "title": 87,
+    "amount": 100,
+    "categoryName": 84.6,
+    "type": 95.9,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  },
+  "onlyRules": {
+   "label": "chỉ luật (kho 10 ban đầu)",
+   "bank": 123,
+   "rules": 80,
+   "cases": 120,
+   "caseExact": 82.5,
+   "itemExact": 81.3,
+   "field": {
+    "title": 98.4,
+    "amount": 100,
+    "categoryName": 81.3,
+    "type": 95.9,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100
+  }
+ },
+ "ruleUses": 63,
+ "ruleRight": 63,
+ "activeRules": [
+  "bim cho → Gia đình (5)",
+  "cho be → Gia đình (6)",
+  "bim → Gia đình (6)",
+  "tu thien → Chi khác (5)",
+  "tu → Chi khác (5)",
+  "thien → Chi khác (5)",
+  "lau → Ăn uống (6)",
+  "pho → Ăn uống (4)",
+  "an lau → Ăn uống (4)",
+  "an → Ăn uống (15)",
+  "cat toc → Chi khác (6)",
+  "cat → Chi khác (6)",
+  "toc → Chi khác (6)",
+  "an oc → Ăn uống (4)",
+  "oc → Ăn uống (5)",
+  "luong → Lương (5)",
+  "highlands → Ăn uống (3)",
+  "dam → Hiếu hỉ (7)",
+  "rua xe → Di chuyển (5)",
+  "rua → Di chuyển (5)",
+  "xe → Di chuyển (9)",
+  "nuoc → Hóa đơn (3)",
+  "xang → Di chuyển (3)",
+  "thuong → Thưởng (10)",
+  "wifi → Hóa đơn (3)",
+  "the coffee → Ăn uống (4)",
+  "coffee house → Ăn uống (4)",
+  "the → Ăn uống (4)",
+  "coffee → Ăn uống (4)",
+  "house → Ăn uống (4)",
+  "mung → Hiếu hỉ (4)",
+  "karaoke → Giải trí (4)",
+  "com → Ăn uống (3)",
+  "phe cuoi → Giải trí (3)",
+  "cuoi tuan → Giải trí (6)",
+  "tuan → Giải trí (6)",
+  "banh mi → Ăn uống (6)",
+  "mi thit → Ăn uống (3)",
+  "banh → Ăn uống (6)",
+  "mi → Ăn uống (6)",
+  "thit → Ăn uống (3)",
+  "lai chung → Đầu tư (3)",
+  "chung khoan → Đầu tư (3)",
+  "lai → Đầu tư (3)",
+  "khoan → Đầu tư (3)",
+  "nhau → Ăn uống (4)",
+  "gio → Hiếu hỉ (5)",
+  "winmart → Ăn uống (5)",
+  "tien mang → Hóa đơn (3)",
+  "mang → Hóa đơn (3)",
+  "netflix → Giải trí (3)",
+  "li xi → Chi khác (4)",
+  "li → Chi khác (4)",
+  "xi → Chi khác (4)",
+  "tour → Du lịch (3)",
+  "ve may → Du lịch (4)",
+  "may bay → Du lịch (4)",
+  "may → Du lịch (4)",
+  "bay → Du lịch (4)",
+  "cafe cuoi → Giải trí (3)",
+  "cashback → Thu khác (4)",
+  "shopeefood → Ăn uống (4)",
+  "dam gio → Hiếu hỉ (3)",
+  "tan gia → Hiếu hỉ (3)",
+  "tan → Hiếu hỉ (3)",
+  "gia → Hiếu hỉ (3)",
+  "tien nha → Nhà ở (4)",
+  "bun bo → Ăn uống (3)",
+  "bun → Ăn uống (3)",
+  "bo → Ăn uống (4)",
+  "da → Ăn uống (3)",
+  "hoan tien → Thu khác (3)",
+  "hoan → Thu khác (3)",
+  "hoc phi → Giáo dục (4)",
+  "hoc → Giáo dục (4)",
+  "phim → Giải trí (5)",
+  "an sang → Ăn uống (5)",
+  "sang → Ăn uống (5)",
+  "grab → Di chuyển (3)",
+  "ve phim → Giải trí (3)"
+ ]
+}
