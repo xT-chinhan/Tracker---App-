@@ -51,9 +51,9 @@ function OverviewSkeleton() {
   return (
     <div className="contents" data-testid="loading" aria-busy="true">
       <div className="grid grid-cols-12 gap-5">
-        {kpi([90, 130, 70, 70, 70], 'col-span-4')}
-        {kpi([80, 150, 80, 80], 'col-span-3')}
-        {kpi([160, 280, 150, 150], 'col-span-5')}
+        {kpi([90, 130, 70, 70, 70], 'col-span-6 xl:col-span-4')}
+        {kpi([80, 150, 80, 80], 'col-span-6 xl:col-span-3')}
+        {kpi([160, 280, 150, 150], 'col-span-12 xl:col-span-5')}
       </div>
       <div className="grid min-h-[540px] flex-1 grid-cols-12 gap-5">
         <Card className="col-span-8 flex flex-col">
@@ -128,7 +128,7 @@ export default function OverviewPage() {
       {header}
       <div className="grid grid-cols-12 gap-5">
         <Kpi
-          className="col-span-4"
+          className="col-span-6 xl:col-span-4"
           icon={<Users />}
           label="Người dùng"
           value={formatNumber(data.users.total)}
@@ -140,7 +140,7 @@ export default function OverviewPage() {
           ]}
         />
         <Kpi
-          className="col-span-3"
+          className="col-span-6 xl:col-span-3"
           icon={<ArrowLeftRight />}
           label="Giao dịch"
           value={formatNumber(data.transactions.total)}
@@ -151,7 +151,7 @@ export default function OverviewPage() {
           ]}
         />
         <Kpi
-          className="col-span-5"
+          className="col-span-12 xl:col-span-5"
           icon={<span className="size-[7px] rounded-full bg-income" />}
           label="Tổng thu · toàn thời gian"
           value={formatVND(data.transactions.totalIncome)}
