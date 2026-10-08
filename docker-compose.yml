@@ -1,3 +1,7 @@
+# Biến lấy từ .env cạnh file này (xem .env.example).
+#   docker compose up -d                          => chỉ PostgreSQL (dev: localhost:${DB_PORT:-5433})
+#   docker compose --profile api up -d --build    => DB + API (http://localhost:${API_PORT:-3000}/api)
+#   docker compose --profile app up -d --build    => DB + API + Admin web qua nginx (http://localhost:${ADMIN_PORT:-8080}, /api proxy sang API)
 services:
   db:
     image: postgres:16-alpine
@@ -7,18 +11,22 @@ services:
       POSTGRES_PASSWORD: tracker
       POSTGRES_DB: tracker
     ports:
-      - "5433:5432"
+      - "${DB_PORT:-5433}:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tracker -d tracker"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
 
-  # Tùy chọn: docker compose --profile api up -d --build  => DB + API (http://localhost:${API_PORT:-3000}/api)
-  # Biến lấy từ .env cạnh file này (JWT_SECRET bắt buộc, >= 16 ký tự).
   api:
-    profiles: ["api"]
+    profiles: ["api", "app"]
     build: ./backend
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://tracker:tracker@db:5432/${API_DB:-tracker}?schema=public
       JWT_SECRET: ${JWT_SECRET:-}
@@ -26,15 +34,27 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SEED_DEMO: ${SEED_DEMO:-false}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_SECURE: ${SMTP_SECURE:-false}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
-      SMTP_FROM: ${SMTP_FROM:-App Tracker <no-reply@tracker.local>}
-      TRUST_PROXY: ${TRUST_PROXY:-}
+      SMTP_FROM: ${SMTP_FROM:-Thu Chi <no-reply@thuchi.vn>}
+      # Sau nginx của service admin: 1 hop (nginx ghi đè X-Forwarded-For bằng IP thật)
+      TRUST_PROXY: ${TRUST_PROXY:-1}
     ports:
       - "${API_PORT:-3000}:3000"
+
+  admin:
+    profiles: ["app"]
+    build: ./admin
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${ADMIN_PORT:-8080}:80"
 
 volumes:
   db-data:

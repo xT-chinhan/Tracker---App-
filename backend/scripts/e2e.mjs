@@ -9,7 +9,7 @@ import { readFileSync } from 'node:fs';
 
 const BASE = process.env.API_URL ?? 'http://localhost:3000/api';
 const API_LOG = process.env.API_LOG ?? '/tmp/tracker-api.log';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@tracker.local';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@thuchi.vn';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'admin123';
 
 let pass = 0, fail = 0, section = '';

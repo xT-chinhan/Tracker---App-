@@ -3,7 +3,7 @@ import path from 'node:path'
 import { expect, type Page } from '@playwright/test'
 
 export const API_URL = process.env.E2E_API_URL ?? 'http://localhost:3001/api'
-export const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? 'admin@tracker.local'
+export const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? 'admin@thuchi.vn'
 export const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? 'admin123'
 export const SHOTS = process.env.E2E_SHOTS ?? '/tmp/admin-shots'
 export const STATE_FILE = path.join(import.meta.dirname, '.state.json')

@@ -1,4 +1,7 @@
 node_modules/
 dist/
+seed-dist/
 .env
 *.log
+# Bản xuất thử từ công cụ thiết kế (không phải mockup đã duyệt)
+design/stitch/
