@@ -8,7 +8,7 @@ Dự án độc lập. Bản Flutter + Firestore cũ (App_Quan_ly_chi_tieu_ca_nh
 - Tài khoản demo: `admin@thuchi.vn / admin123`, `demo@thuchi.vn / demo123` (khớp mockup mobile).
 - Tiếp theo: app mobile Flutter (máy chưa cài Flutter SDK). Thiết kế đã duyệt ở `design/mockup/` (25 màn), token ở `design/tokens.md`, `design/DESIGN.md`. App đọc cấu hình qua `GET /api/config/public`.
 - Tab bar mobile: Trang chủ · Lịch sử · [＋] · Báo cáo · Cài đặt. Chạm ＋ = Ghi giao dịch; nhấn giữ = menu Thu nhập / Chuyển tiền / mẫu nhập nhanh.
-- Để sau: push FCM (làm cùng mobile), vay/nợ.
+- **Ưu tiên hiện tại: trợ lý AI** (`ai/`, đề xuất ở `ai/research/DE-XUAT.md`). Việc hoãn lại ghi ở `docs/BACKLOG.md` (mobile, QR thanh toán, FCM, vay/nợ, vận hành).
 
 ## Quy tắc làm việc
 - **Giao diện phải có mockup và được duyệt trước khi dựng** (web, mobile, admin). Backend/API thì làm thẳng. Mockup đặt trong `design/`, cùng style ảnh mẫu `design/reference.png` (tối giản, nền trắng ngà, gần đơn sắc).
