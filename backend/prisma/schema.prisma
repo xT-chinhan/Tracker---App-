@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  LOCKED
+}
+
+enum TxType {
+  INCOME
+  EXPENSE
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  WITHDRAWN
+  EARLY_WITHDRAWN
+}
+
+enum GoalEntryType {
+  DEPOSIT
+  WITHDRAW
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  role         Role       @default(USER)
+  status       UserStatus @default(ACTIVE)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  categories   Category[]
+  transactions Transaction[]
+  budgets      Budget[]
+  savingGoals  SavingGoal[]
+}
+
+/// userId = null => danh mục hệ thống (admin quản lý, dùng chung cho mọi user)
+model Category {
+  id         String   @id @default(uuid())
+  userId     String?
+  name       String
+  type       TxType
+  icon       String   @default("ellipsis")
+  color      String   @default("#64748B")
+  isArchived Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@index([userId])
+}
+
+model Transaction {
+  id         String   @id @default(uuid())
+  userId     String
+  categoryId String
+  type       TxType
+  amount     BigInt
+  title      String
+  note       String?
+  occurredAt DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([userId, occurredAt])
+  @@index([categoryId])
+}
+
+/// Hạn mức chi theo danh mục chi tiêu trong một tháng (month = "YYYY-MM")
+model Budget {
+  id          String   @id @default(uuid())
+  userId      String
+  categoryId  String
+  month       String
+  limitAmount BigInt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, categoryId, month])
+}
+
+model SavingGoal {
+  id           String     @id @default(uuid())
+  userId       String
+  name         String
+  targetAmount BigInt
+  savedAmount  BigInt     @default(0)
+  startDate    DateTime
+  targetDate   DateTime
+  icon         String     @default("star")
+  color        String     @default("#3498DB")
+  status       GoalStatus @default(ACTIVE)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries SavingEntry[]
+
+  @@index([userId])
+}
+
+/// Sổ nạp/rút của mục tiêu tiết kiệm. Nạp = tiền rời số dư, rút = tiền về số dư.
+model SavingEntry {
+  id        String        @id @default(uuid())
+  goalId    String
+  type      GoalEntryType
+  amount    BigInt
+  date      DateTime
+  createdAt DateTime      @default(now())
+
+  goal SavingGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@index([goalId])
+}
