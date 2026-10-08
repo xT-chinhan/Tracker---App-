@@ -23,6 +23,10 @@ class CategoryQuery {
   @IsOptional() @IsEnum(TxType) type?: TxType;
 }
 
+/** Collation mặc định của Postgres xếp "Ăn uống" sau "Sức khỏe" => sắp xếp tiếng Việt ở tầng ứng dụng. */
+const viCollator = new Intl.Collator('vi', { sensitivity: 'base' });
+const viCompare = (a: string, b: string) => viCollator.compare(a, b);
+
 /**
  * Dùng chung cho user (ownerId = userId) và admin (ownerId = null => danh mục hệ thống).
  * Tên danh mục là duy nhất trong phạm vi (hệ thống + của user) theo từng loại thu/chi.
@@ -32,19 +36,19 @@ export class CategoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** Danh mục user được thấy: hệ thống + của riêng mình, chưa lưu trữ. */
-  listForUser(userId: string, type?: TxType) {
-    return this.prisma.category.findMany({
-      where: { isArchived: false, type, OR: [{ userId: null }, { userId }] },
-      orderBy: [{ userId: { sort: 'asc', nulls: 'first' } }, { name: 'asc' }],
-    });
+  /** Hệ thống trước, của user sau; trong mỗi nhóm xếp theo tên tiếng Việt. */
+  async listForUser(userId: string, type?: TxType) {
+    const rows = await this.prisma.category.findMany({ where: { isArchived: false, type, OR: [{ userId: null }, { userId }] } });
+    return rows.sort((a, b) => Number(a.userId !== null) - Number(b.userId !== null) || viCompare(a.name, b.name));
   }
 
-  listSystem(type?: TxType) {
-    return this.prisma.category.findMany({
+  /** Đang dùng trước, đã lưu trữ sau; xếp theo tên tiếng Việt. */
+  async listSystem(type?: TxType) {
+    const rows = await this.prisma.category.findMany({
       where: { userId: null, type },
-      orderBy: [{ isArchived: 'asc' }, { name: 'asc' }],
       include: { _count: { select: { transactions: true } } },
     });
+    return rows.sort((a, b) => Number(a.isArchived) - Number(b.isArchived) || viCompare(a.name, b.name));
   }
 
   /** Danh mục dùng được để ghi giao dịch / ngân sách cho user. */
@@ -74,10 +78,11 @@ export class CategoriesService {
     });
   }
 
-  /** Đã có giao dịch => lưu trữ (ẩn) để giữ lịch sử; chưa có => xóa hẳn. */
+  /** Đã có giao dịch / giao dịch định kỳ => lưu trữ (ẩn) để giữ lịch sử; chưa có => xóa hẳn (mẫu nhập nhanh, ngân sách xóa theo). */
   async remove(ownerId: string | null, id: string) {
     await this.findOwned(ownerId, id);
-    const used = await this.prisma.transaction.count({ where: { categoryId: id } });
+    const used = (await this.prisma.transaction.count({ where: { categoryId: id } }))
+      + (await this.prisma.recurringRule.count({ where: { categoryId: id } }));
     if (used > 0) {
       await this.prisma.category.update({ where: { id }, data: { isArchived: true } });
       return { archived: true };

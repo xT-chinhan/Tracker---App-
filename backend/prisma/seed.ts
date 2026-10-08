@@ -31,7 +31,7 @@ async function main() {
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
   if (email && password) {
-    await prisma.user.upsert({
+    const admin = await prisma.user.upsert({
       where: { email },
       update: { role: 'ADMIN' },
       create: {
@@ -41,6 +41,9 @@ async function main() {
         passwordHash: await bcrypt.hash(password, 10),
       },
     });
+    if (!(await prisma.wallet.count({ where: { userId: admin.id } }))) {
+      await prisma.wallet.create({ data: { userId: admin.id, name: 'Tiền mặt', type: 'CASH' } });
+    }
   }
 
   console.log(`Seeded ${SYSTEM_CATEGORIES.length} system categories, admin: ${email ?? '(skipped)'}`);

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Injectable, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, HttpCode, Injectable, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsUUID, Matches, Max, Min } from 'class-validator';
@@ -10,8 +10,8 @@ import { MONTH_REGEX, monthOf, monthRange } from '../common/time';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
 
 class CreateBudgetDto {
-  /** Danh mục chi tiêu */
-  @IsUUID() categoryId: string;
+  /** Danh mục chi tiêu; bỏ trống => ngân sách tổng của tháng */
+  @IsOptional() @IsUUID() categoryId?: string;
   /** YYYY-MM */
   @Matches(MONTH_REGEX) month: string;
   @Type(() => Number) @IsInt() @Min(1) @Max(MAX_AMOUNT) limitAmount: number;
@@ -30,8 +30,10 @@ class CopyBudgetsDto {
   @Matches(MONTH_REGEX) toMonth: string;
 }
 
-/** Ngưỡng cảnh báo giữ như app cũ: >= 80% là sắp hết, >= 100% là vượt. */
+/** Ngưỡng cảnh báo: >= 80% là sắp hết, >= 100% là vượt. */
 const WARNING_PERCENT = 80;
+const CATEGORY_SELECT = { select: { id: true, name: true, icon: true, color: true } } as const;
+const fmt = (v: number) => v.toLocaleString('vi-VN');
 
 @Injectable()
 export class BudgetsService {
@@ -40,15 +42,17 @@ export class BudgetsService {
   async list(userId: string, month: string) {
     const budgets = await this.prisma.budget.findMany({
       where: { userId, month },
-      include: { category: { select: { id: true, name: true, icon: true, color: true } } },
+      include: { category: CATEGORY_SELECT },
       orderBy: { createdAt: 'asc' },
     });
-    const spent = await this.spentByCategory(userId, month, budgets.map((b) => b.categoryId));
-    const items = budgets.map((b) => withProgress(b, spent.get(b.categoryId) ?? 0));
+    const spent = await this.spent(userId, month);
+    const overallBudget = budgets.find((b) => !b.categoryId);
+    const items = budgets.filter((b) => b.categoryId).map((b) => withProgress(b, spent.get(b.categoryId!) ?? 0));
     const totalLimit = items.reduce((s, b) => s + b.limitAmount, 0);
     const totalSpent = items.reduce((s, b) => s + b.spent, 0);
     return {
       month,
+      overall: overallBudget ? withProgress(overallBudget, spent.get(null) ?? 0) : null,
       totalLimit,
       totalSpent,
       totalRemaining: totalLimit - totalSpent,
@@ -57,25 +61,34 @@ export class BudgetsService {
   }
 
   async create(userId: string, dto: CreateBudgetDto) {
-    const category = await this.categories.usableForUser(userId, dto.categoryId);
-    if (category.type !== 'EXPENSE') throw new BadRequestException('Ngân sách chỉ áp dụng cho danh mục chi tiêu');
+    if (dto.categoryId) {
+      const category = await this.categories.usableForUser(userId, dto.categoryId);
+      if (category.type !== 'EXPENSE') throw new BadRequestException('Ngân sách chỉ áp dụng cho danh mục chi tiêu');
+    } else if (await this.prisma.budget.findFirst({ where: { userId, month: dto.month, categoryId: null } })) {
+      throw new ConflictException('Tháng này đã có ngân sách tổng');
+    }
     const budget = await this.prisma.budget.create({
-      data: { userId, categoryId: category.id, month: dto.month, limitAmount: BigInt(dto.limitAmount) },
-      include: { category: { select: { id: true, name: true, icon: true, color: true } } },
+      data: { userId, categoryId: dto.categoryId ?? null, month: dto.month, limitAmount: BigInt(dto.limitAmount) },
+      include: { category: CATEGORY_SELECT },
     });
-    const spent = await this.spentByCategory(userId, dto.month, [budget.categoryId]);
-    return withProgress(budget, spent.get(budget.categoryId) ?? 0);
+    return withProgress(budget, (await this.spent(userId, dto.month)).get(budget.categoryId) ?? 0);
   }
 
+  /** Đổi hạn mức => tính lại dấu đã báo: tụt dưới ngưỡng thì xóa dấu để lần vượt sau báo lại. */
   async update(userId: string, id: string, dto: UpdateBudgetDto) {
-    await this.findOwned(userId, id);
+    const current = await this.findOwned(userId, id);
+    const spent = (await this.spent(userId, current.month)).get(current.categoryId) ?? 0;
+    const pctNew = (spent / dto.limitAmount) * 100;
     const budget = await this.prisma.budget.update({
       where: { id },
-      data: { limitAmount: BigInt(dto.limitAmount) },
-      include: { category: { select: { id: true, name: true, icon: true, color: true } } },
+      data: {
+        limitAmount: BigInt(dto.limitAmount),
+        warnedAt: pctNew < WARNING_PERCENT ? null : undefined,
+        exceededAt: pctNew < 100 ? null : undefined,
+      },
+      include: { category: CATEGORY_SELECT },
     });
-    const spent = await this.spentByCategory(userId, budget.month, [budget.categoryId]);
-    return withProgress(budget, spent.get(budget.categoryId) ?? 0);
+    return withProgress(budget, spent);
   }
 
   async remove(userId: string, id: string) {
@@ -83,16 +96,60 @@ export class BudgetsService {
     await this.prisma.budget.delete({ where: { id } });
   }
 
-  /** Sao chép ngân sách sang tháng khác; danh mục đã có ngân sách ở tháng đích được giữ nguyên. */
+  /** Sao chép ngân sách (kể cả ngân sách tổng) sang tháng khác; mục đã có ở tháng đích được giữ nguyên. */
   async copy(userId: string, dto: CopyBudgetsDto) {
-    const source = await this.prisma.budget.findMany({
-      where: { userId, month: dto.fromMonth, category: { isArchived: false } },
-    });
+    if (dto.fromMonth === dto.toMonth) throw new BadRequestException('Tháng nguồn và tháng đích phải khác nhau');
+    const [source, existing] = await Promise.all([
+      this.prisma.budget.findMany({
+        where: { userId, month: dto.fromMonth, OR: [{ categoryId: null }, { category: { isArchived: false } }] },
+      }),
+      this.prisma.budget.findMany({ where: { userId, month: dto.toMonth }, select: { categoryId: true } }),
+    ]);
+    const taken = new Set(existing.map((b) => b.categoryId));
     const { count } = await this.prisma.budget.createMany({
-      data: source.map((b) => ({ userId, categoryId: b.categoryId, month: dto.toMonth, limitAmount: b.limitAmount })),
+      data: source
+        .filter((b) => !taken.has(b.categoryId))
+        .map((b) => ({ userId, categoryId: b.categoryId, month: dto.toMonth, limitAmount: b.limitAmount })),
       skipDuplicates: true,
     });
     return { copied: count };
+  }
+
+  /**
+   * Gọi sau khi tạo/sửa giao dịch chi: ngân sách danh mục + ngân sách tổng của tháng đó vượt 80% / 100%
+   * => sinh 1 thông báo. Mỗi ngưỡng mỗi ngân sách chỉ báo 1 lần (updateMany có điều kiện => an toàn khi chạy đồng thời).
+   */
+  async checkThresholds(userId: string, month: string, categoryId: string) {
+    const budgets = await this.prisma.budget.findMany({
+      where: { userId, month, OR: [{ categoryId }, { categoryId: null }] },
+      include: { category: CATEGORY_SELECT },
+    });
+    if (!budgets.length) return;
+    const spent = await this.spent(userId, month);
+    for (const b of budgets) {
+      const used = spent.get(b.categoryId) ?? 0;
+      const limit = Number(b.limitAmount);
+      const pct = (used / limit) * 100;
+      const level = pct >= 100 ? 'exceeded' : pct >= WARNING_PERCENT ? 'warning' : null;
+      if (!level) continue;
+      const now = new Date();
+      // Vượt 100% => đánh dấu cả 2 ngưỡng, chỉ gửi 1 thông báo "vượt"
+      const { count } = await this.prisma.budget.updateMany({
+        where: level === 'exceeded' ? { id: b.id, exceededAt: null } : { id: b.id, warnedAt: null },
+        data: level === 'exceeded' ? { exceededAt: now, warnedAt: b.warnedAt ?? now } : { warnedAt: now },
+      });
+      if (!count) continue;
+      const name = b.category ? `"${b.category.name}"` : 'tổng';
+      await this.prisma.notification.create({
+        data: {
+          userId,
+          type: level === 'exceeded' ? 'BUDGET_EXCEEDED' : 'BUDGET_WARNING',
+          title: level === 'exceeded' ? `Vượt ngân sách ${name}` : `Sắp hết ngân sách ${name}`,
+          body: `Tháng ${month}: đã chi ${fmt(used)}đ / ${fmt(limit)}đ (${Math.round(pct * 10) / 10}%)`,
+          data: { budgetId: b.id, month, categoryId: b.categoryId, spent: used, limit, percentage: Math.round(pct * 10) / 10 },
+        },
+      });
+    }
   }
 
   private async findOwned(userId: string, id: string) {
@@ -101,14 +158,17 @@ export class BudgetsService {
     return b;
   }
 
-  private async spentByCategory(userId: string, month: string, categoryIds: string[]) {
+  /** Tổng chi theo danh mục của tháng; key null = tổng chi cả tháng. Chuyển tiền / tiết kiệm không tính. */
+  private async spent(userId: string, month: string) {
     const { start, end } = monthRange(month);
     const rows = await this.prisma.transaction.groupBy({
       by: ['categoryId'],
-      where: { userId, type: 'EXPENSE', categoryId: { in: categoryIds }, occurredAt: { gte: start, lt: end } },
+      where: { userId, type: 'EXPENSE', occurredAt: { gte: start, lt: end } },
       _sum: { amount: true },
     });
-    return new Map(rows.map((r) => [r.categoryId, Number(r._sum.amount ?? 0)]));
+    const m = new Map<string | null, number>(rows.map((r) => [r.categoryId, Number(r._sum.amount ?? 0)]));
+    m.set(null, rows.reduce((s, r) => s + Number(r._sum.amount ?? 0), 0));
+    return m;
   }
 }
 
@@ -131,12 +191,13 @@ function withProgress<T extends Budget>(b: T, spent: number) {
 export class BudgetsController {
   constructor(private readonly budgets: BudgetsService) {}
 
-  /** Ngân sách của tháng kèm số đã chi, còn lại, % và trạng thái ok | warning | exceeded */
+  /** Ngân sách của tháng: `overall` (ngân sách tổng) + `items` theo danh mục, kèm spent/remaining/percentage/status */
   @Get()
   list(@CurrentUser() u: AuthUser, @Query() q: BudgetQuery) {
     return this.budgets.list(u.id, q.month ?? monthOf(new Date()));
   }
 
+  /** Bỏ trống categoryId => ngân sách tổng (mỗi tháng 1) */
   @Post()
   create(@CurrentUser() u: AuthUser, @Body() dto: CreateBudgetDto) {
     return this.budgets.create(u.id, dto);
@@ -158,5 +219,5 @@ export class BudgetsController {
   }
 }
 
-@Module({ imports: [CategoriesModule], controllers: [BudgetsController], providers: [BudgetsService] })
+@Module({ imports: [CategoriesModule], controllers: [BudgetsController], providers: [BudgetsService], exports: [BudgetsService] })
 export class BudgetsModule {}

@@ -1,8 +1,11 @@
-import { BadRequestException, Body, ConflictException, Controller, ForbiddenException, Get, HttpCode, Injectable, Module, Patch, Post, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, ForbiddenException, Get, HttpCode, Injectable, Logger, Module, Patch, Post, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcryptjs';
+import { randomInt } from 'crypto';
+import * as nodemailer from 'nodemailer';
 import { User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser, Public } from '../common/auth';
@@ -28,22 +31,83 @@ class ChangePasswordDto {
   @IsString() @MinLength(6) @MaxLength(72) newPassword: string;
 }
 
+class ForgotPasswordDto {
+  @IsEmail() email: string;
+}
+
+class ResetPasswordDto {
+  @IsEmail() email: string;
+  /** Mã 6 số gửi qua email */
+  @Matches(/^\d{6}$/, { message: 'otp phải gồm 6 chữ số' }) otp: string;
+  @IsString() @MinLength(6) @MaxLength(72) newPassword: string;
+}
+
+class DeleteAccountDto {
+  /** Mật khẩu hiện tại để xác nhận */
+  @IsString() password: string;
+}
+
+const OTP_TTL_MS = 10 * 60 * 1000;
+const OTP_RESEND_MS = 60 * 1000;
+const OTP_MAX_ATTEMPTS = 5;
+const OTP_INVALID = 'Mã OTP không đúng hoặc đã hết hạn';
+
 export function publicUser<T extends { passwordHash: string }>(u: T): Omit<T, 'passwordHash'> {
   const { passwordHash, ...rest } = u;
   return rest;
 }
 
+/** Gửi mail qua SMTP_*; không cấu hình SMTP_HOST => in OTP ra log (dev / e2e). */
+@Injectable()
+export class MailService {
+  private readonly logger = new Logger('Mail');
+  private readonly transport?: nodemailer.Transporter;
+
+  constructor(private readonly config: ConfigService) {
+    const host = config.get<string>('SMTP_HOST');
+    if (host) {
+      this.transport = nodemailer.createTransport({
+        host,
+        port: Number(config.get('SMTP_PORT', 587)),
+        secure: config.get('SMTP_SECURE') === 'true',
+        auth: config.get('SMTP_USER') ? { user: config.get('SMTP_USER'), pass: config.get('SMTP_PASS') } : undefined,
+      });
+    }
+  }
+
+  async sendOtp(email: string, otp: string) {
+    if (!this.transport) {
+      this.logger.warn(`[DEV] OTP đặt lại mật khẩu cho ${email}: ${otp}`);
+      return;
+    }
+    await this.transport.sendMail({
+      from: this.config.get('SMTP_FROM', this.config.get('SMTP_USER')),
+      to: email,
+      subject: 'Mã đặt lại mật khẩu App Tracker',
+      text: `Mã OTP của bạn là ${otp}. Mã có hiệu lực trong 10 phút. Nếu không phải bạn yêu cầu, hãy bỏ qua email này.`,
+    });
+  }
+}
+
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService, private readonly jwt: JwtService) {}
+  private readonly logger = new Logger('Auth');
 
+  constructor(private readonly prisma: PrismaService, private readonly jwt: JwtService, private readonly mail: MailService) {}
+
+  /** Tạo user kèm ví mặc định "Tiền mặt". */
   async register(dto: RegisterDto) {
     const email = dto.email.toLowerCase().trim();
     if (await this.prisma.user.findUnique({ where: { email } })) {
       throw new ConflictException('Email đã được sử dụng');
     }
     const user = await this.prisma.user.create({
-      data: { email, name: dto.name.trim(), passwordHash: await bcrypt.hash(dto.password, 10) },
+      data: {
+        email,
+        name: dto.name,
+        passwordHash: await bcrypt.hash(dto.password, 10),
+        wallets: { create: { name: 'Tiền mặt', type: 'CASH' } },
+      },
     });
     return this.issue(user);
   }
@@ -62,7 +126,7 @@ export class AuthService {
   }
 
   async updateProfile(userId: string, dto: UpdateProfileDto) {
-    return publicUser(await this.prisma.user.update({ where: { id: userId }, data: { name: dto.name.trim() } }));
+    return publicUser(await this.prisma.user.update({ where: { id: userId }, data: { name: dto.name } }));
   }
 
   async changePassword(userId: string, dto: ChangePasswordDto) {
@@ -74,6 +138,51 @@ export class AuthService {
       where: { id: userId },
       data: { passwordHash: await bcrypt.hash(dto.newPassword, 10) },
     });
+  }
+
+  /**
+   * Chạy nền sau khi đã trả 204 => email có tồn tại hay không đều phản hồi như nhau.
+   * OTP mới ghi đè OTP cũ; trong 60s kể từ lần gửi trước thì bỏ qua.
+   */
+  async forgotPassword(dto: ForgotPasswordDto) {
+    const user = await this.prisma.user.findUnique({ where: { email: dto.email.toLowerCase().trim() } });
+    if (!user || user.status === 'LOCKED') return;
+    const prev = await this.prisma.passwordReset.findUnique({ where: { userId: user.id } });
+    if (prev && Date.now() - prev.createdAt.getTime() < OTP_RESEND_MS) return;
+    const otp = String(randomInt(0, 1_000_000)).padStart(6, '0');
+    const data = { codeHash: await bcrypt.hash(otp, 10), expiresAt: new Date(Date.now() + OTP_TTL_MS), attempts: 0, createdAt: new Date() };
+    await this.prisma.passwordReset.upsert({ where: { userId: user.id }, create: { userId: user.id, ...data }, update: data });
+    await this.mail.sendOtp(user.email, otp);
+  }
+
+  /** Sai quá 5 lần => OTP bị hủy, phải xin mã mới. */
+  async resetPassword(dto: ResetPasswordDto) {
+    const user = await this.prisma.user.findUnique({ where: { email: dto.email.toLowerCase().trim() } });
+    const rec = user && (await this.prisma.passwordReset.findUnique({ where: { userId: user.id } }));
+    if (!user || !rec || rec.expiresAt < new Date() || rec.attempts >= OTP_MAX_ATTEMPTS) throw new BadRequestException(OTP_INVALID);
+    if (!(await bcrypt.compare(dto.otp, rec.codeHash))) {
+      const { attempts } = await this.prisma.passwordReset.update({ where: { userId: user.id }, data: { attempts: { increment: 1 } } });
+      if (attempts >= OTP_MAX_ATTEMPTS) await this.prisma.passwordReset.deleteMany({ where: { userId: user.id } });
+      throw new BadRequestException(OTP_INVALID);
+    }
+    await this.prisma.$transaction([
+      this.prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(dto.newPassword, 10) } }),
+      this.prisma.passwordReset.delete({ where: { userId: user.id } }),
+    ]);
+  }
+
+  /** Xóa tài khoản + toàn bộ dữ liệu (cascade). Admin cuối cùng không tự xóa được. */
+  async deleteAccount(userId: string, dto: DeleteAccountDto) {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    if (!(await bcrypt.compare(dto.password, user.passwordHash))) throw new BadRequestException('Mật khẩu không đúng');
+    if (user.role === 'ADMIN' && (await this.prisma.user.count({ where: { role: 'ADMIN' } })) <= 1) {
+      throw new ConflictException('Không thể xóa admin cuối cùng');
+    }
+    await this.prisma.user.delete({ where: { id: userId } });
+  }
+
+  runForgot(dto: ForgotPasswordDto) {
+    this.forgotPassword(dto).catch((e) => this.logger.error(`forgot-password: ${e?.message ?? e}`));
   }
 
   private async issue(user: User) {
@@ -99,6 +208,18 @@ export class AuthController {
     return this.auth.login(dto);
   }
 
+  /** Luôn 204 (chống dò email). Có tài khoản => gửi OTP 6 số, hạn 10 phút, gửi lại sau tối thiểu 60s. */
+  @Public() @Post('auth/forgot-password') @HttpCode(204)
+  forgotPassword(@Body() dto: ForgotPasswordDto) {
+    this.auth.runForgot(dto);
+  }
+
+  /** Đặt lại mật khẩu bằng OTP; sai 5 lần => OTP bị hủy */
+  @Public() @Post('auth/reset-password') @HttpCode(204)
+  resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.auth.resetPassword(dto);
+  }
+
   @ApiBearerAuth() @Get('me')
   me(@CurrentUser() u: AuthUser) {
     return this.auth.me(u.id);
@@ -113,7 +234,13 @@ export class AuthController {
   changePassword(@CurrentUser() u: AuthUser, @Body() dto: ChangePasswordDto) {
     return this.auth.changePassword(u.id, dto);
   }
+
+  /** Xóa tài khoản và toàn bộ dữ liệu, cần mật khẩu */
+  @ApiBearerAuth() @Delete('me') @HttpCode(204)
+  deleteAccount(@CurrentUser() u: AuthUser, @Body() dto: DeleteAccountDto) {
+    return this.auth.deleteAccount(u.id, dto);
+  }
 }
 
-@Module({ controllers: [AuthController], providers: [AuthService] })
+@Module({ controllers: [AuthController], providers: [AuthService, MailService] })
 export class AuthModule {}

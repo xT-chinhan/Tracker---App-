@@ -1,12 +1,12 @@
 import { BadRequestException, Body, ConflictException, Controller, Delete, Get, HttpCode, Injectable, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDateString, IsEnum, IsHexColor, IsInt, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { IsDateString, IsEnum, IsHexColor, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { GoalStatus, SavingGoal } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser } from '../common/auth';
 import { MAX_AMOUNT, Trim } from '../common/dto';
-import { StatsModule, StatsService } from '../stats/stats.module';
+import { lockUser, WalletsModule, WalletsService } from '../wallets/wallets.module';
 
 class CreateGoalDto {
   @Trim() @IsString() @MinLength(1) @MaxLength(80) name: string;
@@ -29,8 +29,15 @@ class UpdateGoalDto {
 
 class DepositDto {
   @Type(() => Number) @IsInt() @Min(1) @Max(MAX_AMOUNT) amount: number;
+  /** Ví trích tiền (phải đủ số dư) */
+  @IsUUID() walletId: string;
   /** Ngày nạp, mặc định hôm nay */
   @IsOptional() @IsDateString() date?: string;
+}
+
+class WithdrawDto {
+  /** Ví nhận lại tiền */
+  @IsUUID() walletId: string;
 }
 
 class GoalQuery {
@@ -42,13 +49,13 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
  * Luật nghiệp vụ (giữ theo app cũ):
- * - Nạp: trừ vào số dư, không vượt quá số còn thiếu (phần dư bị cắt), số dư phải đủ.
- * - Đủ mục tiêu => COMPLETED. Rút: trả toàn bộ về số dư, COMPLETED => WITHDRAWN, chưa đủ => EARLY_WITHDRAWN.
+ * - Nạp: trừ vào ví được chọn, không vượt quá số còn thiếu (phần dư bị cắt), số dư VÍ phải đủ.
+ * - Đủ mục tiêu => COMPLETED. Rút: trả toàn bộ về ví được chọn, COMPLETED => WITHDRAWN, chưa đủ => EARLY_WITHDRAWN.
  * - Mục tiêu đã rút không nạp thêm được.
  */
 @Injectable()
 export class SavingGoalsService {
-  constructor(private readonly prisma: PrismaService, private readonly stats: StatsService) {}
+  constructor(private readonly prisma: PrismaService, private readonly wallets: WalletsService) {}
 
   async list(userId: string, status?: GoalStatus) {
     const goals = await this.prisma.savingGoal.findMany({
@@ -63,6 +70,7 @@ export class SavingGoalsService {
     const entries = await this.prisma.savingEntry.findMany({
       where: { goalId: id },
       orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+      include: { wallet: { select: { id: true, name: true, type: true } } },
     });
     return { ...withProgress(goal), entries };
   }
@@ -112,8 +120,8 @@ export class SavingGoalsService {
 
   async deposit(userId: string, id: string, dto: DepositDto) {
     return this.prisma.$transaction(async (tx) => {
-      // Khóa theo user để 2 lần nạp đồng thời không cùng vượt qua kiểm tra số dư
-      await tx.$queryRaw`SELECT 1 FROM "User" WHERE id = ${userId} FOR UPDATE`;
+      // Khóa theo user để 2 lần nạp đồng thời không cùng vượt qua kiểm tra số dư ví
+      await lockUser(tx, userId);
       const goal = await tx.savingGoal.findFirst({ where: { id, userId } });
       if (!goal) throw new NotFoundException('Không tìm thấy mục tiêu');
       if (CLOSED.includes(goal.status)) throw new ConflictException('Mục tiêu đã rút, không thể nạp thêm');
@@ -122,11 +130,12 @@ export class SavingGoalsService {
       if (stillNeeded <= 0) throw new ConflictException('Mục tiêu đã hoàn thành');
       const amount = Math.min(dto.amount, stillNeeded);
 
-      const { balance } = await this.stats.balance(userId);
-      if (balance < amount) throw new BadRequestException('Số dư không đủ để nạp');
+      const wallet = await this.wallets.usable(userId, dto.walletId, tx);
+      const balance = (await this.wallets.balances(userId, tx)).get(wallet.id) ?? 0;
+      if (balance < amount) throw new BadRequestException(`Số dư ví "${wallet.name}" không đủ để nạp (còn ${balance})`);
 
       await tx.savingEntry.create({
-        data: { goalId: id, type: 'DEPOSIT', amount: BigInt(amount), date: dto.date ? new Date(dto.date) : new Date() },
+        data: { userId, goalId: id, walletId: wallet.id, type: 'DEPOSIT', amount: BigInt(amount), date: dto.date ? new Date(dto.date) : new Date() },
       });
       const savedAmount = goal.savedAmount + BigInt(amount);
       const updated = await tx.savingGoal.update({
@@ -137,16 +146,17 @@ export class SavingGoalsService {
     });
   }
 
-  async withdraw(userId: string, id: string) {
+  async withdraw(userId: string, id: string, dto: WithdrawDto) {
     return this.prisma.$transaction(async (tx) => {
-      await tx.$queryRaw`SELECT 1 FROM "User" WHERE id = ${userId} FOR UPDATE`;
+      await lockUser(tx, userId);
       const goal = await tx.savingGoal.findFirst({ where: { id, userId } });
       if (!goal) throw new NotFoundException('Không tìm thấy mục tiêu');
       if (CLOSED.includes(goal.status)) throw new ConflictException('Mục tiêu đã được rút');
       if (goal.savedAmount <= 0n) throw new BadRequestException('Mục tiêu chưa có tiền để rút');
+      const wallet = await this.wallets.usable(userId, dto.walletId, tx);
 
       await tx.savingEntry.create({
-        data: { goalId: id, type: 'WITHDRAW', amount: goal.savedAmount, date: new Date() },
+        data: { userId, goalId: id, walletId: wallet.id, type: 'WITHDRAW', amount: goal.savedAmount, date: new Date() },
       });
       const updated = await tx.savingGoal.update({
         where: { id },
@@ -156,6 +166,7 @@ export class SavingGoalsService {
     });
   }
 
+  /** Chỉ xóa được khi đã rút hết; sổ nạp/rút được giữ lại (goalId => null) để số dư từng ví không đổi. */
   async remove(userId: string, id: string) {
     const goal = await this.findOwned(userId, id);
     if (goal.savedAmount > 0n) throw new ConflictException('Hãy rút tiền khỏi mục tiêu trước khi xóa');
@@ -218,8 +229,8 @@ export class SavingGoalsController {
   }
 
   @Post(':id/withdraw') @HttpCode(200)
-  withdraw(@CurrentUser() u: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
-    return this.goals.withdraw(u.id, id);
+  withdraw(@CurrentUser() u: AuthUser, @Param('id', ParseUUIDPipe) id: string, @Body() dto: WithdrawDto) {
+    return this.goals.withdraw(u.id, id, dto);
   }
 
   @Delete(':id') @HttpCode(204)
@@ -228,5 +239,5 @@ export class SavingGoalsController {
   }
 }
 
-@Module({ imports: [StatsModule], controllers: [SavingGoalsController], providers: [SavingGoalsService] })
+@Module({ imports: [WalletsModule], controllers: [SavingGoalsController], providers: [SavingGoalsService] })
 export class SavingGoalsModule {}
