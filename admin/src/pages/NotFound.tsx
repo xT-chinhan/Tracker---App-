@@ -1,12 +1,13 @@
-import { Link } from 'react-router'
-import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router'
+import { MapPinOff } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { EmptyState } from '@/components/common'
 
 export default function NotFoundPage() {
+  const navigate = useNavigate()
   return (
-    <div className="flex flex-col items-center gap-3 py-24 text-center">
-      <p className="text-5xl font-semibold text-muted-foreground/40">404</p>
-      <p className="font-medium">Không tìm thấy trang</p>
-      <Button asChild variant="outline"><Link to="/">Về tổng quan</Link></Button>
-    </div>
+    <Card className="flex flex-1 items-center justify-center">
+      <EmptyState icon={<MapPinOff />} title="Không tìm thấy trang" description="Đường dẫn không tồn tại hoặc đã bị đổi." action={{ label: 'Về tổng quan', onClick: () => navigate('/') }} />
+    </Card>
   )
 }

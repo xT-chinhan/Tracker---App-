@@ -1,22 +1,62 @@
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeftRight, LayoutDashboard, LogOut, Shapes, UserCog, Users, Wallet } from 'lucide-react'
+import { ArrowLeftRight, LayoutDashboard, LogOut, Megaphone, Shapes, UserRoundCog, Users } from 'lucide-react'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { UserAvatar } from '@/components/common'
+import { Button } from '@/components/ui/button'
+import { UserBubble } from '@/components/common'
 import { api, auth, logout } from '@/lib/api'
+import { formatNumber } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
-const NAV = [
+const MANAGE = [
   { to: '/', label: 'Tổng quan', icon: LayoutDashboard, end: true },
-  { to: '/users', label: 'Người dùng', icon: Users },
+  { to: '/users', label: 'Người dùng', icon: Users, count: true },
   { to: '/transactions', label: 'Giao dịch', icon: ArrowLeftRight },
-  { to: '/categories', label: 'Danh mục hệ thống', icon: Shapes },
-  { to: '/account', label: 'Tài khoản', icon: UserCog },
+  { to: '/categories', label: 'Danh mục', icon: Shapes },
+  { to: '/broadcasts', label: 'Thông báo', icon: Megaphone },
 ]
 
-/** Khung trang sau đăng nhập: sidebar (thu gọn thành icon trên tablet) + nội dung. */
+/** Logo chữ "đ" gạch chân trên nền đen. */
+export function Logo({ size = 'md' }: { size?: 'md' | 'lg' }) {
+  return (
+    <div
+      className={cn(
+        'flex shrink-0 items-center justify-center bg-primary font-bold text-primary-foreground underline decoration-2 underline-offset-3',
+        size === 'lg' ? 'size-14 rounded-[16px] text-[26px]' : 'size-9 rounded-[11px] text-lg',
+      )}
+      aria-hidden="true"
+    >
+      đ
+    </div>
+  )
+}
+
+function NavItem({ to, label, icon: Icon, end, count }: { to: string; label: string; icon: typeof Users; end?: boolean; count?: number }) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      aria-label={label}
+      title={label}
+      className={({ isActive }) =>
+        cn(
+          'group/nav flex size-11 items-center justify-center gap-3 rounded-sm border border-transparent text-[14.5px] font-medium text-nav transition-colors hover:bg-card/60 hover:text-foreground xl:h-[42px] xl:w-auto xl:justify-start xl:px-3',
+          isActive && 'border-border bg-card font-semibold text-foreground shadow-[0_1px_3px_rgb(17_17_17/.05)] hover:bg-card',
+        )
+      }
+    >
+      <Icon className="size-[18px] text-nav-icon group-aria-[current=page]/nav:text-foreground group-aria-[current=page]/nav:[stroke-width:2]" />
+      <span className="hidden xl:inline">{label}</span>
+      {count !== undefined && <span className="ml-auto hidden text-xs font-medium text-faint tabular-nums xl:inline">{formatNumber(count)}</span>}
+    </NavLink>
+  )
+}
+
+const groupLabel = 'mx-auto my-3.5 h-px w-7 overflow-hidden bg-border text-transparent xl:mx-0 xl:mt-1 xl:mb-2 xl:h-auto xl:w-auto xl:bg-transparent xl:px-3 xl:text-xs xl:leading-normal xl:font-medium xl:text-faint'
+
+/** Khung trang sau đăng nhập: sidebar 248px (rail 72px dưới 1280px) cùng nền trang, không có top bar. */
 export function Layout() {
   const navigate = useNavigate()
   const authed = auth.isValid()
@@ -31,70 +71,58 @@ export function Layout() {
     initialData: auth.user() ?? undefined,
     enabled: authed,
   })
+  const overview = useQuery({ queryKey: ['overview'], queryFn: api.overview, enabled: authed })
 
   // Token hết hạn: trang login sẽ dọn localStorage
   if (!authed) return <Navigate to={auth.token() ? '/login?reason=expired' : '/login'} replace />
 
   return (
-    <div className="flex min-h-svh bg-muted/40">
-      <aside className="sticky top-0 flex h-svh w-16 shrink-0 flex-col border-r bg-background lg:w-64">
-        <div className="flex h-16 items-center gap-2.5 border-b px-4">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Wallet className="size-4" />
-          </div>
-          <div className="hidden leading-tight lg:block">
-            <p className="text-sm font-semibold">Thu Chi Admin</p>
-            <p className="text-xs text-muted-foreground">Bảng quản trị</p>
+    <div className="flex min-h-svh">
+      <aside className="sticky top-0 flex h-svh w-[72px] shrink-0 flex-col items-center border-r border-border px-3 pt-5 pb-5 xl:w-[248px] xl:items-stretch xl:px-4 xl:pt-7" data-testid="sidebar">
+        <div className="flex items-center gap-3 pb-6 xl:px-2 xl:pb-7">
+          <Logo />
+          <div className="hidden xl:block">
+            <p className="text-base leading-[1.3] font-bold tracking-[-0.01em]">Thu Chi</p>
+            <p className="text-xs leading-[1.3] text-muted-foreground">Bảng quản trị</p>
           </div>
         </div>
-        <nav className="flex flex-1 flex-col gap-1 p-2 lg:p-3">
-          {NAV.map(({ to, label, icon: Icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              title={label}
-              className={({ isActive }) =>
-                cn(
-                  'flex h-10 items-center justify-center gap-3 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:justify-start',
-                  isActive && 'bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary',
-                )
-              }
-            >
-              <Icon className="size-4.5 shrink-0" />
-              <span className="hidden lg:inline">{label}</span>
-            </NavLink>
-          ))}
+        <p className={cn(groupLabel, 'hidden xl:block')}>Quản lý</p>
+        <nav className="flex flex-col gap-0.5">
+          {MANAGE.map((n) => <NavItem key={n.to} {...n} count={n.count ? overview.data?.users.total : undefined} />)}
         </nav>
-        <div className="border-t p-2 lg:p-3">
+        <p className={cn(groupLabel, 'xl:mt-6')} aria-hidden="true">Cá nhân</p>
+        <nav className="flex flex-col gap-0.5">
+          <NavItem to="/account" label="Tài khoản" icon={UserRoundCog} />
+        </nav>
+
+        <div className="mt-auto flex items-center gap-2.5 pt-3 xl:border-t xl:border-border xl:px-2">
+          {/* Desktop: tên + email + nút đăng xuất */}
+          <div className="hidden min-w-0 flex-1 items-center gap-2.5 xl:flex">
+            <UserBubble name={me?.name ?? '?'} size="sm" />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13.5px] leading-[1.35] font-semibold" data-testid="me-name">{me?.name}</p>
+              <p className="truncate text-xs leading-[1.4] text-muted-foreground">{me?.email}</p>
+            </div>
+            <Button variant="ghost" size="icon" aria-label="Đăng xuất" title="Đăng xuất" onClick={() => logout()} data-testid="logout">
+              <LogOut />
+            </Button>
+          </div>
+          {/* Rail: bong bóng mở menu */}
           <DropdownMenu>
-            <DropdownMenuTrigger
-              className="flex w-full items-center justify-center gap-3 rounded-lg p-1.5 text-left outline-none hover:bg-muted lg:justify-start"
-              data-testid="user-menu"
-            >
-              <UserAvatar name={me?.name ?? '?'} />
-              <div className="hidden min-w-0 lg:block">
-                <p className="truncate text-sm font-medium" data-testid="me-name">{me?.name}</p>
-                <p className="truncate text-xs text-muted-foreground">{me?.email}</p>
-              </div>
+            <DropdownMenuTrigger className="cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary/20 xl:hidden" aria-label="Tài khoản của bạn" data-testid="user-menu">
+              <UserBubble name={me?.name ?? '?'} size="sm" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" align="start" className="w-56">
-              <DropdownMenuLabel className="truncate">{me?.email}</DropdownMenuLabel>
+            <DropdownMenuContent side="right" align="end">
+              <DropdownMenuLabel>{me?.email}</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigate('/account')}><UserRoundCog /> Tài khoản</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate('/account')}>
-                <UserCog /> Tài khoản
-              </DropdownMenuItem>
-              <DropdownMenuItem variant="destructive" onClick={() => logout()}>
-                <LogOut /> Đăng xuất
-              </DropdownMenuItem>
+              <DropdownMenuItem variant="destructive" onClick={() => logout()}><LogOut /> Đăng xuất</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </aside>
-      <main className="min-w-0 flex-1">
-        <div className="mx-auto w-full max-w-7xl p-4 md:p-6 lg:p-8">
-          <Outlet />
-        </div>
+      <main className="flex min-w-0 flex-1 flex-col gap-5 px-8 pt-7 pb-8 xl:gap-6 xl:px-10 xl:pt-9">
+        <Outlet />
       </main>
     </div>
   )

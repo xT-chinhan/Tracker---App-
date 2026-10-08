@@ -1,20 +1,24 @@
 import { useState, type FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { Loader2 } from 'lucide-react'
+import { KeyRound, Lock, ShieldCheck } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { PageHeader, RoleBadge } from '@/components/common'
+import { Card } from '@/components/ui/card'
+import { Field, Input, PasswordInput } from '@/components/ui/input'
+import { notify } from '@/components/ui/sonner'
+import { Bubble } from '@/components/CategoryIcon'
+import { PageHeader, UserBubble } from '@/components/common'
 import { api, auth } from '@/lib/api'
+import { formatDate } from '@/lib/format'
+
+type PwErrors = { current?: string; next?: string; confirm?: string }
 
 export default function AccountPage() {
   const qc = useQueryClient()
   const { data: me } = useQuery({ queryKey: ['me'], queryFn: api.me, initialData: auth.user() ?? undefined })
   const [name, setName] = useState(me?.name ?? '')
   const [pw, setPw] = useState({ current: '', next: '', confirm: '' })
-  const [pwError, setPwError] = useState<string | null>(null)
+  const [pwErr, setPwErr] = useState<PwErrors>({})
 
   const saveName = useMutation({
     mutationFn: () => api.updateMe(name.trim()),
@@ -22,17 +26,19 @@ export default function AccountPage() {
       auth.setUser(u)
       qc.setQueryData(['me'], u)
       qc.invalidateQueries({ queryKey: ['users'] })
-      toast.success('Đã cập nhật tên hiển thị')
+      notify.success('Đã cập nhật tên hiển thị', { description: `Tên mới: ${u.name}` })
     },
-    onError: (e) => toast.error(e.message),
+    onError: (e) => notify.error('Không lưu được tên', e.message),
   })
   const changePw = useMutation({
     mutationFn: () => api.changePassword(pw.current, pw.next),
-    onSuccess: () => {
+    onSuccess: ({ accessToken, user }) => {
+      auth.save(accessToken, user) // token cũ đã bị vô hiệu
       setPw({ current: '', next: '', confirm: '' })
-      toast.success('Đã đổi mật khẩu')
+      notify.success('Đã đổi mật khẩu', { description: 'Các thiết bị khác đã bị đăng xuất.', icon: <KeyRound /> })
     },
-    onError: (e) => setPwError(e.message),
+    // Lỗi của backend (vd sai mật khẩu hiện tại) hiện ngay dưới ô tương ứng
+    onError: (e) => setPwErr(/hiện tại/i.test(e.message) ? { current: e.message } : { next: e.message }),
   })
 
   const submitName = (e: FormEvent) => {
@@ -41,59 +47,68 @@ export default function AccountPage() {
   }
   const submitPw = (e: FormEvent) => {
     e.preventDefault()
-    setPwError(null)
-    if (pw.next.length < 6) return setPwError('Mật khẩu mới phải có ít nhất 6 ký tự')
-    if (pw.next !== pw.confirm) return setPwError('Xác nhận mật khẩu không khớp')
-    changePw.mutate()
+    const errs: PwErrors = {}
+    if (!pw.current) errs.current = 'Nhập mật khẩu hiện tại'
+    if (pw.next.length < 6) errs.next = 'Mật khẩu mới phải có ít nhất 6 ký tự'
+    else if (pw.next !== pw.confirm) errs.confirm = 'Mật khẩu nhập lại chưa khớp'
+    setPwErr(errs)
+    if (!Object.keys(errs).length) changePw.mutate()
+  }
+  const setField = (k: keyof typeof pw, v: string) => {
+    setPw({ ...pw, [k]: v })
+    setPwErr({ ...pwErr, [k]: undefined })
   }
 
   return (
     <>
-      <PageHeader title="Tài khoản" description="Thông tin đăng nhập quản trị viên" />
-      <div className="grid max-w-3xl gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Thông tin cá nhân</CardTitle>
-            <CardDescription className="flex items-center gap-2">{me?.email} {me && <RoleBadge role={me.role} />}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={submitName} className="flex flex-wrap items-end gap-3 sm:max-w-md">
-              <div className="grid min-w-52 flex-1 gap-2">
-                <Label htmlFor="name">Tên hiển thị</Label>
-                <Input id="name" value={name} maxLength={100} required onChange={(e) => setName(e.target.value)} />
+      <PageHeader title="Tài khoản" description="Thông tin đăng nhập của bạn" />
+      <div className="grid grid-cols-12 items-start gap-5">
+        <Card className="col-span-6">
+          <div className="flex items-center gap-4">
+            <UserBubble name={me?.name ?? '?'} size="xl" />
+            <div className="min-w-0">
+              <p className="truncate text-title-l" data-testid="account-name">{me?.name}</p>
+              <div className="mt-1 flex items-center gap-2">
+                <Badge variant="ink"><ShieldCheck />Quản trị</Badge>
+                {me && <span className="text-body-s text-muted-foreground tabular-nums">từ {formatDate(me.createdAt)}</span>}
               </div>
-              <Button type="submit" disabled={saveName.isPending || !name.trim() || name.trim() === me?.name} data-testid="save-name">
-                {saveName.isPending && <Loader2 className="animate-spin" />} Lưu
-              </Button>
-            </form>
-          </CardContent>
+            </div>
+          </div>
+          <form onSubmit={submitName} className="mt-8 flex flex-col gap-[18px]">
+            <Field label="Họ và tên" htmlFor="name">
+              <Input id="name" size="lg" value={name} maxLength={100} required onChange={(e) => setName(e.target.value)} />
+            </Field>
+            <Field label="Email đăng nhập" htmlFor="email" help="Email không đổi được trong bảng quản trị.">
+              <Input id="email" size="lg" icon={<Lock />} value={me?.email ?? ''} disabled readOnly />
+            </Field>
+            <div className="mt-3.5 flex justify-end">
+              <Button type="submit" disabled={saveName.isPending || !name.trim() || name.trim() === me?.name} data-testid="save-name">Lưu tên</Button>
+            </div>
+          </form>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Đổi mật khẩu</CardTitle>
-            <CardDescription>Mật khẩu mới tối thiểu 6 ký tự</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={submitPw} className="grid gap-4 sm:max-w-sm">
-              {pwError && <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive" data-testid="pw-error">{pwError}</p>}
-              <div className="grid gap-2">
-                <Label htmlFor="pw-current">Mật khẩu hiện tại</Label>
-                <Input id="pw-current" type="password" autoComplete="current-password" required value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="pw-new">Mật khẩu mới</Label>
-                <Input id="pw-new" type="password" autoComplete="new-password" required value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="pw-confirm">Nhập lại mật khẩu mới</Label>
-                <Input id="pw-confirm" type="password" autoComplete="new-password" required value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} />
-              </div>
-              <Button type="submit" className="w-fit" disabled={changePw.isPending} data-testid="save-password">
-                {changePw.isPending && <Loader2 className="animate-spin" />} Đổi mật khẩu
-              </Button>
-            </form>
-          </CardContent>
+        <Card className="col-span-6">
+          <div className="flex items-center gap-3.5">
+            <Bubble size="lg"><KeyRound /></Bubble>
+            <div>
+              <p className="text-title-l">Đổi mật khẩu</p>
+              <p className="mt-0.5 text-body-s text-muted-foreground">Cần mật khẩu hiện tại để xác nhận</p>
+            </div>
+          </div>
+          <form onSubmit={submitPw} className="mt-8 flex flex-col gap-[18px]" noValidate>
+            <Field label="Mật khẩu hiện tại" htmlFor="pw-current" error={pwErr.current} errorTestId="pw-error">
+              <PasswordInput id="pw-current" size="lg" autoComplete="current-password" aria-invalid={!!pwErr.current} value={pw.current} onChange={(e) => setField('current', e.target.value)} />
+            </Field>
+            <Field label="Mật khẩu mới" htmlFor="pw-new" help="Tối thiểu 6 ký tự" error={pwErr.next} errorTestId="pw-error">
+              <PasswordInput id="pw-new" size="lg" autoComplete="new-password" aria-invalid={!!pwErr.next} value={pw.next} onChange={(e) => setField('next', e.target.value)} />
+            </Field>
+            <Field label="Nhập lại mật khẩu mới" htmlFor="pw-confirm" error={pwErr.confirm} errorTestId="pw-error">
+              <PasswordInput id="pw-confirm" size="lg" autoComplete="new-password" aria-invalid={!!pwErr.confirm} value={pw.confirm} onChange={(e) => setField('confirm', e.target.value)} />
+            </Field>
+            <div className="mt-3.5 flex justify-end">
+              <Button type="submit" disabled={changePw.isPending} data-testid="save-password">Đổi mật khẩu</Button>
+            </div>
+          </form>
         </Card>
       </div>
     </>

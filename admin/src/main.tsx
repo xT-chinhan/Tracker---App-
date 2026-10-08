@@ -12,6 +12,7 @@ import UsersPage from '@/pages/Users'
 import UserDetailPage from '@/pages/UserDetail'
 import TransactionsPage from '@/pages/Transactions'
 import CategoriesPage from '@/pages/Categories'
+import BroadcastsPage from '@/pages/Broadcasts'
 import AccountPage from '@/pages/Account'
 import NotFoundPage from '@/pages/NotFound'
 import './index.css'
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
       { path: 'users/:id', element: <UserDetailPage /> },
       { path: 'transactions', element: <TransactionsPage /> },
       { path: 'categories', element: <CategoriesPage /> },
+      { path: 'broadcasts', element: <BroadcastsPage /> },
       { path: 'account', element: <AccountPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
@@ -47,7 +49,7 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <RouterProvider router={router} />
-        <Toaster position="top-right" richColors closeButton />
+        <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
   </StrictMode>,

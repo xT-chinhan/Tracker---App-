@@ -18,7 +18,7 @@ export interface State {
   currentMonth: string
   baseline: Overview
   expected: Overview
-  an: { income: number; expense: number; savings: number; balance: number; txCount: number; incomeCount: number; currentMonthCount: number; budgets: number; goals: number; trend: MonthSum[] }
+  an: { income: number; expense: number; savings: number; balance: number; wallets: { id: string; name: string; balance: number; txCount: number }[]; txCount: number; incomeCount: number; currentMonthCount: number; budgets: number; goals: number; trend: MonthSum[] }
 }
 export interface Overview {
   users: { total: number; active: number; locked: number; new30d: number }
@@ -49,10 +49,15 @@ export async function adminToken(email = ADMIN_EMAIL, password = ADMIN_PASSWORD)
   return (await apiOk<{ accessToken: string }>('POST', '/auth/login', undefined, { email, password })).accessToken
 }
 
+/** Token mới của user seed (token cũ mất hiệu lực sau khi bị khóa / đổi mật khẩu). */
+export async function relogin(u: { email: string; password: string }) {
+  return (await apiOk<{ accessToken: string }>('POST', '/auth/login', undefined, { email: u.email, password: u.password })).accessToken
+}
+
 export async function login(page: Page, email = ADMIN_EMAIL, password = ADMIN_PASSWORD) {
   await page.goto('/login')
   await page.getByLabel('Email').fill(email)
-  await page.getByLabel('Mật khẩu').fill(password)
+  await page.getByLabel('Mật khẩu', { exact: true }).fill(password)
   await page.getByRole('button', { name: 'Đăng nhập' }).click()
 }
 
@@ -60,6 +65,9 @@ export async function loginAsAdmin(page: Page) {
   await login(page)
   await expect(page.getByRole('heading', { name: 'Tổng quan' })).toBeVisible()
 }
+
+/** Đợi hết skeleton (data-testid="loading"). */
+export const settled = (page: Page) => expect(page.getByTestId('loading')).toHaveCount(0)
 
 /** Chọn 1 option trong Radix Select theo data-testid của trigger. */
 export async function pick(page: Page, testId: string, option: string | RegExp) {
@@ -73,7 +81,7 @@ export async function shot(page: Page, name: string) {
   await page.screenshot({ path: path.join(SHOTS, `${name}.png`), fullPage: true })
 }
 
-/** Khớp số tiền đã format, bỏ qua khác biệt khoảng trắng (NBSP). */
-export const money = (v: number) => new RegExp(`^[+−-]?${vnd(v).replace(/\s/g, '\\s').replace(/\./g, '\\.')}$`)
-export const vnd = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(v)
+/** Khớp số tiền đã format "1.234.567đ" (có thể có dấu + / −). */
+export const money = (v: number) => new RegExp(`^[+−]?${vnd(v).replace(/\./g, '\\.')}$`)
+export const vnd = (v: number) => `${num(Math.abs(v))}đ`
 export const num = (v: number) => new Intl.NumberFormat('vi-VN').format(v)

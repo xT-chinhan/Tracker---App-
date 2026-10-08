@@ -7,7 +7,8 @@ const fakeJwt = (payload: object) =>
 test('đăng nhập: trang login hiển thị đúng', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveURL(/\/login$/)
-  await expect(page.getByText('Dùng tài khoản quản trị viên để tiếp tục')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Đăng nhập quản trị' })).toBeVisible()
+  await expect(page.getByText('Tài khoản người dùng thường không đăng nhập được ở đây.')).toBeVisible()
   await shot(page, '01-login')
 })
 
@@ -43,12 +44,29 @@ test('đăng nhập thành công, đăng xuất, chặn truy cập khi chưa đ�
   await expect(page.getByTestId('me-name')).toBeVisible()
   await page.goto('/users')
   await expect(page.getByRole('heading', { name: 'Người dùng' })).toBeVisible()
-  await page.getByTestId('user-menu').click()
-  await page.getByRole('menuitem', { name: 'Đăng xuất' }).click()
+  await page.getByRole('button', { name: 'Đăng xuất' }).click()
   await expect(page).toHaveURL(/\/login/)
   expect(await page.evaluate(() => localStorage.getItem('admin.token'))).toBeNull()
   await page.goto('/transactions')
   await expect(page).toHaveURL(/\/login$/)
+})
+
+test('đăng nhập: nút hiện/ẩn mật khẩu', async ({ page }) => {
+  await page.goto('/login')
+  const pw = page.getByLabel('Mật khẩu', { exact: true })
+  await pw.fill('bi-mat')
+  await expect(pw).toHaveAttribute('type', 'password')
+  await page.getByRole('button', { name: 'Hiện mật khẩu' }).click()
+  await expect(pw).toHaveAttribute('type', 'text')
+  await page.getByRole('button', { name: 'Ẩn mật khẩu' }).click()
+  await expect(pw).toHaveAttribute('type', 'password')
+})
+
+test('đăng nhập: bị giới hạn tần suất (429) => thông báo tiếng Việt', async ({ page }) => {
+  await page.route('**/api/auth/login', (r) => r.fulfill({ status: 429, contentType: 'application/json', body: JSON.stringify({ statusCode: 429, message: 'ThrottlerException: Too Many Requests' }) }))
+  await login(page, ADMIN_EMAIL, 'bat-ky')
+  await expect(page.getByTestId('login-error')).toContainText('Bạn thử quá nhiều lần')
+  await expect(page).toHaveURL(/\/login/)
 })
 
 test('token hết hạn => về trang đăng nhập', async ({ page }) => {
@@ -85,7 +103,7 @@ test('admin đang đăng nhập bị khóa => bị đẩy ra với thông báo',
   const admin = await adminToken()
   await apiOk('PATCH', `/admin/users/${admin2.id}`, admin, { status: 'LOCKED' })
   try {
-    await page.getByRole('link', { name: 'Người dùng' }).click()
+    await page.getByRole('link', { name: 'Người dùng', exact: true }).click()
     await expect(page).toHaveURL(/\/login\?reason=locked/)
     await expect(page.getByTestId('login-error')).toHaveText('Tài khoản đã bị khóa.')
   } finally {

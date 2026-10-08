@@ -1,8 +1,9 @@
 import {
   Baby, Banknote, BookOpen, Briefcase, Building2, Car, CarTaxiFront, Coffee, Coins, Dumbbell, Ellipsis, Film, Fuel, Gamepad2,
-  Gift, GraduationCap, HandHeart, HeartPulse, House, type LucideIcon, Music, PawPrint, PiggyBank, Pill, Plane, Shirt,
+  Gift, GraduationCap, HandHeart, HeartPulse, House, Landmark, type LucideIcon, Music, PawPrint, PiggyBank, Pill, Plane, Shirt,
   ShoppingBasket, ShoppingCart, Smartphone, Star, Tag, TrendingUp, Utensils, Wallet, Wifi, Zap,
 } from 'lucide-react'
+import type { WalletType } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
 /** Tên icon dùng chung với app di động (kiểu FontAwesome camelCase) -> icon hiển thị. */
@@ -15,28 +16,58 @@ export const CATEGORY_ICONS: Record<string, LucideIcon> = {
   paw: PawPrint, baby: Baby, star: Star, ellipsis: Ellipsis,
 }
 
-export function CategoryIcon({ icon, color, className }: { icon: string; color: string; className?: string }) {
-  const Icon = CATEGORY_ICONS[icon] ?? Tag
+export const WALLET_ICONS: Record<WalletType, LucideIcon> = { CASH: Banknote, BANK: Landmark, EWALLET: Smartphone }
+
+const BUBBLE_SIZE = {
+  xs: 'size-6 text-[10px] [&_svg]:size-[13px]',
+  chip: 'size-[22px] bg-card [&_svg]:size-[13px]',
+  sm: 'size-8 text-xs [&_svg]:size-4',
+  md: 'size-10 text-[13px] [&_svg]:size-[19px]',
+  lg: 'size-14 text-lg [&_svg]:size-6',
+  xl: 'size-[72px] text-2xl [&_svg]:size-[30px]',
+} as const
+
+/** Bong bóng tròn xám chứa icon hoặc chữ viết tắt (màu chỉ dùng cho ý nghĩa, không tô theo danh mục). */
+export function Bubble({ size = 'md', tone = 'default', className, children }: {
+  size?: keyof typeof BUBBLE_SIZE
+  tone?: 'default' | 'ink' | 'danger' | 'success'
+  className?: string
+  children?: React.ReactNode
+}) {
   return (
     <span
-      className={cn('inline-flex size-8 shrink-0 items-center justify-center rounded-lg', className)}
-      style={{ backgroundColor: `${color}1f`, color }}
+      className={cn(
+        'inline-flex shrink-0 items-center justify-center rounded-full font-semibold tracking-[-0.01em]',
+        { default: 'bg-muted text-ink-soft', ink: 'bg-primary text-primary-foreground', danger: 'bg-destructive-soft text-destructive', success: 'bg-success-soft text-income' }[tone],
+        BUBBLE_SIZE[size],
+        className,
+      )}
     >
-      <Icon className="size-4" />
+      {children}
     </span>
   )
 }
 
-export function CategoryChip({ name, icon, color }: { name: string; icon: string; color: string }) {
+export function CategoryIcon({ icon, size = 'sm', className }: { icon: string; size?: keyof typeof BUBBLE_SIZE; className?: string }) {
+  const Icon = CATEGORY_ICONS[icon] ?? Tag
+  return <Bubble size={size} className={className}><Icon /></Bubble>
+}
+
+/** Chip danh mục trong bảng: nền xám, icon trong bong bóng trắng. */
+export function CategoryChip({ name, icon }: { name: string; icon: string }) {
   const Icon = CATEGORY_ICONS[icon] ?? Tag
   return (
     <span
-      className="inline-flex max-w-full items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium"
-      style={{ backgroundColor: `${color}1a`, color }}
+      className="inline-flex h-[30px] max-w-full items-center gap-2 rounded-full bg-muted pr-3 pl-1 text-[13px] font-medium whitespace-nowrap text-ink-soft"
       data-testid="category-chip"
     >
-      <Icon className="size-3.5 shrink-0" />
-      <span className="truncate text-foreground/80">{name}</span>
+      <Bubble size="chip"><Icon /></Bubble>
+      <span className="truncate">{name}</span>
     </span>
   )
+}
+
+/** Ô màu nhỏ: màu danh mục chỉ để tô biểu đồ. */
+export function Swatch({ color, className }: { color: string; className?: string }) {
+  return <span className={cn('size-3.5 shrink-0 rounded-[4px] shadow-[inset_0_0_0_1px_rgb(17_17_17/.06)]', className)} style={{ backgroundColor: color }} />
 }

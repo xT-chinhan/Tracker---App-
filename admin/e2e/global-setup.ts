@@ -12,7 +12,7 @@ const shift = (m: string, delta: number) => {
 }
 const at = (month: string, day: number) => `${month}-${String(day).padStart(2, '0')}T12:00:00+07:00`
 
-interface Tx { cat: string; amount: number; title: string; note?: string; month: string; day: number }
+interface Tx { cat: string; amount: number; title: string; note?: string; month: string; day: number; wallet?: string }
 
 export default async function globalSetup() {
   const suffix = Date.now().toString(36)
@@ -45,20 +45,31 @@ export default async function globalSetup() {
   const catId = (name: string) => cats.find((c) => c.name === name)?.id ?? (name === used.name ? used.id : undefined)
   const catType = (name: string) => (name === used.name ? 'EXPENSE' : cats.find((c) => c.name === name)!.type)
 
+  // Ví: đăng ký tự tạo ví "Tiền mặt"; an có thêm MB Bank (số dư đầu 2tr) và MoMo (5tr)
+  type W = { id: string; name: string }
+  const walletsOf = async (u: SeedUser) => (await apiOk<{ items: W[] }>('GET', '/wallets', u.token)).items
+  const cashOf = async (u: SeedUser) => (await walletsOf(u)).find((w) => w.name === 'Tiền mặt')!
+  const anWallets: Record<string, { id: string; initial: number }> = { 'Tiền mặt': { id: (await cashOf(users.an)).id, initial: 0 } }
+  for (const [name, type, initial] of [['MB Bank', 'BANK', 2_000_000], ['MoMo', 'EWALLET', 5_000_000]] as const) {
+    const w = await apiOk<W>('POST', '/wallets', users.an.token, { name, type, initialBalance: initial })
+    anWallets[name] = { id: w.id, initial }
+  }
+  const cash = { binh: (await cashOf(users.binh)).id, chi: (await cashOf(users.chi)).id }
+
   const plan: Record<'an' | 'binh' | 'chi', Tx[]> = { an: [], binh: [], chi: [] }
   for (let i = 5; i >= 0; i--) {
     const m = shift(cur, -i)
     plan.an.push(
-      { cat: 'Lương', amount: 15_000_000, title: 'Lương tháng', month: m, day: 1 },
-      { cat: 'Ăn uống', amount: 2_500_000 + i * 100_000, title: 'Ăn uống trong tháng', note: 'Chợ + quán', month: m, day: 2 },
-      { cat: 'Di chuyển', amount: 800_000, title: 'Grab, xăng xe', month: m, day: 3 },
-      { cat: 'Hóa đơn', amount: 1_200_000, title: 'Điện nước internet', month: m, day: 4 },
+      { cat: 'Lương', amount: 15_000_000, title: 'Lương tháng', month: m, day: 1, wallet: 'MB Bank' },
+      { cat: 'Ăn uống', amount: 2_500_000 + i * 100_000, title: 'Ăn uống trong tháng', note: 'Chợ + quán', month: m, day: 2, wallet: 'Tiền mặt' },
+      { cat: 'Di chuyển', amount: 800_000, title: 'Grab, xăng xe', month: m, day: 3, wallet: 'MoMo' },
+      { cat: 'Hóa đơn', amount: 1_200_000, title: 'Điện nước internet', month: m, day: 4, wallet: 'MB Bank' },
     )
   }
   plan.an.push(
-    { cat: 'Thưởng', amount: 3_000_000, title: 'Thưởng dự án', month: cur, day: 5 },
-    { cat: 'Mua sắm', amount: 1_750_000, title: 'Mua áo khoác', note: `Uniqlo ${suffix}`, month: cur, day: 5 },
-    { cat: 'Lương', amount: 14_000_000, title: 'Lương cũ', month: shift(cur, -8), day: 1 },
+    { cat: 'Thưởng', amount: 3_000_000, title: 'Thưởng dự án', month: cur, day: 5, wallet: 'Tiền mặt' },
+    { cat: 'Mua sắm', amount: 1_750_000, title: 'Mua áo khoác', note: `Uniqlo ${suffix}`, month: cur, day: 5, wallet: 'MoMo' },
+    { cat: 'Lương', amount: 14_000_000, title: 'Lương cũ', month: shift(cur, -8), day: 1, wallet: 'MB Bank' },
   )
   for (let i = 2; i >= 0; i--) {
     const m = shift(cur, -i)
@@ -77,8 +88,11 @@ export default async function globalSetup() {
   }
   plan.chi.push({ cat: used.name, amount: 300_000, title: 'Quà sinh nhật bạn', month: cur, day: 3 })
 
+  const walletIdOf = (key: 'an' | 'binh' | 'chi', t: Tx) => (key === 'an' ? anWallets[t.wallet!].id : cash[key])
   for (const key of ['an', 'binh', 'chi'] as const) {
-    const items = plan[key].map((t) => ({ categoryId: catId(t.cat)!, amount: t.amount, title: t.title, note: t.note, occurredAt: at(t.month, t.day) }))
+    const items = plan[key].map((t) => ({
+      categoryId: catId(t.cat)!, walletId: walletIdOf(key, t), amount: t.amount, title: t.title, note: t.note, occurredAt: at(t.month, t.day),
+    }))
     await apiOk('POST', '/transactions/bulk', users[key].token, { items })
   }
 
@@ -92,15 +106,15 @@ export default async function globalSetup() {
   const goal = (u: SeedUser, name: string, targetAmount: number) =>
     apiOk<{ id: string }>('POST', '/saving-goals', u.token, { name, targetAmount, targetDate: target })
   const g1 = await goal(users.an, 'Mua laptop', 30_000_000)
-  await apiOk('POST', `/saving-goals/${g1.id}/deposit`, users.an.token, { amount: 5_000_000 })
+  await apiOk('POST', `/saving-goals/${g1.id}/deposit`, users.an.token, { amount: 5_000_000, walletId: anWallets['MB Bank'].id })
   const g2 = await goal(users.binh, 'Du lịch Đà Lạt', 4_000_000)
-  await apiOk('POST', `/saving-goals/${g2.id}/deposit`, users.binh.token, { amount: 4_000_000 })
+  await apiOk('POST', `/saving-goals/${g2.id}/deposit`, users.binh.token, { amount: 4_000_000, walletId: cash.binh })
   const g3 = await goal(users.binh, 'Quỹ khẩn cấp', 10_000_000)
-  await apiOk('POST', `/saving-goals/${g3.id}/deposit`, users.binh.token, { amount: 10_000_000 })
-  await apiOk('POST', `/saving-goals/${g3.id}/withdraw`, users.binh.token)
+  await apiOk('POST', `/saving-goals/${g3.id}/deposit`, users.binh.token, { amount: 10_000_000, walletId: cash.binh })
+  await apiOk('POST', `/saving-goals/${g3.id}/withdraw`, users.binh.token, { walletId: cash.binh })
   const g4 = await goal(users.chi, 'Học tiếng Anh', 5_000_000)
-  await apiOk('POST', `/saving-goals/${g4.id}/deposit`, users.chi.token, { amount: 1_000_000 })
-  await apiOk('POST', `/saving-goals/${g4.id}/withdraw`, users.chi.token)
+  await apiOk('POST', `/saving-goals/${g4.id}/deposit`, users.chi.token, { amount: 1_000_000, walletId: cash.chi })
+  await apiOk('POST', `/saving-goals/${g4.id}/withdraw`, users.chi.token, { walletId: cash.chi })
   const goalsAdded: Record<string, number> = { ACTIVE: 1, COMPLETED: 1, WITHDRAWN: 1, EARLY_WITHDRAWN: 1 }
 
   // ===== Kỳ vọng tính tay =====
@@ -138,6 +152,12 @@ export default async function globalSetup() {
   }
   const anIncome = sum(plan.an.filter(isIncome))
   const anExpense = sum(plan.an.filter((t) => !isIncome(t)))
+  // Số dư từng ví = ban đầu + thu − chi − nạp tiết kiệm (5tr từ MB Bank)
+  const anWalletList = Object.entries(anWallets).map(([name, w]) => {
+    const xs = plan.an.filter((t) => t.wallet === name)
+    const deposit = name === 'MB Bank' ? 5_000_000 : 0
+    return { id: w.id, name, balance: w.initial + sum(xs.filter(isIncome)) - sum(xs.filter((t) => !isIncome(t))) - deposit, txCount: xs.length }
+  })
   const st: State = {
     suffix,
     users,
@@ -150,7 +170,8 @@ export default async function globalSetup() {
       income: anIncome,
       expense: anExpense,
       savings: 5_000_000,
-      balance: anIncome - anExpense - 5_000_000,
+      balance: 7_000_000 + anIncome - anExpense - 5_000_000,
+      wallets: anWalletList,
       txCount: plan.an.length,
       incomeCount: plan.an.filter(isIncome).length,
       currentMonthCount: plan.an.filter((t) => t.month === cur).length,

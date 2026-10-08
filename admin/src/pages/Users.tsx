@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { Eye, Lock, MoreHorizontal, Search, ShieldCheck, ShieldOff, Unlock } from 'lucide-react'
+import { Ellipsis, Lock, LockOpen, Search, ShieldCheck, ShieldOff, UserRound } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { EmptyState, ErrorState, PageHeader, Pagination, RoleBadge, StatusBadge, TableSkeleton, UserAvatar } from '@/components/common'
+import { Chip, EmptyState, ErrorState, PageHeader, Pagination, RoleBadge, StatusBadge, TableSkeleton, UserBubble } from '@/components/common'
 import { useUserActions } from '@/components/useUserActions'
 import { api, auth, type Role, type UserStatus } from '@/lib/api'
-import { formatDate, formatNumber } from '@/lib/format'
+import { formatDate, formatDayMonth, formatNumber, ROLE_LABEL } from '@/lib/format'
 import { useDebounced, useUrlFilters } from '@/lib/utils'
 
 const LIMIT = 10
@@ -39,100 +39,126 @@ export default function UsersPage() {
     queryFn: () => api.users(query),
     placeholderData: keepPreviousData,
   })
+  const overview = useQuery({ queryKey: ['overview'], queryFn: api.overview })
+  const counts = overview.data?.users
   const { toggleLock, toggleRole, dialog } = useUserActions()
   const meId = auth.user()?.id
+  const filtered = !!(values.q || values.status || values.role)
 
   return (
     <>
       <PageHeader
         title="Người dùng"
-        description={data ? `${formatNumber(data.total)} tài khoản phù hợp` : 'Quản lý tài khoản, khóa/mở khóa và phân quyền'}
+        description={
+          filtered
+            ? data && `${formatNumber(data.total)} tài khoản phù hợp`
+            : counts && `${formatNumber(counts.total)} tài khoản · ${formatNumber(counts.active)} hoạt động · ${formatNumber(counts.locked)} đã khóa`
+        }
       />
-      <Card className="gap-0 py-0">
-        <div className="flex flex-wrap items-center gap-3 border-b p-4">
-          <div className="relative min-w-56 flex-1">
-            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Tìm theo tên hoặc email…"
-              className="h-9 pl-9"
-              data-testid="users-search"
-            />
-          </div>
-          <Select value={values.status || 'all'} onValueChange={(v) => set({ status: v })}>
-            <SelectTrigger className="h-9! w-40" data-testid="filter-status"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Mọi trạng thái</SelectItem>
-              <SelectItem value="ACTIVE">Hoạt động</SelectItem>
-              <SelectItem value="LOCKED">Đã khóa</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={values.role || 'all'} onValueChange={(v) => set({ role: v })}>
-            <SelectTrigger className="h-9! w-40" data-testid="filter-role"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Mọi vai trò</SelectItem>
-              <SelectItem value="USER">Người dùng</SelectItem>
-              <SelectItem value="ADMIN">Quản trị</SelectItem>
-            </SelectContent>
-          </Select>
+      <div className="flex items-center gap-2.5">
+        <Input
+          wrapperClassName="w-[260px] shrink-0 xl:w-[340px]"
+          icon={<Search />}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Tìm theo tên hoặc email"
+          aria-label="Tìm người dùng"
+          data-testid="users-search"
+        />
+        <Select value={values.role || 'all'} onValueChange={(v) => set({ role: v })}>
+          <SelectTrigger label="Vai trò" className="w-[168px] xl:w-[184px]" data-testid="filter-role">
+            {values.role ? ROLE_LABEL[values.role as Role] : 'Tất cả'}
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="USER">Người dùng</SelectItem>
+            <SelectItem value="ADMIN">Quản trị</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="flex gap-2 xl:ml-1.5" role="group" aria-label="Trạng thái" data-testid="filter-status">
+          <Chip on={!values.status} onClick={() => set({ status: '' })}>Tất cả</Chip>
+          <Chip on={values.status === 'ACTIVE'} onClick={() => set({ status: 'ACTIVE' })}>
+            Hoạt động {counts && <span className="c text-faint tabular-nums">{formatNumber(counts.active)}</span>}
+          </Chip>
+          <Chip on={values.status === 'LOCKED'} onClick={() => set({ status: 'LOCKED' })}>
+            Đã khóa {counts && <span className="c text-faint tabular-nums">{formatNumber(counts.locked)}</span>}
+          </Chip>
         </div>
+      </div>
 
+      <Card flush>
         {error ? (
           <ErrorState error={error} onRetry={refetch} />
         ) : isPending ? (
-          <TableSkeleton />
+          <TableSkeleton rows={10} />
         ) : data.items.length === 0 ? (
-          <EmptyState title="Không tìm thấy người dùng" description="Thử đổi từ khóa hoặc bộ lọc." />
+          <EmptyState
+            title="Không tìm thấy người dùng"
+            description="Không có tài khoản nào khớp từ khóa và bộ lọc hiện tại."
+            action={{ label: 'Xóa bộ lọc', onClick: () => { setSearch(''); set({ q: '', status: '', role: '' }) } }}
+          />
         ) : (
           <div className={isFetching ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
             <Table>
+              <colgroup>
+                <col />
+                <col className="w-[132px] xl:w-[150px]" />
+                <col className="w-[134px] xl:w-[150px]" />
+                <col className="w-[100px] xl:w-[120px]" />
+                <col className="hidden w-[110px] xl:table-column" />
+                <col className="hidden w-[150px] xl:table-column" />
+                <col className="w-[76px] xl:w-[72px]" />
+              </colgroup>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="pl-4">Người dùng</TableHead>
+                  <TableHead>Người dùng</TableHead>
                   <TableHead>Vai trò</TableHead>
                   <TableHead>Trạng thái</TableHead>
                   <TableHead className="text-right">Giao dịch</TableHead>
-                  <TableHead className="text-right">Mục tiêu</TableHead>
-                  <TableHead className="pl-6">Ngày tạo</TableHead>
-                  <TableHead className="w-12 pr-4" />
+                  <TableHead className="hidden text-right xl:table-cell">Mục tiêu</TableHead>
+                  <TableHead className="hidden xl:table-cell">Ngày tham gia</TableHead>
+                  <TableHead><span className="sr-only">Thao tác</span></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {data.items.map((u) => (
                   <TableRow key={u.id} data-testid="user-row" data-email={u.email}>
-                    <TableCell className="max-w-72 pl-4">
-                      <Link to={`/users/${u.id}`} className="group flex items-center gap-3">
-                        <UserAvatar name={u.name} />
+                    <TableCell>
+                      <Link to={`/users/${u.id}`} className="flex min-w-0 items-center gap-3">
+                        <UserBubble name={u.name} />
                         <div className="min-w-0">
-                          <p className="truncate font-medium group-hover:text-primary group-hover:underline">
+                          <p className="truncate text-body-l font-medium">
                             {u.name}
                             {u.id === meId && <span className="ml-1.5 text-xs font-normal text-muted-foreground">(bạn)</span>}
                           </p>
-                          <p className="truncate text-xs text-muted-foreground">{u.email}</p>
+                          <p className="truncate text-body-s text-muted-foreground">
+                            {u.email}
+                            <span className="tabular-nums xl:hidden"> · {formatDayMonth(u.createdAt)}</span>
+                          </p>
                         </div>
                       </Link>
                     </TableCell>
                     <TableCell><RoleBadge role={u.role} /></TableCell>
                     <TableCell><StatusBadge status={u.status} /></TableCell>
                     <TableCell className="text-right tabular-nums">{formatNumber(u._count.transactions)}</TableCell>
-                    <TableCell className="text-right tabular-nums">{formatNumber(u._count.savingGoals)}</TableCell>
-                    <TableCell className="pl-6 text-muted-foreground tabular-nums">{formatDate(u.createdAt)}</TableCell>
-                    <TableCell className="pr-4">
+                    <TableCell className="hidden text-right tabular-nums xl:table-cell">{formatNumber(u._count.savingGoals)}</TableCell>
+                    <TableCell className="hidden text-muted-foreground tabular-nums xl:table-cell">{formatDate(u.createdAt)}</TableCell>
+                    <TableCell className="pr-4 text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon-sm" aria-label="Thao tác" data-testid="user-actions"><MoreHorizontal /></Button>
+                          <Button variant="ghost" size="icon" aria-label="Thao tác" data-testid="user-actions"><Ellipsis /></Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52">
+                        <DropdownMenuContent align="end" sideOffset={4}>
+                          <DropdownMenuLabel>{u.name}</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
-                            <Link to={`/users/${u.id}`}><Eye /> Xem chi tiết</Link>
+                            <Link to={`/users/${u.id}`}><UserRound /> Xem chi tiết</Link>
                           </DropdownMenuItem>
-                          <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={() => toggleRole(u)}>
                             {u.role === 'USER' ? <><ShieldCheck /> Cấp quyền quản trị</> : <><ShieldOff /> Hạ quyền quản trị</>}
                           </DropdownMenuItem>
+                          <DropdownMenuSeparator />
                           <DropdownMenuItem variant={u.status === 'ACTIVE' ? 'destructive' : 'default'} onClick={() => toggleLock(u)}>
-                            {u.status === 'ACTIVE' ? <><Lock /> Khóa tài khoản</> : <><Unlock /> Mở khóa</>}
+                            {u.status === 'ACTIVE' ? <><Lock /> Khóa tài khoản</> : <><LockOpen /> Mở khóa</>}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

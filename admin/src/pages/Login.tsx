@@ -1,11 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Navigate, useNavigate, useSearchParams } from 'react-router'
-import { AlertCircle, Loader2, Wallet } from 'lucide-react'
+import { CircleAlert, KeyRound, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Card } from '@/components/ui/card'
+import { Field, Input, PasswordInput } from '@/components/ui/input'
+import { Logo } from '@/components/Layout'
 import { api, auth } from '@/lib/api'
+
+const YEAR = new Date().getFullYear()
 
 const REASONS: Record<string, string> = {
   expired: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
@@ -47,45 +49,31 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-teal-50 via-background to-slate-100 p-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-6 flex flex-col items-center gap-3 text-center">
-          <div className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-            <Wallet className="size-6" />
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold">Thu Chi Admin</h1>
-            <p className="text-sm text-muted-foreground">Quản trị nền tảng quản lý tài chính cá nhân</p>
-          </div>
-        </div>
-        <Card className="shadow-xl shadow-slate-200/60">
-          <CardHeader>
-            <CardTitle>Đăng nhập</CardTitle>
-            <CardDescription>Dùng tài khoản quản trị viên để tiếp tục</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={submit} className="space-y-4">
-              {error && (
-                <div role="alert" data-testid="login-error" className="flex gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive">
-                  <AlertCircle className="mt-0.5 size-4 shrink-0" />
-                  <span>{error}</span>
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@example.com" className="h-10" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Mật khẩu</Label>
-                <Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-10" />
-              </div>
-              <Button type="submit" className="h-10 w-full" disabled={loading}>
-                {loading && <Loader2 className="animate-spin" />} Đăng nhập
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="relative flex min-h-svh flex-col items-center justify-center px-4 pb-10">
+      <Card className="w-full max-w-[448px] rounded-2xl p-10">
+        <Logo size="lg" />
+        <h1 className="mt-6 text-headline">Đăng nhập quản trị</h1>
+        <p className="mt-2 text-muted-foreground">Trang dành cho quản trị viên Thu Chi.</p>
+        <form onSubmit={submit} className="mt-8">
+          {error && (
+            <div role="alert" data-testid="login-error" className="mb-5 flex gap-2.5 rounded-md bg-destructive-soft px-3.5 py-3 text-[13.5px] text-destructive">
+              <CircleAlert className="mt-px size-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+          <Field label="Email" htmlFor="email">
+            <Input id="email" size="lg" icon={<Mail />} type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ban@thuchi.vn" />
+          </Field>
+          <Field label="Mật khẩu" htmlFor="password" className="mt-4">
+            <PasswordInput id="password" size="lg" icon={<KeyRound />} autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+          </Field>
+          <Button type="submit" size="lg" className="mt-8 w-full" disabled={loading}>
+            {loading ? 'Đang đăng nhập…' : 'Đăng nhập'}
+          </Button>
+        </form>
+        <p className="mt-5 text-center text-body-s text-faint">Tài khoản người dùng thường không đăng nhập được ở đây.</p>
+      </Card>
+      <p className="absolute bottom-7 text-body-s text-faint">© {YEAR} Thu Chi · Bảng quản trị v1.0</p>
     </div>
   )
 }

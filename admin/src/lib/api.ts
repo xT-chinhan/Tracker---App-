@@ -30,10 +30,34 @@ export interface MonthTotal {
   net: number
 }
 
+export type WalletType = 'CASH' | 'BANK' | 'EWALLET'
+
+export interface Wallet {
+  id: string
+  name: string
+  type: WalletType
+  icon: string
+  color: string
+  isArchived: boolean
+  initialBalance: number
+  balance: number
+}
+
 export interface UserDetail extends User {
   _count: { transactions: number; categories: number; budgets: number; savingGoals: number }
   finance: { balance: number; totalIncome: number; totalExpense: number; savings: number }
+  wallets: Wallet[]
   trend: MonthTotal[]
+}
+
+export interface Broadcast {
+  id: string
+  title: string
+  body: string
+  createdById: string | null
+  recipients: number
+  readCount: number
+  createdAt: string
 }
 
 export interface Overview {
@@ -62,6 +86,7 @@ export interface Transaction {
   occurredAt: string
   createdAt: string
   category: CategoryRef
+  wallet: Pick<Wallet, 'id' | 'name' | 'type' | 'icon' | 'color' | 'isArchived'>
   user: { id: string; email: string; name: string }
 }
 
@@ -77,6 +102,17 @@ export interface Paged<T> {
   total: number
   page: number
   limit: number
+}
+
+export type TxQuery = {
+  page?: number
+  limit?: number
+  userId?: string
+  walletId?: string
+  type?: TxType
+  categoryId?: string
+  month?: string
+  q?: string
 }
 
 export class ApiError extends Error {
@@ -149,7 +185,11 @@ async function request<T>(method: string, path: string, opts: { body?: unknown; 
   const data = res.status === 204 ? null : await res.json().catch(() => null)
   if (!res.ok) {
     const raw = data?.message
-    const message = Array.isArray(raw) ? raw.join(', ') : raw || res.statusText || 'Có lỗi xảy ra'
+    let message = Array.isArray(raw) ? raw.join(', ') : raw || res.statusText || 'Có lỗi xảy ra'
+    if (res.status === 429) {
+      const wait = Number(res.headers.get('Retry-After'))
+      message = `Bạn thử quá nhiều lần. Vui lòng đợi ${wait > 0 ? `${wait} giây` : 'một lát'} rồi thử lại.`
+    }
     if (!opts.anonymous && (res.status === 401 || res.status === 403)) {
       logout(res.status === 401 ? 'expired' : message === 'Tài khoản đã bị khóa' ? 'locked' : 'forbidden')
     }
@@ -164,15 +204,17 @@ export const api = {
   me: () => request<User>('GET', '/me'),
   updateMe: (name: string) => request<User>('PATCH', '/me', { body: { name } }),
   changePassword: (currentPassword: string, newPassword: string) =>
-    request<null>('POST', '/me/password', { body: { currentPassword, newPassword } }),
+    // Backend trả token mới và vô hiệu mọi token cũ
+    request<{ accessToken: string; user: User }>('POST', '/me/password', { body: { currentPassword, newPassword } }),
 
   overview: () => request<Overview>('GET', '/admin/overview'),
   users: (q: { page?: number; limit?: number; q?: string; status?: UserStatus; role?: Role }) =>
     request<Paged<UserListItem>>('GET', '/admin/users', { query: q }),
   user: (id: string) => request<UserDetail>('GET', `/admin/users/${id}`),
   updateUser: (id: string, body: { status?: UserStatus; role?: Role }) => request<User>('PATCH', `/admin/users/${id}`, { body }),
-  transactions: (q: { page?: number; limit?: number; userId?: string; type?: TxType; categoryId?: string; month?: string; q?: string }) =>
-    request<Paged<Transaction>>('GET', '/admin/transactions', { query: q }),
+  transactions: (q: TxQuery) => request<Paged<Transaction>>('GET', '/admin/transactions', { query: q }),
+  broadcasts: (q: { page?: number; limit?: number }) => request<Paged<Broadcast>>('GET', '/admin/broadcasts', { query: q }),
+  broadcast: (body: { title: string; body: string }) => request<Omit<Broadcast, 'readCount'>>('POST', '/admin/broadcasts', { body }),
 
   categories: (type?: TxType) => request<SystemCategory[]>('GET', '/admin/categories', { query: { type } }),
   createCategory: (body: { name: string; type: TxType; icon: string; color: string }) =>

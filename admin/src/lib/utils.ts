@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from 'tailwind-merge'
+
+/** twMerge biết thang chữ / bóng đổ riêng của theme (index.css), để `text-headline` không bị coi là màu chữ. */
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      text: ['display', 'headline', 'title-l', 'title-m', 'body', 'body-l', 'body-s'],
+      shadow: ['card', 'pop', 'thumb'],
+    },
+  },
+})
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
