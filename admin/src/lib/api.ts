@@ -119,10 +119,55 @@ export type TxQuery = {
 
 export class ApiError extends Error {
   status: number
-  constructor(status: number, message: string) {
+  /** Body lỗi gốc của backend (vd `errors` theo trường khi PATCH cấu hình) */
+  data: unknown
+  constructor(status: number, message: string, data?: unknown) {
     super(message)
     this.status = status
+    this.data = data
   }
+}
+
+/* ===== Cấu hình hệ thống ===== */
+export type ConfigSection = 'general' | 'access' | 'smtp' | 'password' | 'business' | 'mobile'
+export type ConfigValue = string | number | boolean | null
+export type ConfigValues = Record<ConfigSection, Record<string, ConfigValue>>
+
+export interface Maintenance {
+  enabled: boolean
+  message: string
+  endsAt: string | null
+  startedAt: string | null
+  startedBy: string | null
+}
+
+export interface SystemConfig {
+  values: ConfigValues
+  maintenance: Maintenance
+  smtp: { configured: boolean; hasPassword: boolean; passwordSavedAt: string | null; passwordSavedBy: string | null; source: 'db' | 'env' | 'none' }
+  updated: Record<string, { at: string; by: string | null }>
+  lastSaved: { at: string; by: string | null } | null
+  stats: { activeUsers: number; savingGoals: number; recurringRules: number }
+}
+
+export interface ConfigChange {
+  id: string
+  createdAt: string
+  section: ConfigSection
+  key: string
+  secret: boolean
+  oldValue: ConfigValue
+  newValue: ConfigValue
+  actor: { id: string; name: string | null; email: string | null } | null
+}
+
+export interface SmtpTestResult {
+  ok: boolean
+  to: string
+  at: string
+  durationMs: number
+  response?: string
+  error?: string
 }
 
 export const auth = {
@@ -196,7 +241,7 @@ async function request<T>(method: string, path: string, opts: { body?: unknown; 
     if (!opts.anonymous && (res.status === 401 || res.status === 403)) {
       logout(res.status === 401 ? 'expired' : message === 'Tài khoản đã bị khóa' ? 'locked' : 'forbidden')
     }
-    throw new ApiError(res.status, message)
+    throw new ApiError(res.status, message, data)
   }
   return data as T
 }
@@ -226,4 +271,11 @@ export const api = {
     request<SystemCategory>('PATCH', `/admin/categories/${id}`, { body }),
   deleteCategory: (id: string) => request<{ archived: boolean }>('DELETE', `/admin/categories/${id}`),
   restoreCategory: (id: string) => request<SystemCategory>('POST', `/admin/categories/${id}/restore`),
+
+  config: () => request<SystemConfig>('GET', '/admin/config'),
+  updateConfig: (body: Partial<Record<ConfigSection, Record<string, ConfigValue>>>) => request<SystemConfig>('PATCH', '/admin/config', { body }),
+  configHistory: (q: { page?: number; limit?: number; section?: ConfigSection }) =>
+    request<Paged<ConfigChange> & { counts: Partial<Record<ConfigSection, number>> }>('GET', '/admin/config/history', { query: q }),
+  setMaintenance: (body: { enabled: boolean; message?: string; endsAt?: string | null }) => request<Maintenance>('POST', '/admin/config/maintenance', { body }),
+  testSmtp: () => request<SmtpTestResult>('POST', '/admin/config/smtp/test'),
 }

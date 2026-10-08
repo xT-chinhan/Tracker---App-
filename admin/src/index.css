@@ -54,6 +54,9 @@
   --color-destructive-bar: #D9483B;
   --color-warning: #956400;
   --color-warning-soft: #FBF3DB;
+  --color-warning-bar: #D99A1E;          /* switch bảo trì, chấm vàng, vùng cảnh báo ngân sách */
+  --color-warning-ink: #6B4800;          /* tiêu đề banner vàng */
+  --color-warning-line: #F1E3B5;         /* viền banner vàng */
 
   --color-skeleton-a: #ECEBE7;
   --color-skeleton-b: #F4F3F0;

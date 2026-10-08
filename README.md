@@ -92,7 +92,8 @@ docker compose --profile app down               # dừng, giữ dữ liệu (th�
 | `SEED_DEMO` | false | `true`: mỗi lần container api khởi động nạp lại dữ liệu demo |
 | `CORS_ORIGINS` | — | Origin gọi API trực tiếp (admin qua nginx không cần) |
 | `TRUST_PROXY` | 1 | API đứng sau nginx; để trống nếu API ra Internet trực tiếp |
-| `SMTP_HOST` `SMTP_PORT` `SMTP_SECURE` `SMTP_USER` `SMTP_PASS` `SMTP_FROM` | | Gửi OTP quên mật khẩu; `SMTP_HOST` trống → OTP in ra log |
+| `SMTP_HOST` `SMTP_PORT` `SMTP_SECURE` `SMTP_USER` `SMTP_PASS` `SMTP_FROM` | | Gửi OTP quên mật khẩu; `SMTP_HOST` trống → OTP in ra log. Admin có thể cấu hình SMTP ngay trên trang Cấu hình (ưu tiên hơn env) |
+| `CONFIG_SECRET` | dẫn xuất từ `JWT_SECRET` | Khóa mã hóa mật khẩu SMTP lưu trong Cấu hình hệ thống |
 
 Biến riêng khi dev: `backend/.env` (xem [backend/README.md](backend/README.md#biến-môi-trường-backendenv)), `admin/.env` (`VITE_API_URL`).
 
@@ -101,8 +102,8 @@ Biến riêng khi dev: `backend/.env` (xem [backend/README.md](backend/README.md
 `npm run test` chạy tuần tự, tự lo server và DB rồi dọn dẹp:
 
 1. Tạo lại DB `tracker_test` (cổng `DB_PORT`) → migrate → seed → **nạp dữ liệu demo** (để chứng minh test không cần DB rỗng).
-2. Bật API `NODE_ENV=test TZ=UTC` ở `:3001` → `verify-demo` (bất biến dữ liệu demo qua API, ~560 kiểm tra) → **backend e2e: 549 kiểm tra**.
-3. Khởi động lại API → **admin e2e Playwright: 37 test** (tự bật Vite ở `:5174`).
+2. Bật API `NODE_ENV=test TZ=UTC` ở `:3001` → `verify-demo` (bất biến dữ liệu demo qua API, ~560 kiểm tra) → **backend e2e: 708 kiểm tra**.
+3. Khởi động lại API → **admin e2e Playwright: 44 test** (tự bật Vite ở `:5174`).
 4. Dừng API, xóa DB test (`KEEP_TEST_DB=1` để giữ). Tùy chọn: `TEST_DB`, `TEST_API_PORT`, `E2E_PORT`, `SKIP_BACKEND=1`, `SKIP_ADMIN=1`.
 
 Kết quả gần nhất: verify-demo 0 lỗi, backend e2e 549/549, admin e2e 37/37 (~4 phút).
@@ -120,12 +121,12 @@ Kết quả gần nhất: verify-demo 0 lỗi, backend e2e 549/549, admin e2e 37
 │   │                                     # recurring, quick-templates, notifications, stats, export, admin, health
 │   ├── src/common/         # JWT guard, DTO, giờ VN, filter lỗi Prisma
 │   ├── prisma/             # schema, migrations, seed.ts, seed-demo.ts
-│   ├── scripts/            # e2e.mjs (549 kiểm tra), verify-demo.mjs
+│   ├── scripts/            # e2e.mjs (708 kiểm tra), verify-demo.mjs
 │   └── Dockerfile
 ├── admin/
 │   ├── src/pages/          # Đăng nhập, Tổng quan, Người dùng, Chi tiết, Giao dịch, Danh mục, Thông báo, Tài khoản
 │   ├── src/components/     # layout, biểu đồ, shadcn/ui đã chỉnh theo mockup
-│   ├── e2e/                # Playwright (37 test)
+│   ├── e2e/                # Playwright (44 test)
 │   ├── Dockerfile, nginx.conf
 └── design/
     ├── mockup/             # mockup mobile 25 màn (390×844) + ảnh chụp
@@ -146,6 +147,7 @@ Chi tiết đầy đủ + danh sách endpoint: [backend/README.md](backend/READM
 - **Định kỳ**: ngày/tuần/tháng/năm × interval, giữ ngày neo (31 → cuối tháng), cron 15 phút, sinh bù, idempotent; ví/danh mục lưu trữ hoặc user bị khóa → tự tạm dừng + thông báo.
 - **Tài khoản**: JWT có `tokenVersion` (đổi mật khẩu / khóa / đăng xuất mọi nơi → token cũ hết hạn), OTP quên mật khẩu, rate limit đăng nhập.
 - **Admin**: tổng quan, khóa/mở + phân quyền user, giao dịch toàn hệ thống + CSV, danh mục hệ thống, broadcast tới mọi user đang hoạt động.
+- **Cấu hình hệ thống** (trang "Cấu hình"): thông tin app, đăng ký, bảo trì (tự tắt theo giờ), SMTP, mật khẩu & OTP, ngưỡng ngân sách, bật/tắt tính năng, phiên bản app di động, lịch sử thay đổi. App đọc qua `GET /api/config/public`. Chi tiết: [backend/README.md](backend/README.md#cấu-hình-hệ-thống).
 
 ## Lộ trình
 

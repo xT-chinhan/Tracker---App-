@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 import { IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from 'class-validator';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthUser, CurrentUser } from '../common/auth';
+import { AuthUser, CurrentUser, Feature } from '../common/auth';
 import { MAX_AMOUNT, PageQuery, paged, RangeQuery } from '../common/dto';
 import { parseDate, resolveRange } from '../common/time';
 import { Db, lockUser, WalletsModule, WalletsService } from '../wallets/wallets.module';
@@ -162,6 +162,8 @@ export class TransfersService {
 
 @ApiTags('transfers')
 @ApiBearerAuth()
+/** Tính năng có thể tắt trong Cấu hình hệ thống: tắt => route ghi 403 FEATURE_DISABLED, đọc vẫn được */
+@Feature('transfers')
 @Controller('transfers')
 export class TransfersController {
   constructor(private readonly transfers: TransfersService) {}

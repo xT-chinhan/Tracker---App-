@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';
 import { Readable } from 'stream';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthUser, CurrentUser } from '../common/auth';
+import { AuthUser, CurrentUser, Feature } from '../common/auth';
 import { RangeQuery } from '../common/dto';
 import { resolveRange } from '../common/time';
 import { WalletsModule, WalletsService } from '../wallets/wallets.module';
@@ -62,6 +62,8 @@ export class ExportService {
 
 @ApiTags('export')
 @ApiBearerAuth()
+/** Tính năng có thể tắt trong Cấu hình hệ thống: tắt => mọi route 403 FEATURE_DISABLED */
+@Feature('csvExport', { reads: true })
 @Controller('export')
 export class ExportController {
   constructor(private readonly exporter: ExportService) {}

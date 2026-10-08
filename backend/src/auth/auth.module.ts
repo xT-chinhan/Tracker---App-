@@ -1,15 +1,14 @@
 import { BadRequestException, Body, ConflictException, Controller, Delete, ForbiddenException, Get, HttpCode, Injectable, Logger, Module, Patch, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { AppThrottlerGuard } from '../common/throttle';
 import { ApiBearerAuth, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import * as bcrypt from 'bcryptjs';
 import { randomInt } from 'crypto';
-import * as nodemailer from 'nodemailer';
 import { User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser, Public } from '../common/auth';
+import { SystemConfigService } from '../system-config/system-config.module';
 import { Trim } from '../common/dto';
 
 class RegisterDto {
@@ -48,9 +47,6 @@ class DeleteAccountDto {
   @IsString() password: string;
 }
 
-const OTP_TTL_MS = 10 * 60 * 1000;
-const OTP_RESEND_MS = 60 * 1000;
-const OTP_MAX_ATTEMPTS = 5;
 const OTP_INVALID = 'Mã OTP không đúng hoặc đã hết hạn';
 /** Hash giả để email không tồn tại cũng tốn 1 lần bcrypt (không dò email qua thời gian phản hồi) */
 const DUMMY_HASH = bcrypt.hashSync('dummy-password', 10);
@@ -60,34 +56,25 @@ export function publicUser<T extends { passwordHash: string; tokenVersion: numbe
   return rest;
 }
 
-/** Gửi mail qua SMTP_*; không cấu hình SMTP_HOST => in OTP ra log (dev / e2e). */
+/** Gửi mail theo SMTP trong Cấu hình hệ thống (fallback SMTP_* env); chưa cấu hình máy chủ => in OTP ra log (dev / e2e). */
 @Injectable()
 export class MailService {
   private readonly logger = new Logger('Mail');
-  private readonly transport?: nodemailer.Transporter;
 
-  constructor(private readonly config: ConfigService) {
-    const host = config.get<string>('SMTP_HOST');
-    if (host) {
-      this.transport = nodemailer.createTransport({
-        host,
-        port: Number(config.get('SMTP_PORT', 587)),
-        secure: config.get('SMTP_SECURE') === 'true',
-        auth: config.get('SMTP_USER') ? { user: config.get('SMTP_USER'), pass: config.get('SMTP_PASS') } : undefined,
-      });
-    }
-  }
+  constructor(private readonly sys: SystemConfigService) {}
 
-  async sendOtp(email: string, otp: string) {
-    if (!this.transport) {
-      this.logger.warn(`[DEV] OTP đặt lại mật khẩu cho ${email}: ${otp}`);
+  async sendOtp(email: string, otp: string, minutes: number) {
+    const m = await this.sys.mailer();
+    if (!m) {
+      this.logger.warn(`[DEV] OTP đặt lại mật khẩu cho ${email}: ${otp} (hạn ${minutes} phút)`);
       return;
     }
-    await this.transport.sendMail({
-      from: this.config.get('SMTP_FROM', this.config.get('SMTP_USER')),
+    const appName = await this.sys.get<string>('general.appName');
+    await m.transport.sendMail({
+      from: m.from,
       to: email,
-      subject: 'Mã đặt lại mật khẩu App Tracker',
-      text: `Mã OTP của bạn là ${otp}. Mã có hiệu lực trong 10 phút. Nếu không phải bạn yêu cầu, hãy bỏ qua email này.`,
+      subject: `Mã đặt lại mật khẩu ${appName}`,
+      text: `Mã OTP của bạn là ${otp}. Mã có hiệu lực trong ${minutes} phút. Nếu không phải bạn yêu cầu, hãy bỏ qua email này.`,
     });
   }
 }
@@ -96,10 +83,26 @@ export class MailService {
 export class AuthService {
   private readonly logger = new Logger('Auth');
 
-  constructor(private readonly prisma: PrismaService, private readonly jwt: JwtService, private readonly mail: MailService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwt: JwtService,
+    private readonly mail: MailService,
+    private readonly sys: SystemConfigService,
+  ) {}
 
-  /** Tạo user kèm ví mặc định "Tiền mặt". */
+  /** Độ dài tối thiểu lấy từ Cấu hình hệ thống (password.minLength), áp cho đăng ký / đổi / đặt lại mật khẩu. */
+  private async assertPasswordLength(password: string, field = 'Mật khẩu') {
+    const min = await this.sys.get<number>('password.minLength');
+    if (password.length < min) throw new BadRequestException(`${field} phải có ít nhất ${min} ký tự`);
+  }
+
+  /** Tạo user kèm ví mặc định (tên theo cấu hình business.defaultWalletName). Tắt đăng ký => 403; bảo trì => 503. */
   async register(dto: RegisterDto) {
+    if (!(await this.sys.get<boolean>('access.registrationEnabled'))) {
+      throw new ForbiddenException({ statusCode: 403, code: 'REGISTRATION_DISABLED', message: 'Ứng dụng đang tạm ngưng nhận đăng ký mới' });
+    }
+    await this.sys.assertNotMaintenance('USER');
+    await this.assertPasswordLength(dto.password);
     const email = dto.email.toLowerCase().trim();
     if (await this.prisma.user.findUnique({ where: { email } })) {
       throw new ConflictException('Email đã được sử dụng');
@@ -110,7 +113,7 @@ export class AuthService {
         name: dto.name,
         lastLoginAt: new Date(),
         passwordHash: await bcrypt.hash(dto.password, 10),
-        wallets: { create: { name: 'Tiền mặt', type: 'CASH' } },
+        wallets: { create: { name: await this.sys.get<string>('business.defaultWalletName'), type: 'CASH' } },
       },
     });
     return this.issue(user);
@@ -123,6 +126,7 @@ export class AuthService {
       throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
     if (user.status === 'LOCKED') throw new ForbiddenException('Tài khoản đã bị khóa');
+    await this.sys.assertNotMaintenance(user.role);
     return this.issue(await this.prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } }));
   }
 
@@ -140,6 +144,7 @@ export class AuthService {
     if (!(await bcrypt.compare(dto.currentPassword, user.passwordHash))) {
       throw new BadRequestException('Mật khẩu hiện tại không đúng');
     }
+    await this.assertPasswordLength(dto.newPassword, 'Mật khẩu mới');
     const updated = await this.prisma.user.update({
       where: { id: userId },
       data: { passwordHash: await bcrypt.hash(dto.newPassword, 10), tokenVersion: { increment: 1 } },
@@ -159,24 +164,27 @@ export class AuthService {
   async forgotPassword(dto: ForgotPasswordDto) {
     const user = await this.prisma.user.findUnique({ where: { email: dto.email.toLowerCase().trim() } });
     if (!user || user.status === 'LOCKED') return;
+    const cfg = await this.sys.otp();
     const prev = await this.prisma.passwordReset.findUnique({ where: { userId: user.id } });
-    if (prev && Date.now() - prev.createdAt.getTime() < OTP_RESEND_MS) return;
+    if (prev && Date.now() - prev.createdAt.getTime() < cfg.resendSeconds * 1000) return;
     const otp = String(randomInt(0, 1_000_000)).padStart(6, '0');
-    const data = { codeHash: await bcrypt.hash(otp, 10), expiresAt: new Date(Date.now() + OTP_TTL_MS), attempts: 0, createdAt: new Date() };
+    const data = { codeHash: await bcrypt.hash(otp, 10), expiresAt: new Date(Date.now() + cfg.expiryMinutes * 60_000), attempts: 0, createdAt: new Date() };
     await this.prisma.passwordReset.upsert({ where: { userId: user.id }, create: { userId: user.id, ...data }, update: data });
-    await this.mail.sendOtp(user.email, otp);
+    await this.mail.sendOtp(user.email, otp, cfg.expiryMinutes);
   }
 
-  /** Sai quá 5 lần => OTP bị hủy, phải xin mã mới. */
+  /** Sai quá số lần cho phép (password.otpMaxAttempts) => OTP bị hủy, phải xin mã mới. */
   async resetPassword(dto: ResetPasswordDto) {
+    const { maxAttempts } = await this.sys.otp();
     const user = await this.prisma.user.findUnique({ where: { email: dto.email.toLowerCase().trim() } });
     const rec = user && (await this.prisma.passwordReset.findUnique({ where: { userId: user.id } }));
-    if (!user || !rec || rec.expiresAt < new Date() || rec.attempts >= OTP_MAX_ATTEMPTS) throw new BadRequestException(OTP_INVALID);
+    if (!user || !rec || rec.expiresAt < new Date() || rec.attempts >= maxAttempts) throw new BadRequestException(OTP_INVALID);
     if (!(await bcrypt.compare(dto.otp, rec.codeHash))) {
       const { attempts } = await this.prisma.passwordReset.update({ where: { userId: user.id }, data: { attempts: { increment: 1 } } });
-      if (attempts >= OTP_MAX_ATTEMPTS) await this.prisma.passwordReset.deleteMany({ where: { userId: user.id } });
+      if (attempts >= maxAttempts) await this.prisma.passwordReset.deleteMany({ where: { userId: user.id } });
       throw new BadRequestException(OTP_INVALID);
     }
+    await this.assertPasswordLength(dto.newPassword, 'Mật khẩu mới');
     await this.prisma.$transaction([
       this.prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(dto.newPassword, 10), tokenVersion: { increment: 1 } } }),
       this.prisma.passwordReset.delete({ where: { userId: user.id } }),
@@ -199,7 +207,10 @@ export class AuthService {
 
   private async issue(user: User) {
     return {
-      accessToken: await this.jwt.signAsync({ sub: user.id, role: user.role, tv: user.tokenVersion }),
+      accessToken: await this.jwt.signAsync(
+        { sub: user.id, role: user.role, tv: user.tokenVersion },
+        { expiresIn: (await this.sys.jwtExpiresIn()) as `${number}d` },
+      ),
       user: publicUser(user),
     };
   }
@@ -210,25 +221,26 @@ export class AuthService {
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
-  /** Giới hạn theo IP (THROTTLE_*), quá => 429 */
-  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/register')
+  /** Giới hạn theo IP (THROTTLE_*), quá => 429. Tắt đăng ký => 403 REGISTRATION_DISABLED; bảo trì => 503 MAINTENANCE */
+  @Public() @UseGuards(AppThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/register')
   register(@Body() dto: RegisterDto) {
     return this.auth.register(dto);
   }
 
-  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/login') @HttpCode(200)
+  /** Giới hạn theo IP (THROTTLE_*) và theo email (Cấu hình: số lần / khung phút). Bảo trì => user thường 503, admin vẫn vào được */
+  @Public() @UseGuards(AppThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/login') @HttpCode(200)
   login(@Body() dto: LoginDto) {
     return this.auth.login(dto);
   }
 
-  /** Luôn 204 (chống dò email). Có tài khoản => gửi OTP 6 số, hạn 10 phút, gửi lại sau tối thiểu 60s. Giới hạn chặt hơn (THROTTLE_FORGOT_LIMIT). */
-  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/forgot-password') @HttpCode(204)
+  /** Luôn 204 (chống dò email). Có tài khoản => gửi OTP 6 số; hạn / chờ gửi lại theo Cấu hình hệ thống (mặc định 10 phút / 60s). Giới hạn chặt hơn (THROTTLE_FORGOT_LIMIT). */
+  @Public() @UseGuards(AppThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/forgot-password') @HttpCode(204)
   forgotPassword(@Body() dto: ForgotPasswordDto) {
     this.auth.runForgot(dto);
   }
 
-  /** Đặt lại mật khẩu bằng OTP; sai 5 lần => OTP bị hủy. Mọi phiên cũ hết hiệu lực. */
-  @Public() @UseGuards(ThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/reset-password') @HttpCode(204)
+  /** Đặt lại mật khẩu bằng OTP; sai quá số lần cho phép (mặc định 5) => OTP bị hủy. Mọi phiên cũ hết hiệu lực. */
+  @Public() @UseGuards(AppThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/reset-password') @HttpCode(204)
   resetPassword(@Body() dto: ResetPasswordDto) {
     return this.auth.resetPassword(dto);
   }

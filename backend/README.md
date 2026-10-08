@@ -46,6 +46,9 @@ npm run dev                     # http://localhost:3000/api
 | `THROTTLE_AUTH_LIMIT` | 10 (test: 200) | Số request / cửa sổ / IP cho mỗi route login, register, reset-password |
 | `THROTTLE_FORGOT_LIMIT` | 3 (test: 20) | Như trên cho forgot-password |
 | `TRUST_PROXY` | — | Chạy sau reverse proxy: `1` (số hop), `true` hoặc danh sách IP, để rate limit đếm theo IP thật |
+| `CONFIG_SECRET` | (dẫn xuất từ `JWT_SECRET`) | Khóa mã hóa AES-256-GCM cho giá trị bí mật trong Cấu hình hệ thống (mật khẩu SMTP). Đổi khóa thì mật khẩu SMTP đã lưu không giải mã được, phải nhập lại |
+
+Các giá trị `SMTP_*`, `JWT_EXPIRES_IN`, `THROTTLE_AUTH_LIMIT` là **mặc định** cho Cấu hình hệ thống: chưa có admin sửa thì hệ thống chạy đúng như env (xem mục Cấu hình hệ thống bên dưới).
 
 ## Dữ liệu demo (`prisma/seed-demo.ts`)
 
@@ -70,7 +73,8 @@ npm run build && NODE_ENV=test node dist/main > /tmp/tracker-api.log 2>&1 &
 npm run test:e2e              # API_URL=http://host:port/api  API_LOG=/đường/dẫn/log  ADMIN_EMAIL / ADMIN_PASSWORD (mặc định admin@thuchi.vn / admin123)
 ```
 
-- 549 kiểm tra. Email ngẫu nhiên nên chạy lặp được không cần reset DB, kể cả DB đã có dữ liệu demo. Mất khoảng 90 giây: 1 lần chờ 61s (giới hạn gửi lại OTP) và ~11s chờ hết khóa 429 ở cuối.
+- 708 kiểm tra. Email ngẫu nhiên nên chạy lặp được không cần reset DB, kể cả DB đã có dữ liệu demo. Mất khoảng 2 phút: 1 lần chờ 61s (giới hạn gửi lại OTP), ~31s (chờ gửi lại OTP theo cấu hình) và ~11s chờ hết khóa 429 ở cuối.
+- Nhóm `config:` sửa Cấu hình hệ thống (đủ mọi trường, bảo trì tự tắt theo giờ, máy chủ SMTP giả trong script) rồi khôi phục giá trị ban đầu ở cuối nhóm, kể cả khi lỗi.
 - Có thể chạy server với `TZ=UTC` để chắc chắn không phụ thuộc múi giờ máy chủ (`npm run test` chạy như vậy).
 - In ra ma trận test theo nhóm; exit code 1 nếu có lỗi.
 
@@ -81,8 +85,9 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 | Module | Method | Path | Mô tả |
 |---|---|---|---|
 | health | GET | `/health` | Công khai: `{status, db, version}`, DB lỗi → 503 |
-| auth | POST | `/auth/register` | Đăng ký, tự tạo ví "Tiền mặt" (rate limit) |
-| | POST | `/auth/login` | Đăng nhập (tài khoản khóa → 403; rate limit) |
+| config | GET | `/config/public` | Công khai (cả khi bảo trì): cấu hình app đọc khi khởi động, xem mục Cấu hình hệ thống |
+| auth | POST | `/auth/register` | Đăng ký, tự tạo ví mặc định (tên theo cấu hình, mặc định "Tiền mặt"); tắt đăng ký → 403 `REGISTRATION_DISABLED` (rate limit) |
+| | POST | `/auth/login` | Đăng nhập (tài khoản khóa → 403; bảo trì → user thường 503; rate limit theo IP + theo email) |
 | | POST | `/auth/forgot-password` | Luôn 204; gửi OTP 6 số nếu email tồn tại (rate limit chặt hơn) |
 | | POST | `/auth/reset-password` | `{email, otp, newPassword}`; mọi phiên cũ hết hiệu lực (rate limit) |
 | | POST | `/auth/logout-all` | 204; đăng xuất mọi thiết bị, kể cả token đang dùng |
@@ -131,6 +136,10 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 | | GET / POST | `/admin/broadcasts` | Lịch sử (số người nhận / đã đọc) / gửi cho mọi user ACTIVE |
 | | GET / POST / PATCH / DELETE | `/admin/categories[/:id]` | Danh mục hệ thống |
 | | POST | `/admin/categories/:id/restore` | |
+| | GET / PATCH | `/admin/config` | Mọi cấu hình theo mục / sửa một phần (kiểm tra hợp lệ, lỗi → 400 `{errors: {"mục.trường": "lý do"}}`), trả trạng thái mới |
+| | GET | `/admin/config/history?section=&page=&limit=` | Lịch sử thay đổi (mỗi trường một dòng, bí mật hiện `••••`) |
+| | POST | `/admin/config/maintenance` | `{enabled, message?, endsAt?}` bật/tắt bảo trì ngay |
+| | POST | `/admin/config/smtp/test` | Gửi email thử tới email admin bằng cấu hình đã lưu → `{ok, response \| error, durationMs}` (5 lần/phút) |
 
 ## Nghiệp vụ v1
 
@@ -171,4 +180,29 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 - **Báo cáo**: so với tháng trước (|thay đổi| ≤ 5% = `stable`), cơ cấu theo danh mục, giao dịch lớn/nhỏ nhất, dự báo tháng sau bằng trung bình có trọng số (≥ 3 tháng quan sát, ngược lại trung bình cộng). Mọi thống kê đều lọc được theo ví.
 - **Xuất CSV**: UTF-8 có BOM, cột Ngày (giờ VN), Loại, Danh mục, Ví, Tiêu đề, Ghi chú, Số tiền. Escape theo RFC 4180 (dấu phẩy, ngoặc kép, xuống dòng). Đọc DB theo lô 1000 dòng (keyset) và stream ra response nên khoảng thời gian lớn không dồn hết vào RAM; lỗi tham số (ví lạ, from ≥ to) vẫn trả 4xx trước khi stream.
 - **Admin**: user bị khóa thì token đang có bị 403, không đăng nhập được, và mọi token cũ vô hiệu vĩnh viễn. Admin không tự khóa hay tự hạ quyền được.
+- **Cấu hình hệ thống** (admin, trang "Cấu hình"): xem mục riêng bên dưới.
 - **Để sau**: vay/nợ, push FCM.
+
+## Cấu hình hệ thống
+
+Lưu ở bảng `SystemSetting` (khóa `mục.trường` → JSON; chưa có dòng = giá trị mặc định, tức hành vi/env cũ) và `SystemConfigChange` (lịch sử: ai, lúc nào, mục, trường, cũ → mới; actor rỗng = Hệ thống). Đọc qua cache trong tiến trình 15 giây, lưu xong xóa cache ngay ở instance đó (instance khác thấy trong ≤ 15 giây, app thấy trong 1 phút như trang admin ghi).
+
+| Mục | Trường | Mặc định | Có hiệu lực ở đâu |
+|---|---|---|---|
+| general | `appName`, `supportEmail`, `hotline`, `termsUrl`, `privacyUrl` | "Thu Chi", trống | `/config/public`; tên app vào tiêu đề email OTP / email thử. Link phải `https://` |
+| access | `registrationEnabled` | true | Tắt → `POST /auth/register` 403 `{code:'REGISTRATION_DISABLED'}` |
+| | `sessionDays` (1–365) | theo `JWT_EXPIRES_IN` (30) | Hạn JWT khi đăng nhập / đăng ký / đổi mật khẩu. Chưa sửa thì dùng nguyên `JWT_EXPIRES_IN` |
+| | `loginMaxAttempts` / `loginWindowMinutes` | `THROTTLE_AUTH_LIMIT` (10, test 200) / 1 | Giới hạn đăng nhập **theo email** (thêm vào giới hạn theo IP), quá → 429 + `Retry-After` |
+| | `maintenanceMessage`, `maintenanceEndsAt` | câu mặc định, không hẹn | Nội dung + giờ tự tắt của bảo trì |
+| smtp | `host`, `port`, `security` (`starttls`/`ssl`/`none`), `user`, `password`, `from` | `SMTP_*` | Gửi OTP + email thử. Host trống → OTP ghi log. Mật khẩu mã hóa AES-256-GCM (`CONFIG_SECRET`), không API nào trả về (chỉ `hasPassword`, `passwordSavedAt/By`) |
+| password | `minLength` (6–64) | 6 | Đăng ký, đổi mật khẩu, đặt lại mật khẩu → 400 "Mật khẩu phải có ít nhất N ký tự" |
+| | `otpExpiryMinutes` (1–60), `otpMaxAttempts` (1–10), `otpResendSeconds` (30–600, < hạn mã) | 10 / 5 / 60 | Quên / đặt lại mật khẩu |
+| business | `budgetWarningPercent` (10–100) < `budgetExceededPercent` (50–200) | 80 / 100 | Thông báo BUDGET_WARNING/EXCEEDED, `status` của ngân sách; `GET /budgets` trả `thresholds` |
+| | `defaultWalletName` | "Tiền mặt" | Ví tạo sẵn khi đăng ký |
+| | `featureSavingGoals`, `featureRecurring`, `featureTransfers`, `featureCsvExport`, `featureQuickTemplates` | true | Tắt → route **ghi** (khác GET) của tính năng trả 403 `{code:'FEATURE_DISABLED'}`, đọc vẫn được, dữ liệu giữ nguyên. Riêng xuất CSV chặn cả GET (chính nó là tính năng). Áp cho mọi tài khoản |
+| mobile | `android/iosLatestVersion`, `android/iosMinVersion` (x.y.z, tối thiểu ≤ mới nhất), `android/iosStoreUrl`, `releaseNotes` (≤ 300) | 1.0.0, trống | `/config/public` cho app hiện hộp "Cần cập nhật" |
+
+- **Bảo trì** (`POST /admin/config/maintenance`, không qua thanh Lưu): mọi request có token của user không phải ADMIN → 503 `{code:'MAINTENANCE', message, endsAt}`; đăng nhập và đăng ký của user thường cũng 503. ADMIN không bị chặn; `/health`, `/config/public`, quên / đặt lại mật khẩu vẫn chạy. Có `endsAt` thì tới giờ tự tắt: kiểm tra ngay khi đọc (request đầu tiên sau giờ đó đã qua được) và cron mỗi phút; lịch sử ghi "Hệ thống", giờ dự kiến được xóa. Tắt tay cũng xóa giờ dự kiến.
+- **Giao dịch định kỳ tắt**: ngoài chặn route ghi, cron (và `POST /admin/recurring/run-due`) tạm ngưng sinh kỳ (`skipped: true, reason: 'FEATURE_DISABLED'`), `nextRunAt` giữ nguyên. Bật lại thì lượt chạy kế tiếp sinh bù các kỳ đã qua, giống khi server tắt (lương, tiền nhà… vẫn được ghi đúng ngày).
+- **Kiểm tra hợp lệ**: từng trường (kiểu, khoảng, https, email, số điện thoại, phiên bản, độ dài) và ràng buộc chéo trên trạng thái sau khi gộp; một trường sai thì không lưu gì. Gửi giá trị trùng hiện tại thì không ghi lịch sử.
+- `GET /config/public` → `{appName, supportEmail, hotline, termsUrl, privacyUrl, currency, registrationEnabled, maintenance:{enabled, message, endsAt}, features:{savingGoals, recurring, transfers, csvExport, quickTemplates}, budget:{warningPercent, exceededPercent}, password:{minLength}, otp:{expiryMinutes, resendSeconds}, mobile:{android:{latestVersion, minVersion, storeUrl}, ios:{…}, releaseNotes}}`. Không chứa SMTP.

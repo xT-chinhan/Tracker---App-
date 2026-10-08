@@ -20,6 +20,7 @@ import { QuickTemplatesModule } from './quick-templates/quick-templates.module';
 import { ExportModule } from './export/export.module';
 import { RecurringModule } from './recurring/recurring.module';
 import { HealthModule } from './health/health.module';
+import { SystemConfigModule, SystemConfigService } from './system-config/system-config.module';
 
 @Module({
   imports: [
@@ -37,21 +38,43 @@ import { HealthModule } from './health/health.module';
       },
     }),
     ScheduleModule.forRoot(),
-    // Chỉ áp cho các route auth công khai (@UseGuards(ThrottlerGuard)); đếm theo IP + route.
-    // NODE_ENV=test nới giới hạn (cửa sổ 10s) để e2e chạy được; mọi giá trị ghi đè được bằng env.
+    SystemConfigModule,
+    // Chỉ áp cho các route có @UseGuards(ThrottlerGuard) (auth công khai + gửi email thử).
+    //  - default: theo IP + route. NODE_ENV=test nới giới hạn (cửa sổ 10s) để e2e chạy được; ghi đè được bằng env.
+    //  - login: theo email, số lần / khung thời gian lấy từ Cấu hình hệ thống (access.loginMaxAttempts / loginWindowMinutes).
+    //  - smtpTest: gửi email thử, 5 lần / phút / admin.
     ThrottlerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      imports: [SystemConfigModule],
+      inject: [ConfigService, SystemConfigService],
+      useFactory: (config: ConfigService, sys: SystemConfigService) => {
         const test = config.get('NODE_ENV') === 'test';
         const num = (key: string, dev: number, testValue: number) => Number(config.get(key) ?? (test ? testValue : dev));
         const authLimit = num('THROTTLE_AUTH_LIMIT', 10, 200);
         const forgotLimit = num('THROTTLE_FORGOT_LIMIT', 3, 20);
         return {
           errorMessage: 'Bạn thao tác quá nhiều lần, vui lòng thử lại sau',
-          throttlers: [{
-            ttl: num('THROTTLE_TTL_SEC', 60, 10) * 1000,
-            limit: (ctx) => (ctx.getHandler().name === 'forgotPassword' ? forgotLimit : authLimit),
-          }],
+          throttlers: [
+            {
+              name: 'default',
+              ttl: num('THROTTLE_TTL_SEC', 60, 10) * 1000,
+              limit: (ctx) => (ctx.getHandler().name === 'forgotPassword' ? forgotLimit : authLimit),
+              skipIf: (ctx) => ctx.getHandler().name === 'testSmtp',
+            },
+            {
+              name: 'login',
+              ttl: async () => (await sys.loginLimit()).ttlMs,
+              limit: async () => (await sys.loginLimit()).limit,
+              skipIf: (ctx) => ctx.getHandler().name !== 'login',
+              getTracker: (req) => String(req.body?.email ?? '').toLowerCase().trim(),
+            },
+            {
+              name: 'smtpTest',
+              ttl: 60_000,
+              limit: 5,
+              skipIf: (ctx) => ctx.getHandler().name !== 'testSmtp',
+              getTracker: (req) => String(req.user?.id ?? req.ip),
+            },
+          ],
         };
       },
     }),

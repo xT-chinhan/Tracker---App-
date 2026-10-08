@@ -322,3 +322,31 @@ model RecurringRule {
   @@index([userId])
   @@index([isActive, nextRunAt])
 }
+
+/// Cấu hình hệ thống do admin sửa (key = "<section>.<field>"). Không có dòng => dùng giá trị mặc định (env / hành vi cũ).
+/// Giá trị bí mật (mật khẩu SMTP) lưu dạng mã hóa AES-256-GCM.
+model SystemSetting {
+  key           String   @id
+  value         Json
+  updatedAt     DateTime @updatedAt
+  updatedById   String?
+  updatedByName String?
+}
+
+/// Lịch sử thay đổi cấu hình: mỗi trường đổi một dòng. actorId null = hệ thống (vd tự tắt bảo trì).
+/// Trường bí mật lưu "••••" cho cả giá trị cũ và mới.
+model SystemConfigChange {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  actorId    String?
+  actorName  String?
+  actorEmail String?
+  section    String
+  key        String
+  oldValue   Json?
+  newValue   Json?
+  secret     Boolean  @default(false)
+
+  @@index([createdAt])
+  @@index([section, createdAt])
+}

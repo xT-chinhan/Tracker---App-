@@ -4,8 +4,10 @@
 //   ADMIN_EMAIL / ADMIN_PASSWORD  mặc định theo .env.example
 // Email/tên ngẫu nhiên nên chạy lặp được không cần reset DB. Exit code 1 nếu có lỗi.
 // Server phải chạy với NODE_ENV=test (cần POST /recurring/run-due + giới hạn tần suất nới cho test: cửa sổ 10s).
-// Có 1 lần chờ 61s (giới hạn gửi lại OTP) và ~10s chờ hết khóa 429 ở cuối.
+// Có 1 lần chờ 61s (giới hạn gửi lại OTP), ~31s (chờ gửi lại OTP theo cấu hình) và ~10s chờ hết khóa 429 ở cuối.
+// Nhóm "config:" đổi Cấu hình hệ thống rồi khôi phục giá trị ban đầu ở cuối nhóm (kể cả khi lỗi).
 import { readFileSync } from 'node:fs';
+import net from 'node:net';
 
 const BASE = process.env.API_URL ?? 'http://localhost:3000/api';
 const API_LOG = process.env.API_LOG ?? '/tmp/tracker-api.log';
@@ -44,6 +46,35 @@ async function newUser(prefix) {
   const r = await req('POST', '/auth/register', { body: { email, password: 'secret1', name: prefix } });
   const w = await req('GET', '/wallets', { token: r.data.accessToken });
   return { email, token: r.data.accessToken, id: r.data.user.id, cash: w.data.items[0].id };
+}
+
+/** Máy chủ SMTP giả (đủ lệnh cho nodemailer): ghi lại AUTH PLAIN + nội dung thư, trả 250. */
+function fakeSmtp() {
+  const mails = [];
+  const server = net.createServer((sock) => {
+    let data = null, buf = '', auth = null;
+    sock.write('220 fake ESMTP\r\n');
+    sock.on('data', (chunk) => {
+      buf += chunk.toString('utf8');
+      let i;
+      while ((i = buf.indexOf('\r\n')) >= 0) {
+        const line = buf.slice(0, i); buf = buf.slice(i + 2);
+        if (data) {
+          if (line === '.') { mails.push({ auth, raw: data.join('\n') }); data = null; sock.write('250 2.0.0 OK queued\r\n'); }
+          else data.push(line.startsWith('..') ? line.slice(1) : line);
+          continue;
+        }
+        const cmd = line.slice(0, 4).toUpperCase();
+        if (cmd === 'EHLO') sock.write('250-fake\r\n250-AUTH PLAIN\r\n250 8BITMIME\r\n');
+        else if (cmd === 'AUTH') { const p = Buffer.from(line.split(' ')[2] ?? '', 'base64').toString().split('\0'); auth = { user: p[1], pass: p[2] }; sock.write('235 2.7.0 Authentication successful\r\n'); }
+        else if (cmd === 'DATA') { data = []; sock.write('354 End data with <CR><LF>.<CR><LF>\r\n'); }
+        else if (cmd === 'QUIT') { sock.write('221 Bye\r\n'); sock.end(); }
+        else sock.write('250 OK\r\n');
+      }
+    });
+    sock.on('error', () => {});
+  });
+  return new Promise((res) => server.listen(0, '127.0.0.1', () => res({ port: server.address().port, mails, close: () => new Promise((r2) => server.close(r2)) })));
 }
 
 // ================= AUTH =================
@@ -1541,12 +1572,424 @@ group('auth: quên mật khẩu OTP');
   check('locked account gets no OTP', readOtps()?.length === 4, readOtps());
 }
 
+// ================= CẤU HÌNH HỆ THỐNG =================
+// Mọi thay đổi được khôi phục về giá trị ban đầu ở khối finally (chạy lặp được).
+{
+  const SECRET = `S3cr3t-${S}`;
+  const decode = (t) => JSON.parse(Buffer.from(t.split('.')[1], 'base64url').toString());
+  const patch = (body, token = tAd) => req('PATCH', '/admin/config', { token, body });
+  const hist = async (q = '') => (await req('GET', `/admin/config/history${q}`, { token: tAd })).data;
+  const loginAd = async () => (await req('POST', '/auth/login', { body: { email: ADMIN_EMAIL, password: ADMIN_PASSWORD } })).data.accessToken;
+  const C2 = C;
+  let initial = null;
+  try {
+    group('config: quyền / hình dạng / public');
+    r = await req('GET', '/admin/config');
+    check('GET /admin/config no token 401', r.status === 401, r);
+    r = await req('GET', '/admin/config', { token: tA });
+    check('GET /admin/config user 403', r.status === 403, r);
+    r = await req('PATCH', '/admin/config', { token: tA, body: { general: { appName: 'hack' } } });
+    check('PATCH /admin/config user 403', r.status === 403, r);
+    r = await req('GET', '/admin/config/history', { token: tA });
+    check('GET history user 403', r.status === 403, r);
+    r = await req('POST', '/admin/config/maintenance', { token: tA, body: { enabled: true } });
+    check('POST maintenance user 403', r.status === 403, r);
+    r = await req('POST', '/admin/config/smtp/test', { token: tA });
+    check('POST smtp/test user 403', r.status === 403, r);
+    r = await req('GET', '/admin/config', { token: tAd });
+    check('GET /admin/config admin 200: 6 sections + maintenance + smtp meta + stats',
+      r.status === 200 && ['general', 'access', 'smtp', 'password', 'business', 'mobile'].every((s) => typeof r.data.values[s] === 'object')
+      && typeof r.data.maintenance.enabled === 'boolean' && typeof r.data.smtp.configured === 'boolean' && typeof r.data.stats.activeUsers === 'number', r.data);
+    check('smtp password never in GET (only hasPassword)', !('password' in r.data.values.smtp) && typeof r.data.values.smtp.hasPassword === 'boolean', r.data.values.smtp);
+    initial = r.data.values;
+    check('defaults = old behaviour (6 chars, OTP 10/5/60, 80/100, "Tiền mặt", features on, 30 ngày)',
+      initial.password.minLength === 6 && initial.password.otpExpiryMinutes === 10 && initial.password.otpMaxAttempts === 5 && initial.password.otpResendSeconds === 60
+      && initial.business.budgetWarningPercent === 80 && initial.business.budgetExceededPercent === 100 && initial.business.defaultWalletName === 'Tiền mặt'
+      && ['featureSavingGoals', 'featureRecurring', 'featureTransfers', 'featureCsvExport', 'featureQuickTemplates'].every((k) => initial.business[k] === true)
+      && initial.access.registrationEnabled === true && initial.access.sessionDays === 30, initial);
+    r = await req('GET', '/config/public');
+    const pub = r.data;
+    check('GET /config/public no auth 200, full shape', r.status === 200 && typeof pub.appName === 'string' && pub.currency === 'VND' && typeof pub.registrationEnabled === 'boolean'
+      && pub.maintenance && 'enabled' in pub.maintenance && 'message' in pub.maintenance && 'endsAt' in pub.maintenance
+      && ['savingGoals', 'recurring', 'transfers', 'csvExport', 'quickTemplates'].every((k) => typeof pub.features[k] === 'boolean')
+      && pub.budget.warningPercent === 80 && pub.budget.exceededPercent === 100 && pub.password.minLength === 6
+      && pub.mobile.android && pub.mobile.ios && 'latestVersion' in pub.mobile.android && 'minVersion' in pub.mobile.ios && 'storeUrl' in pub.mobile.ios && 'releaseNotes' in pub.mobile
+      && 'supportEmail' in pub && 'hotline' in pub && 'termsUrl' in pub && 'privacyUrl' in pub, pub);
+    r = await req('GET', '/config/public', { token: 'garbage' });
+    check('public config ignores bad token', r.status === 200, r);
+
+    group('config: kiểm tra hợp lệ');
+    const bad = async (name, body, key) => {
+      const x = await patch(body);
+      check(`${name} => 400 errors["${key}"]`, x.status === 400 && typeof x.data.errors?.[key] === 'string', x.data);
+      return x;
+    };
+    r = await bad('privacy link http', { general: { privacyUrl: 'http://thuchi.vn/bao-mat' } }, 'general.privacyUrl');
+    check('error message Vietnamese', r.data.errors['general.privacyUrl'] === 'Link phải bắt đầu bằng https://', r.data);
+    await bad('support email invalid', { general: { supportEmail: 'hotro@' } }, 'general.supportEmail');
+    await bad('hotline invalid', { general: { hotline: 'abc' } }, 'general.hotline');
+    await bad('appName empty', { general: { appName: '   ' } }, 'general.appName');
+    await bad('sessionDays 0', { access: { sessionDays: 0 } }, 'access.sessionDays');
+    await bad('sessionDays 366', { access: { sessionDays: 366 } }, 'access.sessionDays');
+    await bad('sessionDays not int', { access: { sessionDays: '30' } }, 'access.sessionDays');
+    await bad('registrationEnabled not bool', { access: { registrationEnabled: 'yes' } }, 'access.registrationEnabled');
+    await bad('maintenanceEnabled via PATCH', { access: { maintenanceEnabled: true } }, 'access.maintenanceEnabled');
+    await bad('maintenanceEndsAt in the past', { access: { maintenanceEndsAt: new Date(Date.now() - 60000).toISOString() } }, 'access.maintenanceEndsAt');
+    await bad('maintenance message > 200', { access: { maintenanceMessage: 'x'.repeat(201) } }, 'access.maintenanceMessage');
+    await bad('smtp port 70000', { smtp: { port: 70000 } }, 'smtp.port');
+    await bad('smtp security enum', { smtp: { security: 'tls' } }, 'smtp.security');
+    await bad('smtp from format', { smtp: { from: 'Thu Chi <khong-hop-le>' } }, 'smtp.from');
+    await bad('password minLength 5', { password: { minLength: 5 } }, 'password.minLength');
+    await bad('otp attempts 11', { password: { otpMaxAttempts: 11 } }, 'password.otpMaxAttempts');
+    await bad('otp resend >= expiry', { password: { otpExpiryMinutes: 1, otpResendSeconds: 60 } }, 'password.otpResendSeconds');
+    await bad('warning >= exceeded', { business: { budgetWarningPercent: 100, budgetExceededPercent: 100 } }, 'business.budgetWarningPercent');
+    await bad('wallet name empty', { business: { defaultWalletName: '' } }, 'business.defaultWalletName');
+    await bad('version format', { mobile: { androidLatestVersion: '1.4' } }, 'mobile.androidLatestVersion');
+    await bad('min > latest', { mobile: { iosLatestVersion: '1.2.0', iosMinVersion: '1.3.0' } }, 'mobile.iosMinVersion');
+    await bad('store link http', { mobile: { androidStoreUrl: 'http://play.google.com/x' } }, 'mobile.androidStoreUrl');
+    await bad('release notes > 300', { mobile: { releaseNotes: 'x'.repeat(301) } }, 'mobile.releaseNotes');
+    await bad('unknown section', { foo: { a: 1 } }, 'foo');
+    await bad('unknown field', { general: { color: 'red' } }, 'general.color');
+    r = await patch({ general: { appName: 'Không lưu' }, business: { budgetWarningPercent: 5 } });
+    check('one invalid field => nothing saved (all or nothing)', r.status === 400 && 'business.budgetWarningPercent' in r.data.errors, r.data);
+    r = await req('GET', '/admin/config', { token: tAd });
+    check('state unchanged after rejected PATCH', r.data.values.general.appName === initial.general.appName, r.data.values.general);
+    r = await req('GET', '/admin/config/history?section=nope', { token: tAd });
+    check('history bad section 400', r.status === 400, r);
+
+    group('config: lưu / áp dụng ngay / lịch sử');
+    const h0 = (await hist()).total;
+    r = await patch({ general: { appName: `Thu Chi E2E`, supportEmail: 'hotro@thuchi.vn', hotline: '028 7300 6868', termsUrl: 'https://thuchi.vn/dieu-khoan', privacyUrl: 'https://thuchi.vn/bao-mat' } });
+    check('PATCH general 200 returns new state', r.status === 200 && r.data.values.general.appName === 'Thu Chi E2E' && r.data.values.general.hotline === '028 7300 6868', r.data);
+    check('lastSaved by admin', r.data.lastSaved && r.data.lastSaved.by && r.data.lastSaved.at, r.data.lastSaved);
+    r = await req('GET', '/config/public');
+    check('public reflects immediately (cache invalidated on save)', r.data.appName === 'Thu Chi E2E' && r.data.supportEmail === 'hotro@thuchi.vn' && r.data.privacyUrl === 'https://thuchi.vn/bao-mat', r.data);
+    let h = await hist('?section=general&limit=50');
+    const nameRow = h.items.find((x) => x.key === 'appName');
+    check('history: 1 row per changed field (5)', (await hist()).total === h0 + 5, h.total);
+    check('history row: actor, section, old -> new', nameRow && nameRow.section === 'general' && nameRow.oldValue === initial.general.appName && nameRow.newValue === 'Thu Chi E2E' && nameRow.actor?.email === ADMIN_EMAIL && nameRow.secret === false, nameRow);
+    r = await patch({ general: { appName: 'Thu Chi E2E' } });
+    check('PATCH with unchanged value => no new history row', r.status === 200 && (await hist()).total === h0 + 5, r.status);
+    h = await hist('?page=1&limit=2');
+    check('history paginated (limit 2, newest first)', h.items.length === 2 && h.limit === 2 && h.total >= 5 && new Date(h.items[0].createdAt) >= new Date(h.items[1].createdAt), h);
+    h = await hist('?section=general&limit=200');
+    check('history filter by section', h.items.length > 0 && h.items.every((x) => x.section === 'general') && h.counts.general >= 5, h.counts);
+
+    group('config: SMTP (bí mật mã hóa, gửi thử)');
+    r = await patch({ smtp: { host: '127.0.0.1', port: 2599, security: 'none', user: 'no-reply@thuchi.vn', password: SECRET, from: 'Thu Chi <no-reply@thuchi.vn>' } });
+    check('PATCH smtp 200, password not echoed', r.status === 200 && !r.text.includes(SECRET) && r.data.values.smtp.hasPassword === true && r.data.smtp.configured === true && r.data.smtp.source === 'db', r.data.smtp);
+    check('passwordSavedAt / passwordSavedBy', !!r.data.smtp.passwordSavedAt && !!r.data.smtp.passwordSavedBy, r.data.smtp);
+    r = await req('GET', '/admin/config', { token: tAd });
+    check('GET /admin/config never contains secret', r.status === 200 && !r.text.includes(SECRET), r.text.length);
+    r = await req('GET', '/admin/config/history?limit=200', { token: tAd });
+    const pwRow = r.data.items.find((x) => x.section === 'smtp' && x.key === 'password');
+    check('history: secret row masked ••••, flagged secret', !r.text.includes(SECRET) && pwRow && pwRow.oldValue === '••••' && pwRow.newValue === '••••' && pwRow.secret === true, pwRow);
+    r = await req('GET', '/config/public');
+    check('public config never contains SMTP data', !r.text.includes(SECRET) && !r.text.includes('2599') && !('smtp' in r.data), r.data);
+    {
+      const smtp = await fakeSmtp();
+      try {
+        r = await patch({ smtp: { port: smtp.port } });
+        r = await req('POST', '/admin/config/smtp/test', { token: tAd });
+        check('smtp test with working server => {ok:true, response 250}', r.status === 200 && r.data.ok === true && /^250/.test(r.data.response) && r.data.to === ADMIN_EMAIL, r.data);
+        check('server received mail to admin, AUTH with the decrypted saved password', smtp.mails.length === 1 && smtp.mails[0].auth?.user === 'no-reply@thuchi.vn' && smtp.mails[0].auth?.pass === SECRET && smtp.mails[0].raw.includes(ADMIN_EMAIL), smtp.mails.map((m) => ({ auth: m.auth, len: m.raw.length })));
+        const se = `smtp${S}@test.local`;
+        await req('POST', '/auth/register', { body: { email: se, password: 'secret1234', name: 'SMTP' } });
+        await req('POST', '/auth/forgot-password', { body: { email: se } });
+        for (let i = 0; i < 50 && smtp.mails.length < 2; i++) await sleep(100);
+        const raw = smtp.mails[1]?.raw ?? '';
+        const otp = raw.replace(/=\r?\n/g, '').match(/OTP[\s\S]{0,80}?(\d{6})/)?.[1];
+        check('forgot-password OTP sent via DB SMTP config (not logged), "10 phút" + app name in mail', !!otp && raw.includes(se) && /10 ph/.test(raw.replace(/=C3=BA/g, 'ú')) && !readFileSync(API_LOG, 'utf8').includes(`cho ${se}:`), raw.slice(0, 600));
+        r = await req('POST', '/auth/reset-password', { body: { email: se, otp, newPassword: 'secret5678' } });
+        check('OTP from email works', r.status === 204, r.data);
+      } finally {
+        await smtp.close();
+      }
+      r = await patch({ smtp: { port: 2599 } });
+    }
+    r = await req('POST', '/admin/config/smtp/test', { token: tAd });
+    check('smtp test with unreachable server => 200 {ok:false, error detail}, sent to admin email', r.status === 200 && r.data.ok === false && /ECONNREFUSED|ESOCKET|ECONNECTION/.test(r.data.error) && r.data.to === ADMIN_EMAIL && !r.text.includes(SECRET), r.data);
+    let last = r;
+    for (let i = 0; i < 6 && last.status !== 429; i++) last = await req('POST', '/admin/config/smtp/test', { token: tAd });
+    check('smtp test rate-limited (5/min) => 429', last.status === 429 && Number(last.headers.get('retry-after-smtptest') ?? last.headers.get('retry-after')) > 0, { status: last.status, h: [...last.headers] });
+    r = await patch({ smtp: { password: `${SECRET}-2` } });
+    check('change password only => still hidden', r.status === 200 && !r.text.includes(SECRET) && r.data.values.smtp.hasPassword, r.data.smtp);
+    r = await patch({ smtp: { host: '', password: '' } });
+    check('clear host + password => not configured, hasPassword false', r.status === 200 && r.data.smtp.configured === false && r.data.values.smtp.hasPassword === false, r.data.smtp);
+
+    group('config: đăng ký / ví mặc định / độ dài mật khẩu');
+    r = await patch({ business: { defaultWalletName: 'Ví chính E2E' }, password: { minLength: 10 } });
+    check('PATCH wallet name + min length', r.status === 200 && r.data.values.password.minLength === 10, r.data.values.password);
+    r = await req('GET', '/config/public');
+    check('public password.minLength = 10', r.data.password.minLength === 10, r.data.password);
+    const pe = `pw${S}@test.local`;
+    r = await req('POST', '/auth/register', { body: { email: pe, password: 'secret12', name: 'PW' } });
+    check('register with 8 chars < 10 => 400 Vietnamese', r.status === 400 && /ít nhất 10 ký tự/.test(r.data.message), r.data);
+    r = await req('POST', '/auth/register', { body: { email: pe, password: 'secret1234', name: 'PW' } });
+    check('register with 10 chars => 201', r.status === 201, r.data);
+    let tPw = r.data.accessToken; const idPw = r.data.user?.id;
+    r = await req('GET', '/wallets', { token: tPw });
+    check('register creates default wallet with configured name', r.data.items.length === 1 && r.data.items[0].name === 'Ví chính E2E' && r.data.items[0].type === 'CASH', r.data.items);
+    r = await req('POST', '/me/password', { token: tPw, body: { currentPassword: 'secret1234', newPassword: 'short1234' } });
+    check('change password 9 chars => 400', r.status === 400 && /ít nhất 10 ký tự/.test(r.data.message), r.data);
+    r = await req('POST', '/me/password', { token: tPw, body: { currentPassword: 'secret1234', newPassword: 'longer12345' } });
+    check('change password 11 chars => 200', r.status === 200, r.data);
+    tPw = r.data.accessToken;
+    {
+      const readOtps = () => { try { return readFileSync(API_LOG, 'utf8').split('\n').filter((l) => l.includes(`OTP đặt lại mật khẩu cho ${pe}:`)); } catch { return []; } };
+      await req('POST', '/auth/forgot-password', { body: { email: pe } });
+      let line; for (let i = 0; i < 40 && !line; i++) { line = readOtps()[0]; if (!line) await sleep(100); }
+      const otp = line?.match(/: (\d{6})/)?.[1];
+      r = await req('POST', '/auth/reset-password', { body: { email: pe, otp, newPassword: 'short1234' } });
+      check('reset password 9 chars => 400 (OTP kept)', r.status === 400 && /ít nhất 10 ký tự/.test(r.data.message), r.data);
+      r = await req('POST', '/auth/reset-password', { body: { email: pe, otp, newPassword: 'resetpass123' } });
+      check('reset password 12 chars => 204', r.status === 204, r.data);
+    }
+    r = await patch({ password: { minLength: 6 } });
+    r = await req('POST', '/auth/register', { body: { email: `pw6${S}@test.local`, password: 'secret', name: 'PW6' } });
+    check('min length back to 6 => 6 chars accepted', r.status === 201, r.data);
+    r = await patch({ access: { registrationEnabled: false } });
+    check('disable registration', r.status === 200 && r.data.values.access.registrationEnabled === false, r.data.values.access);
+    r = await req('GET', '/config/public');
+    check('public registrationEnabled false', r.data.registrationEnabled === false, r.data);
+    r = await req('POST', '/auth/register', { body: { email: `closed${S}@test.local`, password: 'secret1234', name: 'X' } });
+    check('register when disabled => 403 REGISTRATION_DISABLED Vietnamese', r.status === 403 && r.data.code === 'REGISTRATION_DISABLED' && /tạm ngưng nhận đăng ký/.test(r.data.message), r.data);
+    r = await req('POST', '/auth/login', { body: { email: pe, password: 'resetpass123' } });
+    check('existing users still log in when registration disabled', r.status === 200, r.data);
+    r = await patch({ access: { registrationEnabled: true } });
+    r = await req('POST', '/auth/register', { body: { email: `open${S}@test.local`, password: 'secret1234', name: 'X' } });
+    check('re-enabled => register 201', r.status === 201, r.data);
+
+    group('config: thời hạn phiên (JWT exp)');
+    r = await req('POST', '/auth/login', { body: { email: pe, password: 'resetpass123' } });
+    let p = decode(r.data.accessToken);
+    check('default (env 30d) => exp - iat = 30 days', p.exp - p.iat === 30 * 86400, p);
+    await patch({ access: { sessionDays: 7 } });
+    r = await req('POST', '/auth/login', { body: { email: pe, password: 'resetpass123' } });
+    p = decode(r.data.accessToken);
+    check('sessionDays 7 => login token exp - iat = 7 days', p.exp - p.iat === 7 * 86400, p);
+    r = await req('POST', '/me/password', { token: r.data.accessToken, body: { currentPassword: 'resetpass123', newPassword: 'resetpass456' } });
+    p = decode(r.data.accessToken);
+    check('sessionDays 7 => change-password token also 7 days', p.exp - p.iat === 7 * 86400, p);
+    await patch({ access: { sessionDays: 90 } });
+    r = await req('POST', '/auth/register', { body: { email: `jwt${S}@test.local`, password: 'secret1234', name: 'J' } });
+    p = decode(r.data.accessToken);
+    check('sessionDays 90 => register token 90 days', p.exp - p.iat === 90 * 86400, p);
+
+    group('config: giới hạn đăng nhập theo email');
+    await patch({ access: { loginMaxAttempts: 3, loginWindowMinutes: 1 } });
+    const le = `lim${S}@test.local`;
+    await req('POST', '/auth/register', { body: { email: le, password: 'secret1234', name: 'L' } });
+    const le2 = `lim2${S}@test.local`;
+    await req('POST', '/auth/register', { body: { email: le2, password: 'secret1234', name: 'L2' } });
+    const codes = [];
+    for (let i = 0; i < 3; i++) codes.push((await req('POST', '/auth/login', { body: { email: le, password: 'wrong-pass' } })).status);
+    check('3 wrong attempts => 401 x3', codes.every((c) => c === 401), codes);
+    r = await req('POST', '/auth/login', { body: { email: le, password: 'secret1234' } });
+    check('4th attempt (even correct) => 429 + Retry-After ≈ 60s', r.status === 429 && Number(r.headers.get('retry-after-login')) > 50, { s: r.status, h: [...r.headers] });
+    check('standard Retry-After header too (app/admin read it)', Number(r.headers.get('retry-after')) > 50, [...r.headers]);
+    r = await req('POST', '/auth/login', { body: { email: le2, password: 'secret1234' } });
+    check('other email from same IP not blocked (per email)', r.status === 200, r.data);
+    check('login limit header reflects config (3)', r.headers.get('x-ratelimit-limit-login') === '3', [...r.headers]);
+    await patch({ access: { loginMaxAttempts: initial.access.loginMaxAttempts, loginWindowMinutes: initial.access.loginWindowMinutes } });
+
+    group('config: OTP (hạn / số lần sai / chờ gửi lại)');
+    r = await patch({ password: { otpExpiryMinutes: 2, otpMaxAttempts: 2, otpResendSeconds: 30 } });
+    check('PATCH otp params', r.status === 200 && r.data.values.password.otpResendSeconds === 30, r.data.values.password);
+    r = await req('GET', '/config/public');
+    check('public otp params', r.data.otp.expiryMinutes === 2 && r.data.otp.resendSeconds === 30, r.data.otp);
+    {
+      const oe = `otp${S}@test.local`;
+      await req('POST', '/auth/register', { body: { email: oe, password: 'secret1234', name: 'O' } });
+      const lines = () => { try { return readFileSync(API_LOG, 'utf8').split('\n').filter((l) => l.includes(`OTP đặt lại mật khẩu cho ${oe}:`)); } catch { return []; } };
+      const waitN = async (n) => { for (let i = 0; i < 40; i++) { if (lines().length >= n) return lines()[n - 1]; await sleep(100); } return null; };
+      const t0 = Date.now();
+      await req('POST', '/auth/forgot-password', { body: { email: oe } });
+      let l1 = await waitN(1);
+      check('OTP mail says expiry 2 minutes', !!l1 && /hạn 2 phút/.test(l1), l1);
+      const o1 = l1?.match(/: (\d{6})/)?.[1];
+      const w1 = o1 === '000000' ? '111111' : '000000';
+      for (let i = 0; i < 2; i++) await req('POST', '/auth/reset-password', { body: { email: oe, otp: w1, newPassword: 'secret5678' } });
+      r = await req('POST', '/auth/reset-password', { body: { email: oe, otp: o1, newPassword: 'secret5678' } });
+      check('max attempts 2 => after 2 wrong, correct OTP rejected', r.status === 400, r.data);
+      await req('POST', '/auth/forgot-password', { body: { email: oe } });
+      const l2 = await waitN(2);
+      check('dead OTP => new one issued immediately', !!l2, lines().length);
+      await req('POST', '/auth/forgot-password', { body: { email: oe } });
+      await sleep(800);
+      check('resend within 30s ignored', lines().length === 2, lines().length);
+      const wait = 31000 - (Date.now() - t0) + 1500;
+      console.log(`… chờ ${Math.round(Math.max(wait, 31000) / 1000)}s kiểm tra chờ gửi lại 30s (mặc định 60s)`);
+      await sleep(Math.max(wait, 31000));
+      await req('POST', '/auth/forgot-password', { body: { email: oe } });
+      const l3 = await waitN(3);
+      check('resend allowed after 30s (< default 60s)', !!l3, lines().length);
+      r = await req('POST', '/auth/reset-password', { body: { email: oe, otp: l3?.match(/: (\d{6})/)?.[1], newPassword: 'secret5678' } });
+      check('newest OTP works', r.status === 204, r.data);
+    }
+    await patch({ password: { otpExpiryMinutes: 10, otpMaxAttempts: 5, otpResendSeconds: 60 } });
+
+    group('config: ngưỡng ngân sách điều khiển thông báo');
+    r = await patch({ business: { budgetWarningPercent: 50, budgetExceededPercent: 120 } });
+    check('PATCH thresholds 50 / 120', r.status === 200 && r.data.values.business.budgetWarningPercent === 50, r.data.values.business);
+    {
+      const U = await newUser('budg');
+      const month = '2026-12';
+      await req('POST', '/budgets', { token: U.token, body: { categoryId: C2('Ăn uống'), month, limitAmount: 1000000 } });
+      const add = (amount) => req('POST', '/transactions', { token: U.token, body: { categoryId: C2('Ăn uống'), walletId: U.cash, amount, title: 'ăn', occurredAt: `${month}-05T05:00:00Z` } });
+      const notes = async () => (await req('GET', '/notifications', { token: U.token })).data.items;
+      const status = async () => (await req('GET', `/budgets?month=${month}`, { token: U.token })).data;
+      await add(400000);
+      check('40% => no notification, status ok', (await notes()).length === 0 && (await status()).items[0].status === 'ok', await notes());
+      await add(150000);
+      let n = await notes();
+      let st = await status();
+      check('55% (>= 50) => BUDGET_WARNING, status warning', n.length === 1 && n[0].type === 'BUDGET_WARNING' && st.items[0].status === 'warning', { n, st });
+      check('GET /budgets returns thresholds in use', st.thresholds?.warningPercent === 50 && st.thresholds?.exceededPercent === 120, st.thresholds);
+      await add(500000);
+      n = await notes(); st = await status();
+      check('105% (< 120) => no exceeded notification, still warning', n.length === 1 && st.items[0].status === 'warning', { n, st: st.items[0] });
+      await add(200000);
+      n = await notes(); st = await status();
+      check('125% (>= 120) => BUDGET_EXCEEDED, status exceeded', n.length === 2 && n[0].type === 'BUDGET_EXCEEDED' && st.items[0].status === 'exceeded', { n, st: st.items[0] });
+      r = await req('GET', '/config/public');
+      check('public budget thresholds', r.data.budget.warningPercent === 50 && r.data.budget.exceededPercent === 120, r.data.budget);
+    }
+    await patch({ business: { budgetWarningPercent: 80, budgetExceededPercent: 100 } });
+
+    group('config: tính năng tắt => ghi 403, đọc vẫn được');
+    {
+      const U = await newUser('feat');
+      const bank = (await req('POST', '/wallets', { token: U.token, body: { name: 'NH', type: 'BANK', initialBalance: 5000000 } })).data.id;
+      const goal = (await req('POST', '/saving-goals', { token: U.token, body: { name: 'Mục tiêu', targetAmount: 1000000, targetDate: '2027-06-01T00:00:00Z' } })).data;
+      const tr = (await req('POST', '/transfers', { token: U.token, body: { fromWalletId: bank, toWalletId: U.cash, amount: 1000 } })).data;
+      const tpl = (await req('POST', '/quick-templates', { token: U.token, body: { label: 'Cà phê', title: 'Cà phê', amount: 30000, categoryId: C2('Ăn uống'), walletId: U.cash } })).data;
+      const rule = (await req('POST', '/recurring', { token: U.token, body: { walletId: U.cash, categoryId: C2('Hóa đơn'), amount: 100, title: 'Điện', frequency: 'DAILY', startDate: iso(Date.now() + DAY) } })).data;
+      check('setup data for 5 features', goal?.id && tr?.id && tpl?.id && rule?.id, { goal, tr, tpl, rule });
+      r = await patch({ business: { featureSavingGoals: false, featureRecurring: false, featureTransfers: false, featureCsvExport: false, featureQuickTemplates: false } });
+      check('disable 5 features', r.status === 200 && r.data.values.business.featureTransfers === false, r.data.values.business);
+      r = await req('GET', '/config/public');
+      check('public features all false', Object.values(r.data.features).every((v) => v === false), r.data.features);
+      const off = (name, x) => check(`${name} => 403 FEATURE_DISABLED`, x.status === 403 && x.data.code === 'FEATURE_DISABLED' && typeof x.data.message === 'string', x.data);
+      const on = (name, x) => check(`${name} => 200 (read allowed, data kept)`, x.status === 200, x.data);
+      on('GET /saving-goals', r = await req('GET', '/saving-goals', { token: U.token }));
+      check('saving goal still listed', r.data.length === 1 || r.data.items?.length === 1, r.data);
+      on('GET /saving-goals/:id', await req('GET', `/saving-goals/${goal.id}`, { token: U.token }));
+      off('POST /saving-goals', await req('POST', '/saving-goals', { token: U.token, body: { name: 'x', targetAmount: 1000, targetDate: '2027-06-01T00:00:00Z' } }));
+      off('PATCH /saving-goals/:id', await req('PATCH', `/saving-goals/${goal.id}`, { token: U.token, body: { name: 'y' } }));
+      off('POST /saving-goals/:id/deposit', await req('POST', `/saving-goals/${goal.id}/deposit`, { token: U.token, body: { amount: 1000, walletId: bank } }));
+      off('DELETE /saving-goals/:id', await req('DELETE', `/saving-goals/${goal.id}`, { token: U.token }));
+      on('GET /transfers', r = await req('GET', '/transfers', { token: U.token }));
+      check('transfer still listed', r.data.total === 1, r.data);
+      off('POST /transfers', await req('POST', '/transfers', { token: U.token, body: { fromWalletId: bank, toWalletId: U.cash, amount: 1000 } }));
+      off('DELETE /transfers/:id', await req('DELETE', `/transfers/${tr.id}`, { token: U.token }));
+      on('GET /quick-templates', await req('GET', '/quick-templates', { token: U.token }));
+      off('POST /quick-templates', await req('POST', '/quick-templates', { token: U.token, body: { label: 'x', title: 'x', amount: 1, categoryId: C2('Ăn uống'), walletId: U.cash } }));
+      off('POST /quick-templates/:id/use', await req('POST', `/quick-templates/${tpl.id}/use`, { token: U.token, body: {} }));
+      on('GET /recurring', await req('GET', '/recurring', { token: U.token }));
+      on('GET /recurring/:id/preview', await req('GET', `/recurring/${rule.id}/preview?count=3`, { token: U.token }));
+      off('POST /recurring', await req('POST', '/recurring', { token: U.token, body: { walletId: U.cash, categoryId: C2('Hóa đơn'), amount: 1, title: 'x', frequency: 'DAILY', startDate: iso(Date.now() + DAY) } }));
+      off('POST /recurring/:id/pause', await req('POST', `/recurring/${rule.id}/pause`, { token: U.token }));
+      off('POST /recurring/run-due (user)', await req('POST', `/recurring/run-due?now=${iso(Date.now() + 3 * DAY)}`, { token: U.token }));
+      r = await req('POST', '/admin/recurring/run-due', { token: tAd });
+      check('cron path (admin run-due) paused while recurring disabled', r.status === 200 && r.data.skipped === true && r.data.reason === 'FEATURE_DISABLED', r.data);
+      off('GET /export/transactions.csv (export is the feature itself)', await req('GET', '/export/transactions.csv?month=2026-12', { token: U.token }));
+      on('GET /transactions unaffected', await req('GET', '/transactions', { token: U.token }));
+      r = await patch({ business: { featureSavingGoals: true, featureRecurring: true, featureTransfers: true, featureCsvExport: true, featureQuickTemplates: true } });
+      check('re-enable features', r.status === 200 && r.data.values.business.featureCsvExport === true, r.data.values.business);
+      r = await req('POST', '/transfers', { token: U.token, body: { fromWalletId: bank, toWalletId: U.cash, amount: 1000 } });
+      check('re-enabled: POST /transfers 201', r.status === 201, r.data);
+      r = await req('POST', `/saving-goals/${goal.id}/deposit`, { token: U.token, body: { amount: 1000, walletId: bank } });
+      check('re-enabled: deposit 200', r.status === 200, r.data);
+      r = await req('POST', `/quick-templates/${tpl.id}/use`, { token: U.token, body: {} });
+      check('re-enabled: template use 201', r.status === 201, r.data);
+      r = await req('GET', '/export/transactions.csv?month=2026-12', { token: U.token });
+      check('re-enabled: CSV 200', r.status === 200, r.status);
+      r = await req('POST', `/recurring/run-due?now=${iso(Date.now() + 3 * DAY)}`, { token: U.token });
+      check('re-enabled: recurring catches up missed periods', r.status === 200 && r.data.created >= 2, r.data);
+      h = await hist('?section=business&limit=20');
+      check('history: feature toggles recorded (bool old -> new)', h.items.some((x) => x.key === 'featureCsvExport' && x.oldValue === false && x.newValue === true), h.items.slice(0, 3));
+    }
+
+    group('config: bảo trì (admin không bị chặn, tự tắt theo giờ)');
+    {
+      const M = await newUser('maint');
+      r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: true, message: 'x', endsAt: new Date(Date.now() - 1000).toISOString() } });
+      check('turn on with endsAt in the past => 400', r.status === 400 && 'access.maintenanceEndsAt' in r.data.errors, r.data);
+      r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: true, message: '' } });
+      check('turn on with empty message => 400', r.status === 400, r.data);
+      r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: 'yes' } });
+      check('enabled not boolean => 400', r.status === 400, r.data);
+      r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: true, message: `Bảo trì E2E ${S}` } });
+      check('turn on 200 (startedBy admin, startedAt)', r.status === 200 && r.data.enabled === true && r.data.message === `Bảo trì E2E ${S}` && !!r.data.startedBy && !!r.data.startedAt && r.data.endsAt === null, r.data);
+      r = await req('GET', '/me', { token: M.token });
+      check('user request => 503 {code:MAINTENANCE, message, endsAt}', r.status === 503 && r.data.code === 'MAINTENANCE' && r.data.message === `Bảo trì E2E ${S}` && r.data.endsAt === null, r.data);
+      r = await req('GET', '/wallets', { token: M.token });
+      check('user any route => 503', r.status === 503, r.status);
+      r = await req('POST', '/auth/login', { body: { email: M.email, password: 'secret1' } });
+      check('user login => 503 MAINTENANCE', r.status === 503 && r.data.code === 'MAINTENANCE', r.data);
+      r = await req('POST', '/auth/register', { body: { email: `mreg${S}@test.local`, password: 'secret1', name: 'X' } });
+      check('register => 503 MAINTENANCE', r.status === 503 && r.data.code === 'MAINTENANCE', r.data);
+      const tAd2 = await loginAd();
+      check('admin login still works', !!tAd2, tAd2);
+      r = await req('GET', '/admin/overview', { token: tAd2 });
+      check('admin routes unaffected', r.status === 200, r.status);
+      r = await req('GET', '/me', { token: tAd });
+      check('admin own /me unaffected', r.status === 200, r.status);
+      r = await req('GET', '/config/public');
+      check('public config works + shows maintenance', r.status === 200 && r.data.maintenance.enabled === true && r.data.maintenance.message === `Bảo trì E2E ${S}`, r.data.maintenance);
+      r = await req('GET', '/health');
+      check('health works during maintenance', r.status === 200, r.status);
+      r = await req('GET', '/admin/config', { token: tAd });
+      check('admin view: maintenance on', r.data.maintenance.enabled === true, r.data.maintenance);
+      r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: false } });
+      check('turn off 200', r.status === 200 && r.data.enabled === false, r.data);
+      r = await req('GET', '/me', { token: M.token });
+      check('user works again after off', r.status === 200, r.status);
+      h = await hist('?section=access&limit=10');
+      check('history: manual on/off recorded with actor', h.items.filter((x) => x.key === 'maintenanceEnabled' && x.actor?.email === ADMIN_EMAIL).length >= 2, h.items.slice(0, 4));
+      // Tự tắt theo giờ dự kiến xong
+      const endsAt = new Date(Date.now() + 3000).toISOString();
+      r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: true, endsAt } });
+      check('turn on with endsAt +3s', r.status === 200 && r.data.enabled === true && r.data.endsAt === endsAt, r.data);
+      r = await req('GET', '/me', { token: M.token });
+      check('503 carries endsAt', r.status === 503 && r.data.endsAt === endsAt, r.data);
+      r = await req('GET', '/config/public');
+      check('public maintenance.endsAt', r.data.maintenance.endsAt === endsAt, r.data.maintenance);
+      await sleep(3500);
+      r = await req('GET', '/me', { token: M.token });
+      check('after endsAt passes => auto off, user 200', r.status === 200, r.data);
+      await sleep(500);
+      r = await req('GET', '/admin/config', { token: tAd });
+      check('admin view: maintenance off, endsAt cleared', r.data.maintenance.enabled === false && r.data.values.access.maintenanceEndsAt === null, r.data.maintenance);
+      h = await hist('?section=access&limit=5');
+      const sys = h.items.find((x) => x.key === 'maintenanceEnabled');
+      check('history: auto-off recorded as system (actor null), true -> false', sys && sys.actor === null && sys.oldValue === true && sys.newValue === false, h.items.slice(0, 3));
+      r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: false } });
+      check('turn off when already off => 200 no-op', r.status === 200 && r.data.enabled === false, r.data);
+    }
+  } finally {
+    group('config: khôi phục mặc định');
+    await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: false } });
+    if (initial) {
+      const body = JSON.parse(JSON.stringify(initial));
+      delete body.smtp.hasPassword;
+      body.smtp.password = '';
+      r = await patch(body);
+      check('restore initial values 200', r.status === 200, r.data);
+      const now = (await req('GET', '/admin/config', { token: tAd })).data.values;
+      check('state equals initial (re-runnable)', JSON.stringify(now) === JSON.stringify(initial), { now, initial });
+    }
+  }
+}
+
 // ================= SWAGGER =================
 group('swagger');
 r = await fetch(BASE.replace(/\/api$/, '') + '/docs/openapi.json');
 {
   const doc = r.status === 200 ? await r.json() : { paths: {}, components: { schemas: {} } };
-  check('openapi.json 54 paths (+health, logout-all, admin run-due)', Object.keys(doc.paths).length === 54, Object.keys(doc.paths).length);
+  check('openapi.json 59 paths (+health, logout-all, admin run-due, 5 cấu hình)', Object.keys(doc.paths).length === 59, Object.keys(doc.paths).length);
+  check('config PATCH body documented per section', ['general', 'access', 'smtp', 'password', 'business', 'mobile'].every((k) => k in (doc.paths['/api/admin/config']?.patch?.requestBody?.content?.['application/json']?.schema?.properties ?? {})), doc.paths['/api/admin/config']);
   check('DTO schemas populated', ['amount', 'categoryId', 'walletId', 'title'].every((k) => k in (doc.components.schemas.CreateTransactionDto?.properties ?? {})), doc.components.schemas.CreateTransactionDto);
 }
 
