@@ -116,8 +116,9 @@ export class BudgetsService {
   }
 
   /**
-   * Gọi sau khi tạo/sửa giao dịch chi: ngân sách danh mục + ngân sách tổng của tháng đó vượt 80% / 100%
+   * Gọi sau khi tạo/sửa/xóa giao dịch chi: ngân sách danh mục + ngân sách tổng của tháng đó vượt 80% / 100%
    * => sinh 1 thông báo. Mỗi ngưỡng mỗi ngân sách chỉ báo 1 lần (updateMany có điều kiện => an toàn khi chạy đồng thời).
+   * Chi tụt dưới ngưỡng (xóa / sửa / dời giao dịch) => xóa dấu để lần vượt sau báo lại (giống khi đổi hạn mức).
    */
   async checkThresholds(userId: string, month: string, categoryId: string) {
     const budgets = await this.prisma.budget.findMany({
@@ -131,6 +132,12 @@ export class BudgetsService {
       const limit = Number(b.limitAmount);
       const pct = (used / limit) * 100;
       const level = pct >= 100 ? 'exceeded' : pct >= WARNING_PERCENT ? 'warning' : null;
+      if ((pct < WARNING_PERCENT && b.warnedAt) || (pct < 100 && b.exceededAt)) {
+        await this.prisma.budget.update({
+          where: { id: b.id },
+          data: { warnedAt: pct < WARNING_PERCENT ? null : undefined, exceededAt: null },
+        });
+      }
       if (!level) continue;
       const now = new Date();
       // Vượt 100% => đánh dấu cả 2 ngưỡng, chỉ gửi 1 thông báo "vượt"

@@ -5,12 +5,13 @@ import { Prisma, Role, TxType, UserStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser, Roles } from '../common/auth';
 import { PageQuery, paged, Trim } from '../common/dto';
-import { monthOf } from '../common/time';
+import { monthOf, parseDate } from '../common/time';
 import { publicUser } from '../auth/auth.module';
 import { CategoriesModule, CategoriesService, CreateCategoryDto, UpdateCategoryDto } from '../categories/categories.module';
 import { StatsModule, StatsService } from '../stats/stats.module';
 import { buildTxWhere, TransactionFilter, TX_CATEGORY_SELECT, TX_WALLET_SELECT, withFlags } from '../transactions/transactions.module';
 import { WalletsModule, WalletsService } from '../wallets/wallets.module';
+import { RecurringModule, RecurringService, RunDueQuery } from '../recurring/recurring.module';
 
 class UserListQuery extends PageQuery {
   /** Tìm theo email / tên */
@@ -109,7 +110,11 @@ export class AdminService {
     if (id === actor.id && (dto.status === 'LOCKED' || dto.role === 'USER')) {
       throw new BadRequestException('Không thể tự khóa hoặc tự hạ quyền chính mình');
     }
-    return publicUser(await this.prisma.user.update({ where: { id }, data: dto }));
+    // Khóa => mọi token đang có của user hết hiệu lực (mở khóa lại cũng phải đăng nhập lại)
+    return publicUser(await this.prisma.user.update({
+      where: { id },
+      data: { ...dto, tokenVersion: dto.status === 'LOCKED' ? { increment: 1 } : undefined },
+    }));
   }
 
   async transactions(f: AdminTxFilter) {
@@ -158,7 +163,7 @@ export class AdminService {
 @Roles('ADMIN')
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly admin: AdminService, private readonly categories: CategoriesService) {}
+  constructor(private readonly admin: AdminService, private readonly categories: CategoriesService, private readonly recurring: RecurringService) {}
 
   @Get('overview')
   overview() {
@@ -198,6 +203,16 @@ export class AdminController {
     return this.admin.broadcasts(q);
   }
 
+  /**
+   * Chỉ dev/test (NODE_ENV != production, production => 404): chạy đúng đường của cron cho MỌI user tới mốc `now`
+   * (quy tắc của user bị khóa => bỏ kỳ, tự tạm dừng + thông báo).
+   */
+  @Post('recurring/run-due') @HttpCode(200)
+  runRecurring(@Query() q: RunDueQuery) {
+    if (process.env.NODE_ENV === 'production') throw new NotFoundException();
+    return this.recurring.runAll(q.now ? parseDate(q.now) : new Date());
+  }
+
   /** Danh mục hệ thống (dùng chung cho mọi user), kèm số giao dịch đang dùng */
   @Get('categories')
   listCategories(@Query() q: SystemCategoryQuery) {
@@ -226,5 +241,5 @@ export class AdminController {
   }
 }
 
-@Module({ imports: [CategoriesModule, StatsModule, WalletsModule], controllers: [AdminController], providers: [AdminService] })
+@Module({ imports: [CategoriesModule, StatsModule, WalletsModule, RecurringModule], controllers: [AdminController], providers: [AdminService] })
 export class AdminModule {}

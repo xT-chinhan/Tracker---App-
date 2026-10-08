@@ -84,6 +84,10 @@ export class WalletsService {
   async update(userId: string, id: string, dto: UpdateWalletDto) {
     const w = await this.findOwned(userId, id);
     if (dto.name && dto.name !== w.name) await this.assertNameFree(userId, dto.name, id);
+    // Ví lưu trữ phải giữ số dư = 0
+    if (w.isArchived && dto.initialBalance !== undefined && BigInt(dto.initialBalance) !== w.initialBalance) {
+      throw new ConflictException(`Ví "${w.name}" đã lưu trữ, hãy khôi phục trước khi đổi số dư ban đầu`);
+    }
     await this.prisma.wallet.update({
       where: { id },
       data: {
@@ -98,22 +102,26 @@ export class WalletsService {
   }
 
   /** Chưa phát sinh (giao dịch, chuyển tiền, tiết kiệm, định kỳ) => xóa hẳn, mẫu nhập nhanh dùng ví bị xóa theo. Có phát sinh => chỉ lưu trữ khi số dư = 0. */
+  /** Khóa theo user => chuyển tiền / nạp tiết kiệm đồng thời không lọt vào ví vừa lưu trữ với số dư 0. */
   async remove(userId: string, id: string) {
     await this.findOwned(userId, id);
-    const [tx, tr, se, rr] = await Promise.all([
-      this.prisma.transaction.count({ where: { walletId: id } }),
-      this.prisma.transfer.count({ where: { OR: [{ fromWalletId: id }, { toWalletId: id }] } }),
-      this.prisma.savingEntry.count({ where: { walletId: id } }),
-      this.prisma.recurringRule.count({ where: { walletId: id } }),
-    ]);
-    if (tx + tr + se + rr === 0) {
-      await this.prisma.wallet.delete({ where: { id } });
-      return { archived: false };
-    }
-    const balance = (await this.balances(userId)).get(id) ?? 0;
-    if (balance !== 0) throw new ConflictException('Ví còn số dư, hãy chuyển hết tiền sang ví khác trước khi lưu trữ');
-    await this.prisma.wallet.update({ where: { id }, data: { isArchived: true } });
-    return { archived: true };
+    return this.prisma.$transaction(async (db) => {
+      await lockUser(db, userId);
+      const [tx, tr, se, rr] = await Promise.all([
+        db.transaction.count({ where: { walletId: id } }),
+        db.transfer.count({ where: { OR: [{ fromWalletId: id }, { toWalletId: id }] } }),
+        db.savingEntry.count({ where: { walletId: id } }),
+        db.recurringRule.count({ where: { walletId: id } }),
+      ]);
+      if (tx + tr + se + rr === 0) {
+        await db.wallet.delete({ where: { id } });
+        return { archived: false };
+      }
+      const balance = (await this.balances(userId, db)).get(id) ?? 0;
+      if (balance !== 0) throw new ConflictException('Ví còn số dư, hãy chuyển hết tiền sang ví khác trước khi lưu trữ');
+      await db.wallet.update({ where: { id }, data: { isArchived: true } });
+      return { archived: true };
+    });
   }
 
   async restore(userId: string, id: string) {

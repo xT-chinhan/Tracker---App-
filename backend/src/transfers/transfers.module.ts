@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser } from '../common/auth';
 import { MAX_AMOUNT, PageQuery, paged, RangeQuery } from '../common/dto';
-import { resolveRange } from '../common/time';
+import { parseDate, resolveRange } from '../common/time';
 import { Db, lockUser, WalletsModule, WalletsService } from '../wallets/wallets.module';
 
 class CreateTransferDto {
@@ -68,7 +68,8 @@ export class TransfersService {
   async create(userId: string, dto: CreateTransferDto) {
     return this.prisma.$transaction(async (db) => {
       await lockUser(db, userId);
-      await this.validate(db, userId, dto.fromWalletId, dto.toWalletId, dto.amount, 0);
+      await this.validate(db, userId, dto.fromWalletId, dto.toWalletId);
+      await this.assertNoOverdraft(db, userId, null, { from: dto.fromWalletId, to: dto.toWalletId, amount: dto.amount });
       return db.transfer.create({
         data: {
           userId,
@@ -76,7 +77,7 @@ export class TransfersService {
           toWalletId: dto.toWalletId,
           amount: BigInt(dto.amount),
           note: dto.note?.trim() || null,
-          occurredAt: dto.occurredAt ? new Date(dto.occurredAt) : new Date(),
+          occurredAt: dto.occurredAt ? parseDate(dto.occurredAt) : new Date(),
         },
         include: INCLUDE,
       });
@@ -91,11 +92,9 @@ export class TransfersService {
       const from = dto.fromWalletId ?? cur.fromWalletId;
       const to = dto.toWalletId ?? cur.toWalletId;
       const amount = dto.amount ?? Number(cur.amount);
-      // Số dư hiện tại của ví nguồn mới đã tính cả giao dịch cũ => cộng/trừ lại phần cũ trước khi so
-      const old = Number(cur.amount);
-      const giveBack = (cur.fromWalletId === from ? old : 0) - (cur.toWalletId === from ? old : 0);
       await this.assertNotArchived(db, userId, [cur.fromWalletId, cur.toWalletId]);
-      await this.validate(db, userId, from, to, amount, giveBack);
+      await this.validate(db, userId, from, to);
+      await this.assertNoOverdraft(db, userId, cur, { from, to, amount });
       return db.transfer.update({
         where: { id },
         data: {
@@ -103,26 +102,55 @@ export class TransfersService {
           toWalletId: to,
           amount: BigInt(amount),
           note: dto.note !== undefined ? dto.note.trim() || null : undefined,
-          occurredAt: dto.occurredAt ? new Date(dto.occurredAt) : undefined,
+          occurredAt: dto.occurredAt ? parseDate(dto.occurredAt) : undefined,
         },
         include: INCLUDE,
       });
     });
   }
 
+  /** Xóa = trả tiền về ví nguồn => ví đích phải còn đủ số tiền đã nhận. */
   async remove(userId: string, id: string) {
-    const cur = await this.prisma.transfer.findFirst({ where: { id, userId } });
-    if (!cur) throw new NotFoundException('Không tìm thấy giao dịch chuyển tiền');
-    await this.assertNotArchived(this.prisma, userId, [cur.fromWalletId, cur.toWalletId]);
-    await this.prisma.transfer.delete({ where: { id } });
+    await this.prisma.$transaction(async (db) => {
+      await lockUser(db, userId);
+      const cur = await db.transfer.findFirst({ where: { id, userId } });
+      if (!cur) throw new NotFoundException('Không tìm thấy giao dịch chuyển tiền');
+      await this.assertNotArchived(db, userId, [cur.fromWalletId, cur.toWalletId]);
+      await this.assertNoOverdraft(db, userId, cur, null);
+      await db.transfer.delete({ where: { id } });
+    });
   }
 
-  private async validate(db: Db, userId: string, from: string, to: string, amount: number, giveBack: number) {
+  private async validate(db: Db, userId: string, from: string, to: string) {
     if (from === to) throw new BadRequestException('Ví nguồn và ví đích phải khác nhau');
-    const src = await this.wallets.usable(userId, from, db);
+    await this.wallets.usable(userId, from, db);
     await this.wallets.usable(userId, to, db);
-    const available = ((await this.wallets.balances(userId, db)).get(from) ?? 0) + giveBack;
-    if (available < amount) throw new BadRequestException(`Số dư ví "${src.name}" không đủ (còn ${available})`);
+  }
+
+  /**
+   * Tạo / sửa / xóa chuyển tiền không được làm ví nào bị trừ tiền xuống dưới 0:
+   * hoàn tác giao dịch cũ (`cur`) rồi áp giao dịch mới (`next`), ví có thay đổi âm phải còn đủ.
+   * Vd xóa A→B khi B đã chuyển tiếp số tiền đó đi => B không đủ để hoàn lại => 400.
+   */
+  private async assertNoOverdraft(
+    db: Db,
+    userId: string,
+    cur: { fromWalletId: string; toWalletId: string; amount: bigint } | null,
+    next: { from: string; to: string; amount: number } | null,
+  ) {
+    const delta = new Map<string, number>();
+    const add = (id: string, v: number) => delta.set(id, (delta.get(id) ?? 0) + v);
+    if (cur) { add(cur.fromWalletId, Number(cur.amount)); add(cur.toWalletId, -Number(cur.amount)); }
+    if (next) { add(next.from, -next.amount); add(next.to, next.amount); }
+    const balances = await this.wallets.balances(userId, db);
+    for (const [walletId, d] of delta) {
+      const balance = balances.get(walletId) ?? 0;
+      if (d >= 0 || balance + d >= 0) continue;
+      const w = await db.wallet.findUniqueOrThrow({ where: { id: walletId }, select: { name: true } });
+      // "còn" = số dư khả dụng cho thao tác này (đã hoàn tác phần của chính giao dịch cũ)
+      const available = balance + d + (next && next.from === walletId ? next.amount : 0);
+      throw new BadRequestException(`Số dư ví "${w.name}" không đủ (còn ${available})`);
+    }
   }
 
   /** Không sửa/xóa phát sinh của ví đã lưu trữ (giữ số dư ví lưu trữ = 0). */

@@ -30,14 +30,29 @@ export function shiftMonth(month: string, delta: number): string {
   return new Date(Date.UTC(y, m - 1 + delta, 1)).toISOString().slice(0, 7);
 }
 
+const MIN_DATE = Date.UTC(2000, 0, 1) - OFFSET_MS;
+const MAX_DATE = Date.UTC(2100, 0, 1) - OFFSET_MS;
+
+/**
+ * Parse ngày giờ ISO từ client. Không kèm múi giờ ("2026-09-01", "2026-09-01T08:00") => hiểu là giờ VN,
+ * không phụ thuộc TZ của máy chủ (container thường chạy UTC). Ngoài [2000, 2100) giờ VN => 400.
+ */
+export function parseDate(s: string, field = 'Ngày'): Date {
+  const zoned = /T.*(Z|[+-]\d{2}(:?\d{2})?)$/i.test(s);
+  const d = zoned ? new Date(s) : new Date(s.includes('T') ? `${s}${OFFSET}` : `${s}T00:00:00${OFFSET}`);
+  if (Number.isNaN(d.getTime())) throw new BadRequestException(`${field} không hợp lệ`);
+  if (d.getTime() < MIN_DATE || d.getTime() >= MAX_DATE) throw new BadRequestException(`${field} phải trong khoảng năm 2000 – 2099`);
+  return d;
+}
+
 /** Khoảng thời gian từ query: ưu tiên month, sau đó from/to; không có gì => không lọc. */
 export function resolveRange(q: { month?: string; from?: string; to?: string }): { gte?: Date; lt?: Date } {
   if (q.month) {
     const { start, end } = monthRange(q.month);
     return { gte: start, lt: end };
   }
-  return {
-    gte: q.from ? new Date(q.from) : undefined,
-    lt: q.to ? new Date(q.to) : undefined,
-  };
+  const gte = q.from ? parseDate(q.from, 'from') : undefined;
+  const lt = q.to ? parseDate(q.to, 'to') : undefined;
+  if (gte && lt && gte >= lt) throw new BadRequestException('from phải trước to');
+  return { gte, lt };
 }

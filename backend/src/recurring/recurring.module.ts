@@ -7,6 +7,7 @@ import { Frequency, Prisma, RecurringRule } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser } from '../common/auth';
 import { MAX_AMOUNT, Trim } from '../common/dto';
+import { parseDate } from '../common/time';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
 import { WalletsModule, WalletsService } from '../wallets/wallets.module';
 import { TransactionsModule, TransactionsService } from '../transactions/transactions.module';
@@ -43,7 +44,7 @@ class PreviewQuery {
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(50) count: number = 5;
 }
 
-class RunDueQuery {
+export class RunDueQuery {
   /** Mốc "hiện tại" giả lập (chỉ môi trường dev/test) */
   @IsOptional() @IsDateString() now?: string;
 }
@@ -123,18 +124,25 @@ export class RecurringService implements OnApplicationBootstrap {
 
   /** Chạy bù ngay khi khởi động (các kỳ lỡ lúc server tắt). */
   onApplicationBootstrap() {
-    setImmediate(() => this.tick());
+    setImmediate(() => this.tick().catch((e) => this.logger.error(`Lỗi chạy giao dịch định kỳ: ${(e as Error).message}`)));
   }
 
   @Cron('*/15 * * * *')
   async tick() {
-    if (this.running) return;
+    await this.runAll(new Date());
+  }
+
+  /**
+   * Đường chạy của cron cho MỌI user (admin dev/test gọi đúng hàm này với `now` giả lập).
+   * Một lượt tại một thời điểm trong instance; lượt trùng => bỏ qua (`skipped: true`).
+   */
+  async runAll(now: Date) {
+    if (this.running) return { rules: 0, created: 0, skipped: true };
     this.running = true;
     try {
-      const r = await this.runDue(new Date());
+      const r = await this.runDue(now);
       if (r.created) this.logger.log(`Đã sinh ${r.created} giao dịch định kỳ từ ${r.rules} quy tắc`);
-    } catch (e) {
-      this.logger.error(`Lỗi chạy giao dịch định kỳ: ${(e as Error).message}`);
+      return { ...r, skipped: false };
     } finally {
       this.running = false;
     }
@@ -237,8 +245,8 @@ export class RecurringService implements OnApplicationBootstrap {
   async create(userId: string, dto: CreateRuleDto) {
     await this.categories.usableForUser(userId, dto.categoryId);
     await this.wallets.usable(userId, dto.walletId);
-    const startDate = new Date(dto.startDate);
-    const endDate = dto.endDate ? endOfVnDay(new Date(dto.endDate)) : null;
+    const startDate = parseDate(dto.startDate);
+    const endDate = dto.endDate ? endOfVnDay(parseDate(dto.endDate)) : null;
     if (endDate && endDate < startDate) throw new BadRequestException('Ngày kết thúc phải sau ngày bắt đầu');
     const r = await this.prisma.recurringRule.create({
       data: {
@@ -265,8 +273,8 @@ export class RecurringService implements OnApplicationBootstrap {
     const cur = await this.get(userId, id);
     if (dto.categoryId && dto.categoryId !== cur.categoryId) await this.categories.usableForUser(userId, dto.categoryId);
     if (dto.walletId && dto.walletId !== cur.walletId) await this.wallets.usable(userId, dto.walletId);
-    const startDate = dto.startDate ? new Date(dto.startDate) : cur.startDate;
-    const endDate = dto.endDate === null ? null : dto.endDate ? endOfVnDay(new Date(dto.endDate)) : cur.endDate;
+    const startDate = dto.startDate ? parseDate(dto.startDate) : cur.startDate;
+    const endDate = dto.endDate === null ? null : dto.endDate ? endOfVnDay(parseDate(dto.endDate)) : cur.endDate;
     if (endDate && endDate < startDate) throw new BadRequestException('Ngày kết thúc phải sau ngày bắt đầu');
     const schedule: Schedule = {
       frequency: dto.frequency ?? cur.frequency,
@@ -349,7 +357,7 @@ export class RecurringController {
   @Post('run-due') @HttpCode(200)
   runDue(@CurrentUser() u: AuthUser, @Query() q: RunDueQuery) {
     if (process.env.NODE_ENV === 'production') throw new NotFoundException();
-    return this.recurring.runDue(q.now ? new Date(q.now) : new Date(), { userId: u.id });
+    return this.recurring.runDue(q.now ? parseDate(q.now) : new Date(), { userId: u.id });
   }
 
   @Get(':id')
@@ -392,5 +400,6 @@ export class RecurringController {
   imports: [CategoriesModule, WalletsModule, TransactionsModule],
   controllers: [RecurringController],
   providers: [RecurringService],
+  exports: [RecurringService],
 })
 export class RecurringModule {}

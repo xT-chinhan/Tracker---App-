@@ -1,6 +1,7 @@
 import { Controller, Get, Injectable, Module, Query, StreamableFile } from '@nestjs/common';
 import { ApiBearerAuth, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';
+import { Readable } from 'stream';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser } from '../common/auth';
 import { RangeQuery } from '../common/dto';
@@ -13,6 +14,8 @@ class ExportQuery extends RangeQuery {
 
 const OFFSET_MS = 7 * 60 * 60 * 1000;
 const HEADER = ['Ngày', 'Loại', 'Danh mục', 'Ví', 'Tiêu đề', 'Ghi chú', 'Số tiền'];
+/** Đọc DB theo lô (keyset) => khoảng thời gian lớn cũng không dồn hết vào RAM */
+const BATCH = 1000;
 
 /** RFC 4180: bọc ngoặc kép khi có dấu phẩy / ngoặc kép / xuống dòng, ngoặc kép bên trong nhân đôi. */
 export function csvCell(v: string | number | null | undefined): string {
@@ -27,24 +30,33 @@ const vnTime = (d: Date) => new Date(d.getTime() + OFFSET_MS).toISOString().slic
 export class ExportService {
   constructor(private readonly prisma: PrismaService, private readonly wallets: WalletsService) {}
 
-  async transactionsCsv(userId: string, q: ExportQuery) {
+  /** Kiểm tra quyền + query trước (lỗi => 4xx bình thường), sau đó mới trả stream các dòng CSV. */
+  async transactionsCsv(userId: string, q: ExportQuery): Promise<Readable> {
     if (q.walletId) await this.wallets.findOwned(userId, q.walletId);
     const range = resolveRange(q);
-    const rows = await this.prisma.transaction.findMany({
-      where: { userId, walletId: q.walletId, occurredAt: range.gte || range.lt ? range : undefined },
-      include: { category: { select: { name: true } }, wallet: { select: { name: true } } },
-      orderBy: [{ occurredAt: 'asc' }, { createdAt: 'asc' }],
-    });
-    const lines = [HEADER, ...rows.map((t) => [
-      vnTime(t.occurredAt),
-      t.type === 'INCOME' ? 'Thu' : 'Chi',
-      t.category.name,
-      t.wallet.name,
-      t.title,
-      t.note,
-      Number(t.amount),
-    ])].map((cols) => cols.map(csvCell).join(','));
-    return '\uFEFF' + lines.join('\r\n') + '\r\n';
+    const where = { userId, walletId: q.walletId, occurredAt: range.gte || range.lt ? range : undefined };
+    const prisma = this.prisma;
+    async function* lines() {
+      yield '\uFEFF' + HEADER.map(csvCell).join(',') + '\r\n';
+      let cursor: string | undefined;
+      for (;;) {
+        const rows = await prisma.transaction.findMany({
+          where,
+          include: { category: { select: { name: true } }, wallet: { select: { name: true } } },
+          orderBy: [{ occurredAt: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+          take: BATCH,
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        });
+        if (!rows.length) return;
+        yield rows
+          .map((t) => [vnTime(t.occurredAt), t.type === 'INCOME' ? 'Thu' : 'Chi', t.category.name, t.wallet.name, t.title, t.note, Number(t.amount)]
+            .map(csvCell).join(',') + '\r\n')
+          .join('');
+        if (rows.length < BATCH) return;
+        cursor = rows[rows.length - 1].id;
+      }
+    }
+    return Readable.from(lines());
   }
 }
 
@@ -58,7 +70,7 @@ export class ExportController {
   @Get('transactions.csv')
   @ApiProduces('text/csv')
   async transactions(@CurrentUser() u: AuthUser, @Query() q: ExportQuery) {
-    return new StreamableFile(Buffer.from(await this.exporter.transactionsCsv(u.id, q), 'utf8'), {
+    return new StreamableFile(await this.exporter.transactionsCsv(u.id, q), {
       type: 'text/csv; charset=utf-8',
       disposition: 'attachment; filename="transactions.csv"',
     });

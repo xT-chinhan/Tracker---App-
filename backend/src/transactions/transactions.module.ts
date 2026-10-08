@@ -6,7 +6,7 @@ import { Prisma, Transaction, TxType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser } from '../common/auth';
 import { MAX_AMOUNT, PageQuery, paged, RangeQuery, Trim } from '../common/dto';
-import { monthOf, resolveRange } from '../common/time';
+import { monthOf, parseDate, resolveRange } from '../common/time';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
 import { WalletsModule, WalletsService } from '../wallets/wallets.module';
 import { BudgetsModule, BudgetsService } from '../budgets/budgets.module';
@@ -109,7 +109,7 @@ export class TransactionsService {
         amount: BigInt(dto.amount),
         title: dto.title.trim(),
         note: dto.note?.trim() || null,
-        occurredAt: dto.occurredAt ? new Date(dto.occurredAt) : new Date(),
+        occurredAt: dto.occurredAt ? parseDate(dto.occurredAt) : new Date(),
         recurringRuleId: recurring?.ruleId,
         scheduledFor: recurring?.scheduledFor,
       },
@@ -138,11 +138,18 @@ export class TransactionsService {
         amount: dto.amount !== undefined ? BigInt(dto.amount) : undefined,
         title: dto.title?.trim(),
         note: dto.note !== undefined ? dto.note.trim() || null : undefined,
-        occurredAt: dto.occurredAt ? new Date(dto.occurredAt) : undefined,
+        occurredAt: dto.occurredAt ? parseDate(dto.occurredAt) : undefined,
       },
       include: TX_INCLUDE,
     });
-    if (tx.type === 'EXPENSE') await this.budgets.checkThresholds(userId, monthOf(tx.occurredAt), tx.categoryId);
+    // Tháng / danh mục cũ cũng được tính lại (giao dịch dời đi => chi cũ giảm, dấu cảnh báo được xóa)
+    const checks = new Set<string>();
+    if (current.type === 'EXPENSE') checks.add(`${monthOf(current.occurredAt)}|${current.categoryId}`);
+    if (tx.type === 'EXPENSE') checks.add(`${monthOf(tx.occurredAt)}|${tx.categoryId}`);
+    for (const key of checks) {
+      const [month, categoryId] = key.split('|');
+      await this.budgets.checkThresholds(userId, month, categoryId);
+    }
     return withFlags(tx);
   }
 
@@ -151,6 +158,7 @@ export class TransactionsService {
     if (!tx) throw new NotFoundException('Không tìm thấy giao dịch');
     if (tx.wallet.isArchived) throw new ConflictException('Giao dịch thuộc ví đã lưu trữ, hãy khôi phục ví trước khi xóa');
     await this.prisma.transaction.delete({ where: { id } });
+    if (tx.type === 'EXPENSE') await this.budgets.checkThresholds(userId, monthOf(tx.occurredAt), tx.categoryId);
   }
 
   /** Nhập nhiều giao dịch một lần. Tất cả hoặc không gì cả. */
@@ -169,7 +177,7 @@ export class TransactionsService {
       amount: BigInt(it.amount),
       title: it.title.trim(),
       note: it.note?.trim() || null,
-      occurredAt: it.occurredAt ? new Date(it.occurredAt) : now,
+      occurredAt: it.occurredAt ? parseDate(it.occurredAt) : now,
     }));
     const { count } = await this.prisma.transaction.createMany({ data });
     const checks = new Set(data.filter((d) => d.type === 'EXPENSE').map((d) => `${monthOf(d.occurredAt)}|${d.categoryId}`));
