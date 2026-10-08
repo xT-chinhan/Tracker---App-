@@ -168,7 +168,8 @@ export function logout(reason?: string) {
 type Query = Record<string, string | number | undefined | null>
 
 async function request<T>(method: string, path: string, opts: { body?: unknown; query?: Query; anonymous?: boolean } = {}): Promise<T> {
-  const url = new URL(API_URL + path)
+  // API_URL có thể là đường dẫn tương đối (/api sau reverse proxy) => lấy origin trang làm gốc
+  const url = new URL(API_URL + path, location.origin)
   for (const [k, v] of Object.entries(opts.query ?? {})) {
     if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v))
   }
