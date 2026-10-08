@@ -5,7 +5,7 @@
   "description": "Nền tảng quản lý thu chi cá nhân: backend NestJS + admin web React (mobile Flutter dự kiến)",
   "scripts": {
     "setup": "node scripts/setup.mjs",
-    "dev": "concurrently -k -n api,admin -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix admin run dev\"",
+    "dev": "docker compose up -d --wait db && concurrently -k -n api,admin -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix admin run dev\"",
     "test": "node scripts/test.mjs",
     "build": "npm --prefix backend run build && npm --prefix admin run build",
     "db:up": "docker compose up -d --wait db",

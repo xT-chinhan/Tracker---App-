@@ -307,6 +307,7 @@ function generateDaily(u: UserPlan, skipFixed: Set<string>) {
     }
     if (p.pet && wd === 0 && r.chance(0.5)) tx(day, 16, r.int(0, 59), 'EXPENSE', 'Thú cưng', r.money(150_000, 450_000, 1000), r.pick(['Pate cho mèo', 'Hạt cho chó', 'Cát vệ sinh', 'Tắm spa cho bé cún']), ['ew', 'cash']);
     if (d === 27 && r.chance(0.35)) tx(day, 10, r.int(0, 59), 'INCOME', 'Lãi tiết kiệm', r.money(150_000, 900_000, 1000), 'Lãi tiền gửi', ['bank']);
+    if (d === 18 && ['senior', 'freelancer', 'office'].includes(p.persona) && r.chance(0.3)) tx(day, 14, r.int(0, 59), 'INCOME', 'Đầu tư', r.money(300_000, p.persona === 'senior' ? 6_000_000 : 2_500_000, 10_000), r.pick(['Lãi chứng khoán', 'Cổ tức FPT', 'Chốt lời cổ phiếu', 'Lãi chứng chỉ quỹ']), ['bank', 'bank2']);
     if (d === 14 && r.chance(0.5)) tx(day, 18, r.int(0, 59), 'EXPENSE', 'Chi khác', r.pick([60_000, 80_000, 100_000, 120_000, 150_000]), 'Cắt tóc', ['cash']);
 
     // ---------- Tết (2026: mùng 1 = 17/02)
@@ -836,8 +837,10 @@ async function main() {
       data: { email: DEMO_ADMIN_EMAIL, name: 'Quản trị viên', role: 'ADMIN', passwordHash: await bcrypt.hash(DEMO_ADMIN_PASSWORD, 10), createdAt: at(addDays(TODAY, -364), 8, 30), lastLoginAt: new Date(NOW.getTime() - 3 * HOUR) },
     });
     await prisma.wallet.create({ data: { userId: admin.id, name: 'Tiền mặt', type: 'CASH', createdAt: admin.createdAt } });
-  } else if (admin.role !== 'ADMIN' || admin.status !== 'ACTIVE') {
-    admin = await prisma.user.update({ where: { id: admin.id }, data: { role: 'ADMIN', status: 'ACTIVE' } });
+  } else {
+    // admin demo vừa được db:seed tạo => lùi ngày tạo để không chiếm mục "Đăng ký gần đây"
+    const since = at(addDays(TODAY, -364), 8, 30);
+    admin = await prisma.user.update({ where: { id: admin.id }, data: { role: 'ADMIN', status: 'ACTIVE', createdAt: admin.createdAt < since ? undefined : since } });
   }
 
   // ---- kế hoạch
