@@ -220,7 +220,7 @@ export class StatsService {
   }
 }
 
-/** Chênh lệch so với tháng trước; |thay đổi| <= 5% coi là ổn định (giữ luật app cũ). */
+/** Chênh lệch so với tháng trước; |thay đổi| <= 5% coi là ổn định. */
 function compare(current: number, previous: number) {
   const difference = current - previous;
   const percentageChange = previous ? Math.round((difference / previous) * 1000) / 10 : null;

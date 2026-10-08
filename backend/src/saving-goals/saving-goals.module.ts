@@ -49,7 +49,7 @@ const CLOSED: GoalStatus[] = ['WITHDRAWN', 'EARLY_WITHDRAWN'];
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
- * Luật nghiệp vụ (giữ theo app cũ):
+ * Luật nghiệp vụ:
  * - Nạp: trừ vào ví được chọn, không vượt quá số còn thiếu (phần dư bị cắt), số dư VÍ phải đủ.
  * - Đủ mục tiêu => COMPLETED. Rút: trả toàn bộ về ví được chọn, COMPLETED => WITHDRAWN, chưa đủ => EARLY_WITHDRAWN.
  * - Mục tiêu đã rút không nạp thêm được.
