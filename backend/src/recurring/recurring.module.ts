@@ -5,7 +5,8 @@ import { Type } from 'class-transformer';
 import { IsDateString, IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { Frequency, Prisma, RecurringRule } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthUser, CurrentUser } from '../common/auth';
+import { AuthUser, CurrentUser, Feature } from '../common/auth';
+import { SystemConfigService } from '../system-config/system-config.module';
 import { MAX_AMOUNT, Trim } from '../common/dto';
 import { parseDate } from '../common/time';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
@@ -120,6 +121,7 @@ export class RecurringService implements OnApplicationBootstrap {
     private readonly categories: CategoriesService,
     private readonly wallets: WalletsService,
     private readonly txs: TransactionsService,
+    private readonly sys: SystemConfigService,
   ) {}
 
   /** Chạy bù ngay khi khởi động (các kỳ lỡ lúc server tắt). */
@@ -137,6 +139,8 @@ export class RecurringService implements OnApplicationBootstrap {
    * Một lượt tại một thời điểm trong instance; lượt trùng => bỏ qua (`skipped: true`).
    */
   async runAll(now: Date) {
+    // Tính năng bị tắt => tạm ngưng sinh kỳ (nextRunAt giữ nguyên); bật lại thì lượt chạy kế tiếp sinh bù như khi server tắt.
+    if (!(await this.sys.featureEnabled('recurring'))) return { rules: 0, created: 0, skipped: true, reason: 'FEATURE_DISABLED' };
     if (this.running) return { rules: 0, created: 0, skipped: true };
     this.running = true;
     try {
@@ -341,6 +345,8 @@ export class RecurringService implements OnApplicationBootstrap {
 
 @ApiTags('recurring')
 @ApiBearerAuth()
+/** Tính năng có thể tắt trong Cấu hình hệ thống: tắt => route ghi 403 FEATURE_DISABLED, đọc vẫn được */
+@Feature('recurring')
 @Controller('recurring')
 export class RecurringController {
   constructor(private readonly recurring: RecurringService) {}

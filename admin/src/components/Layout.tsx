@@ -1,6 +1,6 @@
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeftRight, LayoutDashboard, LogOut, Megaphone, Shapes, UserRoundCog, Users } from 'lucide-react'
+import { ArrowLeftRight, LayoutDashboard, LogOut, Megaphone, Settings2, Shapes, UserRoundCog, Users } from 'lucide-react'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -16,6 +16,7 @@ const MANAGE = [
   { to: '/transactions', label: 'Giao dịch', icon: ArrowLeftRight },
   { to: '/categories', label: 'Danh mục', icon: Shapes },
   { to: '/broadcasts', label: 'Thông báo', icon: Megaphone },
+  { to: '/settings', label: 'Cấu hình', icon: Settings2 },
 ]
 
 /** Logo chữ "đ" gạch chân trên nền đen. */

@@ -8,6 +8,7 @@ import { AuthUser, CurrentUser } from '../common/auth';
 import { MAX_AMOUNT } from '../common/dto';
 import { MONTH_REGEX, monthOf, monthRange } from '../common/time';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
+import { SystemConfigService } from '../system-config/system-config.module';
 
 class CreateBudgetDto {
   /** Danh mục chi tiêu; bỏ trống => ngân sách tổng của tháng */
@@ -30,16 +31,20 @@ class CopyBudgetsDto {
   @Matches(MONTH_REGEX) toMonth: string;
 }
 
-/** Ngưỡng cảnh báo: >= 80% là sắp hết, >= 100% là vượt. */
-const WARNING_PERCENT = 80;
+/** Ngưỡng lấy từ Cấu hình hệ thống (business.budgetWarningPercent / budgetExceededPercent, mặc định 80% / 100%). */
+interface Thresholds {
+  warningPercent: number;
+  exceededPercent: number;
+}
 const CATEGORY_SELECT = { select: { id: true, name: true, icon: true, color: true } } as const;
 const fmt = (v: number) => v.toLocaleString('vi-VN');
 
 @Injectable()
 export class BudgetsService {
-  constructor(private readonly prisma: PrismaService, private readonly categories: CategoriesService) {}
+  constructor(private readonly prisma: PrismaService, private readonly categories: CategoriesService, private readonly sys: SystemConfigService) {}
 
   async list(userId: string, month: string) {
+    const th = await this.sys.budgetThresholds();
     const budgets = await this.prisma.budget.findMany({
       where: { userId, month },
       include: { category: CATEGORY_SELECT },
@@ -47,12 +52,13 @@ export class BudgetsService {
     });
     const spent = await this.spent(userId, month);
     const overallBudget = budgets.find((b) => !b.categoryId);
-    const items = budgets.filter((b) => b.categoryId).map((b) => withProgress(b, spent.get(b.categoryId!) ?? 0));
+    const items = budgets.filter((b) => b.categoryId).map((b) => withProgress(b, spent.get(b.categoryId!) ?? 0, th));
     const totalLimit = items.reduce((s, b) => s + b.limitAmount, 0);
     const totalSpent = items.reduce((s, b) => s + b.spent, 0);
     return {
       month,
-      overall: overallBudget ? withProgress(overallBudget, spent.get(null) ?? 0) : null,
+      thresholds: th,
+      overall: overallBudget ? withProgress(overallBudget, spent.get(null) ?? 0, th) : null,
       totalLimit,
       totalSpent,
       totalRemaining: totalLimit - totalSpent,
@@ -71,24 +77,25 @@ export class BudgetsService {
       data: { userId, categoryId: dto.categoryId ?? null, month: dto.month, limitAmount: BigInt(dto.limitAmount) },
       include: { category: CATEGORY_SELECT },
     });
-    return withProgress(budget, (await this.spent(userId, dto.month)).get(budget.categoryId) ?? 0);
+    return withProgress(budget, (await this.spent(userId, dto.month)).get(budget.categoryId) ?? 0, await this.sys.budgetThresholds());
   }
 
   /** Đổi hạn mức => tính lại dấu đã báo: tụt dưới ngưỡng thì xóa dấu để lần vượt sau báo lại. */
   async update(userId: string, id: string, dto: UpdateBudgetDto) {
     const current = await this.findOwned(userId, id);
+    const th = await this.sys.budgetThresholds();
     const spent = (await this.spent(userId, current.month)).get(current.categoryId) ?? 0;
     const pctNew = (spent / dto.limitAmount) * 100;
     const budget = await this.prisma.budget.update({
       where: { id },
       data: {
         limitAmount: BigInt(dto.limitAmount),
-        warnedAt: pctNew < WARNING_PERCENT ? null : undefined,
-        exceededAt: pctNew < 100 ? null : undefined,
+        warnedAt: pctNew < th.warningPercent ? null : undefined,
+        exceededAt: pctNew < th.exceededPercent ? null : undefined,
       },
       include: { category: CATEGORY_SELECT },
     });
-    return withProgress(budget, spent);
+    return withProgress(budget, spent, th);
   }
 
   async remove(userId: string, id: string) {
@@ -116,7 +123,7 @@ export class BudgetsService {
   }
 
   /**
-   * Gọi sau khi tạo/sửa/xóa giao dịch chi: ngân sách danh mục + ngân sách tổng của tháng đó vượt 80% / 100%
+   * Gọi sau khi tạo/sửa/xóa giao dịch chi: ngân sách danh mục + ngân sách tổng của tháng đó vượt ngưỡng cảnh báo / vượt (cấu hình, mặc định 80% / 100%)
    * => sinh 1 thông báo. Mỗi ngưỡng mỗi ngân sách chỉ báo 1 lần (updateMany có điều kiện => an toàn khi chạy đồng thời).
    * Chi tụt dưới ngưỡng (xóa / sửa / dời giao dịch) => xóa dấu để lần vượt sau báo lại (giống khi đổi hạn mức).
    */
@@ -126,21 +133,22 @@ export class BudgetsService {
       include: { category: CATEGORY_SELECT },
     });
     if (!budgets.length) return;
+    const { warningPercent: W, exceededPercent: X } = await this.sys.budgetThresholds();
     const spent = await this.spent(userId, month);
     for (const b of budgets) {
       const used = spent.get(b.categoryId) ?? 0;
       const limit = Number(b.limitAmount);
       const pct = (used / limit) * 100;
-      const level = pct >= 100 ? 'exceeded' : pct >= WARNING_PERCENT ? 'warning' : null;
-      if ((pct < WARNING_PERCENT && b.warnedAt) || (pct < 100 && b.exceededAt)) {
+      const level = pct >= X ? 'exceeded' : pct >= W ? 'warning' : null;
+      if ((pct < W && b.warnedAt) || (pct < X && b.exceededAt)) {
         await this.prisma.budget.update({
           where: { id: b.id },
-          data: { warnedAt: pct < WARNING_PERCENT ? null : undefined, exceededAt: null },
+          data: { warnedAt: pct < W ? null : undefined, exceededAt: null },
         });
       }
       if (!level) continue;
       const now = new Date();
-      // Vượt 100% => đánh dấu cả 2 ngưỡng, chỉ gửi 1 thông báo "vượt"
+      // Vượt ngưỡng vượt => đánh dấu cả 2 ngưỡng, chỉ gửi 1 thông báo "vượt"
       const { count } = await this.prisma.budget.updateMany({
         where: level === 'exceeded' ? { id: b.id, exceededAt: null } : { id: b.id, warnedAt: null },
         data: level === 'exceeded' ? { exceededAt: now, warnedAt: b.warnedAt ?? now } : { warnedAt: now },
@@ -179,7 +187,7 @@ export class BudgetsService {
   }
 }
 
-function withProgress<T extends Budget>(b: T, spent: number) {
+function withProgress<T extends Budget>(b: T, spent: number, th: Thresholds) {
   const limitAmount = Number(b.limitAmount);
   const percentage = limitAmount ? Math.round((spent / limitAmount) * 1000) / 10 : 0;
   return {
@@ -188,7 +196,7 @@ function withProgress<T extends Budget>(b: T, spent: number) {
     spent,
     remaining: limitAmount - spent,
     percentage,
-    status: percentage >= 100 ? 'exceeded' : percentage >= WARNING_PERCENT ? 'warning' : 'ok',
+    status: percentage >= th.exceededPercent ? 'exceeded' : percentage >= th.warningPercent ? 'warning' : 'ok',
   };
 }
 
@@ -198,7 +206,7 @@ function withProgress<T extends Budget>(b: T, spent: number) {
 export class BudgetsController {
   constructor(private readonly budgets: BudgetsService) {}
 
-  /** Ngân sách của tháng: `overall` (ngân sách tổng) + `items` theo danh mục, kèm spent/remaining/percentage/status */
+  /** Ngân sách của tháng: `overall` (ngân sách tổng) + `items` theo danh mục, kèm spent/remaining/percentage/status; `thresholds` = ngưỡng cảnh báo / vượt đang áp dụng */
   @Get()
   list(@CurrentUser() u: AuthUser, @Query() q: BudgetQuery) {
     return this.budgets.list(u.id, q.month ?? monthOf(new Date()));

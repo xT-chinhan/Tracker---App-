@@ -55,7 +55,7 @@ function pageList(page: number, pages: number): (number | 'gap')[] {
 }
 
 /** "1–10 trong 1.284" + số trang (trang hiện tại nền đen). */
-export function Pagination({ page, limit, total, onChange }: { page: number; limit: number; total: number; onChange: (p: number) => void }) {
+export function Pagination({ page, limit, total, onChange, suffix }: { page: number; limit: number; total: number; onChange: (p: number) => void; suffix?: string }) {
   const pages = Math.max(1, Math.ceil(total / limit))
   const from = total === 0 ? 0 : (page - 1) * limit + 1
   const to = Math.min(page * limit, total)
@@ -63,7 +63,7 @@ export function Pagination({ page, limit, total, onChange }: { page: number; lim
   return (
     <div className="flex items-center justify-between border-t border-border py-2.5 pr-4 pl-6 text-[13.5px] text-muted-foreground">
       <span className="tabular-nums" data-testid="pagination-info">
-        {formatNumber(from)}–{formatNumber(to)} trong {formatNumber(total)}
+        {formatNumber(from)}–{formatNumber(to)} trong {formatNumber(total)}{suffix ? ` ${suffix}` : ''}
       </span>
       <nav className="flex items-center gap-1" aria-label="Phân trang">
         <button type="button" className={pg} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Trang trước"><ChevronLeft /></button>

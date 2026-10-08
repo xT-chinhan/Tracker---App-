@@ -101,7 +101,7 @@ function PasswordInput(props: Omit<React.ComponentProps<typeof Input>, "type" | 
     <Input
       {...props}
       type={show ? "text" : "password"}
-      className={cn(!show && "tracking-[2px]", props.className)}
+      className={cn(!show && "tracking-[2px] placeholder:tracking-normal", props.className)}
       end={
         <button
           type="button"

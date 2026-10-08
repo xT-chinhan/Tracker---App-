@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 import { IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { QuickTemplate } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthUser, CurrentUser } from '../common/auth';
+import { AuthUser, CurrentUser, Feature } from '../common/auth';
 import { MAX_AMOUNT, Trim } from '../common/dto';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
 import { WalletsModule, WalletsService } from '../wallets/wallets.module';
@@ -114,6 +114,8 @@ export class QuickTemplatesService {
 
 @ApiTags('quick-templates')
 @ApiBearerAuth()
+/** Tính năng có thể tắt trong Cấu hình hệ thống: tắt => route ghi 403 FEATURE_DISABLED, đọc vẫn được */
+@Feature('quickTemplates')
 @Controller('quick-templates')
 export class QuickTemplatesController {
   constructor(private readonly templates: QuickTemplatesService) {}

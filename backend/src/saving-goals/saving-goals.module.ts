@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 import { IsDateString, IsEnum, IsHexColor, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { GoalStatus, SavingGoal } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthUser, CurrentUser } from '../common/auth';
+import { AuthUser, CurrentUser, Feature } from '../common/auth';
 import { MAX_AMOUNT, Trim } from '../common/dto';
 import { lockUser, WalletsModule, WalletsService } from '../wallets/wallets.module';
 import { parseDate } from '../common/time';
@@ -199,6 +199,8 @@ function withProgress(g: SavingGoal) {
 
 @ApiTags('saving-goals')
 @ApiBearerAuth()
+/** Tính năng có thể tắt trong Cấu hình hệ thống: tắt => route ghi 403 FEATURE_DISABLED, đọc vẫn được */
+@Feature('savingGoals')
 @Controller('saving-goals')
 export class SavingGoalsController {
   constructor(private readonly goals: SavingGoalsService) {}
