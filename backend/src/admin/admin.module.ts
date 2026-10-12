@@ -13,14 +13,14 @@ import { buildTxWhere, TransactionFilter, TX_CATEGORY_SELECT, TX_WALLET_SELECT, 
 import { WalletsModule, WalletsService } from '../wallets/wallets.module';
 import { RecurringModule, RecurringService, RunDueQuery } from '../recurring/recurring.module';
 
-class UserListQuery extends PageQuery {
+export class UserListQuery extends PageQuery {
   /** Tìm theo email / tên */
   @IsOptional() @IsString() @MaxLength(100) q?: string;
   @IsOptional() @IsEnum(UserStatus) status?: UserStatus;
   @IsOptional() @IsEnum(Role) role?: Role;
 }
 
-class UpdateUserDto {
+export class UpdateUserDto {
   @IsOptional() @IsEnum(UserStatus) status?: UserStatus;
   @IsOptional() @IsEnum(Role) role?: Role;
 }
@@ -29,7 +29,7 @@ class AdminTxFilter extends TransactionFilter {
   @IsOptional() @IsUUID() userId?: string;
 }
 
-class BroadcastDto {
+export class BroadcastDto {
   @Trim() @IsString() @MinLength(1) @MaxLength(120) title: string;
   @Trim() @IsString() @MinLength(1) @MaxLength(2000) body: string;
 }
@@ -253,5 +253,5 @@ export class AdminController {
   }
 }
 
-@Module({ imports: [CategoriesModule, StatsModule, WalletsModule, RecurringModule], controllers: [AdminController], providers: [AdminService] })
+@Module({ imports: [CategoriesModule, StatsModule, WalletsModule, RecurringModule], controllers: [AdminController], providers: [AdminService], exports: [AdminService] })
 export class AdminModule {}

@@ -6,6 +6,7 @@
 // Server phải chạy với NODE_ENV=test (cần POST /recurring/run-due + giới hạn tần suất nới cho test: cửa sổ 10s).
 // Có 1 lần chờ 61s (giới hạn gửi lại OTP), ~31s (chờ gửi lại OTP theo cấu hình) và ~10s chờ hết khóa 429 ở cuối.
 // Nhóm "config:" đổi Cấu hình hệ thống rồi khôi phục giá trị ban đầu ở cuối nhóm (kể cả khi lỗi).
+// Nhóm "ai:" (scripts/e2e-ai.mjs) cần provider FAKE (NODE_ENV=test tự dùng fake) và cũng khôi phục cấu hình mục ai.
 import { readFileSync } from 'node:fs';
 import net from 'node:net';
 
@@ -1983,12 +1984,16 @@ group('auth: quên mật khẩu OTP');
   }
 }
 
+// ================= TRỢ LÝ AI (provider FAKE) =================
+await (await import('./e2e-ai.mjs')).aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN_EMAIL, BASE });
+
 // ================= SWAGGER =================
 group('swagger');
 r = await fetch(BASE.replace(/\/api$/, '') + '/docs/openapi.json');
 {
   const doc = r.status === 200 ? await r.json() : { paths: {}, components: { schemas: {} } };
-  check('openapi.json 59 paths (+health, logout-all, admin run-due, 5 cấu hình)', Object.keys(doc.paths).length === 59, Object.keys(doc.paths).length);
+  check('openapi.json 83 paths (+health, logout-all, admin run-due, 5 cấu hình, 24 trợ lý AI)', Object.keys(doc.paths).length === 83, Object.keys(doc.paths).length);
+  check('AI endpoints documented (SSE + confirm body)', doc.paths['/api/ai/conversations/{id}/messages/stream']?.post && 'payload' in (doc.components.schemas.ConfirmDraftDto?.properties ?? {}) && doc.paths['/api/admin/ai/stats']?.get, Object.keys(doc.paths).filter((p) => p.includes('/ai')));
   check('config PATCH body documented per section', ['general', 'access', 'smtp', 'password', 'business', 'mobile'].every((k) => k in (doc.paths['/api/admin/config']?.patch?.requestBody?.content?.['application/json']?.schema?.properties ?? {})), doc.paths['/api/admin/config']);
   check('DTO schemas populated', ['amount', 'categoryId', 'walletId', 'title'].every((k) => k in (doc.components.schemas.CreateTransactionDto?.properties ?? {})), doc.components.schemas.CreateTransactionDto);
 }

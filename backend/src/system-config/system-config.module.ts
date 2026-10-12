@@ -29,11 +29,11 @@ import { PageQuery, paged } from '../common/dto';
 
 /* ============================== Định nghĩa cấu hình ============================== */
 
-export const SECTIONS = ['general', 'access', 'smtp', 'password', 'business', 'mobile'] as const;
+export const SECTIONS = ['general', 'access', 'smtp', 'password', 'business', 'mobile', 'ai'] as const;
 export type Section = (typeof SECTIONS)[number];
 
 type Kind = 'string' | 'int' | 'bool' | 'datetime' | 'enum';
-type Format = 'email' | 'https' | 'version' | 'phone' | 'from';
+type Format = 'email' | 'https' | 'version' | 'phone' | 'from' | 'url';
 
 interface Def {
   section: Section;
@@ -63,6 +63,10 @@ interface EnvDefaults {
   smtpFrom: string;
   jwtDays: number;
   loginLimit: number;
+  aiProvider: string;
+  ollamaUrl: string;
+  aiChatModel: string;
+  aiEmbedModel: string;
 }
 
 const FEATURE_FIELDS: Record<FeatureName, string> = {
@@ -71,6 +75,7 @@ const FEATURE_FIELDS: Record<FeatureName, string> = {
   transfers: 'featureTransfers',
   csvExport: 'featureCsvExport',
   quickTemplates: 'featureQuickTemplates',
+  ai: 'featureAi',
 };
 
 export const FEATURE_LABELS: Record<FeatureName, string> = {
@@ -79,6 +84,7 @@ export const FEATURE_LABELS: Record<FeatureName, string> = {
   transfers: 'Chuyển tiền giữa ví',
   csvExport: 'Xuất CSV',
   quickTemplates: 'Mẫu nhập nhanh',
+  ai: 'Trợ lý AI',
 };
 
 export const DEFAULT_MAINTENANCE_MESSAGE = 'Ứng dụng đang bảo trì để nâng cấp hệ thống. Dữ liệu của bạn vẫn an toàn, vui lòng quay lại sau ít phút.';
@@ -123,6 +129,22 @@ const DEFS: Def[] = [
   { section: 'mobile', field: 'iosMinVersion', kind: 'string', required: true, format: 'version', def: () => '1.0.0' },
   { section: 'mobile', field: 'iosStoreUrl', kind: 'string', maxLen: 300, format: 'https', def: () => '' },
   { section: 'mobile', field: 'releaseNotes', kind: 'string', maxLen: 300, def: () => '' },
+
+  // Trợ lý AI. Tắt `enabled` (hoặc business.featureAi) => route ghi của /ai trả 403 FEATURE_DISABLED.
+  // provider: env AI_PROVIDER ghi đè; NODE_ENV=test luôn dùng fake (e2e nhanh, tất định).
+  { section: 'ai', field: 'enabled', kind: 'bool', def: () => true },
+  { section: 'ai', field: 'provider', kind: 'enum', values: ['ollama', 'fake'], def: (e) => e.aiProvider },
+  { section: 'ai', field: 'ollamaUrl', kind: 'string', required: true, maxLen: 300, format: 'url', def: (e) => e.ollamaUrl },
+  { section: 'ai', field: 'chatModel', kind: 'string', required: true, maxLen: 100, def: (e) => e.aiChatModel },
+  { section: 'ai', field: 'embedModel', kind: 'string', required: true, maxLen: 100, def: (e) => e.aiEmbedModel },
+  { section: 'ai', field: 'timeoutSeconds', kind: 'int', min: 5, max: 600, def: () => 60 },
+  { section: 'ai', field: 'dailyMessageLimitPerUser', kind: 'int', min: 1, max: 100000, def: () => 200 },
+  { section: 'ai', field: 'maxConversationsPerUser', kind: 'int', min: 1, max: 10000, def: () => 100 },
+  // Ngưỡng tự bật luật / ví dụ CHUNG do chu trình học ban đêm đề xuất (không đạt => chờ admin duyệt)
+  { section: 'ai', field: 'autoApproveEnabled', kind: 'bool', def: () => true },
+  { section: 'ai', field: 'autoApproveMinUsers', kind: 'int', min: 2, max: 100000, def: () => 3 },
+  { section: 'ai', field: 'autoApproveMinSupport', kind: 'int', min: 1, max: 100000, def: () => 5 },
+  { section: 'ai', field: 'autoApproveMinPrecision', kind: 'int', min: 50, max: 100, def: () => 90 },
 ];
 
 const keyOf = (d: Pick<Def, 'section' | 'field'>) => `${d.section}.${d.field}`;
@@ -173,6 +195,7 @@ function validateValue(d: Def, raw: unknown, out: { value?: unknown }): string |
       if (v && d.format === 'version' && !VERSION_RE.test(v)) return 'Phiên bản dạng x.y.z, vd 1.4.0';
       if (v && d.format === 'phone' && !PHONE_RE.test(v)) return 'Số điện thoại không hợp lệ';
       if (v && d.format === 'from' && !FROM_RE.test(v)) return 'Dạng "Tên <email@miền>" hoặc một email';
+      if (v && d.format === 'url' && !/^https?:\/\/[^\s/]+(\/[^\s]*)?$/.test(v)) return 'Link phải bắt đầu bằng http:// hoặc https://';
       out.value = v;
       return null;
     }
@@ -254,6 +277,10 @@ export class SystemConfigService {
       smtpFrom: config.get<string>('SMTP_FROM') ?? '',
       jwtDays: jwt ? Math.min(365, Math.max(1, Number(jwt[1]))) : 30,
       loginLimit: Number(config.get('THROTTLE_AUTH_LIMIT') ?? (test ? 200 : 10)),
+      aiProvider: config.get<string>('AI_PROVIDER') === 'fake' || test ? 'fake' : 'ollama',
+      ollamaUrl: config.get<string>('OLLAMA_URL') || 'http://localhost:11434',
+      aiChatModel: config.get<string>('AI_CHAT_MODEL') || 'gemma2:2b',
+      aiEmbedModel: config.get<string>('AI_EMBED_MODEL') || 'bge-m3',
     };
     this.key = secretKey(config);
   }
@@ -326,7 +353,31 @@ export class SystemConfigService {
   }
 
   async featureEnabled(f: FeatureName) {
+    if (f === 'ai' && (await this.get<boolean>('ai.enabled')) === false) return false;
     return (await this.get<boolean>(`business.${FEATURE_FIELDS[f]}`)) !== false;
+  }
+
+  /** Cấu hình trợ lý AI đang hiệu lực (provider: env AI_PROVIDER ghi đè, NODE_ENV=test => fake). */
+  async ai() {
+    const s = await this.snapshot();
+    const v = (f: string) => s.values.get(`ai.${f}`);
+    const envProvider = this.config.get<string>('AI_PROVIDER');
+    return {
+      enabled: (await this.featureEnabled('ai')),
+      provider: (envProvider === 'fake' || envProvider === 'ollama' ? envProvider : this.env.test ? 'fake' : v('provider')) as 'ollama' | 'fake',
+      ollamaUrl: v('ollamaUrl') as string,
+      chatModel: v('chatModel') as string,
+      embedModel: v('embedModel') as string,
+      timeoutMs: (v('timeoutSeconds') as number) * 1000,
+      dailyMessageLimitPerUser: v('dailyMessageLimitPerUser') as number,
+      maxConversationsPerUser: v('maxConversationsPerUser') as number,
+      autoApprove: {
+        enabled: v('autoApproveEnabled') as boolean,
+        minUsers: v('autoApproveMinUsers') as number,
+        minSupport: v('autoApproveMinSupport') as number,
+        minPrecision: (v('autoApproveMinPrecision') as number) / 100,
+      },
+    };
   }
 
   async assertFeature(f: FeatureName) {
@@ -405,7 +456,13 @@ export class SystemConfigService {
       currency: 'VND',
       registrationEnabled: v('access.registrationEnabled'),
       maintenance: { enabled: m.enabled, message: m.enabled ? m.message : null, endsAt: m.enabled ? m.endsAt : null },
-      features: Object.fromEntries((Object.keys(FEATURE_FIELDS) as FeatureName[]).map((f) => [f, v(`business.${FEATURE_FIELDS[f]}`) !== false])),
+      // Trợ lý AI có khối riêng `ai` bên dưới (bật = ai.enabled && business.featureAi)
+      features: Object.fromEntries((Object.keys(FEATURE_FIELDS) as FeatureName[]).filter((f) => f !== 'ai').map((f) => [f, v(`business.${FEATURE_FIELDS[f]}`) !== false])),
+      ai: {
+        enabled: v('ai.enabled') !== false && v('business.featureAi') !== false,
+        dailyMessageLimitPerUser: v('ai.dailyMessageLimitPerUser'),
+        maxConversationsPerUser: v('ai.maxConversationsPerUser'),
+      },
       budget: { warningPercent: v('business.budgetWarningPercent'), exceededPercent: v('business.budgetExceededPercent') },
       password: { minLength: v('password.minLength') },
       otp: { expiryMinutes: v('password.otpExpiryMinutes'), resendSeconds: v('password.otpResendSeconds') },

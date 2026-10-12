@@ -10,7 +10,7 @@ import { MONTH_REGEX, monthOf, monthRange } from '../common/time';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
 import { SystemConfigService } from '../system-config/system-config.module';
 
-class CreateBudgetDto {
+export class CreateBudgetDto {
   /** Danh mục chi tiêu; bỏ trống => ngân sách tổng của tháng */
   @IsOptional() @IsUUID() categoryId?: string;
   /** YYYY-MM */

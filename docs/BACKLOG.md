@@ -2,6 +2,12 @@
 
 Cập nhật: 2026-10-08. Ưu tiên hiện tại: **trợ lý AI** (`ai/`). Các mục dưới đây tạm hoãn.
 
+## 0. Trợ lý AI — việc còn lại phía backend
+- **pgvector**: embedding đang lưu `Bytes` (Float32) trong `AiExample`, kNN chạy trong tiến trình (`AiRepo.knnRows` → provider `similarExamples`), đủ nhanh vì kho mỗi user nhỏ. Khi kho chung lớn (> vài chục nghìn dòng) chuyển sang pgvector: đổi image `postgres:16-alpine` → image có pgvector (vd `pgvector/pgvector:pg16`, bản Debian) — **phải dump/restore volume `db-data`**, không đổi image tại chỗ; thêm cột `vector(1024)` + index HNSW, thay phần thân `knnRows`/`similar` bằng `ORDER BY embedding <=> $q LIMIT k` (giao diện provider giữ nguyên).
+- Image Docker của API chưa chứa `ai/` (build context chỉ `backend/`) → cần đưa `ai/` vào image (đổi context sang gốc repo hoặc copy) và cài `tsx`; hiện thiếu `ai/` thì ghi-giao-dich báo chưa sẵn sàng.
+- Hàng đợi gọi Ollama đang trong tiến trình: chạy nhiều instance API cần hàng đợi chung (Redis / bảng job).
+- Giao diện chat (app + admin "Trung tâm học AI") chờ mockup được duyệt; API đã đủ (`/ai/*`, `/admin/ai/*`).
+
 ## 1. App mobile Flutter
 - Thiết kế đã duyệt: `design/mockup/` (25 màn), `design/tokens.md` (map 1:1 sang `ThemeData`), `design/DESIGN.md`.
 - Tab bar: Trang chủ · Lịch sử · [＋] · Báo cáo · Cài đặt. Chạm ＋ = Ghi giao dịch; nhấn giữ = menu Thu nhập / Chuyển tiền / mẫu nhập nhanh.
