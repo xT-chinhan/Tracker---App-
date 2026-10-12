@@ -263,6 +263,9 @@ Bảo trì: như mọi route khác (USER 503, ADMIN qua). `GET /config/public` c
 ### Dữ liệu
 `AiConversation` (userId, scope USER/ADMIN, title, archived) · `AiMessage` (role, content, skill, routeBy, status ok/ask/error/unsupported, latencyMs, tokens, meta) · `AiDraft` (messageId 1–1, kind, payload, status PROPOSED/EXECUTING/CONFIRMED/EDITED/CANCELLED, finalPayload, result, resolvedAt) · `AiFeedback` (DRAFT_OUTCOME/REROUTE/THUMBS, unique theo tin + loại) · `AiMemory` (key/value, helpful/harmful, source, lastUsedAt) · `AiExample` (scope USER/GLOBAL, ownerKey = userId \| "global", skill, input, inputNorm, output, embedding, confirmations, userCount, status) · `AiRule` (scope, kind category/route, pattern còn dấu → value, support/helpful/harmful/precision, status, approvedBy, evalReport) · `AiEvalCase` · `AiLearningRun`. Migration `20261012090000_ai_assistant`.
 
+### Smoke với Ollama thật (2026-10-12, RTX 3050, gemma2:2b + bge-m3, `scripts/ai-smoke-ollama.mjs`)
+5 hội thoại / 12 tin + 5 lần xác nhận, 0 lỗi. Độ trễ server p50 990 ms, p95 1489 ms; `ghi-giao-dich` (1 lời gọi LLM) p50 1050 ms (~650 token prompt / 20–40 token ra); skill tra cứu tất định 7–24 ms; kNN router (bge-m3) 144–1489 ms; lần đầu (nhúng kho câu mẫu + nạp model) 1,9 s. Xác nhận nháp 150–180 ms. Model hay chép số tiền / ví vào tên khoản → backend cắt bằng code (`cleanTitle`).
+
 ### Giới hạn hiện tại
 - Image Docker chỉ chứa `backend/` → không có `ai/` → `ghi-giao-dich`/`dat-ngan-sach` báo chưa sẵn sàng, router chỉ còn luật admin + kNN. Cần đưa `ai/` vào build context (hoặc đặt `AI_DIR`).
 - Hàng đợi Ollama là trong tiến trình; nhiều instance API cần hàng đợi chung.

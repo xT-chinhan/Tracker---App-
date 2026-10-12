@@ -34,6 +34,20 @@ export function monthFromText(text: string, now: string, preferPast = true): str
   return cur;
 }
 
+const MONEY_IN_TITLE = /\s*\b\d[\d.,]*\s*(k|tr|triệu|trieu|củ|nghìn|ngàn|đ|vnd|lít|xị)?\d*\b/giu;
+const WALLET_WORDS = /\s*\b(trả|tra|ck|chuyển khoản|qua|bằng|bang)\s*$/iu;
+/** Bỏ số tiền + tên ví (và "trả / ck" đứng trước) khỏi tên khoản do LLM đặt. */
+export function cleanTitle(title: string, walletName: string | null): string {
+  let t = title.replace(MONEY_IN_TITLE, ' ');
+  if (walletName) {
+    const f = fold(t), w = fold(walletName);
+    const k = f.lastIndexOf(w);
+    if (k > 0) t = t.slice(0, k);
+  }
+  for (const short of ['mb', 'tcb', 'vcb', 'momo']) t = t.replace(new RegExp(`\\s+(ck\\s+|trả\\s+)?${short}\\s*$`, 'iu'), '');
+  return t.replace(WALLET_WORDS, '').replace(/\s+/g, ' ').trim();
+}
+
 const EMAIL_RE = /[^\s@<>()"',;:]+@[^\s@<>()"',;:]+\.[a-z]{2,}/i;
 const INCOME_HINT = /\b(luong|thuong|duoc (cho|tang)|ban |lai |co tuc|hoan tien|nhan|thu nhap)/;
 
@@ -105,7 +119,9 @@ const ghiGiaoDich: Skill = {
         categoryName = INCOME_HINT.test(fold(s.text)) && catType.has('Thu khác') ? 'Thu khác' : catType.has('Chi khác') ? 'Chi khác' : uctx.categories[0].name;
         fallback++;
       }
-      const title = (llmOut?.[i]?.title || cap(acc[i] || s.text)).slice(0, 120);
+      // gemma2:2b hay chép cả số tiền / ví vào tên ("Cà phê 45k", "… ck mb") dù prompt cấm → bỏ phần đó bằng code
+      const raw = llmOut?.[i]?.title || cap(acc[i] || s.text);
+      const title = (cleanTitle(raw, s.walletName) || cap(acc[i] || s.text)).slice(0, 120);
       return { title, amount: s.amount, categoryName, type: catType.get(categoryName)!, date: s.date, walletName: s.walletName, source: s.text, clean: acc[i], ruleId: hits[i]?.id ?? null };
     });
     const lines = items.map((it) => `• ${it.title} — ${fmtVnd(it.amount)} · ${it.categoryName} · ${vnDay(it.date)}${it.walletName ? ` · ${it.walletName}` : ''}`);
