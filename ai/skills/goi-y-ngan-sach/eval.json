@@ -1,0 +1,319 @@
+[
+ {
+  "id": "01",
+  "fixture": "user-demo",
+  "input": "gợi ý ngân sách tháng sau cho mình",
+  "expect": {
+   "draft": {
+    "kind": "budget-plan",
+    "month": "2026-11",
+    "overall": 23900000
+   },
+   "draftItems": [
+    {
+     "categoryName": "Ăn uống",
+     "limitAmount": 9550000,
+     "median3m": 9502000,
+     "monthsSeen": 3
+    },
+    {
+     "categoryName": "Nhà ở",
+     "limitAmount": 2500000
+    },
+    {
+     "categoryName": "Gia đình",
+     "limitAmount": 2000000
+    },
+    {
+     "categoryName": "Hóa đơn",
+     "limitAmount": 1250000
+    },
+    {
+     "categoryName": "Giải trí",
+     "limitAmount": 750000
+    },
+    {
+     "categoryName": "Di chuyển",
+     "limitAmount": 750000
+    }
+   ],
+   "contains": [
+    "Ngân sách tổng: 23.900.000đ",
+    "Ăn uống: 9.550.000đ"
+   ],
+   "notContains": [
+    "Mua sắm:"
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "user-demo",
+  "input": "nên đặt ngân sách bao nhiêu cho hợp lý",
+  "expect": {
+   "draft": {
+    "kind": "budget-plan",
+    "month": "2026-11",
+    "overall": 23900000
+   },
+   "draftItems": [
+    {
+     "categoryName": "Ăn uống",
+     "limitAmount": 9550000,
+     "median3m": 9502000,
+     "monthsSeen": 3
+    },
+    {
+     "categoryName": "Nhà ở",
+     "limitAmount": 2500000
+    },
+    {
+     "categoryName": "Gia đình",
+     "limitAmount": 2000000
+    },
+    {
+     "categoryName": "Hóa đơn",
+     "limitAmount": 1250000
+    },
+    {
+     "categoryName": "Giải trí",
+     "limitAmount": 750000
+    },
+    {
+     "categoryName": "Di chuyển",
+     "limitAmount": 750000
+    }
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "user-demo",
+  "input": "lập ngân sách tháng này giúp mình",
+  "expect": {
+   "draft": {
+    "kind": "budget-plan",
+    "month": "2026-10"
+   },
+   "contains": [
+    "đã có ngân sách"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "user-demo",
+  "input": "đề xuất hạn mức chi tiêu cho từng danh mục",
+  "expect": {
+   "draftItems": [
+    {
+     "categoryName": "Ăn uống",
+     "limitAmount": 9550000,
+     "median3m": 9502000,
+     "monthsSeen": 3
+    },
+    {
+     "categoryName": "Nhà ở",
+     "limitAmount": 2500000
+    },
+    {
+     "categoryName": "Gia đình",
+     "limitAmount": 2000000
+    },
+    {
+     "categoryName": "Hóa đơn",
+     "limitAmount": 1250000
+    },
+    {
+     "categoryName": "Giải trí",
+     "limitAmount": 750000
+    },
+    {
+     "categoryName": "Di chuyển",
+     "limitAmount": 750000
+    }
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "user-demo",
+  "input": "tư vấn ngân sách ăn uống nên để bao nhiêu",
+  "expect": {
+   "draftItems": [
+    {
+     "categoryName": "Ăn uống",
+     "limitAmount": 9550000,
+     "median3m": 9502000,
+     "monthsSeen": 3
+    }
+   ],
+   "contains": [
+    "Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "user-demo",
+  "input": "suggest a budget for next month",
+  "expect": {
+   "draft": {
+    "kind": "budget-plan",
+    "month": "2026-11"
+   }
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "user-demo",
+  "input": "goi y ngan sach thang toi",
+  "expect": {
+   "draft": {
+    "kind": "budget-plan",
+    "month": "2026-11"
+   }
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "user-demo",
+  "input": "gợi ý ngân sách tháng 12",
+  "expect": {
+   "draft": {
+    "kind": "budget-plan",
+    "month": "2026-12"
+   }
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "user-thu",
+  "input": "gợi ý ngân sách cho mình",
+  "expect": {
+   "draft": {
+    "kind": "budget-plan",
+    "month": "2026-11",
+    "overall": 18300000
+   },
+   "draftItems": [
+    {
+     "categoryName": "Ăn uống",
+     "limitAmount": 11400000
+    },
+    {
+     "categoryName": "Hóa đơn",
+     "limitAmount": 1300000
+    },
+    {
+     "categoryName": "Mua sắm",
+     "limitAmount": 850000
+    },
+    {
+     "categoryName": "Giải trí",
+     "limitAmount": 850000
+    },
+    {
+     "categoryName": "Thú cưng",
+     "limitAmount": 450000
+    },
+    {
+     "categoryName": "Di chuyển",
+     "limitAmount": 250000
+    }
+   ],
+   "notContains": [
+    "Du lịch:",
+    "Sức khỏe:"
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "user-thu",
+  "input": "tháng sau nên đặt ngân sách thế nào",
+  "expect": {
+   "draftItems": [
+    {
+     "categoryName": "Ăn uống",
+     "limitAmount": 11400000
+    },
+    {
+     "categoryName": "Hóa đơn",
+     "limitAmount": 1300000
+    },
+    {
+     "categoryName": "Mua sắm",
+     "limitAmount": 850000
+    },
+    {
+     "categoryName": "Giải trí",
+     "limitAmount": 850000
+    },
+    {
+     "categoryName": "Thú cưng",
+     "limitAmount": 450000
+    },
+    {
+     "categoryName": "Di chuyển",
+     "limitAmount": 250000
+    }
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-empty",
+  "input": "gợi ý ngân sách tháng sau",
+  "expect": {
+   "draft": null,
+   "contains": [
+    "ít nhất 2 tháng"
+   ]
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-demo",
+  "input": "gợi ý ngân sách cho tài khoản của vợ tôi",
+  "expect": {
+   "refused": "other_user",
+   "draft": null
+  }
+ },
+ {
+  "id": "13",
+  "fixture": "user-demo",
+  "input": "dựa vào mấy tháng trước đặt ngân sách giúp mình",
+  "expect": {
+   "draftItems": [
+    {
+     "categoryName": "Ăn uống",
+     "limitAmount": 9550000,
+     "median3m": 9502000,
+     "monthsSeen": 3
+    },
+    {
+     "categoryName": "Nhà ở",
+     "limitAmount": 2500000
+    },
+    {
+     "categoryName": "Gia đình",
+     "limitAmount": 2000000
+    },
+    {
+     "categoryName": "Hóa đơn",
+     "limitAmount": 1250000
+    },
+    {
+     "categoryName": "Giải trí",
+     "limitAmount": 750000
+    },
+    {
+     "categoryName": "Di chuyển",
+     "limitAmount": 750000
+    }
+   ]
+  }
+ }
+]

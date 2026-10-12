@@ -1,0 +1,124 @@
+[
+ {
+  "id": "01",
+  "fixture": "admin",
+  "input": "tóm tắt thay đổi cấu hình",
+  "expect": {
+   "contains": [
+    "10 thay đổi cấu hình gần nhất, theo người sửa: Administrator 6, Trần Quốc Bảo 3, Hệ thống 1.",
+    "08/10 09:12 · Administrator · Đăng ký & truy cập › giờ kết thúc bảo trì: (trống) → 12/10 05:00",
+    "tính năng xuất CSV: bật → tắt",
+    "ngưỡng cảnh báo ngân sách (%): 80 → 75"
+   ],
+   "notContains": [
+    "••••"
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "admin",
+  "input": "lịch sử cấu hình smtp",
+  "expect": {
+   "contains": [
+    "2 thay đổi",
+    "mật khẩu SMTP: đã đổi (giá trị ẩn)",
+    "máy chủ SMTP: (trống) → \"smtp.thuchi.vn\""
+   ],
+   "notContains": [
+    "••••"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "admin",
+  "input": "ai đã đổi cấu hình tuần này",
+  "expect": {
+   "contains": [
+    "7 thay đổi cấu hình gần nhất (tuần này)"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "admin",
+  "input": "cấu hình hôm qua ai sửa",
+  "expect": {
+   "contains": [
+    "2 thay đổi cấu hình gần nhất (hôm qua), theo người sửa: Trần Quốc Bảo 2."
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "admin",
+  "input": "thay đổi về mật khẩu",
+  "expect": {
+   "contains": [
+    "độ dài mật khẩu tối thiểu: 6 → 8"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "admin",
+  "input": "ai bật bảo trì",
+  "expect": {
+   "contains": [
+    "4 thay đổi",
+    "Hệ thống",
+    "chế độ bảo trì: bật → tắt"
+   ]
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "admin",
+  "input": "thay đổi cấu hình tháng 9",
+  "expect": {
+   "contains": [
+    "1 thay đổi",
+    "phiên bản Android tối thiểu: \"1.0.0\" → \"1.1.0\""
+   ]
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "admin",
+  "input": "thay đổi cấu hình tháng 8",
+  "expect": {
+   "contains": [
+    "Không có thay đổi cấu hình nào (tháng 8)"
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "admin",
+  "input": "summarize recent config changes",
+  "expect": {
+   "contains": [
+    "10 thay đổi"
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "admin",
+  "input": "tom tat lich su cau hinh",
+  "expect": {
+   "contains": [
+    "10 thay đổi"
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-demo",
+  "input": "ai đã đổi cấu hình",
+  "expect": {
+   "refused": "scope"
+  }
+ }
+]

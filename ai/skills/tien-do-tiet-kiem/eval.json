@@ -1,0 +1,228 @@
+[
+ {
+  "id": "01",
+  "fixture": "user-demo",
+  "input": "tiết kiệm đi Đà Lạt tới đâu rồi",
+  "expect": {
+   "contains": [
+    "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng)."
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "user-demo",
+  "input": "mục tiêu macbook được bao nhiêu phần trăm rồi",
+  "expect": {
+   "contains": [
+    "MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%)",
+    "97.702đ/ngày",
+    "31/03/2027",
+    "còn 174 ngày"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "user-demo",
+  "input": "quỹ khẩn cấp được bao nhiêu rồi",
+  "expect": {
+   "contains": [
+    "Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%)",
+    "24.540đ/ngày",
+    "31/12/2028"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "user-demo",
+  "input": "các mục tiêu tiết kiệm của mình",
+  "expect": {
+   "contains": [
+    "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu",
+    "Du lịch Đà Lạt",
+    "MacBook Air M4",
+    "Quỹ khẩn cấp"
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "user-demo",
+  "input": "tiến độ tiết kiệm",
+  "expect": {
+   "contains": [
+    "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "user-demo",
+  "input": "bao giờ thì đủ tiền mua macbook",
+  "expect": {
+   "contains": [
+    "MacBook Air M4: đã có 18.000.000đ"
+   ],
+   "notContains": [
+    "Du lịch Đà Lạt"
+   ]
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "user-demo",
+  "input": "muc tieu tiet kiem du lich",
+  "expect": {
+   "contains": [
+    "Du lịch Đà Lạt: đã có 4.200.000đ"
+   ]
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "user-demo",
+  "input": "mục tiêu mua xe tới đâu rồi",
+  "expect": {
+   "contains": [
+    "không thấy mục tiêu nào khớp",
+    "52.200.000đ"
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "user-demo",
+  "input": "còn bao lâu nữa đủ tiền mua laptop",
+  "expect": {
+   "contains": [
+    "không thấy mục tiêu nào khớp"
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "user-demo",
+  "input": "quỹ khẩn cấp còn thiếu bao nhiêu",
+  "expect": {
+   "contains": [
+    "còn thiếu 20.000.000đ"
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-demo",
+  "input": "mỗi ngày phải góp bao nhiêu cho chuyến đà lạt",
+  "expect": {
+   "contains": [
+    "26.471đ/ngày"
+   ]
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-thu",
+  "input": "mục tiêu laptop mới",
+  "expect": {
+   "contains": [
+    "Laptop mới: đã có 20.500.000đ / 20.500.000đ (100%). Mục tiêu đã hoàn thành."
+   ]
+  }
+ },
+ {
+  "id": "13",
+  "fixture": "user-thu",
+  "input": "các mục tiêu tiết kiệm",
+  "expect": {
+   "contains": [
+    "Đã tiết kiệm 23.000.000đ trên tổng 23.000.000đ của 2 mục tiêu"
+   ],
+   "notContains": [
+    "MacBook"
+   ]
+  }
+ },
+ {
+  "id": "14",
+  "fixture": "user-thu",
+  "input": "quỹ khẩn cấp",
+  "expect": {
+   "contains": [
+    "Quỹ khẩn cấp: đã rút tiền trước hạn"
+   ],
+   "notContains": [
+    "30.000.000"
+   ]
+  }
+ },
+ {
+  "id": "15",
+  "fixture": "user-thu",
+  "input": "quà sinh nhật mẹ tới đâu rồi",
+  "expect": {
+   "contains": [
+    "Quà sinh nhật mẹ: đã có 2.500.000đ / 2.500.000đ (100%). Mục tiêu đã hoàn thành."
+   ]
+  }
+ },
+ {
+  "id": "16",
+  "fixture": "user-empty",
+  "input": "mục tiêu tiết kiệm của mình",
+  "expect": {
+   "contains": [
+    "chưa có mục tiêu tiết kiệm nào"
+   ]
+  }
+ },
+ {
+  "id": "17",
+  "fixture": "user-demo",
+  "input": "mục tiêu tiết kiệm của anh Nam",
+  "expect": {
+   "refused": "other_user"
+  }
+ },
+ {
+  "id": "18",
+  "fixture": "user-demo",
+  "input": "how are my savings goals",
+  "expect": {
+   "contains": [
+    "52.200.000đ"
+   ]
+  }
+ },
+ {
+  "id": "19",
+  "fixture": "user-demo",
+  "input": "ong heo cua minh sao roi",
+  "expect": {
+   "contains": [
+    "52.200.000đ"
+   ]
+  }
+ },
+ {
+  "id": "20",
+  "fixture": "user-demo",
+  "input": "tiết kiệm macbook tháng này góp chưa",
+  "expect": {
+   "contains": [
+    "MacBook Air M4"
+   ]
+  }
+ },
+ {
+  "id": "21",
+  "fixture": "user-demo",
+  "input": "Đà Lạt",
+  "expect": {
+   "contains": [
+    "Du lịch Đà Lạt: đã có 4.200.000đ"
+   ]
+  }
+ }
+]

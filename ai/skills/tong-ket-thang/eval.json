@@ -1,0 +1,239 @@
+[
+ {
+  "id": "01",
+  "fixture": "user-demo",
+  "input": "tháng này tiêu bao nhiêu rồi",
+  "expect": {
+   "contains": [
+    "Tháng 10 (tính đến 08/10): thu 22.560.000đ, chi 8.404.000đ, chênh lệch +14.156.000đ",
+    "Nhà ở 2.500.000đ (29,7%)",
+    "So với tháng 9 (17.324.000đ): chi giảm 51,5%",
+    "Tiền nhà 2.500.000đ (01/10)"
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "user-demo",
+  "input": "tổng kết tháng 9",
+  "expect": {
+   "contains": [
+    "Tháng 9: thu 27.540.000đ, chi 17.324.000đ, chênh lệch +10.216.000đ",
+    "Ăn uống 9.502.000đ (54,8%)",
+    "So với tháng 8 (45.349.000đ): chi giảm 61,8%"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "user-demo",
+  "input": "tháng trước chi những gì nhiều nhất",
+  "expect": {
+   "contains": [
+    "Ăn uống 9.502.000đ (54,8%)",
+    "Nhà ở 2.500.000đ (14,4%)"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "user-demo",
+  "input": "tháng 8 thu chi thế nào",
+  "expect": {
+   "contains": [
+    "thu 26.474.000đ, chi 45.349.000đ, chênh lệch −18.875.000đ",
+    "Mua sắm 27.849.000đ (61,4%)",
+    "chi tăng 90,4%",
+    "Máy giặt LG + tủ lạnh Panasonic 27.849.000đ (24/08)"
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "user-demo",
+  "input": "tháng này thu nhập bao nhiêu",
+  "expect": {
+   "contains": [
+    "thu 22.560.000đ",
+    "Nguồn thu: Lương 22.000.000đ (97,5%)"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "user-demo",
+  "input": "tuần này xài hết bao nhiêu",
+  "expect": {
+   "contains": [
+    "Tuần này: chi 3.671.000đ (13 khoản), thu 22.560.000đ (2 khoản)",
+    "Mua sắm 1.690.000đ (46%)"
+   ]
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "user-demo",
+  "input": "tuần trước tiêu bao nhiêu",
+  "expect": {
+   "contains": [
+    "Tuần trước: chi 5.321.000đ (22 khoản), thu 3.000.000đ (1 khoản)"
+   ]
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "user-demo",
+  "input": "7 ngày qua chi bao nhiêu",
+  "expect": {
+   "contains": [
+    "7 ngày qua: chi 5.354.000đ (24 khoản)"
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "user-demo",
+  "input": "hôm nay tiêu bao nhiêu",
+  "expect": {
+   "contains": [
+    "Hôm nay: chi 85.000đ (2 khoản), thu 560.000đ (1 khoản)"
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "user-demo",
+  "input": "hôm qua chi hết bao nhiêu",
+  "expect": {
+   "contains": [
+    "Hôm qua: chi 133.000đ (2 khoản)"
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-demo",
+  "input": "thang nay tieu het bao nhieu",
+  "expect": {
+   "contains": [
+    "chi 8.404.000đ",
+    "So với tháng 9 (17.324.000đ): chi giảm 51,5%"
+   ]
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-demo",
+  "input": "so với tháng trước tháng này chi nhiều hơn không",
+  "expect": {
+   "contains": [
+    "chi giảm 51,5%",
+    "lưu ý tháng này chưa hết"
+   ]
+  }
+ },
+ {
+  "id": "13",
+  "fixture": "user-demo",
+  "input": "báo cáo tháng 7",
+  "expect": {
+   "contains": [
+    "Tháng 7:",
+    "chi 23.814.000đ"
+   ]
+  }
+ },
+ {
+  "id": "14",
+  "fixture": "user-empty",
+  "input": "tháng này tiêu bao nhiêu",
+  "expect": {
+   "contains": [
+    "chưa có giao dịch thu chi nào"
+   ]
+  }
+ },
+ {
+  "id": "15",
+  "fixture": "user-thu",
+  "input": "tháng này tiêu bao nhiêu",
+  "expect": {
+   "contains": [
+    "thu 0đ, chi 2.847.000đ, chênh lệch −2.847.000đ",
+    "Ăn uống 1.849.000đ (64,9%)"
+   ],
+   "notContains": [
+    "8.404.000"
+   ]
+  }
+ },
+ {
+  "id": "16",
+  "fixture": "user-thu",
+  "input": "tổng kết tháng 9",
+  "expect": {
+   "contains": [
+    "thu 23.504.000đ, chi 13.636.000đ",
+    "Sushi Hokkaido 1.050.000đ (07/09)"
+   ]
+  }
+ },
+ {
+  "id": "17",
+  "fixture": "user-thu",
+  "input": "tháng 8 tiêu nhiều nhất vào đâu",
+  "expect": {
+   "contains": [
+    "Ăn uống 14.609.000đ (49,3%), Du lịch 9.910.000đ (33,4%)"
+   ]
+  }
+ },
+ {
+  "id": "18",
+  "fixture": "user-demo",
+  "input": "chi tiêu của vợ tôi tháng này",
+  "expect": {
+   "refused": "other_user"
+  }
+ },
+ {
+  "id": "19",
+  "fixture": "user-demo",
+  "input": "how much did I spend this month",
+  "expect": {
+   "contains": [
+    "chi 8.404.000đ"
+   ]
+  }
+ },
+ {
+  "id": "20",
+  "fixture": "user-demo",
+  "input": "last week spending",
+  "expect": {
+   "contains": [
+    "Tuần trước: chi 5.321.000đ"
+   ]
+  }
+ },
+ {
+  "id": "21",
+  "fixture": "user-thu",
+  "input": "tuần này xài bao nhiêu",
+  "expect": {
+   "contains": [
+    "Tuần này: chi 1.053.000đ (11 khoản), thu 0đ (0 khoản)"
+   ]
+  }
+ },
+ {
+  "id": "22",
+  "fixture": "user-demo",
+  "input": "tháng này dư được bao nhiêu",
+  "expect": {
+   "contains": [
+    "chênh lệch +14.156.000đ"
+   ]
+  }
+ }
+]

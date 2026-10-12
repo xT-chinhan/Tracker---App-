@@ -1,0 +1,4827 @@
+{
+ "now": "2026-10-08T20:00:00+07:00",
+ "principal": {
+  "userId": "22f06e2f-b52b-47f4-a529-fc9ce18770a2",
+  "role": "USER",
+  "displayName": "Nguyễn Minh Anh"
+ },
+ "wallets": [
+  {
+   "name": "MB Bank",
+   "type": "BANK",
+   "isArchived": false,
+   "balance": 18672000
+  },
+  {
+   "name": "Techcombank",
+   "type": "BANK",
+   "isArchived": false,
+   "balance": 4000000
+  },
+  {
+   "name": "Tiền mặt",
+   "type": "CASH",
+   "isArchived": false,
+   "balance": 1850000
+  },
+  {
+   "name": "MoMo",
+   "type": "EWALLET",
+   "isArchived": false,
+   "balance": 1500000
+  }
+ ],
+ "savings": 52200000,
+ "categories": [
+  {
+   "name": "Lương",
+   "type": "INCOME"
+  },
+  {
+   "name": "Thưởng",
+   "type": "INCOME"
+  },
+  {
+   "name": "Đầu tư",
+   "type": "INCOME"
+  },
+  {
+   "name": "Được tặng",
+   "type": "INCOME"
+  },
+  {
+   "name": "Thu khác",
+   "type": "INCOME"
+  },
+  {
+   "name": "Ăn uống",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Di chuyển",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Mua sắm",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Hóa đơn",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Nhà ở",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Sức khỏe",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Giáo dục",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Giải trí",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Chi khác",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Hiếu hỉ",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Du lịch",
+   "type": "EXPENSE"
+  },
+  {
+   "name": "Gia đình",
+   "type": "EXPENSE"
+  }
+ ],
+ "transactions": [
+  {
+   "title": "Katinat",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-01"
+  },
+  {
+   "title": "Tiền nhà",
+   "amount": 2500000,
+   "type": "EXPENSE",
+   "categoryName": "Nhà ở",
+   "walletName": "MB Bank",
+   "date": "2026-04-01"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 73000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-01"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 82000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-01"
+  },
+  {
+   "title": "Lotte Mart",
+   "amount": 190000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-01"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-02"
+  },
+  {
+   "title": "Gửi xe tháng",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-02"
+  },
+  {
+   "title": "Katinat",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-02"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-02"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 37000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-02"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 40000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-03"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-03"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-03"
+  },
+  {
+   "title": "Lương công ty",
+   "amount": 22000000,
+   "type": "INCOME",
+   "categoryName": "Lương",
+   "walletName": "MB Bank",
+   "date": "2026-04-05"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 140000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-05"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-06"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-06"
+  },
+  {
+   "title": "Gửi tiền bố mẹ",
+   "amount": 2000000,
+   "type": "EXPENSE",
+   "categoryName": "Gia đình",
+   "walletName": "MB Bank",
+   "date": "2026-04-06"
+  },
+  {
+   "title": "Ốc với đồng nghiệp",
+   "amount": 180000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-06"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 86000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-07"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 410000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-07"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-08"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-08"
+  },
+  {
+   "title": "Bạn trả tiền mượn",
+   "amount": 1600000,
+   "type": "INCOME",
+   "categoryName": "Được tặng",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-08"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-08"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 450000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-08"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 35000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-09"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 66000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-09"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 150000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-09"
+  },
+  {
+   "title": "Tiền điện EVN",
+   "amount": 352000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-04-09"
+  },
+  {
+   "title": "Tiền nước",
+   "amount": 91000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-04-09"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-10"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-10"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 89000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-10"
+  },
+  {
+   "title": "Mua rau củ, thịt cá",
+   "amount": 153000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-10"
+  },
+  {
+   "title": "Internet FPT",
+   "amount": 245000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "Techcombank",
+   "date": "2026-04-10"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 34000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-11"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 27000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-12"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 109000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-12"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-13"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 43000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-13"
+  },
+  {
+   "title": "Katinat",
+   "amount": 53000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-14"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-14"
+  },
+  {
+   "title": "Mua rau củ, thịt cá",
+   "amount": 136000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-14"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 37000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-14"
+  },
+  {
+   "title": "Spotify Premium",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-04-15"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-15"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-15"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-16"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-17"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-17"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 442000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-17"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 31000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-18"
+  },
+  {
+   "title": "Cổ tức FPT",
+   "amount": 1850000,
+   "type": "INCOME",
+   "categoryName": "Đầu tư",
+   "walletName": "MB Bank",
+   "date": "2026-04-18"
+  },
+  {
+   "title": "Bách Hóa Xanh",
+   "amount": 542000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-18"
+  },
+  {
+   "title": "Sushi Hokkaido",
+   "amount": 360000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-19"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-20"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-20"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-20"
+  },
+  {
+   "title": "Cước Vinaphone",
+   "amount": 150000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MoMo",
+   "date": "2026-04-20"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 38000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-21"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-21"
+  },
+  {
+   "title": "Freelance thiết kế",
+   "amount": 2500000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "Techcombank",
+   "date": "2026-04-21"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 35000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-22"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-22"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 65000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-22"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-22"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 107000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-22"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-22"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-23"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 27000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-23"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 79000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-23"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-23"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 40000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-23"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 60000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-24"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-24"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 120000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-24"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-25"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-26"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 57000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-27"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 28000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-27"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 69000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-27"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 43000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-27"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-28"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-28"
+  },
+  {
+   "title": "Ăn tối gia đình",
+   "amount": 340000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-04-28"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-04-29"
+  },
+  {
+   "title": "Katinat",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-29"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-29"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-04-30"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-30"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 558000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-04-30"
+  },
+  {
+   "title": "Tiền nhà",
+   "amount": 2500000,
+   "type": "EXPENSE",
+   "categoryName": "Nhà ở",
+   "walletName": "MB Bank",
+   "date": "2026-05-01"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 30000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-01"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 53000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-01"
+  },
+  {
+   "title": "Siêu thị WinMart",
+   "amount": 512000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-01"
+  },
+  {
+   "title": "Gửi xe tháng",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-02"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 120000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-05-02"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 43000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-03"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-03"
+  },
+  {
+   "title": "Shopee: đồ gia dụng",
+   "amount": 394000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "MoMo",
+   "date": "2026-05-03"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 74000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-04"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-04"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-04"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 275000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-04"
+  },
+  {
+   "title": "TikTok Shop: mỹ phẩm",
+   "amount": 421000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-04"
+  },
+  {
+   "title": "Lương công ty",
+   "amount": 22000000,
+   "type": "INCOME",
+   "categoryName": "Lương",
+   "walletName": "MB Bank",
+   "date": "2026-05-05"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 69000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-05"
+  },
+  {
+   "title": "Lotte Mart",
+   "amount": 192000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-05"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 38000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-05"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-06"
+  },
+  {
+   "title": "Sinh tố",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-06"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 65000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-06"
+  },
+  {
+   "title": "Gửi tiền bố mẹ",
+   "amount": 2000000,
+   "type": "EXPENSE",
+   "categoryName": "Gia đình",
+   "walletName": "MB Bank",
+   "date": "2026-05-06"
+  },
+  {
+   "title": "Shopee: giày sneaker",
+   "amount": 465000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-06"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-07"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 43000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-07"
+  },
+  {
+   "title": "Mẹ cho",
+   "amount": 1400000,
+   "type": "INCOME",
+   "categoryName": "Được tặng",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-07"
+  },
+  {
+   "title": "Bách Hóa Xanh",
+   "amount": 344000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-07"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-08"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-08"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-09"
+  },
+  {
+   "title": "Karaoke với bạn",
+   "amount": 233000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-05-09"
+  },
+  {
+   "title": "Tiền điện EVN",
+   "amount": 794000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-05-09"
+  },
+  {
+   "title": "Tiền nước",
+   "amount": 167000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-05-09"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-10"
+  },
+  {
+   "title": "Katinat",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-10"
+  },
+  {
+   "title": "Trà chanh",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-10"
+  },
+  {
+   "title": "Bowling",
+   "amount": 129000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-05-10"
+  },
+  {
+   "title": "Internet FPT",
+   "amount": 245000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "Techcombank",
+   "date": "2026-05-10"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 107000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-11"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 69000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-11"
+  },
+  {
+   "title": "Trà chanh",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-11"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 40000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-12"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-13"
+  },
+  {
+   "title": "Trà chanh",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-13"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-13"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-14"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-14"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 80000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-14"
+  },
+  {
+   "title": "Spotify Premium",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-05-15"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-15"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-15"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 72000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-15"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-15"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-16"
+  },
+  {
+   "title": "Sinh tố",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-17"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 524000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-17"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-18"
+  },
+  {
+   "title": "Katinat",
+   "amount": 63000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-19"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 74000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-19"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 83000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-20"
+  },
+  {
+   "title": "Cước Viettel",
+   "amount": 120000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MoMo",
+   "date": "2026-05-20"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-21"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 34000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-21"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-21"
+  },
+  {
+   "title": "Freelance thiết kế",
+   "amount": 2500000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "Techcombank",
+   "date": "2026-05-21"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-22"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-22"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 60000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-22"
+  },
+  {
+   "title": "Co.opmart",
+   "amount": 290000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-24"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 91000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-24"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-25"
+  },
+  {
+   "title": "Katinat",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-25"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-25"
+  },
+  {
+   "title": "Trà chanh",
+   "amount": 63000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-25"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 34000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-25"
+  },
+  {
+   "title": "Hoàn tiền Shopee",
+   "amount": 770000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "MB Bank",
+   "date": "2026-05-26"
+  },
+  {
+   "title": "Ốc với đồng nghiệp",
+   "amount": 290000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-05-26"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 89000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-26"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 36000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-05-27"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-27"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 38000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-28"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-29"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 160000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-05-29"
+  },
+  {
+   "title": "Katinat",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-30"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 30000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-05-31"
+  },
+  {
+   "title": "Tour Phú Quốc 3N2Đ",
+   "amount": 6850000,
+   "type": "EXPENSE",
+   "categoryName": "Du lịch",
+   "walletName": "MB Bank",
+   "date": "2026-05-31"
+  },
+  {
+   "title": "Karaoke với bạn",
+   "amount": 350000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "Tiền mặt",
+   "date": "2026-05-31"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 30000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-01"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-06-01"
+  },
+  {
+   "title": "Tiền nhà",
+   "amount": 2500000,
+   "type": "EXPENSE",
+   "categoryName": "Nhà ở",
+   "walletName": "MB Bank",
+   "date": "2026-06-01"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 35000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-06-01"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-01"
+  },
+  {
+   "title": "Gửi xe tháng",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-02"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-02"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-03"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 71000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-06-04"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-04"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 78000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-04"
+  },
+  {
+   "title": "Lương công ty",
+   "amount": 22000000,
+   "type": "INCOME",
+   "categoryName": "Lương",
+   "walletName": "MB Bank",
+   "date": "2026-06-05"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-05"
+  },
+  {
+   "title": "Co.opmart",
+   "amount": 338000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-05"
+  },
+  {
+   "title": "Khám răng",
+   "amount": 627000,
+   "type": "EXPENSE",
+   "categoryName": "Sức khỏe",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-06"
+  },
+  {
+   "title": "Gửi tiền bố mẹ",
+   "amount": 2000000,
+   "type": "EXPENSE",
+   "categoryName": "Gia đình",
+   "walletName": "MB Bank",
+   "date": "2026-06-06"
+  },
+  {
+   "title": "Board game café",
+   "amount": 102000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-06-07"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-06-08"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 31000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-08"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-06-08"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-08"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 53000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-09"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 105000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-09"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 34000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-06-09"
+  },
+  {
+   "title": "Tiền điện EVN",
+   "amount": 992000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-06-09"
+  },
+  {
+   "title": "Tiền nước",
+   "amount": 78000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-06-09"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 31000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-06-10"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 57000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-10"
+  },
+  {
+   "title": "Internet FPT",
+   "amount": 245000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "Techcombank",
+   "date": "2026-06-10"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-06-11"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-06-11"
+  },
+  {
+   "title": "Shopee: áo thun",
+   "amount": 213000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "MoMo",
+   "date": "2026-06-11"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 67000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-06-12"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 28000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-06-12"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-12"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-06-13"
+  },
+  {
+   "title": "Karaoke với bạn",
+   "amount": 357000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-13"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-14"
+  },
+  {
+   "title": "Cắt tóc",
+   "amount": 120000,
+   "type": "EXPENSE",
+   "categoryName": "Chi khác",
+   "walletName": "MoMo",
+   "date": "2026-06-14"
+  },
+  {
+   "title": "Bida",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-06-14"
+  },
+  {
+   "title": "Spotify Premium",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-06-15"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-15"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 130000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-15"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MB Bank",
+   "date": "2026-06-16"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-16"
+  },
+  {
+   "title": "Ốc với đồng nghiệp",
+   "amount": 210000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-16"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 30000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-17"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-17"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-17"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-18"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MB Bank",
+   "date": "2026-06-18"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 53000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-19"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 87000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MB Bank",
+   "date": "2026-06-19"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 65000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-20"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 487000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-20"
+  },
+  {
+   "title": "Nạp tiền điện thoại",
+   "amount": 200000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-06-20"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-06-21"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-21"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 97000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-21"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 35000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-22"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-22"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 89000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-23"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 67000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-23"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-23"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 43000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-23"
+  },
+  {
+   "title": "Co.opmart",
+   "amount": 359000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-23"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-24"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 82000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-24"
+  },
+  {
+   "title": "Freelance thiết kế",
+   "amount": 1000000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "Techcombank",
+   "date": "2026-06-24"
+  },
+  {
+   "title": "Lazada: tai nghe Bluetooth",
+   "amount": 481000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-24"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-25"
+  },
+  {
+   "title": "Viếng đám tang",
+   "amount": 1000000,
+   "type": "EXPENSE",
+   "categoryName": "Hiếu hỉ",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-25"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-25"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 107000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-26"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-26"
+  },
+  {
+   "title": "Bowling",
+   "amount": 117000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-27"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-28"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-28"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 40000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-28"
+  },
+  {
+   "title": "Board game café",
+   "amount": 74000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-28"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 34000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-29"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 63000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-29"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-29"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 61000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-30"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-30"
+  },
+  {
+   "title": "Mua xe Honda Vision",
+   "amount": 34500000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MB Bank",
+   "date": "2026-06-30"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 78000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-06-30"
+  },
+  {
+   "title": "Tiền nhà",
+   "amount": 2500000,
+   "type": "EXPENSE",
+   "categoryName": "Nhà ở",
+   "walletName": "MB Bank",
+   "date": "2026-07-01"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-01"
+  },
+  {
+   "title": "Gửi xe tháng",
+   "amount": 150000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-02"
+  },
+  {
+   "title": "Katinat",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-02"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 66000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-02"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-02"
+  },
+  {
+   "title": "Ăn tối gia đình",
+   "amount": 280000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-07-02"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-03"
+  },
+  {
+   "title": "Trà sữa Gong Cha",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-03"
+  },
+  {
+   "title": "Katinat",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-04"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-05"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-05"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-05"
+  },
+  {
+   "title": "Lương công ty",
+   "amount": 22000000,
+   "type": "INCOME",
+   "categoryName": "Lương",
+   "walletName": "MB Bank",
+   "date": "2026-07-05"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-06"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-06"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-06"
+  },
+  {
+   "title": "Trà sữa Gong Cha",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-06"
+  },
+  {
+   "title": "Gửi tiền bố mẹ",
+   "amount": 2000000,
+   "type": "EXPENSE",
+   "categoryName": "Gia đình",
+   "walletName": "MB Bank",
+   "date": "2026-07-06"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-07"
+  },
+  {
+   "title": "Shopee: ốp lưng điện thoại",
+   "amount": 78000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "MoMo",
+   "date": "2026-07-07"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 81000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-08"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 70000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-08"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-08"
+  },
+  {
+   "title": "Co.opmart",
+   "amount": 556000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-08"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 31000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-07-08"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 40000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-09"
+  },
+  {
+   "title": "Tiền điện EVN",
+   "amount": 1194000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-07-09"
+  },
+  {
+   "title": "Tiền nước",
+   "amount": 172000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-07-09"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 75000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-07-10"
+  },
+  {
+   "title": "Internet FPT",
+   "amount": 245000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "Techcombank",
+   "date": "2026-07-10"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 35000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-11"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 350000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-07-11"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-12"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-12"
+  },
+  {
+   "title": "Sinh tố",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-12"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 370000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-07-12"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 90000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-13"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-13"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-14"
+  },
+  {
+   "title": "Cắt tóc",
+   "amount": 60000,
+   "type": "EXPENSE",
+   "categoryName": "Chi khác",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-14"
+  },
+  {
+   "title": "Spotify Premium",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-07-15"
+  },
+  {
+   "title": "Katinat",
+   "amount": 57000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-15"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-15"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 55000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-16"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 68000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-16"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-17"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-17"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 61000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-17"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-18"
+  },
+  {
+   "title": "Cổ tức FPT",
+   "amount": 2440000,
+   "type": "INCOME",
+   "categoryName": "Đầu tư",
+   "walletName": "MB Bank",
+   "date": "2026-07-18"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-19"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-19"
+  },
+  {
+   "title": "Trà sữa Gong Cha",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-19"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-07-20"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-20"
+  },
+  {
+   "title": "Freelance thiết kế",
+   "amount": 2500000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "Techcombank",
+   "date": "2026-07-20"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 30000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-07-20"
+  },
+  {
+   "title": "Nạp tiền điện thoại",
+   "amount": 200000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MoMo",
+   "date": "2026-07-20"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 57000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-21"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 76000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-21"
+  },
+  {
+   "title": "Katinat",
+   "amount": 53000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-22"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 72000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-22"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-22"
+  },
+  {
+   "title": "Lotte Mart",
+   "amount": 488000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-07-22"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-23"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 55000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-23"
+  },
+  {
+   "title": "Ăn tối gia đình",
+   "amount": 190000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-07-23"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-24"
+  },
+  {
+   "title": "Khám mắt",
+   "amount": 460000,
+   "type": "EXPENSE",
+   "categoryName": "Sức khỏe",
+   "walletName": "MB Bank",
+   "date": "2026-07-24"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-24"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 35000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-25"
+  },
+  {
+   "title": "Khóa học UX/UI Design",
+   "amount": 8900000,
+   "type": "EXPENSE",
+   "categoryName": "Giáo dục",
+   "walletName": "MB Bank",
+   "date": "2026-07-25"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 61000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-26"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-26"
+  },
+  {
+   "title": "Karaoke với bạn",
+   "amount": 230000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-26"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-07-26"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 82000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-27"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 43000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-28"
+  },
+  {
+   "title": "Mua rau củ, thịt cá",
+   "amount": 185000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-28"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 65000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-07-29"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-07-29"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-29"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 36000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-07-29"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-30"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-07-31"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-01"
+  },
+  {
+   "title": "Tiền nhà",
+   "amount": 2500000,
+   "type": "EXPENSE",
+   "categoryName": "Nhà ở",
+   "walletName": "MB Bank",
+   "date": "2026-08-01"
+  },
+  {
+   "title": "Gửi xe tháng",
+   "amount": 150000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-02"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-02"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 198000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-02"
+  },
+  {
+   "title": "Bowling",
+   "amount": 201000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-08-02"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 61000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-03"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 140000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-08-03"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 31000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-04"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-04"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 78000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-08-04"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 60000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-05"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-08-05"
+  },
+  {
+   "title": "Lương công ty",
+   "amount": 22000000,
+   "type": "INCOME",
+   "categoryName": "Lương",
+   "walletName": "MB Bank",
+   "date": "2026-08-05"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 60000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-05"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-05"
+  },
+  {
+   "title": "Katinat",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-06"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-06"
+  },
+  {
+   "title": "Gửi tiền bố mẹ",
+   "amount": 2000000,
+   "type": "EXPENSE",
+   "categoryName": "Gia đình",
+   "walletName": "MB Bank",
+   "date": "2026-08-06"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 53000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-07"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 28000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-07"
+  },
+  {
+   "title": "Bán đồ cũ",
+   "amount": 260000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "MB Bank",
+   "date": "2026-08-07"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 53000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-07"
+  },
+  {
+   "title": "Lotte Mart",
+   "amount": 535000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-07"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-08"
+  },
+  {
+   "title": "Lẩu Thái với bạn",
+   "amount": 430000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-08-08"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-09"
+  },
+  {
+   "title": "Tiền điện EVN",
+   "amount": 743000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-08-09"
+  },
+  {
+   "title": "Tiền nước",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-08-09"
+  },
+  {
+   "title": "Karaoke với bạn",
+   "amount": 272000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-08-09"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-10"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-10"
+  },
+  {
+   "title": "Mua rau củ, thịt cá",
+   "amount": 383000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-10"
+  },
+  {
+   "title": "Internet FPT",
+   "amount": 245000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "Techcombank",
+   "date": "2026-08-10"
+  },
+  {
+   "title": "Highlands Coffee",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-11"
+  },
+  {
+   "title": "Sushi Hokkaido",
+   "amount": 470000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-08-11"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 43000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-12"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-12"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-12"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 27000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-13"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-13"
+  },
+  {
+   "title": "Trà chanh",
+   "amount": 57000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-13"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-08-13"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-14"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 470000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-14"
+  },
+  {
+   "title": "Spotify Premium",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-08-15"
+  },
+  {
+   "title": "Katinat",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-15"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 220000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-15"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-16"
+  },
+  {
+   "title": "Trà sữa TocoToco",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-16"
+  },
+  {
+   "title": "Pizza 4P's",
+   "amount": 520000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-08-16"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-17"
+  },
+  {
+   "title": "Freelance thiết kế",
+   "amount": 2500000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "Techcombank",
+   "date": "2026-08-17"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 85000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-08-17"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-18"
+  },
+  {
+   "title": "Katinat",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-19"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-19"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-19"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 41000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-20"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 84000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-20"
+  },
+  {
+   "title": "Bách Hóa Xanh",
+   "amount": 426000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-20"
+  },
+  {
+   "title": "Cước Viettel",
+   "amount": 150000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MoMo",
+   "date": "2026-08-20"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-21"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-22"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-22"
+  },
+  {
+   "title": "Bida",
+   "amount": 92000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-08-22"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-23"
+  },
+  {
+   "title": "Katinat",
+   "amount": 55000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-24"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-24"
+  },
+  {
+   "title": "Máy giặt LG + tủ lạnh Panasonic",
+   "amount": 27849000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "Techcombank",
+   "date": "2026-08-24"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-25"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-25"
+  },
+  {
+   "title": "Sushi Hokkaido",
+   "amount": 460000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-08-25"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 36000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-26"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-26"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 76000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-26"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-26"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-27"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 57000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-27"
+  },
+  {
+   "title": "Lãi tiền gửi",
+   "amount": 214000,
+   "type": "INCOME",
+   "categoryName": "Đầu tư",
+   "walletName": "MB Bank",
+   "date": "2026-08-27"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-27"
+  },
+  {
+   "title": "Khám răng",
+   "amount": 265000,
+   "type": "EXPENSE",
+   "categoryName": "Sức khỏe",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-27"
+  },
+  {
+   "title": "Katinat",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-28"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 38000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-08-28"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-28"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 101000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-28"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 33000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-29"
+  },
+  {
+   "title": "Lotte Mart",
+   "amount": 341000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-29"
+  },
+  {
+   "title": "Board game café",
+   "amount": 82000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-08-29"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-30"
+  },
+  {
+   "title": "Thưởng doanh số",
+   "amount": 1500000,
+   "type": "INCOME",
+   "categoryName": "Thưởng",
+   "walletName": "MB Bank",
+   "date": "2026-08-30"
+  },
+  {
+   "title": "Đi chợ",
+   "amount": 296000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-30"
+  },
+  {
+   "title": "Vé xem bóng đá",
+   "amount": 124000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-08-30"
+  },
+  {
+   "title": "Ốc với đồng nghiệp",
+   "amount": 150000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-08-30"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 55000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-08-31"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-08-31"
+  },
+  {
+   "title": "Grab về nhà",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-08-31"
+  },
+  {
+   "title": "Bún bò Huế",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-01"
+  },
+  {
+   "title": "Tiền nhà",
+   "amount": 2500000,
+   "type": "EXPENSE",
+   "categoryName": "Nhà ở",
+   "walletName": "MB Bank",
+   "date": "2026-09-01"
+  },
+  {
+   "title": "Bán đồ cũ",
+   "amount": 1040000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "MB Bank",
+   "date": "2026-09-01"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 67000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-01"
+  },
+  {
+   "title": "Lotte Mart",
+   "amount": 255000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-01"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 21000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-02"
+  },
+  {
+   "title": "Gửi xe tháng",
+   "amount": 150000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-02"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-02"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 87000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-02"
+  },
+  {
+   "title": "Trà sữa Gong Cha",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-02"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-03"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 71000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-04"
+  },
+  {
+   "title": "Cà phê sáng",
+   "amount": 32000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-04"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 44000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-04"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 108000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-04"
+  },
+  {
+   "title": "Sushi Hokkaido",
+   "amount": 670000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-04"
+  },
+  {
+   "title": "Lương công ty",
+   "amount": 22000000,
+   "type": "INCOME",
+   "categoryName": "Lương",
+   "walletName": "MB Bank",
+   "date": "2026-09-05"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-06"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 108000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-06"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 350000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-06"
+  },
+  {
+   "title": "Gửi tiền bố mẹ",
+   "amount": 2000000,
+   "type": "EXPENSE",
+   "categoryName": "Gia đình",
+   "walletName": "MB Bank",
+   "date": "2026-09-06"
+  },
+  {
+   "title": "Bowling",
+   "amount": 135000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-09-06"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 33000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-07"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-07"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 31000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-07"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 70000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-07"
+  },
+  {
+   "title": "Siêu thị WinMart",
+   "amount": 489000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-07"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-08"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-09"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 56000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-09"
+  },
+  {
+   "title": "Tiền nước",
+   "amount": 177000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-09-09"
+  },
+  {
+   "title": "Tiền điện EVN",
+   "amount": 526000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MB Bank",
+   "date": "2026-09-09"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-10"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 47000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-10"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-10"
+  },
+  {
+   "title": "Internet FPT",
+   "amount": 245000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "Techcombank",
+   "date": "2026-09-10"
+  },
+  {
+   "title": "Katinat",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-11"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-11"
+  },
+  {
+   "title": "Co.opmart",
+   "amount": 153000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-11"
+  },
+  {
+   "title": "Bida",
+   "amount": 66000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-09-12"
+  },
+  {
+   "title": "Bún đậu mắm tôm",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-12"
+  },
+  {
+   "title": "Mua rau củ, thịt cá",
+   "amount": 494000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-12"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-13"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 61000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-13"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-13"
+  },
+  {
+   "title": "Be đi làm",
+   "amount": 40000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-14"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 57000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-14"
+  },
+  {
+   "title": "Bún riêu",
+   "amount": 35000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-14"
+  },
+  {
+   "title": "Sinh tố",
+   "amount": 36000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-14"
+  },
+  {
+   "title": "Cắt tóc",
+   "amount": 80000,
+   "type": "EXPENSE",
+   "categoryName": "Chi khác",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-14"
+  },
+  {
+   "title": "Spotify Premium",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-09-15"
+  },
+  {
+   "title": "Mì Quảng",
+   "amount": 42000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-15"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 27000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-16"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 50000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-16"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 350000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-16"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 55000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-16"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-17"
+  },
+  {
+   "title": "Sinh tố",
+   "amount": 63000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-17"
+  },
+  {
+   "title": "Ăn tối gia đình",
+   "amount": 200000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-17"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-18"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 28000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-19"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 64000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-19"
+  },
+  {
+   "title": "Karaoke với bạn",
+   "amount": 316000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-09-19"
+  },
+  {
+   "title": "Cộng Cà Phê",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-20"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-20"
+  },
+  {
+   "title": "Cà phê cuối tuần",
+   "amount": 79000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-09-20"
+  },
+  {
+   "title": "Sushi Hokkaido",
+   "amount": 480000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-20"
+  },
+  {
+   "title": "Cước Viettel",
+   "amount": 200000,
+   "type": "EXPENSE",
+   "categoryName": "Hóa đơn",
+   "walletName": "MoMo",
+   "date": "2026-09-20"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 30000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-21"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 65000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-21"
+  },
+  {
+   "title": "Freelance thiết kế",
+   "amount": 1500000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "Techcombank",
+   "date": "2026-09-21"
+  },
+  {
+   "title": "Sushi Hokkaido",
+   "amount": 550000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-21"
+  },
+  {
+   "title": "Bánh mì",
+   "amount": 34000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-22"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-22"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-22"
+  },
+  {
+   "title": "Xôi gà",
+   "amount": 28000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-23"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-23"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 28000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-24"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 65000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-24"
+  },
+  {
+   "title": "Cơm gà Hải Nam",
+   "amount": 61000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-24"
+  },
+  {
+   "title": "Lotte Mart",
+   "amount": 560000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-24"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-25"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 45000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-26"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 102000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-26"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 28000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-27"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-27"
+  },
+  {
+   "title": "Sushi Hokkaido",
+   "amount": 660000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-09-27"
+  },
+  {
+   "title": "Cà phê cuối tuần",
+   "amount": 87000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-09-27"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-28"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 33000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-28"
+  },
+  {
+   "title": "Cơm tấm sườn",
+   "amount": 58000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-28"
+  },
+  {
+   "title": "Thưởng doanh số",
+   "amount": 3000000,
+   "type": "INCOME",
+   "categoryName": "Thưởng",
+   "walletName": "MB Bank",
+   "date": "2026-09-28"
+  },
+  {
+   "title": "Nhà thuốc Long Châu",
+   "amount": 289000,
+   "type": "EXPENSE",
+   "categoryName": "Sức khỏe",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-28"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 51000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-09-29"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 69000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-09-29"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 29000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-09-29"
+  },
+  {
+   "title": "Phở bò",
+   "amount": 46000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-01"
+  },
+  {
+   "title": "Tiền nhà",
+   "amount": 2500000,
+   "type": "EXPENSE",
+   "categoryName": "Nhà ở",
+   "walletName": "MB Bank",
+   "date": "2026-10-01"
+  },
+  {
+   "title": "Bún chả",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-01"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 450000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-10-01"
+  },
+  {
+   "title": "Gửi xe tháng",
+   "amount": 100000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-02"
+  },
+  {
+   "title": "Cà phê muối",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-10-02"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 62000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-02"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 91000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-02"
+  },
+  {
+   "title": "Xanh SM về nhà",
+   "amount": 52000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-10-02"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 60000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-10-03"
+  },
+  {
+   "title": "Cà phê cuối tuần",
+   "amount": 84000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-10-03"
+  },
+  {
+   "title": "Đi chợ cuối tuần",
+   "amount": 500000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-04"
+  },
+  {
+   "title": "Vé xem bóng đá",
+   "amount": 230000,
+   "type": "EXPENSE",
+   "categoryName": "Giải trí",
+   "walletName": "MoMo",
+   "date": "2026-10-04"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 108000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-04"
+  },
+  {
+   "title": "Nướng Gogi",
+   "amount": 370000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MB Bank",
+   "date": "2026-10-04"
+  },
+  {
+   "title": "Hủ tiếu",
+   "amount": 37000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-05"
+  },
+  {
+   "title": "Xanh SM đi làm",
+   "amount": 63000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-10-05"
+  },
+  {
+   "title": "Lương công ty",
+   "amount": 22000000,
+   "type": "INCOME",
+   "categoryName": "Lương",
+   "walletName": "MB Bank",
+   "date": "2026-10-05"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 48000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-05"
+  },
+  {
+   "title": "Khám răng, cạo vôi",
+   "amount": 1310000,
+   "type": "EXPENSE",
+   "categoryName": "Sức khỏe",
+   "walletName": "MB Bank",
+   "date": "2026-10-05"
+  },
+  {
+   "title": "The Coffee House",
+   "amount": 49000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-10-06"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 84000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-06"
+  },
+  {
+   "title": "Đổ xăng",
+   "amount": 87000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-06"
+  },
+  {
+   "title": "Be về nhà",
+   "amount": 85000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-10-06"
+  },
+  {
+   "title": "Giày chạy bộ Nike Pegasus",
+   "amount": 1690000,
+   "type": "EXPENSE",
+   "categoryName": "Mua sắm",
+   "walletName": "MB Bank",
+   "date": "2026-10-06"
+  },
+  {
+   "title": "Phúc Long",
+   "amount": 54000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "MoMo",
+   "date": "2026-10-07"
+  },
+  {
+   "title": "Cơm văn phòng (đặt GrabFood)",
+   "amount": 79000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-07"
+  },
+  {
+   "title": "Grab đi làm",
+   "amount": 26000,
+   "type": "EXPENSE",
+   "categoryName": "Di chuyển",
+   "walletName": "MoMo",
+   "date": "2026-10-08"
+  },
+  {
+   "title": "Cashback thẻ",
+   "amount": 560000,
+   "type": "INCOME",
+   "categoryName": "Thu khác",
+   "walletName": "MB Bank",
+   "date": "2026-10-08"
+  },
+  {
+   "title": "Cơm trưa văn phòng",
+   "amount": 59000,
+   "type": "EXPENSE",
+   "categoryName": "Ăn uống",
+   "walletName": "Tiền mặt",
+   "date": "2026-10-08"
+  }
+ ],
+ "budgets": [
+  {
+   "month": "2026-07",
+   "categoryName": null,
+   "limitAmount": 14000000
+  },
+  {
+   "month": "2026-07",
+   "categoryName": "Ăn uống",
+   "limitAmount": 3500000
+  },
+  {
+   "month": "2026-07",
+   "categoryName": "Di chuyển",
+   "limitAmount": 1200000
+  },
+  {
+   "month": "2026-07",
+   "categoryName": "Mua sắm",
+   "limitAmount": 2000000
+  },
+  {
+   "month": "2026-07",
+   "categoryName": "Giải trí",
+   "limitAmount": 800000
+  },
+  {
+   "month": "2026-08",
+   "categoryName": null,
+   "limitAmount": 14000000
+  },
+  {
+   "month": "2026-08",
+   "categoryName": "Ăn uống",
+   "limitAmount": 3500000
+  },
+  {
+   "month": "2026-08",
+   "categoryName": "Di chuyển",
+   "limitAmount": 1200000
+  },
+  {
+   "month": "2026-08",
+   "categoryName": "Mua sắm",
+   "limitAmount": 2000000
+  },
+  {
+   "month": "2026-08",
+   "categoryName": "Giải trí",
+   "limitAmount": 800000
+  },
+  {
+   "month": "2026-09",
+   "categoryName": null,
+   "limitAmount": 14000000
+  },
+  {
+   "month": "2026-09",
+   "categoryName": "Ăn uống",
+   "limitAmount": 3500000
+  },
+  {
+   "month": "2026-09",
+   "categoryName": "Di chuyển",
+   "limitAmount": 1200000
+  },
+  {
+   "month": "2026-09",
+   "categoryName": "Giải trí",
+   "limitAmount": 800000
+  },
+  {
+   "month": "2026-10",
+   "categoryName": null,
+   "limitAmount": 14000000
+  },
+  {
+   "month": "2026-10",
+   "categoryName": "Ăn uống",
+   "limitAmount": 3500000
+  },
+  {
+   "month": "2026-10",
+   "categoryName": "Di chuyển",
+   "limitAmount": 1200000
+  },
+  {
+   "month": "2026-10",
+   "categoryName": "Mua sắm",
+   "limitAmount": 1500000
+  },
+  {
+   "month": "2026-10",
+   "categoryName": "Giải trí",
+   "limitAmount": 800000
+  }
+ ],
+ "goals": [
+  {
+   "name": "Quỹ khẩn cấp",
+   "targetAmount": 50000000,
+   "savedAmount": 30000000,
+   "targetDate": "2028-12-30T17:00:00.000Z",
+   "status": "ACTIVE"
+  },
+  {
+   "name": "MacBook Air M4",
+   "targetAmount": 35000000,
+   "savedAmount": 18000000,
+   "targetDate": "2027-03-30T17:00:00.000Z",
+   "status": "ACTIVE"
+  },
+  {
+   "name": "Du lịch Đà Lạt",
+   "targetAmount": 6000000,
+   "savedAmount": 4200000,
+   "targetDate": "2026-12-14T17:00:00.000Z",
+   "status": "ACTIVE"
+  }
+ ]
+}

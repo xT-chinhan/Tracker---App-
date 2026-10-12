@@ -1,0 +1,116 @@
+[
+ {
+  "id": "01",
+  "fixture": "user-demo",
+  "input": "cho mình vài mẹo tiết kiệm",
+  "expect": {
+   "tipsFocus": "Mua sắm",
+   "contains": [
+    "Mua sắm (TB 9.309.000đ/tháng)",
+    "Ăn uống (TB 8.818.000đ/tháng)"
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "user-demo",
+  "input": "làm sao bớt tiền cà phê",
+  "expect": {
+   "tipsFocus": "Ăn uống",
+   "contains": [
+    "8.818.000đ/tháng cho Ăn uống"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "user-demo",
+  "input": "mẹo giảm tiền grab",
+  "expect": {
+   "tipsFocus": "Di chuyển",
+   "contains": [
+    "831.333đ/tháng cho Di chuyển"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "user-demo",
+  "input": "tiêu nhiều quá phải làm sao",
+  "expect": {
+   "tipsFocus": "Mua sắm"
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "user-demo",
+  "input": "cách giảm tiền shopee",
+  "expect": {
+   "tipsFocus": "Mua sắm"
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "user-thu",
+  "input": "mẹo tiết kiệm cho mình",
+  "expect": {
+   "tipsFocus": "Ăn uống",
+   "contains": [
+    "Ăn uống (TB 11.759.000đ/tháng)"
+   ]
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "user-thu",
+  "input": "bí quyết để dành tiền",
+  "expect": {
+   "tipsFocus": "Ăn uống"
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "user-thu",
+  "input": "làm sao bớt tiền đi chơi giải trí",
+  "expect": {
+   "tipsFocus": "Giải trí",
+   "contains": [
+    "1.194.667đ/tháng cho Giải trí"
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "user-empty",
+  "input": "mẹo tiết kiệm",
+  "expect": {
+   "contains": [
+    "chưa có nhiều dữ liệu"
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "user-demo",
+  "input": "mẹo tiết kiệm của user khác là gì",
+  "expect": {
+   "refused": "other_user"
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-demo",
+  "input": "give me some saving tips",
+  "expect": {
+   "tipsFocus": "Mua sắm"
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-demo",
+  "input": "tiền điện cao quá có cách nào giảm",
+  "expect": {
+   "tipsFocus": "Hóa đơn"
+  }
+ }
+]

@@ -1,0 +1,135 @@
+[
+ {
+  "id": "01",
+  "fixture": "admin",
+  "input": "đề xuất khóa tuanh.hoang@demo.thuchi.vn",
+  "expect": {
+   "draft": {
+    "kind": "lock-user",
+    "email": "tuanh.hoang@demo.thuchi.vn"
+   },
+   "contains": [
+    "CHƯA thực hiện",
+    "16.620.000đ"
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "admin",
+  "input": "có nên khóa user Phạm Đức Anh không",
+  "expect": {
+   "draft": null,
+   "contains": [
+    "Không thấy dấu hiệu bất thường"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "admin",
+  "input": "khóa giúp tài khoản Đỗ Phương Linh",
+  "expect": {
+   "draft": {
+    "kind": "lock-user",
+    "email": "phuonglinh.do@demo.thuchi.vn"
+   }
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "admin",
+  "input": "có nên khóa user Linh không",
+  "expect": {
+   "askBack": true,
+   "draft": null,
+   "contains": [
+    "3 tài khoản khớp"
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "admin",
+  "input": "đề xuất khóa tung.bui93@demo.thuchi.vn",
+  "expect": {
+   "draft": null,
+   "contains": [
+    "đã đang bị khóa"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "admin",
+  "input": "đề xuất khóa bao.tran91@demo.thuchi.vn",
+  "expect": {
+   "draft": null,
+   "refused": "admin-target"
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "admin",
+  "input": "đề xuất khóa admin@thuchi.vn",
+  "expect": {
+   "draft": null,
+   "refused": "self"
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "admin",
+  "input": "đề xuất khóa ai@khong.co",
+  "expect": {
+   "askBack": true,
+   "draft": null
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "admin",
+  "input": "đề xuất khóa tài khoản",
+  "expect": {
+   "askBack": true,
+   "draft": null
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "admin-anomaly",
+  "input": "đề xuất khóa khoa.ly@demo.thuchi.vn",
+  "expect": {
+   "draft": {
+    "kind": "lock-user",
+    "email": "khoa.ly@demo.thuchi.vn"
+   },
+   "contains": [
+    "45.000.000đ"
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "admin-anomaly",
+  "input": "có nên khóa Vũ Văn Hùng không",
+  "expect": {
+   "draft": {
+    "kind": "lock-user",
+    "email": "hung.vu89@demo.thuchi.vn"
+   },
+   "contains": [
+    "25 lần đăng nhập sai"
+   ]
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-demo",
+  "input": "đề xuất khóa tuanh.hoang@demo.thuchi.vn",
+  "expect": {
+   "refused": "scope",
+   "draft": null
+  }
+ }
+]

@@ -1,0 +1,232 @@
+[
+ {
+  "id": "01",
+  "fixture": "user-demo",
+  "input": "ngân sách tháng này thế nào",
+  "expect": {
+   "contains": [
+    "Ngân sách tổng tháng 10: đã chi 8.404.000đ / 14.000.000đ (60%), còn 5.596.000đ",
+    "Mỗi ngày còn chi được khoảng 233.166đ (còn 24 ngày)",
+    "• Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ",
+    "Trong hạn mức: Ăn uống 56,5%, Di chuyển 51%, Giải trí 39,3%"
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "user-demo",
+  "input": "ngân sách ăn uống còn bao nhiêu",
+  "expect": {
+   "contains": [
+    "Ăn uống: đã chi 1.978.000đ / 3.500.000đ (56,5%), còn 1.522.000đ",
+    "63.416đ"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "user-demo",
+  "input": "hạn mức mua sắm còn lại",
+  "expect": {
+   "contains": [
+    "Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ"
+   ],
+   "notContains": [
+    "Mỗi ngày còn chi"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "user-demo",
+  "input": "tháng này có vượt ngân sách không",
+  "expect": {
+   "contains": [
+    "(60%), còn 5.596.000đ",
+    "vượt 190.000đ"
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "user-demo",
+  "input": "budget giải trí còn không",
+  "expect": {
+   "contains": [
+    "Giải trí: đã chi 314.000đ / 800.000đ (39,3%), còn 486.000đ",
+    "20.250đ"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "user-demo",
+  "input": "kiểm tra ngân sách di chuyển",
+  "expect": {
+   "contains": [
+    "Di chuyển: đã chi 612.000đ / 1.200.000đ (51%), còn 588.000đ",
+    "24.500đ"
+   ]
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "user-demo",
+  "input": "còn được tiêu bao nhiêu cho grab",
+  "expect": {
+   "contains": [
+    "Di chuyển: đã chi 612.000đ / 1.200.000đ (51%), còn 588.000đ"
+   ]
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "user-demo",
+  "input": "ngân sách tháng trước sao rồi",
+  "expect": {
+   "contains": [
+    "Ngân sách tổng tháng 9: đã chi 17.324.000đ / 14.000.000đ (123,7%), vượt 3.324.000đ",
+    "Ăn uống: đã chi 9.502.000đ / 3.500.000đ (271,5%), vượt 6.002.000đ",
+    "Giải trí: đã chi 742.000đ / 800.000đ (92,8%), còn 58.000đ, sắp chạm hạn mức"
+   ],
+   "notContains": [
+    "Mỗi ngày còn chi"
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "user-demo",
+  "input": "ngân sách tháng 8",
+  "expect": {
+   "contains": [
+    "Mua sắm: đã chi 27.849.000đ / 2.000.000đ (1.392,5%), vượt 25.849.000đ"
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "user-demo",
+  "input": "ngân sách nhà ở còn bao nhiêu",
+  "expect": {
+   "contains": [
+    "chưa đặt ngân sách riêng cho Nhà ở",
+    "14.000.000đ"
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-demo",
+  "input": "ngan sach an uong con nhieu khong",
+  "expect": {
+   "contains": [
+    "Ăn uống: đã chi 1.978.000đ / 3.500.000đ (56,5%), còn 1.522.000đ"
+   ]
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-demo",
+  "input": "mỗi ngày còn tiêu được bao nhiêu",
+  "expect": {
+   "contains": [
+    "233.166đ",
+    "còn 24 ngày"
+   ]
+  }
+ },
+ {
+  "id": "13",
+  "fixture": "user-thu",
+  "input": "ngân sách tháng này",
+  "expect": {
+   "contains": [
+    "đã chi 2.847.000đ / 16.000.000đ (17,8%), còn 13.153.000đ",
+    "548.041đ",
+    "Di chuyển: đã chi 163.000đ / 100.000đ (163%), vượt 63.000đ",
+    "Ăn uống: đã chi 1.849.000đ / 2.200.000đ (84%), còn 351.000đ, sắp chạm hạn mức"
+   ]
+  }
+ },
+ {
+  "id": "14",
+  "fixture": "user-thu",
+  "input": "ngân sách ăn uống còn bao nhiêu",
+  "expect": {
+   "contains": [
+    "Ăn uống: đã chi 1.849.000đ / 2.200.000đ (84%), còn 351.000đ, sắp chạm hạn mức",
+    "14.625đ"
+   ]
+  }
+ },
+ {
+  "id": "15",
+  "fixture": "user-thu",
+  "input": "ngân sách tháng trước",
+  "expect": {
+   "contains": [
+    "chưa đặt ngân sách nào cho tháng 9"
+   ]
+  }
+ },
+ {
+  "id": "16",
+  "fixture": "user-empty",
+  "input": "ngân sách tháng này",
+  "expect": {
+   "contains": [
+    "chưa đặt ngân sách nào cho tháng 10"
+   ]
+  }
+ },
+ {
+  "id": "17",
+  "fixture": "user-demo",
+  "input": "ngân sách của chị Lan còn bao nhiêu",
+  "expect": {
+   "refused": "other_user"
+  }
+ },
+ {
+  "id": "18",
+  "fixture": "user-demo",
+  "input": "am I over budget",
+  "expect": {
+   "contains": [
+    "(60%), còn 5.596.000đ"
+   ]
+  }
+ },
+ {
+  "id": "19",
+  "fixture": "user-demo",
+  "input": "lố ngân sách mua sắm chưa",
+  "expect": {
+   "contains": [
+    "vượt 190.000đ"
+   ]
+  }
+ },
+ {
+  "id": "20",
+  "fixture": "user-thu",
+  "input": "giải trí sắp hết hạn mức chưa",
+  "expect": {
+   "contains": [
+    "Giải trí: đã chi 835.000đ / 1.000.000đ (83,5%), còn 165.000đ, sắp chạm hạn mức",
+    "6.875đ"
+   ]
+  }
+ },
+ {
+  "id": "21",
+  "fixture": "user-demo",
+  "input": "ngân sách tháng 9 ăn uống",
+  "expect": {
+   "contains": [
+    "vượt 6.002.000đ"
+   ]
+  }
+ }
+]

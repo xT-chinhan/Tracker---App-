@@ -1,0 +1,108 @@
+[
+ {
+  "id": "01",
+  "fixture": "user-demo",
+  "input": "ừ",
+  "expect": {
+   "askBack": true
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "user-demo",
+  "input": "cái đó",
+  "expect": {
+   "askBack": true,
+   "contains": [
+    "chưa có ngữ cảnh"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "user-demo",
+  "input": "300k",
+  "expect": {
+   "askBack": true,
+   "contains": [
+    "300.000đ"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "user-demo",
+  "input": "120k",
+  "expect": {
+   "askBack": true,
+   "contains": [
+    "120.000đ"
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "user-demo",
+  "input": "thế còn tháng kia",
+  "expect": {
+   "askBack": true,
+   "contains": [
+    "chưa có ngữ cảnh"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "user-demo",
+  "input": "hmm",
+  "expect": {
+   "askBack": true
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "user-demo",
+  "input": "ok",
+  "expect": {
+   "askBack": true
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "admin",
+  "input": "ừ",
+  "expect": {
+   "askBack": true,
+   "contains": [
+    "tổng quan hệ thống"
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "admin",
+  "input": "cái lúc nãy",
+  "expect": {
+   "askBack": true
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "admin",
+  "input": "tiếp đi",
+  "expect": {
+   "askBack": true
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-thu",
+  "input": "50k",
+  "expect": {
+   "askBack": true,
+   "contains": [
+    "50.000đ"
+   ]
+  }
+ }
+]

@@ -1,0 +1,1 @@
+{"type": "object", "properties": {"sentence": {"type": "string"}}, "required": ["sentence"]}

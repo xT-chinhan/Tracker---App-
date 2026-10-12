@@ -1,0 +1,4 @@
+[
+ {"input": "tháng này tiêu bao nhiêu rồi", "reply": "Tháng 10 (tính đến 08/10): thu 22.560.000đ, chi 8.404.000đ, chênh lệch +14.156.000đ.\nChi nhiều nhất: ...\nSo với tháng 9 (...): chi giảm ...%, lưu ý tháng này chưa hết.\nKhoản chi lớn nhất: ...\n<1 câu nhận xét của model, không có số>"},
+ {"input": "tuần này xài hết bao nhiêu", "reply": "Tuần này: chi ...đ (n khoản), thu ...đ (n khoản).\nChi nhiều nhất: ...\n<1 câu nhận xét>"}
+]

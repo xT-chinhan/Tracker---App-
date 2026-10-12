@@ -1,0 +1,5 @@
+[
+ {"input": "ví momo còn bao nhiêu", "reply": "Ví MoMo hiện còn 1.500.000đ. Tổng 4 ví: 26.022.000đ."},
+ {"input": "tổng tiền tất cả các ví", "reply": "Tổng số dư 4 ví: 26.022.000đ.\n• MB Bank: 18.672.000đ\n• Techcombank: 4.000.000đ\n• Tiền mặt: 1.850.000đ\n• MoMo: 1.500.000đ\nNgoài ra 52.200.000đ đang nằm trong các mục tiêu tiết kiệm (không tính vào số dư ví)."},
+ {"input": "số dư zalopay", "reply": "Bạn chưa có ví ZaloPay trong ứng dụng. Các ví hiện có: ..."}
+]

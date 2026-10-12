@@ -1,0 +1,139 @@
+[
+ {
+  "id": "01",
+  "fixture": "admin",
+  "input": "có tài khoản nào bất thường không",
+  "expect": {
+   "flagged": [
+    "phuonglinh.do@demo.thuchi.vn",
+    "tuanh.hoang@demo.thuchi.vn",
+    "kiet.huynh88@demo.thuchi.vn"
+   ],
+   "notFlagged": [
+    "demo@thuchi.vn",
+    "admin@thuchi.vn"
+   ],
+   "contains": [
+    "Phát hiện 3 tài khoản",
+    "gấp 2,4 lần TB 3 tháng 14.244.667đ",
+    "Đang bị khóa:",
+    "chưa ghi nhận số lần đăng nhập sai"
+   ]
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "admin",
+  "input": "rà soát giao dịch đáng ngờ tuần này",
+  "expect": {
+   "flagged": [
+    "tuanh.hoang@demo.thuchi.vn"
+   ]
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "admin",
+  "input": "ai chi tiêu tăng đột biến",
+  "expect": {
+   "contains": [
+    "16.620.000đ",
+    "~64.402.500đ"
+   ]
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "admin",
+  "input": "kiem tra bat thuong he thong",
+  "expect": {
+   "contains": [
+    "Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn)"
+   ]
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "admin",
+  "input": "any anomalies today",
+  "expect": {
+   "flagged": [
+    "kiet.huynh88@demo.thuchi.vn"
+   ]
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "admin-anomaly",
+  "input": "có tài khoản nào bất thường không",
+  "expect": {
+   "flagged": [
+    "hung.vu89@demo.thuchi.vn",
+    "khoa.ly@demo.thuchi.vn",
+    "giahuy.ngo@demo.thuchi.vn",
+    "tuanh.hoang@demo.thuchi.vn"
+   ],
+   "contains": [
+    "25 lần đăng nhập sai trong 24 giờ",
+    "45.000.000đ",
+    "480 giao dịch trong 30 ngày"
+   ],
+   "notContains": [
+    "chưa ghi nhận số lần đăng nhập sai"
+   ]
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "admin-anomaly",
+  "input": "có ai bị dò mật khẩu không",
+  "expect": {
+   "flagged": [
+    "hung.vu89@demo.thuchi.vn"
+   ]
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "admin-anomaly",
+  "input": "user nào giao dịch dồn dập",
+  "expect": {
+   "flagged": [
+    "giahuy.ngo@demo.thuchi.vn"
+   ],
+   "notFlagged": [
+    "demo@thuchi.vn"
+   ]
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "admin-anomaly",
+  "input": "khoản chi nào lớn bất thường",
+  "expect": {
+   "flagged": [
+    "khoa.ly@demo.thuchi.vn"
+   ]
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "admin",
+  "input": "danh sách tài khoản bị khóa có gì lạ",
+  "expect": {
+   "contains": [
+    "Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn",
+    "Bùi Thanh Tùng",
+    "Phạm Trọng Nghĩa"
+   ]
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-demo",
+  "input": "có tài khoản nào bất thường không",
+  "expect": {
+   "refused": "scope"
+  }
+ }
+]
