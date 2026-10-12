@@ -10,7 +10,7 @@ const tail = (s: string | undefined, unit: number) =>
 
 // Số đứng trước/sau các từ này không phải tiền ("tháng 9", "2 ly", "quý 3", "25kg").
 const BEFORE = /(?:thang|quy|nam|ngay|mung|thu|lan|so|tuan|tang|phong|lop|top|iphone|ban|ky|dot|loai|size|tuoi)\s*$/;
-const AFTER = /^\s*(?:ly|coc|cai|ve|chuyen|nguoi|ngay|thang|nam|lan|bua|kg|g|gram|cuon|doi|chiec|hop|chai|goi|phan|suat|to|dia|lon|h|gio|phut|%|tuoi|qua|con|mon|km|so|tiet|buoi|dem|tang|bo|cay|lit|xi)\b/;
+const AFTER = /^\s*(?:ly|coc|cai|ve|chuyen|nguoi|ngay|thang|nam|lan|bua|kg|g|gram|cuon|doi|chiec|hop|chai|goi|phan|suat|to|dia|lon|h|gio|phut|%|tuoi|qua|con|mon|km|so|tiet|buoi|dem|tang|bo|cay|lit|xi|ky|ki)\b/;
 
 const RULES: [RegExp, (m: RegExpExecArray) => number][] = [
   [new RegExp(String.raw`(?<![\w.,])${NUM}\s*(?:trieu|tr|cu|m)(?:\s*(ruoi|\d{1,3}))?(?![a-z0-9])`, 'g'), (m) => num(m[1]) * 1e6 + tail(m[2], 1e6)],

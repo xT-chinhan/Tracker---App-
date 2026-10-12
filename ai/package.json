@@ -7,7 +7,8 @@
     "eval": "tsx eval/run.ts",
     "eval:router": "tsx eval/router.ts",
     "simulate": "tsx eval/simulate.ts",
-    "latency": "tsx eval/latency.ts"
+    "latency": "tsx eval/latency.ts",
+    "test": "tsx --test test/*.test.ts"
   },
   "dependencies": {
     "pg": "^8.13.0"

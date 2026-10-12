@@ -7,13 +7,25 @@ export const LLM = process.env.LLM_MODEL ?? 'gemma2:2b';
 export interface ChatMsg { role: 'system' | 'user' | 'assistant'; content: string }
 export interface ChatResult { content: string; ms: number; promptTokens: number; evalTokens: number }
 
+/**
+ * Bỏ các từ khóa JSON schema làm Ollama (0.30, Vulkan) BỎ QUA CẢ GRAMMAR mà không báo lỗi — hiện biết: `pattern`.
+ * Ràng buộc kiểu đó phải kiểm bằng code sau khi nhận JSON. Không đổi object gốc.
+ */
+export const UNSUPPORTED_SCHEMA_KEYS = ['pattern'];
+export function stripUnsupported<T>(schema: T): T {
+  if (Array.isArray(schema)) return schema.map(stripUnsupported) as T;
+  if (!schema || typeof schema !== 'object') return schema;
+  // chỉ bỏ TỪ KHÓA (giá trị chuỗi); thuộc tính tên "pattern" trong `properties` (giá trị object) vẫn giữ
+  return Object.fromEntries(Object.entries(schema).filter(([k, v]) => !(UNSUPPORTED_SCHEMA_KEYS.includes(k) && typeof v === 'string')).map(([k, v]) => [k, stripUnsupported(v)])) as T;
+}
+
 /** stop "\n\n": cắt khoảng trắng rác gemma2 hay sinh sau JSON (đo thực tế: không đổi độ trễ đáng kể, xem results/latency.json). */
 export async function chat(messages: ChatMsg[], format: object, numPredict = 256, stop: string[] = ['\n\n']): Promise<ChatResult> {
   const t = performance.now();
   const r = await fetch(`${OLLAMA}/api/chat`, {
     method: 'POST',
     body: JSON.stringify({
-      model: LLM, messages, format, stream: false, keep_alive: '30m',
+      model: LLM, messages, format: stripUnsupported(format), stream: false, keep_alive: '30m',
       options: { temperature: 0, seed: 7, num_ctx: 4096, num_predict: numPredict, stop },
     }),
   });
