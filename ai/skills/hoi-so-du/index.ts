@@ -1,24 +1,23 @@
-import type { SkillDef } from '../../lib/contracts.js';
-import { findName, money, userGuard } from '../../lib/skillkit.js';
+import type { BalanceData, Skill } from '../../lib/contracts.js';
+import { fetchP, findName, money, userGuard } from '../../lib/skillkit.js';
 import { fold } from '../../lib/text.js';
 
 /** Tên ví/ngân hàng phổ biến: nhắc tới mà user không có → báo không có ví đó (không đoán). */
 const KNOWN = ['mb bank', 'techcombank', 'vietcombank', 'bidv', 'vietinbank', 'agribank', 'tpbank', 'vpbank', 'acb', 'sacombank', 'momo', 'zalopay', 'shopeepay', 'viettel money', 'tien mat'];
 const KNOWN_LABEL: Record<string, string> = { 'mb bank': 'MB Bank', 'tien mat': 'Tiền mặt', momo: 'MoMo', zalopay: 'ZaloPay', shopeepay: 'ShopeePay', 'viettel money': 'Viettel Money', tpbank: 'TPBank', vpbank: 'VPBank', acb: 'ACB', bidv: 'BIDV' };
 
-export const skill: SkillDef = {
-  name: 'hoi-so-du', scope: 'USER', output: 'text', providers: ['user.balance'],
-  plan: () => [{ provider: 'user.balance' }],
+export const skill: Skill = {
+  name: 'hoi-so-du', scope: 'USER', description: 'Số dư tổng và từng ví', context: ['balance'],
   async run({ input, context }) {
     const g = userGuard(input, context.principal); if (g) return g;
-    const b = context['user.balance'];
-    if (!b) return { reply: 'Mình chưa lấy được số dư, bạn thử lại sau nhé.', meta: { error: 'missing user.balance' } };
-    const active = b.wallets.filter((w) => !w.isArchived);
+    const b = await fetchP<BalanceData>(context, 'balance');
+    if (!b) return { reply: 'Mình chưa lấy được số dư, bạn thử lại sau nhé.', meta: { error: 'missing balance' } };
+    const active = b.wallets;
     const name = findName(input, b.wallets.map((w) => w.name));
     if (name) {
       const w = b.wallets.find((x) => x.name === name)!;
       return {
-        reply: `Ví ${w.name} hiện còn ${money(w.balance)}${w.isArchived ? ' (ví đã lưu trữ)' : ''}.` + (active.length > 1 ? ` Tổng ${active.length} ví: ${money(b.total)}.` : ''),
+        reply: `Ví ${w.name} hiện còn ${money(w.balance)}.` + (active.length > 1 ? ` Tổng ${active.length} ví: ${money(b.total)}.` : ''),
         followUps: ['Tháng này tôi chi bao nhiêu?', `Giao dịch gần đây của ví ${w.name}`],
         meta: { computed: [active.length] },
       };

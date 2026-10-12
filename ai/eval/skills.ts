@@ -5,11 +5,12 @@
  * Cộng thêm kiểm tra riêng của từng ca (expect). Chạy: flock /tmp/app-tracker-gpu.lock npx tsx eval/skills.ts [--skills a,b]
  */
 import { existsSync, readFileSync } from 'node:fs';
-import type { Draft, SkillResult } from '../lib/contracts.js';
+import type { DraftProposal, SkillResult } from '../lib/contracts.js';
+import { NEW_PROVIDERS } from '../lib/contracts.js';
 import { ollamaLlm } from '../lib/skillkit.js';
 import { fold } from '../lib/text.js';
 import { SKILLS } from '../router/registry.js';
-import { buildContext, loadFixture, type AdminFixture } from './fixtures/providers.js';
+import { loadFixture, makeContext, type AdminFixture } from './fixtures/providers.js';
 import { arg, pctl, table, writeResult } from './common.js';
 
 interface Expect {
@@ -76,34 +77,39 @@ function allowedDates(context: unknown, now: string, extra: unknown[], input = '
   return { days, years, times };
 }
 
-function validDraft(d: Draft): string | null {
+function validDraft(d: DraftProposal): string | null {
   const isStr = (v: unknown) => typeof v === 'string' && v.length > 0;
   const isDate = (v: unknown) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+  const p: any = d.payload;
+  if (!p || typeof p !== 'object') return 'payload';
   switch (d.kind) {
-    case 'tx-filter':
-      if (d.from && !isDate(d.from)) return 'from'; if (d.to && !isDate(d.to)) return 'to';
-      if (d.from && d.to && d.from >= d.to) return 'from>=to';
-      if (d.type && !['INCOME', 'EXPENSE'].includes(d.type)) return 'type';
-      for (const k of ['minAmount', 'maxAmount'] as const) if (d[k] !== undefined && !(Number.isInteger(d[k]) && d[k]! > 0)) return k;
-      if (d.minAmount && d.maxAmount && d.minAmount > d.maxAmount) return 'min>max';
+    case 'search_filter':
+      if (p.target === 'users') {
+        if (p.status && !['ACTIVE', 'LOCKED'].includes(p.status)) return 'status';
+        if (p.role && !['USER', 'ADMIN'].includes(p.role)) return 'role';
+        if (p.q !== undefined && (!isStr(p.q) || p.q.length > 100)) return 'q';
+        return null;
+      }
+      if (p.target !== 'transactions') return 'target';
+      if (p.month && !/^\d{4}-\d{2}$/.test(p.month)) return 'month';
+      if (p.from && !isDate(p.from)) return 'from'; if (p.to && !isDate(p.to)) return 'to';
+      if (p.from && p.to && p.from >= p.to) return 'from>=to';
+      if (p.type && !['INCOME', 'EXPENSE'].includes(p.type)) return 'type';
+      for (const k of ['minAmount', 'maxAmount']) if (p[k] !== undefined && !(Number.isInteger(p[k]) && p[k] > 0)) return k;
+      if (p.minAmount && p.maxAmount && p.minAmount > p.maxAmount) return 'min>max';
+      if (p.q !== undefined && (!isStr(p.q) || p.q.length > 100)) return 'q';
       return null;
-    case 'budget-plan':
-      if (!/^\d{4}-\d{2}$/.test(d.month)) return 'month';
-      if (d.overall !== null && !(Number.isInteger(d.overall) && d.overall > 0)) return 'overall';
-      for (const i of d.items) if (!isStr(i.categoryName) || !Number.isInteger(i.limitAmount) || i.limitAmount < 1) return 'item';
-      return null;
-    case 'user-filter':
-      if (d.status && !['ACTIVE', 'LOCKED'].includes(d.status)) return 'status';
-      if (d.role && !['USER', 'ADMIN'].includes(d.role)) return 'role';
-      if (d.q !== undefined && (!isStr(d.q) || d.q.length > 100)) return 'q';
+    case 'budgets':
+      if (!Array.isArray(p.items) || p.items.length < 1 || p.items.length > 50) return 'items';
+      for (const i of p.items) if (!/^\d{4}-\d{2}$/.test(i.month) || !Number.isInteger(i.limitAmount) || i.limitAmount < 1 || !(i.categoryName === null || isStr(i.categoryName))) return 'item';
       return null;
     case 'broadcast':
-      if (!isStr(d.title) || d.title.length > 120) return 'title';
-      if (!isStr(d.body) || d.body.length > 2000) return 'body';
-      if (!VI.test(d.title + d.body)) return 'vi';
+      if (!isStr(p.title) || p.title.length > 120) return 'title';
+      if (!isStr(p.body) || p.body.length > 2000) return 'body';
+      if (!VI.test(p.title + p.body)) return 'vi';
       return null;
-    case 'lock-user':
-      if (!isStr(d.userId) || !isStr(d.email) || !d.reasons.length) return 'lock';
+    case 'lock_user':
+      if (!/^[0-9a-f-]{36}$/i.test(p.userId) || !isStr(p.email) || !Array.isArray(p.reasons) || !p.reasons.length) return 'lock';
       return null;
     default: return 'kind';
   }
@@ -118,6 +124,8 @@ const sub = (a: unknown, b: unknown): boolean => {
 const admin = loadFixture('admin') as AdminFixture;
 /** --fake: model luôn trả {} → kiểm tra đường lùi của code, không cần GPU. */
 const FAKE = process.argv.includes('--fake');
+/** --asis: backend như hiện tại — chưa có provider MỚI, monthSummary chỉ top 5, không có largestExpense. */
+const ASIS = process.argv.includes('--asis');
 const fakeLlm = { chat: async () => ({ content: '{}', ms: 0 }) };
 const only = arg('skills', '').split(',').filter(Boolean);
 const names = Object.keys(SKILLS).filter((n) => !only.length || only.includes(n));
@@ -133,8 +141,7 @@ for (const name of names) {
   const rows: any[] = [];
   for (const c of cases) {
     const fx = loadFixture(c.fixture);
-    const reqs = skill.plan(c.input, fx.now);
-    const context = buildContext(fx, reqs);
+    const { ctx: context, trace } = makeContext(fx, skill.context, { missing: ASIS ? NEW_PROVIDERS : [], asis: ASIS });
     const t0 = performance.now();
     let r: SkillResult;
     try { r = await skill.run({ input: c.input, context, llm: FAKE ? fakeLlm : ollamaLlm, now: fx.now }); }
@@ -145,9 +152,9 @@ for (const name of names) {
     const text = [r.reply, r.askBack ?? '', r.draft ? JSON.stringify(r.draft) : ''].join('\n');
     // ── kiểm tra chung ──
     if (r.meta?.error) fails.push(`lỗi: ${r.meta.error}`);
-    const allowed = new Set<number>([...numbersIn(context), ...inputNumbers(c.input), ...numbersIn(c.input), ...(r.meta?.computed ?? []).flatMap((x) => [Math.abs(x), Math.round(Math.abs(x) * 10) / 10]), ...stat, ...TEMPLATE_CONSTANTS]);
+    const allowed = new Set<number>([...numbersIn(trace.map((t) => t.data)), ...inputNumbers(c.input), ...numbersIn(c.input), ...(r.meta?.computed ?? []).flatMap((x) => [Math.abs(x), Math.round(Math.abs(x) * 10) / 10]), ...stat, ...TEMPLATE_CONSTANTS]);
     // Ngày/giờ trong reply (dd/mm, dd/mm/yyyy, hh:mm) phải là ngày có trong context (đổi sang giờ VN), hôm nay, hoặc mốc của bộ lọc / tham số plan.
-    const dates = allowedDates(context, fx.now, [r.draft, reqs], c.input);
+    const dates = allowedDates(trace.map((t) => t.data), fx.now, [r.draft, trace.map((t) => t.args ?? null)], c.input);
     for (const k of dates.days) allowed.add(+k.slice(0, 2));
     const badDates: string[] = [];
     const replyNoDates = r.reply.replace(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?(?:\s+(\d{2}):(\d{2}))?\b/g, (m, d, mo, y, hh, mi) => {
@@ -163,7 +170,7 @@ for (const name of names) {
     if (!VI.test(r.reply)) fails.push('không phải tiếng Việt');
     if (r.reply.length > (e.maxLen ?? 1500)) fails.push(`reply dài ${r.reply.length}`);
     if (fx.principal.role === 'USER') {
-      const foreign = admin.userActivity.filter((u) => u.id !== fx.principal.userId).flatMap((u) => [u.email, u.name]).filter((s) => !fold(c.input).includes(fold(s)));
+      const foreign = admin.userActivity.filter((u) => u.id !== (fx.principal as any).userId).flatMap((u) => [u.email, u.name]).filter((s) => !fold(c.input).includes(fold(s)));
       const leak = foreign.filter((s) => text.includes(s));
       if (leak.length) fails.push(`lộ dữ liệu người khác: ${leak.join(', ')}`);
     }
@@ -180,17 +187,17 @@ for (const name of names) {
       if (!r.draft) fails.push('thiếu draft');
       else {
         for (const [k, v] of Object.entries(e.draft)) if (!sub((r.draft as any)[k], v)) fails.push(`draft.${k}=${JSON.stringify((r.draft as any)[k])}, cần ${JSON.stringify(v)}`);
-        if (r.draft.kind === 'tx-filter' || r.draft.kind === 'user-filter') {
-          // filter: không được có thêm trường ngoài đáp án (trừ q khi đáp án ghi "q": "*")
-          for (const k of Object.keys(r.draft)) if (!(k in e.draft)) fails.push(`draft thừa ${k}=${JSON.stringify((r.draft as any)[k])}`);
+        if (r.draft.kind === 'search_filter' && (e.draft as any).payload) {
+          // bộ lọc: không được có thêm trường ngoài đáp án
+          for (const k of Object.keys(r.draft.payload)) if (!(k in (e.draft as any).payload)) fails.push(`draft thừa ${k}=${JSON.stringify((r.draft.payload as any)[k])}`);
         }
       }
     }
     for (const it of e.draftItems ?? []) {
-      const items = (r.draft as any)?.items ?? [];
+      const items = (r.draft as any)?.payload?.items ?? [];
       if (!items.some((x: any) => sub(x, it))) fails.push(`draft thiếu item ${JSON.stringify(it)}`);
     }
-    for (const t of e.draftText ?? []) { const d: any = r.draft ?? {}; if (!`${d.title ?? ''} ${d.body ?? ''}`.includes(t)) fails.push(`nháp thiếu "${t}"`); }
+    for (const t of e.draftText ?? []) { const d: any = r.draft?.payload ?? {}; if (!`${d.title ?? ''} ${d.body ?? ''}`.includes(t)) fails.push(`nháp thiếu "${t}"`); }
     if (e.faq && r.meta?.faq !== e.faq) fails.push(`faq=${r.meta?.faq}, cần ${e.faq}`);
     if (e.tipsFocus && !(r.meta?.focus as string[] | undefined)?.includes(e.tipsFocus)) fails.push(`focus=${JSON.stringify(r.meta?.focus)}, cần ${e.tipsFocus}`);
     const flagged = new Set(((r.meta?.flags as any[]) ?? []).map((f) => f.email));
@@ -210,4 +217,4 @@ for (const name of names) {
 console.log('\n' + table(summary));
 const tot = all.length, pass = all.filter((x) => x.pass).length;
 console.log(`\nTổng: ${pass}/${tot} = ${Math.round((1000 * pass) / tot) / 10}%  · p50 ${pctl(all.map((x) => x.ms), 50)} ms`);
-if (!only.length) writeResult(FAKE ? 'trackB-skills-fake-llm.json' : 'trackB-skills.json', { summary, total: { cases: tot, pass, p50: pctl(all.map((x) => x.ms), 50), p95: pctl(all.map((x) => x.ms), 95) }, cases: all });
+if (!only.length) writeResult(`trackB-skills${FAKE ? '-fake-llm' : ''}${ASIS ? '-asis' : ''}.json`, { summary, total: { cases: tot, pass, p50: pctl(all.map((x) => x.ms), 50), p95: pctl(all.map((x) => x.ms), 95) }, cases: all });

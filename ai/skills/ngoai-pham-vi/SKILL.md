@@ -1,8 +1,8 @@
 ---
 name: ngoai-pham-vi
-scope: BOTH (USER và ADMIN)
+scope: ANY (USER và ADMIN)
 output: text
-providers: []
+context: []
 llm: không gọi model
 ---
 # ngoai-pham-vi — từ chối lịch sự

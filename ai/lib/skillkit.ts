@@ -1,11 +1,21 @@
 /** Tiện ích dùng chung cho các skill (Track B). Thuần; chỉ `llmSentence`/`llmJson` gọi model qua `Llm` được truyền vào. */
-import type { ChatMsg } from './ollama.js';
 import { chat } from './ollama.js';
-import type { Llm, Principal, SkillResult } from './contracts.js';
+import type { ChatMsg, LlmClient, SkillContext, SkillResult } from './contracts.js';
 import { fold } from './text.js';
 
-/** Adapter Ollama cho interface `Llm` (gemma2:2b, temperature 0, xem lib/ollama.ts). */
-export const ollamaLlm: Llm = { chat: (m, f, n) => chat(m, f, n ?? 120) };
+/** Adapter Ollama cho `LlmClient` khi chạy eval ngoài backend (gemma2:2b, temperature 0, xem lib/ollama.ts). */
+export const ollamaLlm: LlmClient = { provider: 'ollama', chatModel: 'gemma2:2b', chat: (m, o = {}) => chat(m, o.format ?? {}, o.numPredict ?? 120, o.stop) };
+
+type Principal = SkillContext['principal'];
+
+/**
+ * Lấy dữ liệu provider: không tham số và đã nạp sẵn → `context.data`; còn lại `context.get`.
+ * Provider chưa có ở backend / lỗi → undefined (skill tự lùi).
+ */
+export async function fetchP<T>(ctx: SkillContext, name: string, args?: Record<string, unknown>): Promise<T | undefined> {
+  if (!args && name in ctx.data) return ctx.data[name] as T;
+  try { return await ctx.get<T>(name, args); } catch { return undefined; }
+}
 
 // ───────── định dạng số (số trong câu trả lời CHỈ đi qua các hàm này) ─────────
 export const money = (n: number) => `${n < 0 ? '−' : ''}${Math.abs(Math.round(n)).toLocaleString('vi-VN')}đ`;
@@ -104,36 +114,36 @@ export function checkSentence(s: string, maxLen = 220): string | null {
   return null;
 }
 
-export interface Sentence { text: string; accepted: boolean | null; ms: number; calls: number; reason?: string }
+export interface Sentence { text: string; accepted: boolean | null; ms: number; calls: number; reason?: string; raw?: string }
 
 /**
  * Model viết 1 câu nhận xét/khuyên từ các DỮ KIỆN ĐỊNH TÍNH (không đưa số cho model, để nó không có số mà chép).
  * Không đạt `checkSentence` → dùng `fallback` (câu do code chọn).
  */
-export async function llmSentence(llm: Llm, task: string, facts: string[], fallback: string): Promise<Sentence> {
+export async function llmSentence(llm: LlmClient, task: string, facts: string[], fallback: string): Promise<Sentence> {
   const msgs: ChatMsg[] = [
     { role: 'system', content: 'Bạn là trợ lý tài chính cá nhân, nói tiếng Việt có dấu, thân thiện, ngắn gọn. Viết đúng MỘT câu (tối đa 30 từ). TUYỆT ĐỐI không viết con số, số tiền, phần trăm hay ngày tháng. Không bịa thông tin ngoài dữ kiện. Chỉ trả JSON.' },
     { role: 'user', content: `Việc: ${task}\nDữ kiện:\n${facts.map((f) => `- ${f}`).join('\n')}` },
   ];
   const schema = { type: 'object', properties: { sentence: { type: 'string' } }, required: ['sentence'] };
   try {
-    const r = await llm.chat(msgs, schema, 90);
+    const r = await llm.chat(msgs, { format: schema, numPredict: 90 });
     const j = parseJson(r.content);
     const s = typeof j?.sentence === 'string' ? j.sentence.trim() : '';
     const bad = checkSentence(s);
-    return bad ? { text: fallback, accepted: false, ms: r.ms, calls: 1, reason: bad } : { text: s, accepted: true, ms: r.ms, calls: 1 };
+    return bad ? { text: fallback, accepted: false, ms: r.ms, calls: 1, reason: bad, raw: s } : { text: s, accepted: true, ms: r.ms, calls: 1 };
   } catch (e) {
     return { text: fallback, accepted: false, ms: 0, calls: 1, reason: String(e) };
   }
 }
 
 /** Gọi model với schema nhỏ, trả object hoặc null (không retry: ca khó thì code lùi về mặc định). */
-export async function llmJson<T = any>(llm: Llm, system: string, user: string, schema: object, numPredict = 120, shots: [string, unknown][] = []): Promise<{ data: T | null; ms: number }> {
+export async function llmJson<T = any>(llm: LlmClient, system: string, user: string, schema: object, numPredict = 120, shots: [string, unknown][] = []): Promise<{ data: T | null; ms: number }> {
   const msgs: ChatMsg[] = [{ role: 'system', content: system }];
   for (const [u, a] of shots) msgs.push({ role: 'user', content: u }, { role: 'assistant', content: JSON.stringify(a) });
   msgs.push({ role: 'user', content: user });
   try {
-    const r = await llm.chat(msgs, schema, numPredict);
+    const r = await llm.chat(msgs, { format: schema, numPredict });
     return { data: parseJson(r.content), ms: r.ms };
   } catch {
     return { data: null, ms: 0 };
@@ -146,4 +156,4 @@ export function parseJson(s: string): any {
   try { return JSON.parse(s.slice(a, b + 1).replace(/,\s*([}\]])/g, '$1')); } catch { return null; }
 }
 
-export const llmMeta = (s: Sentence | null) => (s ? { calls: s.calls, ms: Math.round(s.ms), accepted: s.accepted } : { calls: 0, ms: 0, accepted: null });
+export const llmMeta = (s: Sentence | null) => (s ? { calls: s.calls, ms: Math.round(s.ms), accepted: s.accepted, ...(s.reason ? { reason: s.reason, raw: s.raw } : {}) } : { calls: 0, ms: 0, accepted: null });

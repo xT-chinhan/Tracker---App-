@@ -2,7 +2,7 @@
 name: meo-tiet-kiem
 scope: USER
 output: text
-providers: [user.categoryHistory (params months = 3 tháng đủ gần nhất)]
+context: [] — gọi `monthSummary {month, limit: 20}` cho 3 tháng đủ gần nhất
 llm: chọn 2–3 id mẹo từ enum (JSON {ids})
 ---
 # meo-tiet-kiem — mẹo tiết kiệm bám theo chi tiêu thật

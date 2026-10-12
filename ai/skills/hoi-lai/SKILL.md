@@ -1,8 +1,8 @@
 ---
 name: hoi-lai
-scope: BOTH
+scope: ANY
 output: text (askBack)
-providers: []
+context: []
 llm: không gọi model
 ---
 # hoi-lai — hỏi lại khi chưa rõ

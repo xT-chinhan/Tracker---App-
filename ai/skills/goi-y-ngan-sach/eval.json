@@ -5,11 +5,14 @@
   "input": "gợi ý ngân sách tháng sau cho mình",
   "expect": {
    "draft": {
-    "kind": "budget-plan",
-    "month": "2026-11",
-    "overall": 23900000
+    "kind": "budgets"
    },
    "draftItems": [
+    {
+     "categoryName": null,
+     "limitAmount": 23900000,
+     "month": "2026-11"
+    },
     {
      "categoryName": "Ăn uống",
      "limitAmount": 9550000,
@@ -35,6 +38,9 @@
     {
      "categoryName": "Di chuyển",
      "limitAmount": 750000
+    },
+    {
+     "month": "2026-11"
     }
    ],
    "contains": [
@@ -52,11 +58,14 @@
   "input": "nên đặt ngân sách bao nhiêu cho hợp lý",
   "expect": {
    "draft": {
-    "kind": "budget-plan",
-    "month": "2026-11",
-    "overall": 23900000
+    "kind": "budgets"
    },
    "draftItems": [
+    {
+     "categoryName": null,
+     "limitAmount": 23900000,
+     "month": "2026-11"
+    },
     {
      "categoryName": "Ăn uống",
      "limitAmount": 9550000,
@@ -82,6 +91,9 @@
     {
      "categoryName": "Di chuyển",
      "limitAmount": 750000
+    },
+    {
+     "month": "2026-11"
     }
    ]
   }
@@ -92,11 +104,15 @@
   "input": "lập ngân sách tháng này giúp mình",
   "expect": {
    "draft": {
-    "kind": "budget-plan",
-    "month": "2026-10"
+    "kind": "budgets"
    },
    "contains": [
     "đã có ngân sách"
+   ],
+   "draftItems": [
+    {
+     "month": "2026-10"
+    }
    ]
   }
  },
@@ -159,9 +175,13 @@
   "input": "suggest a budget for next month",
   "expect": {
    "draft": {
-    "kind": "budget-plan",
-    "month": "2026-11"
-   }
+    "kind": "budgets"
+   },
+   "draftItems": [
+    {
+     "month": "2026-11"
+    }
+   ]
   }
  },
  {
@@ -170,9 +190,13 @@
   "input": "goi y ngan sach thang toi",
   "expect": {
    "draft": {
-    "kind": "budget-plan",
-    "month": "2026-11"
-   }
+    "kind": "budgets"
+   },
+   "draftItems": [
+    {
+     "month": "2026-11"
+    }
+   ]
   }
  },
  {
@@ -181,9 +205,13 @@
   "input": "gợi ý ngân sách tháng 12",
   "expect": {
    "draft": {
-    "kind": "budget-plan",
-    "month": "2026-12"
-   }
+    "kind": "budgets"
+   },
+   "draftItems": [
+    {
+     "month": "2026-12"
+    }
+   ]
   }
  },
  {
@@ -192,11 +220,14 @@
   "input": "gợi ý ngân sách cho mình",
   "expect": {
    "draft": {
-    "kind": "budget-plan",
-    "month": "2026-11",
-    "overall": 18300000
+    "kind": "budgets"
    },
    "draftItems": [
+    {
+     "categoryName": null,
+     "limitAmount": 18300000,
+     "month": "2026-11"
+    },
     {
      "categoryName": "Ăn uống",
      "limitAmount": 11400000
@@ -220,6 +251,9 @@
     {
      "categoryName": "Di chuyển",
      "limitAmount": 250000
+    },
+    {
+     "month": "2026-11"
     }
    ],
    "notContains": [

@@ -2,7 +2,7 @@
 name: huong-dan-quan-tri
 scope: ADMIN
 output: text
-providers: [] (FAQ tĩnh faq.json, viết từ backend/README.md mục Admin + Cấu hình hệ thống và trang admin/)
+context: [] (FAQ tĩnh faq.json, viết từ backend/README.md mục Admin + Cấu hình hệ thống và trang admin/)
 llm: chỉ chọn 1 id trong 2–3 ứng viên khi điểm từ khóa sát nhau
 ---
 # huong-dan-quan-tri — cách dùng trang quản trị

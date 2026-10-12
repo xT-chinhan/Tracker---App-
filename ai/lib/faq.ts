@@ -1,5 +1,5 @@
 /** Tra FAQ tĩnh bằng từ khóa (bỏ dấu) → top-k; model chỉ chọn 1 id trong top-k (enum). Câu trả lời lấy nguyên văn FAQ. */
-import type { Llm, SkillResult } from './contracts.js';
+import type { LlmClient, SkillResult } from './contracts.js';
 import { llmJson } from './skillkit.js';
 import { fold } from './text.js';
 
@@ -21,9 +21,9 @@ export function topK(text: string, faq: FaqEntry[], k = 3) {
   return faq.map((e) => ({ e, s: score(text, e) })).filter((x) => x.s > 0).sort((a, b) => b.s - a.s).slice(0, k);
 }
 
-export async function answerFaq(text: string, faq: FaqEntry[], llm: Llm, notFound: string, topics: string[]): Promise<SkillResult & { meta: any }> {
+export async function answerFaq(text: string, faq: FaqEntry[], llm: LlmClient, notFound: string, topics: string[]): Promise<SkillResult & { meta: any }> {
   const top = topK(text, faq);
-  if (!top.length) return { reply: notFound, followUps: topics.slice(0, 3), askBack: notFound, meta: { faq: null, llm: { calls: 0, ms: 0, accepted: null } } };
+  if (!top.length) return { reply: notFound, followUps: topics.slice(0, 3), askBack: true, meta: { faq: null, llm: { calls: 0, ms: 0, accepted: null } } };
   let pick = top[0].e, ms = 0, calls = 0, accepted: boolean | null = null;
   // Chỉ hỏi model khi 2 ứng viên đầu sát điểm nhau; còn lại code chọn.
   if (top.length > 1 && top[1].s >= top[0].s - 1) {

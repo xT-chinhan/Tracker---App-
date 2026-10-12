@@ -4,19 +4,27 @@
  * Mỗi fixture chỉ chứa dữ liệu của MỘT principal → không có đường nào lấy được dữ liệu người khác.
  */
 import { readFileSync } from 'node:fs';
-import type {
-  BudgetLine, BudgetsCtx, CategoryAmount, Compare, GoalCtx, MonthCategoryCtx, MonthReportCtx, PeriodSummaryCtx,
-  ProviderRequest, Providers, SkillContext,
-} from '../../lib/contracts.js';
-import { PROVIDER_SCOPE } from '../../lib/contracts.js';
+import type { SkillContext, UserActivityRow } from '../../lib/contracts.js';
+import { ADMIN_PROVIDERS } from '../../lib/contracts.js';
+
+// Kiểu nội bộ của fixture (bản đầy đủ như response API; makeContext rút về đúng shape provider của backend)
+type CategoryAmount = { categoryName: string; amount: number; count: number; percentage: number };
+type Compare = Record<string, any>;
+type TxBrief = { title: string; amount: number; categoryName: string; walletName: string; date: string };
+type MonthReportCtx = { month: string; income: number; expense: number; net: number; savingRate: number; comparison: any; expenseByCategory: CategoryAmount[]; incomeByCategory: CategoryAmount[]; largestExpense: TxBrief | null };
+type PeriodSummaryCtx = { from: string; to: string; income: number; expense: number; net: number; incomeCount: number; expenseCount: number; expenseByCategory: CategoryAmount[] };
+type BudgetLine = { categoryName: string | null; limitAmount: number; spent: number; remaining: number; percentage: number; status: 'ok' | 'warning' | 'exceeded' };
+type BudgetsCtx = { month: string; thresholds: { warningPercent: number; exceededPercent: number }; overall: BudgetLine | null; items: BudgetLine[] };
+type GoalCtx = { name: string; targetAmount: number; savedAmount: number; remaining: number; progress: number; daysLeft: number; dailyRequired: number; targetDate: string; status: 'ACTIVE' | 'COMPLETED' | 'WITHDRAWN' | 'EARLY_WITHDRAWN' };
+type MonthCategoryCtx = { month: string; expense: number; expenseByCategory: CategoryAmount[] };
 import { monthOf, shiftMonth } from '../../lib/period.js';
 
 export interface UserFixture {
   now: string;
-  principal: SkillContext['principal'];
-  wallets: Providers['user.balance']['wallets'];
+  principal: { userId: string; role: 'USER' | 'ADMIN'; displayName: string };
+  wallets: { name: string; type: string; isArchived: boolean; balance: number }[];
   savings: number;
-  categories: Providers['user.categories'];
+  categories: { name: string; type: 'INCOME' | 'EXPENSE' }[];
   transactions: { title: string; amount: number; type: 'INCOME' | 'EXPENSE'; categoryName: string; walletName: string; date: string }[];
   budgets: { month: string; categoryName: string | null; limitAmount: number }[];
   goals: { name: string; targetAmount: number; savedAmount: number; targetDate: string; status: GoalCtx['status'] }[];
@@ -24,12 +32,12 @@ export interface UserFixture {
 }
 export interface AdminFixture {
   now: string;
-  principal: SkillContext['principal'];
-  overview: Providers['admin.overview'];
-  userActivity: Providers['admin.userActivity'];
-  broadcasts: Providers['admin.broadcasts'];
-  configHistory: Providers['admin.configHistory'];
-  publicConfig: Providers['admin.publicConfig'];
+  principal: { userId: string; role: 'USER' | 'ADMIN'; displayName: string };
+  overview: any;
+  userActivity: UserActivityRow[];
+  broadcasts: { title: string; body: string; recipients: number; readCount: number; createdAt: string }[];
+  configHistory: { createdAt: string; actorName: string | null; section: string; key: string; oldValue: unknown; newValue: unknown; secret: boolean }[];
+  publicConfig: { appName: string; supportEmail: string; hotline: string };
 }
 export type Fixture = UserFixture | AdminFixture;
 
@@ -146,35 +154,63 @@ function categoryHistory(f: UserFixture, months: string[]): MonthCategoryCtx[] {
   return months.map((m) => { const t = inMonth(f, m); return { month: m, expense: sum(t, 'EXPENSE'), expenseByCategory: byCategory(t, 'EXPENSE') }; });
 }
 
-/** Giống Track C: chỉ lấy provider đúng scope của principal; provider sai scope → bỏ (không ném dữ liệu). */
-export function buildContext(fx: Fixture, reqs: ProviderRequest[]): SkillContext {
-  const ctx: SkillContext = { principal: fx.principal };
-  const anyCtx = ctx as any;
-  for (const { provider, params = {} } of reqs) {
-    if (PROVIDER_SCOPE[provider] !== fx.principal.role) continue;
-    if (fx.principal.role === 'USER') {
+/**
+ * SkillContext giống backend Track C (ai.context.ts): `data` = provider khai báo, `get(name, args)` = provider có tham số,
+ * provider admin* chỉ khi role ADMIN (ngược lại ném lỗi như ForbiddenException). `trace` ghi mọi dữ liệu đã đưa cho skill.
+ * `missing`: giả lập backend chưa có các provider MỚI (kiểm tra đường lùi).
+ */
+export function makeContext(fx: Fixture, declared: string[], opts: { missing?: string[]; asis?: boolean } = {}) {
+  const trace: { name: string; args?: Record<string, unknown>; data: unknown }[] = [];
+  const role = fx.principal.role;
+  const fetch = (name: string, args: Record<string, unknown> = {}): unknown => {
+    if (opts.missing?.includes(name)) throw new Error(`Không có context provider "${name}"`);
+    if (ADMIN_PROVIDERS.includes(name as any) && role !== 'ADMIN') throw new Error(`Provider ${name} chỉ dành cho admin`);
+    if (role === 'USER') {
       const f = fx as UserFixture;
-      const month = (params.month as string) ?? monthOf(f.now);
-      switch (provider) {
-        case 'user.balance': anyCtx[provider] = { total: f.wallets.reduce((s, w) => s + w.balance, 0), savings: f.savings, wallets: f.wallets }; break;
-        case 'user.categories': anyCtx[provider] = f.categories; break;
-        case 'user.monthReport': anyCtx[provider] = monthReport(f, month); break;
-        case 'user.periodSummary': anyCtx[provider] = periodSummary(f, params.from as string, params.to as string); break;
-        case 'user.budgets': anyCtx[provider] = budgets(f, month); break;
-        case 'user.goals': anyCtx[provider] = goals(f); break;
-        case 'user.categoryHistory': anyCtx[provider] = categoryHistory(f, params.months as string[]); break;
+      const month = (args.month as string) ?? monthOf(f.now);
+      switch (name) {
+        case 'balance': return { total: f.wallets.reduce((s, w) => s + w.balance, 0), savings: f.savings, wallets: f.wallets.filter((w) => !w.isArchived).map((w) => ({ name: w.name, balance: w.balance })) };
+        case 'wallets': return f.wallets.filter((w) => !w.isArchived).map((w, i) => ({ id: `w${i}`, name: w.name, type: w.type, balance: w.balance }));
+        case 'categories': return f.categories.map((c, i) => ({ id: `c${i}`, name: c.name, type: c.type }));
+        case 'monthSummary': {
+          const r = monthReport(f, month);
+          const lim = opts.asis ? 5 : Math.min((args.limit as number) ?? 5, 50);
+          return { month, income: r.income, expense: r.expense, net: r.net, topExpenses: r.expenseByCategory.slice(0, lim).map((c) => ({ name: c.categoryName, amount: c.amount })), largestExpense: opts.asis ? undefined : r.largestExpense ? { title: r.largestExpense.title, amount: r.largestExpense.amount, categoryName: r.largestExpense.categoryName, date: r.largestExpense.date } : null };
+        }
+        case 'periodSummary': {
+          const r = periodSummary(f, args.from as string, args.to as string);
+          return { from: r.from, to: r.to, income: r.income, expense: r.expense, net: r.net, incomeCount: r.incomeCount, expenseCount: r.expenseCount, topExpenses: r.expenseByCategory.slice(0, 5).map((c) => ({ name: c.categoryName, amount: c.amount })) };
+        }
+        case 'budgets': {
+          const b = budgets(f, month);
+          const v = (x: BudgetLine) => ({ categoryName: x.categoryName, limit: x.limitAmount, spent: x.spent, percentage: x.percentage, status: x.status });
+          return { month: b.month, overall: b.overall ? v(b.overall) : null, items: b.items.map(v) };
+        }
+        case 'savingGoals': return goals(f).map((g) => ({ name: g.name, target: g.targetAmount, saved: g.savedAmount, progress: g.progress, status: g.status, targetDate: g.targetDate, dailyRequired: g.dailyRequired }));
       }
     } else {
       const f = fx as AdminFixture;
-      const limit = (params.limit as number) ?? 50;
-      switch (provider) {
-        case 'admin.overview': anyCtx[provider] = f.overview; break;
-        case 'admin.userActivity': anyCtx[provider] = f.userActivity; break;
-        case 'admin.broadcasts': anyCtx[provider] = f.broadcasts.slice(0, limit); break;
-        case 'admin.configHistory': anyCtx[provider] = f.configHistory.slice(0, limit); break;
-        case 'admin.publicConfig': anyCtx[provider] = f.publicConfig; break;
+      const limit = (args.limit as number) ?? 10;
+      switch (name) {
+        case 'adminOverview': return f.overview;
+        case 'adminUserActivity': return f.userActivity;
+        case 'adminBroadcasts': return f.broadcasts.slice(0, limit);
+        case 'adminConfigHistory': return f.configHistory.slice(0, limit).map((c: any) => ({ createdAt: c.createdAt, section: c.section, key: c.key, secret: c.secret, oldValue: c.oldValue, newValue: c.newValue, actor: c.actorName ? { id: 'x', name: c.actorName, email: '' } : null }));
+        case 'publicConfig': return { appName: f.publicConfig.appName, supportEmail: f.publicConfig.supportEmail, hotline: f.publicConfig.hotline };
+        case 'adminUsersSearch': {
+          const q = String(args.q ?? '').toLowerCase();
+          const items = f.userActivity.filter((u) => u.email.toLowerCase().includes(q) || u.name.toLowerCase().includes(q)).map((u) => ({ id: u.id, email: u.email, name: u.name, role: u.role, status: u.status }));
+          return { total: items.length, items: items.slice(0, limit) };
+        }
+        case 'adminAnomalies': return { since: f.now, lockedUsers: f.overview.users.locked, mostActive24h: [] };
       }
     }
-  }
-  return ctx;
+    throw new Error(`Không có context provider "${name}"`);
+  };
+  const get = async <T,>(name: string, args?: Record<string, unknown>) => { const d = fetch(name, args); trace.push({ name, args, data: d }); return d as T; };
+  const data: Record<string, unknown> = {};
+  for (const n of declared) { try { data[n] = fetch(n); trace.push({ name: n, data: data[n] }); } catch { /* như backend: bỏ provider không dùng được */ } }
+  const p = fx.principal as any;
+  const ctx: SkillContext = { principal: { id: p.userId, name: p.displayName, role: p.role }, now: fx.now, history: [], data, get };
+  return { ctx, trace };
 }

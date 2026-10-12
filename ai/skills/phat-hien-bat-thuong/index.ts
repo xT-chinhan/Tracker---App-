@@ -1,17 +1,22 @@
-import type { SkillDef } from '../../lib/contracts.js';
+import type { AdminAnomaliesData, Skill, UserActivityRow } from '../../lib/contracts.js';
 import { dmy } from '../../lib/period.js';
-import { adminGuard, int, llmMeta, llmSentence } from '../../lib/skillkit.js';
+import { adminGuard, fetchP, int, llmMeta, llmSentence } from '../../lib/skillkit.js';
 import { detect } from './rules.js';
 
 const KIND = { 'spend-spike': 'chi tiêu tăng vọt', 'big-expense': 'khoản chi lớn bất thường', 'tx-burst': 'số giao dịch dồn dập', 'failed-logins': 'đăng nhập sai nhiều lần' };
 
-export const skill: SkillDef = {
-  name: 'phat-hien-bat-thuong', scope: 'ADMIN', output: 'text', providers: ['admin.userActivity'],
-  plan: () => [{ provider: 'admin.userActivity' }],
+export const skill: Skill = {
+  name: 'phat-hien-bat-thuong', scope: 'ADMIN', description: 'Phát hiện bất thường bằng luật (chi tăng vọt, khoản chi lớn, giao dịch dồn dập, đăng nhập sai)', context: [],
   async run({ input, context, llm, now }) {
     const g = adminGuard(input, context.principal); if (g) return g;
-    const users = context['admin.userActivity'];
-    if (!users) return { reply: 'Chưa lấy được dữ liệu hoạt động, thử lại sau.', meta: { error: 'missing admin.userActivity' } };
+    const users = await fetchP<UserActivityRow[]>(context, 'adminUserActivity');
+    if (!users) {
+      // Backend chưa có adminUserActivity → chỉ báo được phần adminAnomalies sẵn có
+      const a = await fetchP<AdminAnomaliesData>(context, 'adminAnomalies');
+      if (!a) return { reply: 'Chưa lấy được dữ liệu hoạt động, thử lại sau.', meta: { error: 'missing adminUserActivity/adminAnomalies' } };
+      const busy = a.mostActive24h.map((x) => `• ${x.email}: ${int(x.transactions)} giao dịch trong 24 giờ`);
+      return { reply: [`Tài khoản đang bị khóa: ${int(a.lockedUsers)}.`, busy.length ? `Ghi giao dịch dồn dập trong 24 giờ:\n${busy.join('\n')}` : 'Không thấy tài khoản nào ghi dồn dập trong 24 giờ.', 'Lưu ý: chưa có dữ liệu chi tiêu theo người dùng nên chưa kiểm tra được chi tăng vọt / khoản chi lớn.'].join('\n'), meta: { degraded: true, llm: llmMeta(null) } };
+    }
     const { flags, median, day } = detect(users, now);
     const computed = [median, day, ...flags.flatMap((f) => f.numbers)];
     const byUser = new Map<string, typeof flags>();
@@ -26,7 +31,7 @@ export const skill: SkillDef = {
       if (byUser.size > top.length) lines.push(`… và ${int(byUser.size - top.length)} tài khoản khác.`);
       computed.push(byUser.size - top.length);
     }
-    if (locked.length) lines.push(`Đang bị khóa: ${locked.map((u) => `${u.name} (${u.email}, đăng nhập cuối ${u.lastLoginAt ? dmy(new Date(Date.parse(u.lastLoginAt) + 7 * 3600000).toISOString().slice(0, 10)) : 'chưa có'})`).join(', ')}.`);
+    if (locked.length) lines.push(`Đang bị khóa: ${locked.map((u) => `${u.name} (${u.email}, đăng nhập cuối ${u.lastLoginAt ? dmy(new Date(new Date(u.lastLoginAt as any).getTime() + 7 * 3600000).toISOString().slice(0, 10)) : 'chưa có'})`).join(', ')}.`);
     if (!users.some((u) => u.failedLogins24h !== undefined)) lines.push('Lưu ý: hệ thống chưa ghi nhận số lần đăng nhập sai nên chưa kiểm tra được dấu hiệu dò mật khẩu.');
     const kinds = [...new Set(flags.map((f) => KIND[f.kind]))];
     const s = await llmSentence(llm, 'Viết một câu tóm tắt ngắn cho quản trị viên về các dấu hiệu bất thường, nhắc rằng cần xem chi tiết trước khi xử lý.',

@@ -1,4 +1,4 @@
-import type { SkillDef } from '../../lib/contracts.js';
+import type { Skill } from '../../lib/contracts.js';
 import { asksOtherUser, isInjection, refusal } from '../../lib/skillkit.js';
 import { fold } from '../../lib/text.js';
 import { findAmounts } from '../../parser/money.js';
@@ -7,9 +7,8 @@ import { findAmounts } from '../../parser/money.js';
 export const ADMIN_ONLY = /\b(khoa (tai khoan|user|nguoi dung|nick)|mo khoa|broadcast|gui thong bao (cho|toi|den) (tat ca|moi|toan)|tong quan he thong|cau hinh he thong|che do bao tri|bat bao tri|smtp|trang quan tri|quyen admin|nang quyen|ha quyen|danh sach (user|nguoi dung)|tat ca (user|nguoi dung)|lock (user|account)|system overview|(soan|viet|gui|tao) (giup |cho )?(mot )?(thong bao|broadcast) (cho|toi|den|gui)?|broadcast)\b/;
 export const PERSONAL = /\b(so du (cua )?(toi|minh|vi)|vi (momo|tien mat)( cua (toi|minh))?|ngan sach cua (toi|minh)|chi tieu cua (toi|minh)|muc tieu (tiet kiem )?cua (toi|minh)|ghi (giup|cho|lai)? ?(toi|minh)? ?(khoan|chi|thu)|my (balance|wallet|budget|spending))\b/;
 
-export const skill: SkillDef = {
-  name: 'ngoai-pham-vi', scope: 'BOTH', output: 'text', providers: [],
-  plan: () => [],
+export const skill: Skill = {
+  name: 'ngoai-pham-vi', scope: 'ANY', description: 'Từ chối lịch sự: ngoài phạm vi, dữ liệu người khác, prompt injection, sai phạm vi phiên', context: [],
   async run({ input, context }) {
     const role = context.principal.role;
     const f = fold(input);

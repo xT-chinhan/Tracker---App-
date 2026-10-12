@@ -2,7 +2,7 @@
 name: huong-dan
 scope: USER
 output: text
-providers: [] (FAQ tĩnh faq.json, viết từ backend/README.md + design/mockup)
+context: [] (FAQ tĩnh faq.json, viết từ backend/README.md + design/mockup)
 llm: chỉ chọn 1 id trong 2–3 ứng viên khi điểm từ khóa sát nhau
 ---
 # huong-dan — cách dùng ứng dụng

@@ -5,8 +5,11 @@
   "input": "tìm người dùng tên Thảo Vy",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "q": "Thảo Vy"
+    "kind": "search_filter",
+    "payload": {
+     "q": "Thảo Vy",
+     "target": "users"
+    }
    }
   }
  },
@@ -16,8 +19,11 @@
   "input": "tra cứu nam.tran@demo.thuchi.vn",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "q": "nam.tran@demo.thuchi.vn"
+    "kind": "search_filter",
+    "payload": {
+     "q": "nam.tran@demo.thuchi.vn",
+     "target": "users"
+    }
    }
   }
  },
@@ -27,8 +33,11 @@
   "input": "liệt kê tài khoản đang bị khóa",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "status": "LOCKED"
+    "kind": "search_filter",
+    "payload": {
+     "status": "LOCKED",
+     "target": "users"
+    }
    }
   }
  },
@@ -38,8 +47,11 @@
   "input": "danh sách admin hiện tại",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "role": "ADMIN"
+    "kind": "search_filter",
+    "payload": {
+     "role": "ADMIN",
+     "target": "users"
+    }
    }
   }
  },
@@ -49,8 +61,11 @@
   "input": "tim user ten hung",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "q": "hung"
+    "kind": "search_filter",
+    "payload": {
+     "q": "hung",
+     "target": "users"
+    }
    }
   }
  },
@@ -60,8 +75,11 @@
   "input": "có tài khoản nào tên Bảo không",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "q": "Bảo"
+    "kind": "search_filter",
+    "payload": {
+     "q": "Bảo",
+     "target": "users"
+    }
    }
   }
  },
@@ -71,8 +89,11 @@
   "input": "xem danh sách người dùng đang hoạt động",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "status": "ACTIVE"
+    "kind": "search_filter",
+    "payload": {
+     "status": "ACTIVE",
+     "target": "users"
+    }
    }
   }
  },
@@ -82,8 +103,11 @@
   "input": "find user named Linh",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "q": "Linh"
+    "kind": "search_filter",
+    "payload": {
+     "q": "Linh",
+     "target": "users"
+    }
    }
   }
  },
@@ -93,8 +117,11 @@
   "input": "list locked accounts",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "status": "LOCKED"
+    "kind": "search_filter",
+    "payload": {
+     "status": "LOCKED",
+     "target": "users"
+    }
    }
   }
  },
@@ -104,9 +131,12 @@
   "input": "tìm user tên Hương bị khóa",
   "expect": {
    "draft": {
-    "kind": "user-filter",
-    "q": "Hương",
-    "status": "LOCKED"
+    "kind": "search_filter",
+    "payload": {
+     "q": "Hương",
+     "status": "LOCKED",
+     "target": "users"
+    }
    }
   }
  },
@@ -116,7 +146,10 @@
   "input": "liệt kê tất cả người dùng",
   "expect": {
    "draft": {
-    "kind": "user-filter"
+    "kind": "search_filter",
+    "payload": {
+     "target": "users"
+    }
    }
   }
  },

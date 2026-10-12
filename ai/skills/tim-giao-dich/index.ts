@@ -1,7 +1,7 @@
-import type { SkillDef, TxFilterDraft } from '../../lib/contracts.js';
+import type { BalanceData, CategoryRow, Skill, TxFilterPayload } from '../../lib/contracts.js';
 import { findAmounts } from '../../parser/money.js';
 import { dm, monthOf, parsePeriod, shiftMonth } from '../../lib/period.js';
-import { findName, llmJson, money, userGuard } from '../../lib/skillkit.js';
+import { fetchP, findName, llmJson, money, userGuard } from '../../lib/skillkit.js';
 import { fold } from '../../lib/text.js';
 import shots from './examples.json' with { type: 'json' };
 
@@ -12,19 +12,18 @@ const STOP = new Set(('tim kiem liet ke xem lai cho minh toi em giup cac nhung k
 const SYS = 'Trích TỪ KHÓA để tìm trong tiêu đề giao dịch: tên món, cửa hàng, dịch vụ, người nhận (1-3 từ, giữ nguyên chữ trong câu). Không lấy thời gian, số tiền, tên ví, tên danh mục, các từ "giao dịch", "khoản". Không có thì để rỗng. Chỉ trả JSON.';
 const SCHEMA = { type: 'object', properties: { keyword: { type: 'string' } }, required: ['keyword'] };
 
-export const skill: SkillDef = {
-  name: 'tim-giao-dich', scope: 'USER', output: 'draft', providers: ['user.categories', 'user.balance'],
-  plan: () => [{ provider: 'user.categories' }, { provider: 'user.balance' }],
+export const skill: Skill = {
+  name: 'tim-giao-dich', scope: 'USER', description: 'Biến câu hỏi thành bộ lọc giao dịch (thời gian, danh mục, ví, từ khóa, số tiền)', context: ['categories', 'balance'],
   async run({ input, context, llm, now }) {
     const g = userGuard(input, context.principal); if (g) return g;
-    const cats = context['user.categories'] ?? [];
-    const wallets = (context['user.balance']?.wallets ?? []).map((w) => w.name);
+    const cats = (await fetchP<CategoryRow[]>(context, 'categories')) ?? [];
+    const wallets = ((await fetchP<BalanceData>(context, 'balance'))?.wallets ?? []).map((w) => w.name);
     const f = fold(input);
-    const draft: TxFilterDraft = { kind: 'tx-filter' };
+    const draft: TxFilterPayload = { target: 'transactions' };
     const crit: string[] = [];
 
     const p = parsePeriod(input, now);
-    if (p) { draft.from = p.from; draft.to = p.to; }
+    if (p) { draft.from = p.from; draft.to = p.to; if (p.kind === 'month') draft.month = p.month; }
     if (/\b(thu nhap|khoan thu|tien vao|nhan duoc|duoc nhan|income)\b/.test(f)) draft.type = 'INCOME';
     else if (/\b(khoan chi|chi tieu|da chi|chi nhung|chi gi|chi het|tieu|xai|expense|spent?)\b/.test(f)) draft.type = 'EXPENSE';
     const wallet = findName(input, wallets);
@@ -82,10 +81,10 @@ export const skill: SkillDef = {
     }
     if (!crit.length) {
       const m = monthOf(now);
-      draft.from = `${m}-01`; draft.to = `${shiftMonth(m, 1)}-01`;
-      return { reply: 'Mình sẽ liệt kê giao dịch tháng này (bạn có thể nói rõ thời gian, danh mục, ví hoặc số tiền để lọc hẹp hơn).', draft, followUps: ['Giao dịch trên 500k tháng này', 'Hôm qua tôi chi những gì?'], meta: { llm: { calls: llmCalls, ms: Math.round(llmMs), accepted } } };
+      draft.from = `${m}-01`; draft.to = `${shiftMonth(m, 1)}-01`; draft.month = m;
+      return { reply: 'Mình sẽ liệt kê giao dịch tháng này (bạn có thể nói rõ thời gian, danh mục, ví hoặc số tiền để lọc hẹp hơn).', draft: { kind: 'search_filter', payload: draft }, followUps: ['Giao dịch trên 500k tháng này', 'Hôm qua tôi chi những gì?'], meta: { llm: { calls: llmCalls, ms: Math.round(llmMs), accepted } } };
     }
-    return { reply: `Mình sẽ tìm giao dịch: ${crit.join(' · ')}.`, draft, followUps: ['Tổng kết tháng này'], meta: { llm: { calls: llmCalls, ms: Math.round(llmMs), accepted } } };
+    return { reply: `Mình sẽ tìm giao dịch: ${crit.join(' · ')}.`, draft: { kind: 'search_filter', payload: draft }, followUps: ['Tổng kết tháng này'], meta: { llm: { calls: llmCalls, ms: Math.round(llmMs), accepted } } };
   },
 };
 export const run = skill.run;

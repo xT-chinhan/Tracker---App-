@@ -2,14 +2,14 @@
 name: hoi-so-du
 scope: USER
 output: text
-providers: [user.balance]
+context: [balance]
 llm: không gọi model (câu trả lời là template thuần)
 ---
 # hoi-so-du — hỏi số dư
 
 **Khi nào**: "momo còn bao nhiêu", "tổng tiền các ví", "số dư techcombank", "check số dư".
 
-**Dữ liệu**: `user.balance` (= `GET /stats/balance` của chính user): tổng, từng ví (tên, loại, số dư, lưu trữ), tiền đang nằm trong mục tiêu tiết kiệm.
+**Dữ liệu**: `balance` (= `GET /stats/balance` của chính user, ví chưa lưu trữ): tổng, từng ví (tên, số dư), tiền đang nằm trong mục tiêu tiết kiệm.
 
 **Cách trả lời** (code):
 1. Chặn chung (`userGuard`): hỏi dữ liệu người khác / prompt injection / phiên không phải USER → từ chối.

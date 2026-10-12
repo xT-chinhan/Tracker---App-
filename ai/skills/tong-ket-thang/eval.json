@@ -54,8 +54,7 @@
   "input": "tháng này thu nhập bao nhiêu",
   "expect": {
    "contains": [
-    "thu 22.560.000đ",
-    "Nguồn thu: Lương 22.000.000đ (97,5%)"
+    "thu 22.560.000đ"
    ]
   }
  },

@@ -1,6 +1,6 @@
-import type { SkillDef } from '../../lib/contracts.js';
+import type { MonthSummaryData, Skill } from '../../lib/contracts.js';
 import { monthOf, shiftMonth } from '../../lib/period.js';
-import { findName, llmJson, money, userGuard } from '../../lib/skillkit.js';
+import { fetchP, findName, llmJson, money, userGuard } from '../../lib/skillkit.js';
 import TIPS from './tips.json' with { type: 'json' };
 
 type Tip = { id: string; text: string };
@@ -9,13 +9,14 @@ const ALIAS: Record<string, string[]> = { 'an uong': ['an uong', 'an', 'ca phe',
 const SYS = 'Chọn 2 đến 3 mẹo tiết kiệm phù hợp nhất với câu hỏi của người dùng. Chỉ trả JSON {"ids": [...]}.';
 const months = (now: string) => [3, 2, 1].map((k) => shiftMonth(monthOf(now), -k));
 
-export const skill: SkillDef = {
-  name: 'meo-tiet-kiem', scope: 'USER', output: 'text', providers: ['user.categoryHistory'],
-  plan: (_input, now) => [{ provider: 'user.categoryHistory', params: { months: months(now) } }],
-  async run({ input, context, llm }) {
+export const skill: Skill = {
+  name: 'meo-tiet-kiem', scope: 'USER', description: 'Mẹo tiết kiệm bám theo danh mục chi nhiều nhất của chính user', context: [],
+  async run({ input, context, llm, now }) {
     const g = userGuard(input, context.principal); if (g) return g;
-    const h = context['user.categoryHistory'] ?? [];
+    const hs = await Promise.all(months(now).map((m) => fetchP<MonthSummaryData>(context, 'monthSummary', { month: m, limit: 20 })));
+    const h = hs.filter((x): x is MonthSummaryData => !!x).map((x) => ({ month: x.month, expenseByCategory: x.topExpenses.map((c) => ({ categoryName: c.name, amount: c.amount })) }));
     const n = h.length || 1;
+    const hasData = h.some((m) => m.expenseByCategory.length);
     const tot = new Map<string, number>();
     for (const m of h) for (const c of m.expenseByCategory) tot.set(c.categoryName, (tot.get(c.categoryName) ?? 0) + c.amount);
     const ranked = [...tot.entries()].map(([name, t]) => ({ name, avg: Math.round(t / n) })).sort((a, b) => b.avg - a.avg);

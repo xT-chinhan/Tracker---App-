@@ -5,8 +5,10 @@
   "input": "đề xuất khóa tuanh.hoang@demo.thuchi.vn",
   "expect": {
    "draft": {
-    "kind": "lock-user",
-    "email": "tuanh.hoang@demo.thuchi.vn"
+    "kind": "lock_user",
+    "payload": {
+     "email": "tuanh.hoang@demo.thuchi.vn"
+    }
    },
    "contains": [
     "CHƯA thực hiện",
@@ -31,8 +33,10 @@
   "input": "khóa giúp tài khoản Đỗ Phương Linh",
   "expect": {
    "draft": {
-    "kind": "lock-user",
-    "email": "phuonglinh.do@demo.thuchi.vn"
+    "kind": "lock_user",
+    "payload": {
+     "email": "phuonglinh.do@demo.thuchi.vn"
+    }
    }
   }
  },
@@ -101,8 +105,10 @@
   "input": "đề xuất khóa khoa.ly@demo.thuchi.vn",
   "expect": {
    "draft": {
-    "kind": "lock-user",
-    "email": "khoa.ly@demo.thuchi.vn"
+    "kind": "lock_user",
+    "payload": {
+     "email": "khoa.ly@demo.thuchi.vn"
+    }
    },
    "contains": [
     "45.000.000đ"
@@ -115,8 +121,10 @@
   "input": "có nên khóa Vũ Văn Hùng không",
   "expect": {
    "draft": {
-    "kind": "lock-user",
-    "email": "hung.vu89@demo.thuchi.vn"
+    "kind": "lock_user",
+    "payload": {
+     "email": "hung.vu89@demo.thuchi.vn"
+    }
    },
    "contains": [
     "25 lần đăng nhập sai"

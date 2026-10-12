@@ -1,8 +1,8 @@
 ---
 name: goi-y-ngan-sach
 scope: USER
-output: draft (BudgetPlanDraft)
-providers: [user.categoryHistory (params months = 3 tháng đủ gần nhất), user.budgets (params month)]
+output: draft budgets
+context: [] — gọi `monthSummary {month, limit: 20}` cho 3 tháng đủ gần nhất, `budgets {month}`
 llm: 1 câu lời khuyên (llmSentence), không được chứa số
 ---
 # goi-y-ngan-sach — gợi ý ngân sách từ 3 tháng gần nhất
@@ -15,6 +15,8 @@ llm: 1 câu lời khuyên (llmSentence), không được chứa số
 - Hạn mức = trung vị làm tròn LÊN bội 50.000đ (tối thiểu 100.000đ). Ngân sách tổng = trung vị tổng chi tháng làm tròn lên bội 100.000đ. Reply hiện cả trung vị và TB.
 - Chưa đủ 2 tháng có chi → không gợi ý.
 
-**Đầu ra**: `draft = { kind: 'budget-plan', month, overall, items[{categoryName, limitAmount, avg3m, median3m, monthsSeen}] }`. Người dùng xác nhận/sửa → backend gọi `POST /budgets` (tên danh mục → id của chính user). Tháng đích đã có ngân sách thì reply cảnh báo sẽ cập nhật.
+**Đầu ra**: `draft = { kind: 'budgets', payload: { items: [{categoryName: null (= tổng), month, limitAmount}, {categoryName, month, limitAmount, median3m, avg3m, monthsSeen}…] } }` đúng loại nháp `budgets` của backend (POST /budgets từng dòng sau khi xác nhận). Tháng đích đã có ngân sách thì reply cảnh báo (backend sẽ báo trùng 409 cho dòng đã có — cần upsert nếu muốn "cập nhật").
+
+**Giới hạn hiện tại**: `monthSummary.topExpenses` ở backend chỉ 5 danh mục → gợi ý tối đa 5 mục/tháng; xin backend tôn trọng `limit`.
 
 **Guardrails**: `userGuard`; mọi số tính từ context, nằm trong `meta.computed`.

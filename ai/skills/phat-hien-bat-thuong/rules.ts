@@ -1,5 +1,5 @@
 /** Luật phát hiện bất thường — thuần code, dùng chung cho phat-hien-bat-thuong và de-xuat-khoa. */
-import type { UserActivity } from '../../lib/contracts.js';
+import type { UserActivityRow as UserActivity } from '../../lib/contracts.js';
 import { daysInMonth, monthOf, vnDay } from '../../lib/period.js';
 import { int, money } from '../../lib/skillkit.js';
 

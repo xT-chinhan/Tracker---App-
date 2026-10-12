@@ -1,16 +1,15 @@
-import type { SkillDef } from '../../lib/contracts.js';
+import type { AdminOverviewData, Skill } from '../../lib/contracts.js';
 import { monthLabel, monthOf } from '../../lib/period.js';
-import { adminGuard, int, llmMeta, llmSentence, money, pct } from '../../lib/skillkit.js';
+import { adminGuard, fetchP, int, llmMeta, llmSentence, money, pct } from '../../lib/skillkit.js';
 
 const GOAL = { ACTIVE: 'đang chạy', COMPLETED: 'đã hoàn thành', WITHDRAWN: 'đã rút', EARLY_WITHDRAWN: 'rút sớm' } as Record<string, string>;
 
-export const skill: SkillDef = {
-  name: 'tong-quan-he-thong', scope: 'ADMIN', output: 'text', providers: ['admin.overview'],
-  plan: () => [{ provider: 'admin.overview' }],
+export const skill: Skill = {
+  name: 'tong-quan-he-thong', scope: 'ADMIN', description: 'Tổng quan hệ thống: người dùng, giao dịch, mục tiêu, xu hướng chi', context: ['adminOverview'],
   async run({ input, context, llm, now }) {
     const g = adminGuard(input, context.principal); if (g) return g;
-    const o = context['admin.overview'];
-    if (!o) return { reply: 'Chưa lấy được số liệu tổng quan, thử lại sau.', meta: { error: 'missing admin.overview' } };
+    const o = await fetchP<AdminOverviewData>(context, 'adminOverview');
+    if (!o) return { reply: 'Chưa lấy được số liệu tổng quan, thử lại sau.', meta: { error: 'missing adminOverview' } };
     const computed: number[] = [];
     const lines = [
       `Người dùng: ${int(o.users.total)} tài khoản (${int(o.users.active)} hoạt động, ${int(o.users.locked)} bị khóa), ${int(o.users.new30d)} tài khoản mới trong 30 ngày.`,

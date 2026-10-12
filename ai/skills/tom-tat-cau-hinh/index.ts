@@ -1,6 +1,6 @@
-import type { ConfigChangeCtx, SkillDef } from '../../lib/contracts.js';
+import type { ConfigChangeRow as ConfigChangeCtx, Skill } from '../../lib/contracts.js';
 import { parsePeriod } from '../../lib/period.js';
-import { adminGuard, int, llmMeta, llmSentence } from '../../lib/skillkit.js';
+import { adminGuard, fetchP, int, llmMeta, llmSentence } from '../../lib/skillkit.js';
 import { fold } from '../../lib/text.js';
 
 export const SECTION: Record<string, string> = { general: 'Chung', access: 'Đăng ký & truy cập', smtp: 'Email (SMTP)', password: 'Bảo mật', business: 'Nghiệp vụ', mobile: 'Ứng dụng mobile' };
@@ -18,32 +18,32 @@ export const KEY: Record<string, string> = {
   featureSavingGoals: 'tính năng tiết kiệm', featureRecurring: 'tính năng định kỳ', featureTransfers: 'tính năng chuyển tiền', featureCsvExport: 'tính năng xuất CSV', featureQuickTemplates: 'tính năng mẫu nhập nhanh',
   androidLatestVersion: 'phiên bản Android mới nhất', androidMinVersion: 'phiên bản Android tối thiểu', iosLatestVersion: 'phiên bản iOS mới nhất', iosMinVersion: 'phiên bản iOS tối thiểu', releaseNotes: 'ghi chú phát hành',
 };
-const vnTime = (iso: string) => { const d = new Date(Date.parse(iso) + 7 * 3600000).toISOString(); return `${d.slice(8, 10)}/${d.slice(5, 7)} ${d.slice(11, 16)}`; };
+const actorOf = (c: ConfigChangeCtx) => c.actor?.name ?? 'Hệ thống';
+const vnTime = (iso: string) => { const d = new Date(new Date(iso as any).getTime() + 7 * 3600000).toISOString(); return `${d.slice(8, 10)}/${d.slice(5, 7)} ${d.slice(11, 16)}`; };
 const val = (v: unknown): string => {
   if (v === null || v === undefined || v === '') return '(trống)';
   if (v === true) return 'bật'; if (v === false) return 'tắt';
   if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(v)) return vnTime(v);
   const s = String(v); return s.length > 60 ? `"${s.slice(0, 57)}…"` : typeof v === 'string' ? `"${s}"` : s;
 };
-export const describe = (c: ConfigChangeCtx) => `${vnTime(c.createdAt)} · ${c.actorName ?? 'Hệ thống'} · ${SECTION[c.section] ?? c.section} › ${KEY[c.key] ?? c.key}: ${c.secret ? 'đã đổi (giá trị ẩn)' : `${val(c.oldValue)} → ${val(c.newValue)}`}`;
+export const describe = (c: ConfigChangeCtx) => `${vnTime(c.createdAt)} · ${actorOf(c)} · ${SECTION[c.section] ?? c.section} › ${KEY[c.key] ?? c.key}: ${c.secret ? 'đã đổi (giá trị ẩn)' : `${val(c.oldValue)} → ${val(c.newValue)}`}`;
 
-export const skill: SkillDef = {
-  name: 'tom-tat-cau-hinh', scope: 'ADMIN', output: 'text', providers: ['admin.configHistory'],
-  plan: () => [{ provider: 'admin.configHistory', params: { limit: 50 } }],
+export const skill: Skill = {
+  name: 'tom-tat-cau-hinh', scope: 'ADMIN', description: 'Tóm tắt lịch sử thay đổi cấu hình hệ thống', context: [],
   async run({ input, context, llm, now }) {
     const g = adminGuard(input, context.principal); if (g) return g;
-    let h = context['admin.configHistory'];
-    if (!h) return { reply: 'Chưa lấy được lịch sử cấu hình, thử lại sau.', meta: { error: 'missing admin.configHistory' } };
+    let h = await fetchP<ConfigChangeCtx[]>(context, 'adminConfigHistory', { limit: 50 });
+    if (!h) return { reply: 'Chưa lấy được lịch sử cấu hình, thử lại sau.', meta: { error: 'missing adminConfigHistory' } };
     const f = fold(input);
     const p = parsePeriod(input, now);
     const sec = SECTION_WORDS.find(([, re]) => re.test(f))?.[0];
     const scope: string[] = [];
-    if (p) { h = h.filter((c) => { const d = new Date(Date.parse(c.createdAt) + 7 * 3600000).toISOString().slice(0, 10); return d >= p.from && d < p.to; }); scope.push(p.label); }
+    if (p) { h = h.filter((c) => { const d = new Date(new Date(c.createdAt as any).getTime() + 7 * 3600000).toISOString().slice(0, 10); return d >= p.from && d < p.to; }); scope.push(p.label); }
     if (sec) { h = h.filter((c) => c.section === sec); scope.push(`mục ${SECTION[sec]}`); }
     const where = scope.length ? ` (${scope.join(', ')})` : '';
     if (!h.length) return { reply: `Không có thay đổi cấu hình nào${where}.`, meta: { llm: llmMeta(null) } };
     const by = new Map<string, number>();
-    for (const c of h) by.set(c.actorName ?? 'Hệ thống', (by.get(c.actorName ?? 'Hệ thống') ?? 0) + 1);
+    for (const c of h) by.set(actorOf(c), (by.get(actorOf(c)) ?? 0) + 1);
     const lines = [
       `${int(h.length)} thay đổi cấu hình gần nhất${where}, theo người sửa: ${[...by].map(([a, n]) => `${a} ${int(n)}`).join(', ')}.`,
       ...h.slice(0, 12).map((c) => `• ${describe(c)}`),
