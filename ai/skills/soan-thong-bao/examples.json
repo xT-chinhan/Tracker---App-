@@ -1,0 +1,6 @@
+[
+ {"input": "soạn thông báo bảo trì hệ thống từ 23h ngày 20/10 đến 1h sáng 21/10",
+  "draft": {"title": "Bảo trì hệ thống đêm 20/10", "body": "Hệ thống sẽ bảo trì từ 23h ngày 20/10 đến 1h sáng 21/10 để nâng cấp. Trong thời gian này bạn tạm thời chưa đăng nhập và ghi chép được. Mong bạn thông cảm vì sự bất tiện này. Trân trọng, đội ngũ Thu Chi."}},
+ {"input": "viết thông báo giới thiệu tính năng xuất dữ liệu CSV mới",
+  "draft": {"title": "Đã có tính năng xuất dữ liệu CSV", "body": "Giờ bạn có thể xuất giao dịch ra file CSV trong Cài đặt › Xuất dữ liệu CSV để lưu trữ hoặc mở bằng Excel. Hãy thử và cho chúng tôi biết cảm nhận của bạn nhé. Trân trọng, đội ngũ Thu Chi."}}
+]

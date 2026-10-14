@@ -1,0 +1,52 @@
+{
+ "Ăn uống": [
+  {"id": "an-1", "text": "Nấu cơm mang theo vài bữa trưa mỗi tuần thay vì ăn ngoài."},
+  {"id": "an-2", "text": "Pha cà phê ở nhà hoặc dùng mẫu nhập nhanh để thấy rõ mỗi ly cà phê cộng dồn bao nhiêu."},
+  {"id": "an-3", "text": "Đi chợ theo danh sách đã lên trước, tránh mua theo hứng ở siêu thị."},
+  {"id": "an-4", "text": "Đặt ngân sách riêng cho Ăn uống và xem cảnh báo khi chạm ngưỡng."}
+ ],
+ "Di chuyển": [
+  {"id": "dc-1", "text": "Gộp các chuyến đi gần nhau, dùng xe buýt hoặc đi chung cho quãng đường quen thuộc."},
+  {"id": "dc-2", "text": "So giá giữa các ứng dụng gọi xe và tránh giờ cao điểm có phụ phí."},
+  {"id": "dc-3", "text": "Bảo dưỡng xe định kỳ để đỡ tốn xăng và sửa chữa lớn."}
+ ],
+ "Mua sắm": [
+  {"id": "ms-1", "text": "Áp dụng quy tắc chờ một ngày trước khi mua món không cần thiết."},
+  {"id": "ms-2", "text": "Gỡ thẻ thanh toán lưu sẵn trên sàn thương mại điện tử để giảm mua bốc đồng."},
+  {"id": "ms-3", "text": "Lập danh sách món cần mua cho cả tháng và chỉ mua trong dịp giảm giá thật sự."}
+ ],
+ "Giải trí": [
+  {"id": "gt-1", "text": "Rà lại các gói đăng ký xem phim, nghe nhạc và hủy gói ít dùng."},
+  {"id": "gt-2", "text": "Xen kẽ các hoạt động miễn phí như đi bộ, thể thao ngoài trời vào cuối tuần."}
+ ],
+ "Hóa đơn": [
+  {"id": "hd-1", "text": "Tắt thiết bị điện khi không dùng và để điều hòa ở mức vừa phải."},
+  {"id": "hd-2", "text": "Xem lại gói cước điện thoại, internet xem có gói rẻ hơn phù hợp không."}
+ ],
+ "Nhà ở": [
+  {"id": "nh-1", "text": "Tiền nhà là chi cố định: hãy đặt giao dịch định kỳ để không bị bất ngờ và tính phần còn lại cho các mục khác."},
+  {"id": "nh-2", "text": "Khi gia hạn hợp đồng thuê, thử thương lượng giá hoặc cân nhắc ở ghép."}
+ ],
+ "Sức khỏe": [
+  {"id": "sk-1", "text": "Dùng bảo hiểm y tế khi khám chữa bệnh và so giá thuốc giữa các nhà thuốc."}
+ ],
+ "Giáo dục": [
+  {"id": "gd-1", "text": "Tìm khóa học trực tuyến miễn phí hoặc mua sách cũ trước khi mua mới."}
+ ],
+ "Gia đình": [
+  {"id": "gđ-1", "text": "Thống nhất với gia đình một khoản chi chung cố định mỗi tháng để dễ kiểm soát."}
+ ],
+ "Du lịch": [
+  {"id": "dl-1", "text": "Đặt vé và phòng sớm, đi ngoài mùa cao điểm, và lập mục tiêu tiết kiệm riêng cho chuyến đi."}
+ ],
+ "Hiếu hỉ": [
+  {"id": "hh-1", "text": "Dự trù một khoản hiếu hỉ cố định mỗi tháng để không phải rút từ các mục khác."}
+ ],
+ "Chi khác": [
+  {"id": "ck-1", "text": "Ghi rõ danh mục cho các khoản chi khác để biết tiền thực sự đi đâu."}
+ ],
+ "_chung": [
+  {"id": "c-1", "text": "Trả tiền cho bản thân trước: chuyển tiền vào mục tiêu tiết kiệm ngay khi nhận lương."},
+  {"id": "c-2", "text": "Xem báo cáo cuối mỗi tuần để phát hiện sớm khoản chi tăng bất thường."}
+ ]
+}

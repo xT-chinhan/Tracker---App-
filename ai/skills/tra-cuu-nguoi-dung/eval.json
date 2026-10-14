@@ -1,0 +1,165 @@
+[
+ {
+  "id": "01",
+  "fixture": "admin",
+  "input": "tìm người dùng tên Thảo Vy",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "Thảo Vy",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "admin",
+  "input": "tra cứu nam.tran@demo.thuchi.vn",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "nam.tran@demo.thuchi.vn",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "admin",
+  "input": "liệt kê tài khoản đang bị khóa",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "status": "LOCKED",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "admin",
+  "input": "danh sách admin hiện tại",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "role": "ADMIN",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "admin",
+  "input": "tim user ten hung",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "hung",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "admin",
+  "input": "có tài khoản nào tên Bảo không",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "Bảo",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "admin",
+  "input": "xem danh sách người dùng đang hoạt động",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "status": "ACTIVE",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "admin",
+  "input": "find user named Linh",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "Linh",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "admin",
+  "input": "list locked accounts",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "status": "LOCKED",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "admin",
+  "input": "tìm user tên Hương bị khóa",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "Hương",
+     "status": "LOCKED",
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "admin",
+  "input": "liệt kê tất cả người dùng",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "target": "users"
+    }
+   }
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-demo",
+  "input": "tìm user tên Hùng",
+  "expect": {
+   "refused": "scope",
+   "draft": null
+  }
+ }
+]

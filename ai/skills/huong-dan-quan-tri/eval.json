@@ -1,0 +1,114 @@
+[
+ {
+  "id": "01",
+  "fixture": "admin",
+  "input": "cách bật chế độ bảo trì",
+  "expect": {
+   "faq": "bao-tri"
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "admin",
+  "input": "gửi email thử smtp ở đâu",
+  "expect": {
+   "faq": "smtp"
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "admin",
+  "input": "làm sao mở khóa tài khoản",
+  "expect": {
+   "faq": "khoa-user"
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "admin",
+  "input": "hướng dẫn thêm danh mục hệ thống",
+  "expect": {
+   "faq": "danh-muc-he-thong"
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "admin",
+  "input": "đổi ngưỡng cảnh báo ngân sách ở đâu",
+  "expect": {
+   "faq": "nguong-ngan-sach"
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "admin",
+  "input": "cach tat dang ky tai khoan moi",
+  "expect": {
+   "faq": "dang-ky"
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "admin",
+  "input": "làm thế nào để bắt buộc cập nhật app",
+  "expect": {
+   "faq": "phien-ban-mobile"
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "admin",
+  "input": "cách nâng quyền quản trị cho user",
+  "expect": {
+   "faq": "phan-quyen"
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "admin",
+  "input": "how do I enable maintenance mode",
+  "expect": {
+   "faq": "bao-tri"
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "admin",
+  "input": "muốn xem lịch sử cấu hình thì vào đâu",
+  "expect": {
+   "faq": "lich-su-cau-hinh"
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "admin",
+  "input": "gửi thông báo cho mọi người làm sao",
+  "expect": {
+   "faq": "broadcast"
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "admin",
+  "input": "chỉnh độ dài mật khẩu tối thiểu ở đâu",
+  "expect": {
+   "faq": "mat-khau-otp"
+  }
+ },
+ {
+  "id": "13",
+  "fixture": "admin",
+  "input": "làm sao xuất hóa đơn VAT",
+  "expect": {
+   "askBack": true
+  }
+ },
+ {
+  "id": "14",
+  "fixture": "user-demo",
+  "input": "cách bật chế độ bảo trì",
+  "expect": {
+   "refused": "scope"
+  }
+ }
+]

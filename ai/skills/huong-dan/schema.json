@@ -1,0 +1,1 @@
+{"type": "object", "properties": {"id": {"type": "string", "enum": ["<id của 2–3 mục ứng viên, sinh lúc chạy>"]}}, "required": ["id"]}
