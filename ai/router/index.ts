@@ -50,3 +50,9 @@ export async function routeCombined(text: string, ctx: UserContext, knn: KnnRout
   const k = await knn.route(text);
   return k.top1 >= minScore ? k : { skill: 'hoi-lai', by: 'fallback', score: k.top1 };
 }
+
+// ── Track B: router theo scope (API mới; routeRules/KnnRouter/routeCombined ở trên giữ nguyên chữ ký cho backend) ──
+// routeRulesScoped(text, scope) → { skill, by: 'guard'|'rule', reason? } | null   (không cần UserContext, không gọi model)
+// routeScoped(text, scope, knn, threshold) → luật → kNN bge-m3 trên câu mẫu của scope → hỏi lại; không bao giờ ra skill ngoài scope
+export { routeRulesScoped, routeScoped, ScopedKnn, DEFAULT_THRESHOLD, type ScopedRoute } from './scoped.js';
+export { BANK as SCOPED_BANK, SKILLS_BY_SCOPE, USER_SKILLS, ADMIN_SKILLS } from './bank.js';

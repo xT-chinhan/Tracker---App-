@@ -21,6 +21,7 @@ import { ExportModule } from './export/export.module';
 import { RecurringModule } from './recurring/recurring.module';
 import { HealthModule } from './health/health.module';
 import { SystemConfigModule, SystemConfigService } from './system-config/system-config.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { SystemConfigModule, SystemConfigService } from './system-config/system-
     RecurringModule,
     ExportModule,
     AdminModule,
+    AiModule,
     HealthModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],

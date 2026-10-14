@@ -1,0 +1,349 @@
+[
+ {
+  "id": "01",
+  "fixture": "user-demo",
+  "input": "tìm các khoản grab tuần trước",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-09-28",
+     "to": "2026-10-05",
+     "q": "grab",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "02",
+  "fixture": "user-demo",
+  "input": "hôm qua mình chi những gì",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-10-07",
+     "to": "2026-10-08",
+     "type": "EXPENSE",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "03",
+  "fixture": "user-demo",
+  "input": "liệt kê giao dịch shopee tháng này",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-10-01",
+     "to": "2026-11-01",
+     "q": "shopee",
+     "target": "transactions",
+     "month": "2026-10"
+    }
+   }
+  }
+ },
+ {
+  "id": "04",
+  "fixture": "user-demo",
+  "input": "lần cuối đổ xăng là khi nào",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "~xăng",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "05",
+  "fixture": "user-demo",
+  "input": "khoản 500k hôm thứ 2 là gì",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-10-05",
+     "to": "2026-10-06",
+     "minAmount": 500000,
+     "maxAmount": 500000,
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "06",
+  "fixture": "user-demo",
+  "input": "xem lại giao dịch tiền điện",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "~điện",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "07",
+  "fixture": "user-demo",
+  "input": "mấy khoản trả bằng momo gần đây",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-09-09",
+     "to": "2026-10-09",
+     "walletName": "MoMo",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "08",
+  "fixture": "user-demo",
+  "input": "tìm giao dịch trên 1 triệu",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "minAmount": 1000000,
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "09",
+  "fixture": "user-demo",
+  "input": "liệt kê các khoản trên 500k tháng 9",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-09-01",
+     "to": "2026-10-01",
+     "minAmount": 500000,
+     "target": "transactions",
+     "month": "2026-09"
+    }
+   }
+  }
+ },
+ {
+  "id": "10",
+  "fixture": "user-demo",
+  "input": "các khoản ăn uống dưới 50k tuần này",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-10-05",
+     "to": "2026-10-09",
+     "categoryName": "Ăn uống",
+     "type": "EXPENSE",
+     "maxAmount": 50000,
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "11",
+  "fixture": "user-demo",
+  "input": "thu nhập tháng 8",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-08-01",
+     "to": "2026-09-01",
+     "type": "INCOME",
+     "target": "transactions",
+     "month": "2026-08"
+    }
+   }
+  }
+ },
+ {
+  "id": "12",
+  "fixture": "user-demo",
+  "input": "giao dịch techcombank tháng trước",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-09-01",
+     "to": "2026-10-01",
+     "walletName": "Techcombank",
+     "target": "transactions",
+     "month": "2026-09"
+    }
+   }
+  }
+ },
+ {
+  "id": "13",
+  "fixture": "user-demo",
+  "input": "tìm khoản tiền nhà",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "~nhà",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "14",
+  "fixture": "user-demo",
+  "input": "từ 1/9 đến 15/9 mua sắm những gì",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-09-01",
+     "to": "2026-09-16",
+     "categoryName": "Mua sắm",
+     "type": "EXPENSE",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "15",
+  "fixture": "user-demo",
+  "input": "các khoản từ 200k đến 500k",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "minAmount": 200000,
+     "maxAmount": 500000,
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "16",
+  "fixture": "user-demo",
+  "input": "tim giao dich ca phe",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "q": "~ca phe",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "17",
+  "fixture": "user-demo",
+  "input": "xem các giao dịch",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-10-01",
+     "to": "2026-11-01",
+     "target": "transactions",
+     "month": "2026-10"
+    }
+   },
+   "contains": [
+    "tháng này"
+   ]
+  }
+ },
+ {
+  "id": "18",
+  "fixture": "user-thu",
+  "input": "giao dịch acb hôm nay",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-10-08",
+     "to": "2026-10-09",
+     "walletName": "ACB",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "19",
+  "fixture": "user-thu",
+  "input": "tìm khoản thú cưng tháng 9",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-09-01",
+     "to": "2026-10-01",
+     "categoryName": "Thú cưng",
+     "type": "EXPENSE",
+     "target": "transactions",
+     "month": "2026-09"
+    }
+   }
+  }
+ },
+ {
+  "id": "20",
+  "fixture": "user-demo",
+  "input": "tìm giao dịch của nguyen van a",
+  "expect": {
+   "refused": "other_user",
+   "draft": null
+  }
+ },
+ {
+  "id": "21",
+  "fixture": "user-demo",
+  "input": "show my transactions from last week",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-09-28",
+     "to": "2026-10-05",
+     "target": "transactions"
+    }
+   }
+  }
+ },
+ {
+  "id": "22",
+  "fixture": "user-demo",
+  "input": "khoản 1tr2 hôm thứ 3 là gì vậy",
+  "expect": {
+   "draft": {
+    "kind": "search_filter",
+    "payload": {
+     "from": "2026-10-06",
+     "to": "2026-10-07",
+     "minAmount": 1200000,
+     "maxAmount": 1200000,
+     "target": "transactions"
+    }
+   }
+  }
+ }
+]

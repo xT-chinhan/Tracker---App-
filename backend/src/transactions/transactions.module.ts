@@ -38,6 +38,9 @@ export class TransactionFilter extends IntersectionType(PageQuery, RangeQuery) {
   @IsOptional() @IsUUID() walletId?: string;
   /** Tìm trong tiêu đề / ghi chú */
   @IsOptional() @Trim() @IsString() @MaxLength(100) q?: string;
+  /** Khoảng số tiền (VND, bao gồm 2 đầu) */
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(MAX_AMOUNT) minAmount?: number;
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(MAX_AMOUNT) maxAmount?: number;
 }
 
 export const TX_CATEGORY_SELECT = { select: { id: true, name: true, icon: true, color: true, type: true } } as const;
@@ -51,6 +54,7 @@ export function buildTxWhere(f: TransactionFilter): Prisma.TransactionWhereInput
     categoryId: f.categoryId,
     walletId: f.walletId,
     occurredAt: range.gte || range.lt ? range : undefined,
+    amount: f.minAmount || f.maxAmount ? { gte: f.minAmount ? BigInt(f.minAmount) : undefined, lte: f.maxAmount ? BigInt(f.maxAmount) : undefined } : undefined,
     OR: f.q
       ? [
           { title: { contains: f.q, mode: 'insensitive' } },

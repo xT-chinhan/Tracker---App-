@@ -1,0 +1,1 @@
+{"type": "object", "properties": {"ids": {"type": "array", "minItems": 2, "maxItems": 3, "items": {"type": "string", "enum": ["<id mẹo của danh mục trọng tâm + mẹo chung, sinh lúc chạy>"]}}}, "required": ["ids"]}

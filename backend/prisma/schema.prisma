@@ -78,6 +78,28 @@ model User {
   passwordReset  PasswordReset?
   recurringRules RecurringRule[]
   savingEntries  SavingEntry[]
+  aiConversations AiConversation[]
+  aiMessages      AiMessage[]
+  aiDrafts        AiDraft[]
+  aiFeedback      AiFeedback[]
+  aiMemory        AiMemory[]
+  aiExamples      AiExample[]
+  aiRules         AiRule[]
+  aiSetting       AiUserSetting?
+  loginFailures   LoginFailure[]
+}
+
+/// Lần đăng nhập SAI của tài khoản có thật (không lưu mật khẩu đã nhập) — để phát hiện dò mật khẩu. Giữ 30 ngày.
+model LoginFailure {
+  id        String   @id @default(uuid())
+  userId    String
+  ip        String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
 }
 
 /// Ví / tài khoản tiền. Số dư luôn tính từ dữ liệu (initialBalance + phát sinh), không lưu cộng dồn.
@@ -349,4 +371,256 @@ model SystemConfigChange {
 
   @@index([createdAt])
   @@index([section, createdAt])
+}
+
+/* ============================== Trợ lý AI ==============================
+ * Mọi dòng dữ liệu của user đều có userId (FK cascade => xóa tài khoản xóa sạch).
+ * Chỉ truy cập qua AiRepo (src/ai/ai.store.ts) — repo bắt buộc có principal từ JWT.
+ * Dòng phạm vi GLOBAL (luật / ví dụ chung) có userId = null và chỉ chứa dữ liệu đã ẩn danh. */
+
+/// USER = hội thoại của người dùng; ADMIN = hội thoại của quản trị viên (skill admin). Lấy theo role lúc tạo.
+enum AiScope {
+  USER
+  ADMIN
+}
+
+enum AiMessageRole {
+  USER
+  ASSISTANT
+}
+
+enum AiDraftStatus {
+  PROPOSED
+  /// Đang thực thi (chặn xác nhận 2 lần đồng thời)
+  EXECUTING
+  CONFIRMED
+  EDITED
+  CANCELLED
+}
+
+/// Phạm vi của ví dụ / luật: riêng 1 user hay chung (đã ẩn danh)
+enum AiKnowledgeScope {
+  USER
+  GLOBAL
+}
+
+enum AiKnowledgeStatus {
+  PROPOSED
+  ACTIVE
+  REJECTED
+}
+
+model AiConversation {
+  id        String   @id @default(uuid())
+  userId    String
+  scope     AiScope
+  title     String?
+  archived  Boolean  @default(false)
+  /// Ghim: không bị tự lưu trữ khi đạt giới hạn số hội thoại
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages AiMessage[]
+
+  @@index([userId, updatedAt])
+}
+
+model AiMessage {
+  id             String        @id @default(uuid())
+  conversationId String
+  /// Trùng với conversation.userId (lọc trực tiếp + đếm hạn mức/ngày)
+  userId         String
+  role           AiMessageRole
+  content        String
+  /// Skill xử lý (tin của assistant)
+  skill          String?
+  /// rule | knn | learned | fallback | reroute
+  routeBy        String?
+  /// ok | ask | error | unsupported
+  status         String        @default("ok")
+  latencyMs      Int?
+  promptTokens   Int?
+  evalTokens     Int?
+  /// Gợi ý câu tiếp theo, thông tin chẩn đoán (luật đã áp, số shot...) — không chứa dữ liệu user khác
+  meta           Json?
+  createdAt      DateTime      @default(now())
+
+  conversation AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  draft        AiDraft?
+  feedback     AiFeedback[]
+
+  @@index([conversationId, createdAt])
+  @@index([userId, role, createdAt])
+  @@index([skill, createdAt])
+}
+
+/// Nháp do skill đề xuất; chỉ thực thi khi user xác nhận (qua service nghiệp vụ sẵn có).
+model AiDraft {
+  id           String        @id @default(uuid())
+  messageId    String        @unique
+  userId       String
+  skill        String
+  /// transactions | budgets | broadcast | lock_user | search_filter
+  kind         String
+  payload      Json
+  status       AiDraftStatus @default(PROPOSED)
+  finalPayload Json?
+  /// Kết quả thực thi (vd {created: 2}) — trả lại nguyên vẹn khi xác nhận lặp (idempotent)
+  result       Json?
+  resolvedAt   DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  message AiMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([skill, status, createdAt])
+}
+
+/// Tín hiệu học: kết quả nháp (DRAFT_OUTCOME), sửa định tuyến "ý tôi là…" (REROUTE), thích / không thích (THUMBS).
+model AiFeedback {
+  id        String   @id @default(uuid())
+  userId    String
+  messageId String
+  /// DRAFT_OUTCOME | REROUTE | THUMBS
+  kind      String
+  skill     String?
+  /// confirmed | edited | cancelled (DRAFT_OUTCOME)
+  outcome   String?
+  fromSkill String?
+  toSkill   String?
+  /// +1 / -1 (THUMBS)
+  rating    Int?
+  /// Khác biệt nháp → bản cuối (DRAFT_OUTCOME edited)
+  diff      Json?
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message AiMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, kind])
+  @@index([userId, createdAt])
+  @@index([kind, createdAt])
+}
+
+/// Trí nhớ riêng của user (ví hay dùng, biệt danh…), có bộ đếm có ích / có hại.
+model AiMemory {
+  id         String    @id @default(uuid())
+  userId     String
+  /// vd "wallet.default", "category.frequent:<tên>"
+  key        String
+  value      String
+  helpful    Int       @default(0)
+  harmful    Int       @default(0)
+  /// confirm | edit | reroute | user
+  source     String
+  lastUsedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, key])
+}
+
+/// Kho ví dụ (few-shot kNN / câu mẫu router). USER = riêng user; GLOBAL = chung, đã ẩn danh (userId null).
+model AiExample {
+  id            String            @id @default(uuid())
+  scope         AiKnowledgeScope
+  userId        String?
+  /// userId hoặc "global" (unique không dính NULL)
+  ownerKey      String
+  /// Skill dùng ví dụ ("router" = câu mẫu định tuyến)
+  skill         String
+  input         String
+  /// Chuẩn hóa còn dấu (khóa trùng)
+  inputNorm     String
+  output        Json
+  /// Float32 little-endian (kNN trong tiến trình; sau này thay bằng pgvector)
+  embedding     Bytes?
+  embedModel    String?
+  confirmations Int               @default(1)
+  /// Số user khác nhau đóng góp (GLOBAL)
+  userCount     Int               @default(1)
+  status        AiKnowledgeStatus @default(ACTIVE)
+  approvedById  String?
+  approvedAt    DateTime?
+  evalReport    Json?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerKey, skill, inputNorm])
+  @@index([scope, skill, status])
+}
+
+/// Luật học được: pattern (chuỗi chuẩn hóa CÒN DẤU) → value (danh mục / skill). kind: category | route.
+model AiRule {
+  id           String            @id @default(uuid())
+  scope        AiKnowledgeScope
+  userId       String?
+  ownerKey     String
+  skill        String
+  kind         String
+  pattern      String
+  value        String
+  /// Số lần quan sát pattern → value
+  support      Int               @default(0)
+  helpful      Int               @default(0)
+  harmful      Int               @default(0)
+  userCount    Int               @default(1)
+  precision    Float?
+  status       AiKnowledgeStatus @default(PROPOSED)
+  approvedById String?
+  approvedAt   DateTime?
+  evalReport   Json?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerKey, kind, pattern, value])
+  @@index([scope, kind, status])
+}
+
+/// Bộ đề hồi quy (chung, ẩn danh) cho cổng kiểm định luật / ví dụ chung.
+model AiEvalCase {
+  id        String   @id @default(uuid())
+  skill     String
+  input     String
+  inputNorm String
+  expected  Json
+  /// seed | approved
+  source    String
+  createdAt DateTime @default(now())
+
+  @@unique([skill, inputNorm])
+}
+
+/// Lịch sử chạy chu trình học ban đêm.
+model AiLearningRun {
+  id         String    @id @default(uuid())
+  trigger    String
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  stats      Json?
+  error      String?
+}
+
+/// Cài đặt AI của user. shareExamples = đồng ý góp ví dụ ẩn danh vào kho chung (hỏi 1 lần, tắt được); consentedAt = lúc đồng ý gần nhất.
+model AiUserSetting {
+  userId        String    @id
+  shareExamples Boolean   @default(false)
+  consentedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

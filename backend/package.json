@@ -33,7 +33,8 @@
     "nodemailer": "^7.0.13",
     "prisma": "^6.19.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

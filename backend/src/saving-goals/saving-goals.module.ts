@@ -242,5 +242,5 @@ export class SavingGoalsController {
   }
 }
 
-@Module({ imports: [WalletsModule], controllers: [SavingGoalsController], providers: [SavingGoalsService] })
+@Module({ imports: [WalletsModule], controllers: [SavingGoalsController], providers: [SavingGoalsService], exports: [SavingGoalsService] })
 export class SavingGoalsModule {}
