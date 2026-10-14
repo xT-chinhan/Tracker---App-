@@ -2,7 +2,7 @@
  * Vòng học.
  *  - NGAY (phạm vi user): xác nhận / sửa / hủy nháp, "ý tôi là…", thích/không thích → tín hiệu + ví dụ + luật + trí nhớ của CHÍNH user.
  *  - BAN ĐÊM (02:30 giờ VN, tuần tự, khóa advisory): gom luật/ví dụ của nhiều user → ẩn danh (k-ẩn danh ≥ 2 user, bỏ tên,
- *    bỏ ghi chú, tiền làm tròn) → ứng viên CHUNG → cổng kiểm định (bộ đề hồi quy trong DB, hoặc ai/eval/gate.ts nếu có)
+ *    bỏ ghi chú, tiền làm tròn) → ứng viên CHUNG → cổng kiểm định (bộ đề hồi quy trong DB)
  *    → tự bật theo ngưỡng trong Cấu hình hệ thống, còn lại chờ admin duyệt.
  */
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
@@ -148,9 +148,9 @@ export class AiLearningService implements OnModuleInit {
         skipDuplicates: true,
       });
     }
-    // 3) Bộ đề hồi quy: bank.seed + ghi.test (câu 1 khoản)
+    // 3) Bộ đề hồi quy: bank.seed + ghi.dev (câu 1 khoản; KHÔNG dùng ghi.test — tập giữ riêng để đo)
     if (!(await this.prisma.aiEvalCase.count())) {
-      const test = (await aiData<{ text: string; items: { categoryName: string }[] }[]>('eval/data/ghi.test.json')) ?? [];
+      const test = (await aiData<{ text: string; items: { categoryName: string }[] }[]>('eval/data/ghi.dev.json')) ?? [];
       const cases = [...(bank ?? []).map((b) => ({ text: b.text, categoryName: b.categoryName })), ...test.filter((t) => t.items.length === 1).map((t) => ({ text: t.text, categoryName: t.items[0].categoryName }))];
       await this.prisma.aiEvalCase.createMany({
         data: cases.map((c) => ({ skill: 'ghi-giao-dich', input: c.text, inputNorm: norm(cleanOf(c.text)), expected: { categoryName: c.categoryName }, source: 'seed' })),
@@ -161,14 +161,11 @@ export class AiLearningService implements OnModuleInit {
 
   /* ============================== cổng kiểm định ============================== */
 
-  private gate?: Promise<any>;
-
+  /**
+   * Cổng tất định trên bộ đề hồi quy trong DB. ai/eval/gate.ts (evaluateRule) chạy model thật trên bộ đề có nhãn đầy đủ —
+   * dùng cho đánh giá offline; nối vào chu trình đêm là việc trong docs/BACKLOG.md.
+   */
   private async evalRule(pattern: string, value: string, cases: { inputNorm: string; expected: any }[]): Promise<EvalReport> {
-    const ext = await (this.gate ??= aiData<any>('eval/gate.ts'));
-    if (typeof ext?.evaluateRule === 'function') {
-      const r = await ext.evaluateRule({ pattern, value, skill: 'ghi-giao-dich' });
-      return { ...r, source: 'ai' };
-    }
     const hit = cases.filter((c) => ruleKeys(c.inputNorm).includes(pattern));
     const correct = hit.filter((c) => c.expected?.categoryName === value).length;
     return { verdict: !hit.length ? 'no-coverage' : correct === hit.length ? 'pass' : 'fail', matched: hit.length, correct, source: 'db' };

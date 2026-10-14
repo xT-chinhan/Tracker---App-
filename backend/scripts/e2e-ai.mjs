@@ -571,8 +571,8 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('non-consenting users contribute nothing (no global rule/example for their phrase)', (await rulesQ(tag)).every((x) => x.pattern !== `món ${tag}`) && (await req('GET', `/admin/ai/examples?limit=50&q=${encodeURIComponent(novelNo)}`, { token: tAd })).data.items.length === 0);
     const sn = r.data.items.find((x) => x.pattern === novel);
     check('novel phrase (no regression coverage) => PROPOSED (waits admin)', sn?.status === 'PROPOSED' && sn.evalReport?.verdict === 'no-coverage', sn);
-    // parser ai/ bỏ "trà" (fold = "tra" trùng từ đệm "trả") nên khóa của "trà đá" là "đá"
-    const td = r.data.items.find((x) => x.pattern === 'đá' && x.value === 'Giải trí');
+    // khóa luật còn dấu: "trà đá" (parser không còn nhầm "trà" với từ đệm "trả")
+    const td = r.data.items.find((x) => x.pattern === 'trà đá' && x.value === 'Giải trí');
     check('"trà đá" → Giải trí contradicts regression set => REJECTED (eval fail)', td?.status === 'REJECTED' && td.evalReport?.verdict === 'fail', td);
     check('no global rule contains contributor name "quân"', !r.data.items.some((x) => /quân/.test(x.pattern)), r.data.items.map((x) => x.pattern));
     check('global rules carry no userId / emails', r.data.items.every((x) => !('userId' in x)) && !U.some((u) => JSON.stringify(r.data).includes(u.email) || JSON.stringify(r.data).includes(u.id)));
