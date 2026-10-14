@@ -73,6 +73,8 @@ function allowedDates(context: unknown, now: string, extra: unknown[], input = '
     else if (x && typeof x === 'object') Object.entries(x).forEach(([k, v]) => walk(v, k));
   };
   walk(context); walk(extra); add(now);
+  // ngày viết sẵn trong dữ liệu (vd tiêu đề broadcast "đêm 12/10")
+  input += ' ' + JSON.stringify(context);
   for (const m of input.matchAll(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?/g)) { days.add(`${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`); if (m[3]) years.add(+m[3]); }
   return { days, years, times };
 }

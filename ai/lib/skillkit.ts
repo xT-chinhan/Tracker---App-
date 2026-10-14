@@ -99,7 +99,8 @@ export function adminGuard(input: string, p: Principal): SkillResult | null {
 }
 
 // ───────── model: 1–2 câu nhận xét, KHÔNG được có số ─────────
-const NUMBER_WORDS = /\b(mot|hai|ba|bon|nam|sau|bay|tam|chin|muoi|tram|nghin|ngan|trieu|ty|ti|phan tram|chuc|nua|k)\b/;
+/** Số viết bằng chữ không lẫn với từ thường (bỏ ngân/năm/sau/bảy/tám/ba/hai… vì trùng 'ngân sách', 'tháng sau', 'tầm'…). */
+const NUMBER_WORDS = /\b(tram|nghin|trieu|ty|phan tram|muoi|ngan dong)\b/; // "chục" bỏ: trùng "chúc mừng"
 const VI_CHARS = /[ăâđêôơưáàảãạấầẩẫậắằẳẵặéèẻẽẹếềểễệíìỉĩịóòỏõọốồổỗộớờởỡợúùủũụứừửữựýỳỷỹỵ]/i;
 
 /** Kiểm câu do model viết: tiếng Việt, ngắn, không chứa số (kể cả số viết bằng chữ), không link/email. */
@@ -108,7 +109,7 @@ export function checkSentence(s: string, maxLen = 220): string | null {
   if (!t) return 'rỗng';
   if (t.length > maxLen) return 'quá dài';
   if (/\d/.test(t)) return 'có chữ số';
-  if (NUMBER_WORDS.test(fold(t).replace(/\bnam (nay|ngoai|sau|truoc)\b/g, ''))) return 'có số viết bằng chữ';
+  if (NUMBER_WORDS.test(fold(t))) return 'có số viết bằng chữ';
   if (/https?:|www\.|@/.test(t)) return 'có link/email';
   if (!VI_CHARS.test(t)) return 'không phải tiếng Việt';
   return null;

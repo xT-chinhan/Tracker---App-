@@ -57,7 +57,7 @@
    "pass%": 53.8,
    "gọi model": 11,
    "model đạt%": 0,
-   "p50 ms": 1,
+   "p50 ms": 0,
    "p95 ms": 1
   },
   {
@@ -68,7 +68,7 @@
    "gọi model": 11,
    "model đạt%": 0,
    "p50 ms": 0,
-   "p95 ms": 3
+   "p95 ms": 2
   },
   {
    "skill": "huong-dan",
@@ -88,7 +88,7 @@
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
-   "p95 ms": 1
+   "p95 ms": 0
   },
   {
    "skill": "hoi-lai",
@@ -98,7 +98,7 @@
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
-   "p95 ms": 1
+   "p95 ms": 0
   },
   {
    "skill": "tong-quan-he-thong",
@@ -128,7 +128,7 @@
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
-   "p95 ms": 1
+   "p95 ms": 0
   },
   {
    "skill": "soan-thong-bao",
@@ -144,7 +144,7 @@
    "skill": "de-xuat-khoa",
    "scope": "ADMIN",
    "cases": 12,
-   "pass%": 25,
+   "pass%": 58.3,
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
@@ -168,12 +168,12 @@
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
-   "p95 ms": 1
+   "p95 ms": 0
   }
  ],
  "total": {
   "cases": 269,
-  "pass": 230,
+  "pass": 234,
   "p50": 0,
   "p95": 1
  },
@@ -184,7 +184,7 @@
    "input": "ví momo còn bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 13,
+   "ms": 14,
    "llm": null,
    "reply": "Ví MoMo hiện còn 1.500.000đ. Tổng 4 ví: 26.022.000đ.",
    "draft": null,
@@ -268,7 +268,7 @@
    "input": "check số dư giúp mình",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Tổng số dư 4 ví: 26.022.000đ.\n• MB Bank: 18.672.000đ\n• Techcombank: 4.000.000đ\n• Tiền mặt: 1.850.000đ\n• MoMo: 1.500.000đ\nNgoài ra 52.200.000đ đang nằm trong các mục tiêu tiết kiệm (không tính vào số dư ví).",
    "draft": null,
@@ -292,7 +292,7 @@
    "input": "số dư zalopay",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Bạn chưa có ví ZaloPay trong ứng dụng. Các ví hiện có:\n• MB Bank: 18.672.000đ\n• Techcombank: 4.000.000đ\n• Tiền mặt: 1.850.000đ\n• MoMo: 1.500.000đ",
    "draft": null,
@@ -462,7 +462,7 @@
    "fails": [
     "thiếu \"Tiền nhà 2.500.000đ (01/10)\""
    ],
-   "ms": 3,
+   "ms": 4,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -518,7 +518,7 @@
    "fails": [
     "thiếu \"Máy giặt LG + tủ lạnh Panasonic 27.849.000đ (24/08)\""
    ],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -577,7 +577,7 @@
    "fails": [
     "thiếu \"Tuần trước: chi 5.321.000đ (22 khoản), thu 3.000.000đ (1 khoản)\""
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -725,7 +725,7 @@
    "input": "tháng này tiêu bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -745,7 +745,7 @@
    "fails": [
     "thiếu \"Sushi Hokkaido 1.050.000đ (07/09)\""
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -813,7 +813,7 @@
    "fails": [
     "thiếu \"Tuần trước: chi 5.321.000đ\""
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -1031,7 +1031,7 @@
    "input": "ngân sách nhà ở còn bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -1237,7 +1237,7 @@
    "input": "tìm các khoản grab tuần trước",
    "pass": true,
    "fails": [],
-   "ms": 2,
+   "ms": 1,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -1332,7 +1332,7 @@
    "input": "khoản 500k hôm thứ 2 là gì",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1357,7 +1357,7 @@
    "input": "xem lại giao dịch tiền điện",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -1526,7 +1526,7 @@
    "input": "tìm khoản tiền nhà",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -1548,7 +1548,7 @@
    "input": "từ 1/9 đến 15/9 mua sắm những gì",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1573,7 +1573,7 @@
    "input": "các khoản từ 200k đến 500k",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1704,7 +1704,7 @@
    "input": "show my transactions from last week",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1752,7 +1752,7 @@
    "input": "tiết kiệm đi Đà Lạt tới đâu rồi",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2190,7 +2190,7 @@
     "draft thiếu item {\"categoryName\":\"Giải trí\",\"limitAmount\":750000}",
     "draft thiếu item {\"categoryName\":\"Di chuyển\",\"limitAmount\":750000}"
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2317,7 +2317,7 @@
     "draft thiếu item {\"categoryName\":\"Giải trí\",\"limitAmount\":750000}",
     "draft thiếu item {\"categoryName\":\"Di chuyển\",\"limitAmount\":750000}"
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2503,7 +2503,7 @@
    "input": "goi y ngan sach thang toi",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2627,11 +2627,10 @@
    "input": "gợi ý ngân sách cho mình",
    "pass": false,
    "fails": [
-    "ngày không có nguồn: 2/3",
     "draft thiếu item {\"categoryName\":\"Thú cưng\",\"limitAmount\":450000}",
     "draft thiếu item {\"categoryName\":\"Di chuyển\",\"limitAmount\":250000}"
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2639,7 +2638,7 @@
     "reason": "rỗng",
     "raw": ""
    },
-   "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 18.300.000đ (trung vị 18.299.000đ/tháng)\n• Ăn uống: 11.400.000đ (trung vị 11.377.000đ, TB 11.759.000đ)\n• Hóa đơn: 1.300.000đ (trung vị 1.265.000đ, TB 1.329.000đ)\n• Mua sắm: 850.000đ (trung vị 838.000đ, TB 1.218.333đ)\n• Giải trí: 850.000đ (trung vị 832.000đ, TB 1.058.667đ, có chi 2/3 tháng)\nBạn có thể hạ dần hạn mức ở các mục chi lớn nếu muốn tiết kiệm thêm.",
+   "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 18.300.000đ (trung vị 18.299.000đ/tháng)\n• Ăn uống: 11.400.000đ (trung vị 11.377.000đ, TB 11.759.000đ)\n• Hóa đơn: 1.300.000đ (trung vị 1.265.000đ, TB 1.329.000đ)\n• Mua sắm: 850.000đ (trung vị 838.000đ, TB 1.218.333đ)\n• Giải trí: 850.000đ (trung vị 832.000đ, TB 1.058.667đ, có chi 2 trong 3 tháng)\nBạn có thể hạ dần hạn mức ở các mục chi lớn nếu muốn tiết kiệm thêm.",
    "draft": {
     "kind": "budgets",
     "payload": {
@@ -2693,7 +2692,6 @@
    "input": "tháng sau nên đặt ngân sách thế nào",
    "pass": false,
    "fails": [
-    "ngày không có nguồn: 2/3",
     "draft thiếu item {\"categoryName\":\"Thú cưng\",\"limitAmount\":450000}",
     "draft thiếu item {\"categoryName\":\"Di chuyển\",\"limitAmount\":250000}"
    ],
@@ -2705,7 +2703,7 @@
     "reason": "rỗng",
     "raw": ""
    },
-   "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 18.300.000đ (trung vị 18.299.000đ/tháng)\n• Ăn uống: 11.400.000đ (trung vị 11.377.000đ, TB 11.759.000đ)\n• Hóa đơn: 1.300.000đ (trung vị 1.265.000đ, TB 1.329.000đ)\n• Mua sắm: 850.000đ (trung vị 838.000đ, TB 1.218.333đ)\n• Giải trí: 850.000đ (trung vị 832.000đ, TB 1.058.667đ, có chi 2/3 tháng)\nBạn có thể hạ dần hạn mức ở các mục chi lớn nếu muốn tiết kiệm thêm.",
+   "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 18.300.000đ (trung vị 18.299.000đ/tháng)\n• Ăn uống: 11.400.000đ (trung vị 11.377.000đ, TB 11.759.000đ)\n• Hóa đơn: 1.300.000đ (trung vị 1.265.000đ, TB 1.329.000đ)\n• Mua sắm: 850.000đ (trung vị 838.000đ, TB 1.218.333đ)\n• Giải trí: 850.000đ (trung vị 832.000đ, TB 1.058.667đ, có chi 2 trong 3 tháng)\nBạn có thể hạ dần hạn mức ở các mục chi lớn nếu muốn tiết kiệm thêm.",
    "draft": {
     "kind": "budgets",
     "payload": {
@@ -2790,7 +2788,7 @@
     "draft thiếu item {\"categoryName\":\"Giải trí\",\"limitAmount\":750000}",
     "draft thiếu item {\"categoryName\":\"Di chuyển\",\"limitAmount\":750000}"
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2854,7 +2852,7 @@
    "fails": [
     "thiếu \"Mua sắm (TB 9.309.000đ/tháng)\""
    ],
-   "ms": 3,
+   "ms": 2,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2870,7 +2868,7 @@
    "input": "làm sao bớt tiền cà phê",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -2920,7 +2918,7 @@
    "input": "cách giảm tiền shopee",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -3014,7 +3012,7 @@
    "input": "give me some saving tips",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -3030,7 +3028,7 @@
    "input": "tiền điện cao quá có cách nào giảm",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 1,
     "ms": 0,
@@ -3046,7 +3044,7 @@
    "input": "làm sao thêm ví mới",
    "pass": true,
    "fails": [],
-   "ms": 2,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3094,7 +3092,7 @@
    "input": "đổi mật khẩu ở đâu",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3110,7 +3108,7 @@
    "input": "quên mật khẩu thì làm thế nào",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3190,7 +3188,7 @@
    "input": "muốn xóa giao dịch thì bấm vào đâu",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3302,7 +3300,7 @@
    "input": "xóa tài khoản như thế nào",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3570,7 +3568,7 @@
    "input": "ghi cà phê 30k",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": null,
    "reply": "Phiên quản trị không xem hay ghi dữ liệu tài chính cá nhân. Hãy đăng nhập ứng dụng bằng tài khoản người dùng để làm việc này.",
    "draft": null,
@@ -3618,7 +3616,7 @@
    "input": "ừ",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": null,
    "reply": "Bạn muốn mình làm gì? Ví dụ: ghi một khoản chi, xem số dư, tổng kết tháng, kiểm tra ngân sách.",
    "draft": null,
@@ -3958,7 +3956,7 @@
    "input": "tra cứu nam.tran@demo.thuchi.vn",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -4198,7 +4196,7 @@
     "không gắn cờ tuanh.hoang@demo.thuchi.vn",
     "không gắn cờ kiet.huynh88@demo.thuchi.vn"
    ],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -4675,9 +4673,9 @@
    ],
    "ms": 0,
    "llm": null,
-   "reply": "Bạn muốn đề xuất khóa tài khoản nào? Cho mình email chính xác.",
+   "reply": "Chưa có dữ liệu hoạt động để nêu lý do khóa Phạm Đức Anh (ducanh.pham92@demo.thuchi.vn); bạn có thể khóa thủ công ở trang Người dùng.",
    "draft": null,
-   "askBack": true
+   "askBack": false
   },
   {
    "skill": "de-xuat-khoa",
@@ -4689,21 +4687,19 @@
    ],
    "ms": 0,
    "llm": null,
-   "reply": "Bạn muốn đề xuất khóa tài khoản nào? Cho mình email chính xác.",
+   "reply": "Chưa có dữ liệu hoạt động để nêu lý do khóa Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn); bạn có thể khóa thủ công ở trang Người dùng.",
    "draft": null,
-   "askBack": true
+   "askBack": false
   },
   {
    "skill": "de-xuat-khoa",
    "id": "04",
    "input": "có nên khóa user Linh không",
-   "pass": false,
-   "fails": [
-    "thiếu \"3 tài khoản khớp\""
-   ],
+   "pass": true,
+   "fails": [],
    "ms": 0,
    "llm": null,
-   "reply": "Bạn muốn đề xuất khóa tài khoản nào? Cho mình email chính xác.",
+   "reply": "Có 3 tài khoản khớp: Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn), Hoàng Diệu Linh (dieulinh.hoang96@demo.thuchi.vn), Phan Khánh Linh (khanhlinh.phan97@demo.thuchi.vn). Bạn chọn email nào?",
    "draft": null,
    "askBack": true
   },
@@ -4711,43 +4707,37 @@
    "skill": "de-xuat-khoa",
    "id": "05",
    "input": "đề xuất khóa tung.bui93@demo.thuchi.vn",
-   "pass": false,
-   "fails": [
-    "thiếu \"đã đang bị khóa\""
-   ],
+   "pass": true,
+   "fails": [],
    "ms": 0,
    "llm": null,
-   "reply": "Chưa có dữ liệu hoạt động để nêu lý do khóa Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn); bạn có thể khóa thủ công ở trang Người dùng.",
+   "reply": "Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn) đã đang bị khóa, không cần đề xuất thêm.",
    "draft": null,
-   "askBack": false
+   "askBack": null
   },
   {
    "skill": "de-xuat-khoa",
    "id": "06",
    "input": "đề xuất khóa bao.tran91@demo.thuchi.vn",
-   "pass": false,
-   "fails": [
-    "refused=false, cần admin-target"
-   ],
+   "pass": true,
+   "fails": [],
    "ms": 0,
    "llm": null,
-   "reply": "Chưa có dữ liệu hoạt động để nêu lý do khóa Trần Quốc Bảo (bao.tran91@demo.thuchi.vn); bạn có thể khóa thủ công ở trang Người dùng.",
+   "reply": "Trần Quốc Bảo (bao.tran91@demo.thuchi.vn) là quản trị viên; trợ lý không đề xuất khóa quản trị viên.",
    "draft": null,
-   "askBack": false
+   "askBack": null
   },
   {
    "skill": "de-xuat-khoa",
    "id": "07",
    "input": "đề xuất khóa admin@thuchi.vn",
-   "pass": false,
-   "fails": [
-    "refused=false, cần self"
-   ],
+   "pass": true,
+   "fails": [],
    "ms": 0,
    "llm": null,
-   "reply": "Chưa có dữ liệu hoạt động để nêu lý do khóa Administrator (admin@thuchi.vn); bạn có thể khóa thủ công ở trang Người dùng.",
+   "reply": "Không thể đề xuất khóa chính tài khoản của bạn.",
    "draft": null,
-   "askBack": false
+   "askBack": null
   },
   {
    "skill": "de-xuat-khoa",
@@ -4799,9 +4789,9 @@
    ],
    "ms": 0,
    "llm": null,
-   "reply": "Bạn muốn đề xuất khóa tài khoản nào? Cho mình email chính xác.",
+   "reply": "Chưa có dữ liệu hoạt động để nêu lý do khóa Vũ Văn Hùng (hung.vu89@demo.thuchi.vn); bạn có thể khóa thủ công ở trang Người dùng.",
    "draft": null,
-   "askBack": true
+   "askBack": false
   },
   {
    "skill": "de-xuat-khoa",
@@ -5011,7 +5001,7 @@
    "input": "cách bật chế độ bảo trì",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
