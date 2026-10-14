@@ -1,0 +1,4113 @@
+{
+ "split": "test0",
+ "tag": "base",
+ "embedModel": "bge-m3",
+ "now": "2026-10-08T09:00:00+07:00",
+ "at": "2026-10-12T15:43:41.382Z",
+ "V1": {
+  "summary": {
+   "cases": 120,
+   "caseExact": 75,
+   "itemExact": 73.2,
+   "field": {
+    "title": 91.9,
+    "amount": 100,
+    "categoryName": 73.2,
+    "type": 96.7,
+    "date": 100,
+    "walletName": 100
+   },
+   "ask": {
+    "recall": 100,
+    "falseAsk": 0
+   },
+   "countOk": 100,
+   "accept": 68.3,
+   "counts": {
+    "items": 123,
+    "itemsExact": 90,
+    "cases": 120,
+    "caseOk": 90,
+    "accepted": 82,
+    "askGold": 8,
+    "askTP": 8,
+    "field": {
+     "title": [
+      113,
+      123
+     ],
+     "amount": [
+      123,
+      123
+     ],
+     "categoryName": [
+      90,
+      123
+     ],
+     "type": [
+      119,
+      123
+     ],
+     "date": [
+      123,
+      123
+     ],
+     "walletName": [
+      123,
+      123
+     ]
+    }
+   },
+   "ci": {
+    "item": "73.2 [64.7–80.2]",
+    "case": "75 [66.6–81.9]",
+    "accept": "68.3 [59.6–76]",
+    "ask": "100 [67.6–100]",
+    "field": {
+     "title": "91.9 [85.7–95.5]",
+     "amount": "100 [97–100]",
+     "categoryName": "73.2 [64.7–80.2]",
+     "type": "96.7 [91.9–98.7]",
+     "date": "100 [97–100]",
+     "walletName": "100 [97–100]"
+    }
+   }
+  },
+  "calls": 112,
+  "retries": 0,
+  "fallbacks": 0,
+  "latency": {
+   "p50": 1282,
+   "p95": 1985
+  },
+  "preds": [
+   {
+    "id": "t001",
+    "text": "ca phe 45k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Cà phê",
+       "amount": 45000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1241.7270119999885,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t002",
+    "text": "Ăn phở 50k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn Phở",
+       "amount": 50000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1159.1534009999596,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t003",
+    "text": "đổ xăng 80k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đổ Xăng",
+       "amount": 80000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1344.9596160000074,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t004",
+    "text": "grab đi làm 45k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Grab đi làm",
+       "amount": 45000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1188.83039800002,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t005",
+    "text": "tiền điện tháng 9 hết 850k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Điện Tháng 9",
+       "amount": 850000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1200.5047069999855,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t006",
+    "text": "lương về 15tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Lương về 15tr",
+       "amount": 15000000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1298.3585880000028,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Thu khác\"→\"Lương\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t007",
+    "text": "mua áo sơ mi 1tr2 trả bằng momo",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Áo Sơ Mi",
+       "amount": 1200000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "MoMo"
+      }
+     ],
+     "meta": {
+      "ms": 1222.8593550000223,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t008",
+    "text": "tiền nhà tháng 10 4tr5 ck mb",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Nhà Tháng 10",
+       "amount": 4500000,
+       "categoryName": "Nhà ở",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "MB Bank"
+      }
+     ],
+     "meta": {
+      "ms": 1251.8243200000143,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t009",
+    "text": "hôm qua ăn lẩu với bạn 2 lít",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn Lẩu",
+       "amount": 200000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1223.597231999971,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t010",
+    "text": "sáng nay bánh mì 25k, cà phê 30k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Bánh mì",
+       "amount": 25000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      },
+      {
+       "title": "Cà phê",
+       "amount": 30000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1718.4818920000107,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true,
+     true
+    ]
+   },
+   {
+    "id": "t011",
+    "text": "tra sua 35k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Trà sữa",
+       "amount": 35000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1280.1942689999705,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t012",
+    "text": "nap dt 100k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Nạp Điện Thoại",
+       "amount": 100000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1353.3149989999947,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Thu khác\"→\"Hóa đơn\"",
+     "type:\"INCOME\"→\"EXPENSE\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t013",
+    "text": "được thưởng dự án 3 củ",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Được thưởng dự án",
+       "amount": 3000000,
+       "categoryName": "Được tặng",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1495.0362569999998,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Được tặng\"→\"Thưởng\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t014",
+    "text": "mẹ cho 500k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Được tặng",
+       "amount": 500000,
+       "categoryName": "Được tặng",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1482.1553079999867,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Được tặng\"→\"Mẹ cho/Tiền mẹ cho\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t015",
+    "text": "bán đồ cũ được 350k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Bán đồ",
+       "amount": 350000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1561.6160569999483,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t016",
+    "text": "cổ tức FPT 1tr250",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Cổ Tố FPT",
+       "amount": 1250000,
+       "categoryName": "Đầu tư",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1694.0944720000261,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t017",
+    "text": "khám răng 600k thứ 2 tuần trước",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Khám răng",
+       "amount": 600000,
+       "categoryName": "Sức khỏe",
+       "type": "EXPENSE",
+       "date": "2026-09-28",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1683.0185390000115,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t018",
+    "text": "15/9 đóng học phí tiếng anh 2tr5",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đóng Học Phi",
+       "amount": 2500000,
+       "categoryName": "Giáo dục",
+       "type": "EXPENSE",
+       "date": "2026-09-15",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1544.3264150000177,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t019",
+    "text": "xem phim cgv 2 vé 180k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Xem phim CGV",
+       "amount": 180000,
+       "categoryName": "Giải trí",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1516.7771480000229,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t020",
+    "text": "đi đám cưới Tuấn mừng 500k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đi đám cưới",
+       "amount": 500000,
+       "categoryName": "Hiếu hỉ",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1650.5536859999993,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t021",
+    "text": "gửi bố mẹ 3tr qua techcombank",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Gửi Bố Mẹ",
+       "amount": 3000000,
+       "categoryName": "Gia đình",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "Techcombank"
+      }
+     ],
+     "meta": {
+      "ms": 1672.2501309999498,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t022",
+    "text": "khách sạn Đà Lạt 1tr8",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Khách sạn Đà Lạt",
+       "amount": 1800000,
+       "categoryName": "Du lịch",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1689.0190900000744,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t023",
+    "text": "mua thuốc cảm 65k ở Long Châu",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Thuốc Cảm",
+       "amount": 65000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1947.4709019999718,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Sức khỏe\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t024",
+    "text": "đi chợ 230k tiền mặt",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đi chợ",
+       "amount": 230000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "Tiền mặt"
+      }
+     ],
+     "meta": {
+      "ms": 1702.575276000076,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Ăn uống\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t025",
+    "text": "netflix 260k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Netflix",
+       "amount": 260000,
+       "categoryName": "Giải trí",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1496.7287240000442,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t026",
+    "text": "Internet FPT 220k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Internet FPT",
+       "amount": 220000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1411.9106130000437,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t027",
+    "text": "tiền nước 120k, tiền điện 900k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Nước",
+       "amount": 120000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      },
+      {
+       "title": "Tiền Điện",
+       "amount": 900000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 2143.496619999991,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true,
+     true
+    ]
+   },
+   {
+    "id": "t028",
+    "text": "ăn trưa 40k với gửi xe 5k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn trưa",
+       "amount": 40000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      },
+      {
+       "title": "Gửi xe",
+       "amount": 5000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 2350.323899000068,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true,
+     true
+    ]
+   },
+   {
+    "id": "t029",
+    "text": "hôm kia mua giày 1tr5 shopee",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua giày",
+       "amount": 1500000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-06",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1499.9317530000117,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t030",
+    "text": "cắt tóc 60k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Cắt Tóc",
+       "amount": 60000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1510.9805090000154,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Chi khác\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t031",
+    "text": "chủ nhật đi karaoke 400k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Karaoke Chủ Nhật",
+       "amount": 400000,
+       "categoryName": "Giải trí",
+       "type": "EXPENSE",
+       "date": "2026-10-04",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1708.6469649999635,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t032",
+    "text": "toi qua an oc 150k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn uống",
+       "amount": 150000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 2002.4261150000384,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t033",
+    "text": "lãi tiết kiệm 1tr2",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Lãi tiết kiệm",
+       "amount": 1200000,
+       "categoryName": "Đầu tư",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1485.2771319999592,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t034",
+    "text": "mua sữa cho bé 450k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Sữa Bé",
+       "amount": 450000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1517.9366460000165,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Gia đình\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t035",
+    "text": "đóng bảo hiểm y tế 1tr1",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đóng Bảo Hiểm Y Tế",
+       "amount": 1100000,
+       "categoryName": "Sức khỏe",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1597.5848649999825,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t036",
+    "text": "mua sách 120k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Sách",
+       "amount": 120000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1614.001886999933,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Giáo dục\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t037",
+    "text": "vé máy bay đi Phú Quốc 3tr2",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Vé máy bay Phú Quốc",
+       "amount": 3200000,
+       "categoryName": "Du lịch",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1985.2654900000198,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t038",
+    "text": "phúng viếng đám tang 300k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Phùng Viếng Đám Tang",
+       "amount": 300000,
+       "categoryName": "Hiếu hỉ",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1908.5223150000675,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t039",
+    "text": "freelance thiết kế logo được 2tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Thu Freelance",
+       "amount": 2000000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1429.870838999981,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t040",
+    "text": "hoàn tiền shopee 45k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Hoàn tiền Shopee",
+       "amount": 45000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1510.0703379999613,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t041",
+    "text": "ăn sáng",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   },
+   {
+    "id": "t042",
+    "text": "mua đồ hết nhiều tiền quá",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   },
+   {
+    "id": "t043",
+    "text": "trả tiền cho nó rồi",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   },
+   {
+    "id": "t044",
+    "text": "hôm qua đi siêu thị",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   },
+   {
+    "id": "t045",
+    "text": "cafe muoi 29k tra momo",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Cafe Muối",
+       "amount": 29000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "MoMo"
+      }
+     ],
+     "meta": {
+      "ms": 1835.3589480000082,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Cafe Muối\"→\"Cà phê muối\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t046",
+    "text": "xăng xe 70k, rửa xe 40k bằng tiền mặt",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Xăng",
+       "amount": 70000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "Tiền mặt"
+      },
+      {
+       "title": "Rửa Xe",
+       "amount": 40000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "Tiền mặt"
+      }
+     ],
+     "meta": {
+      "ms": 1679.4376470000716,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Di chuyển\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false,
+     true
+    ]
+   },
+   {
+    "id": "t047",
+    "text": "bún chả 45 nghìn",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Bún Chả",
+       "amount": 45000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1335.072394000017,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t048",
+    "text": "mua tai nghe bluetooth 890.000đ",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Tai Nghe Bluetooth",
+       "amount": 890000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1296.2641310000326,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t049",
+    "text": "tiền điện thoại 150k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Điện Thoại",
+       "amount": 150000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1310.2145969999256,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t050",
+    "text": "sửa vòi nước 200k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Sửa Vòi Nước",
+       "amount": 200000,
+       "categoryName": "Chi khác",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1300.517361999955,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Chi khác\"→\"Nhà ở\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t051",
+    "text": "vé xem bóng đá 250k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Vé xem bóng đá",
+       "amount": 250000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1287.3662599999225,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Di chuyển\"→\"Giải trí\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t052",
+    "text": "phở 50",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Phở",
+       "amount": 50000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1417.848576999968,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t053",
+    "text": "thứ 4 nhậu với đồng nghiệp hết nửa củ",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Nhậu",
+       "amount": 500000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1305.4250120000215,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t054",
+    "text": "nhận lương tháng 9 18tr500 vào tcb",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Lương",
+       "amount": 18500000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": "Techcombank"
+      }
+     ],
+     "meta": {
+      "ms": 1298.0028300000122,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Thu khác\"→\"Lương\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t055",
+    "text": "thưởng tết 10tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "thưởng Tết 10tr",
+       "amount": 10000000,
+       "categoryName": "Thưởng",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1334.459339999943,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t056",
+    "text": "lì xì cháu 200k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Lì xì cháu",
+       "amount": 200000,
+       "categoryName": "Được tặng",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1318.0583770000376,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Được tặng\"→\"Chi khác\"",
+     "type:\"INCOME\"→\"EXPENSE\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t057",
+    "text": "be về nhà 32k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Be về nhà",
+       "amount": 32000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1247.9495520000346,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t058",
+    "text": "xanh sm 67k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Xanh SM",
+       "amount": 67000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1231.763379000011,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Di chuyển\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t059",
+    "text": "grabfood cơm trưa 55k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Cơm Trưa",
+       "amount": 55000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1188.7043449999765,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t060",
+    "text": "spotify 59k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Spotify",
+       "amount": 59000,
+       "categoryName": "Giải trí",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1169.8461449999595,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t061",
+    "text": "tập gym tháng này 500k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tập Gym Tháng Nay",
+       "amount": 500000,
+       "categoryName": "Sức khỏe",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1275.6596640000353,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t062",
+    "text": "mua rau thịt 180k sáng nay ở chợ",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua rau thịt",
+       "amount": 180000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1396.4321939999936,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Ăn uống\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t063",
+    "text": "trà đá 5k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Trà Đá 5K",
+       "amount": 5000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1313.7345150000183,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t064",
+    "text": "1 trăm rưỡi tiền ăn tối",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn Uống",
+       "amount": 150000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1316.002289999975,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t065",
+    "text": "nạp game 200k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Nạp Game",
+       "amount": 200000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1165.193297999911,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Giải trí\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t066",
+    "text": "mua nồi cơm điện 850k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua nồi cơm điện",
+       "amount": 850000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1200.1605169998948,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t067",
+    "text": "hôm qua đi Grab 3 chuyến hết 120k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Grab",
+       "amount": 120000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1121.210197999957,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t068",
+    "text": "học phí cho con 5tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Học phí cho con",
+       "amount": 5000000,
+       "categoryName": "Giáo dục",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1200.249688000069,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t069",
+    "text": "thuê phòng tháng 10 3tr ck mb bank",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Thuê Phòng Tháng 10",
+       "amount": 3000000,
+       "categoryName": "Nhà ở",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "MB Bank"
+      }
+     ],
+     "meta": {
+      "ms": 1282.0120400000596,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t070",
+    "text": "bán hàng online được 1tr7",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Thu nhập Online",
+       "amount": 1700000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1154.0797050000401,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Thu nhập Online\"→\"Bán hàng online\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t071",
+    "text": "tiền lãi chứng khoán 2tr3",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Lãi chứng khoán",
+       "amount": 2300000,
+       "categoryName": "Đầu tư",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1197.534224000061,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t072",
+    "text": "mùng 2 đóng tiền gửi xe tháng 150k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đóng tiền gửi xe",
+       "amount": 150000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-02",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1286.9152039999608,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Di chuyển\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t073",
+    "text": "1/10 mua vé xe về quê 350k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua vé xe về quê",
+       "amount": 350000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-01",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1368.548311999999,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t074",
+    "text": "an sang 30k, an trua 45k, an toi 120k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn uống",
+       "amount": 30000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      },
+      {
+       "title": "An Sang 30k",
+       "amount": 45000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      },
+      {
+       "title": "An Trầu 45k",
+       "amount": 120000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 2642.3059219999705,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"An Sang 30k\"→\"Ăn trưa\"",
+     "title:\"An Trầu 45k\"→\"Ăn tối\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true,
+     true,
+     true
+    ]
+   },
+   {
+    "id": "t075",
+    "text": "hom qua do xang 100k tra tien mat",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Do xe",
+       "amount": 100000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": "Tiền mặt"
+      }
+     ],
+     "meta": {
+      "ms": 1211.7131570000201,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t076",
+    "text": "tiền internet 250k chuyển khoản techcombank",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Internet",
+       "amount": 250000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "Techcombank"
+      }
+     ],
+     "meta": {
+      "ms": 1148.1286560000153,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t077",
+    "text": "mừng tân gia anh Hùng 500k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "mừng tân gia",
+       "amount": 500000,
+       "categoryName": "Hiếu hỉ",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1202.9355310000246,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t078",
+    "text": "khám bệnh 350k sáng nay, mua thuốc 120k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Khám bệnh",
+       "amount": 350000,
+       "categoryName": "Sức khỏe",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      },
+      {
+       "title": "Mua thuốc",
+       "amount": 120000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1563.7342969999881,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Sức khỏe\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     true,
+     false
+    ]
+   },
+   {
+    "id": "t079",
+    "text": "3 ngày trước mua bàn phím cơ 1tr3",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua sắm",
+       "amount": 1300000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-05",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1184.9548860000214,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Mua sắm\"→\"Bàn phím cơ\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t080",
+    "text": "ăn kem 25k với bé",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn Kem",
+       "amount": 25000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1176.42783099995,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t081",
+    "text": "tiền chợ hôm qua 2 xị",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Chợ",
+       "amount": 200000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1184.7006180000026,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Ăn uống\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t082",
+    "text": "ghi giúp mình khoản chi",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   },
+   {
+    "id": "t083",
+    "text": "mua 2 ly trà sữa 70k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua trà sữa",
+       "amount": 70000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1204.4740189999575,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t084",
+    "text": "đặt tour Hạ Long 4tr cho 2 người",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đặt Tour Hạ Long",
+       "amount": 4000000,
+       "categoryName": "Du lịch",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1157.6932899999665,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t085",
+    "text": "gửi mẹ 2tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Gửi Mẹ",
+       "amount": 2000000,
+       "categoryName": "Gia đình",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1162.431642999989,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t086",
+    "text": "mua quần áo cho con 600k trả bằng thẻ tcb",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Sắm",
+       "amount": 600000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "Techcombank"
+      }
+     ],
+     "meta": {
+      "ms": 1166.8207819999661,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Mua Sắm\"→\"Quần áo cho con/Quần áo\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t087",
+    "text": "tiền rác 30k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Rác",
+       "amount": 30000,
+       "categoryName": "Chi khác",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1131.1901709999656,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Chi khác\"→\"Hóa đơn\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t088",
+    "text": "phí quản lý chung cư 700k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "phi quản lý chung cư",
+       "amount": 700000,
+       "categoryName": "Nhà ở",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1154.1527909999713,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t089",
+    "text": "ăn buffet 2 người 798k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn Buffet",
+       "amount": 798000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1203.1566170000006,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t090",
+    "text": "dạy kèm được 1tr5",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Dạy kèm",
+       "amount": 1500000,
+       "categoryName": "Giáo dục",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1140.1134759999113,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Giáo dục\"→\"Thu khác\"",
+     "type:\"EXPENSE\"→\"INCOME\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t091",
+    "text": "được tặng 1 củ ngày sinh nhật",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Được Tặng",
+       "amount": 1000000,
+       "categoryName": "Được tặng",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1118.0221739999251,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t092",
+    "text": "cafe the coffee house 65k hôm thứ 3",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn uống",
+       "amount": 65000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-06",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1201.7354260000866,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Ăn uống\"→\"The Coffee House/Cà phê\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t093",
+    "text": "Highlands 2 ly 110k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Highlands 2 ly",
+       "amount": 110000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1204.8625239999965,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t094",
+    "text": "mua bỉm cho con 380k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Sắm",
+       "amount": 380000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1134.3454229999334,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Mua Sắm\"→\"Bỉm cho con/Bỉm\"",
+     "categoryName:\"Mua sắm\"→\"Gia đình\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t095",
+    "text": "đổ 50k xăng",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Dỡ Xăng",
+       "amount": 50000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1128.565065999981,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t096",
+    "text": "lương 12 củ rưỡi",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Lương",
+       "amount": 12500000,
+       "categoryName": "Lương",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1139.9014029999962,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t097",
+    "text": "tiền mạng viettel 180k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền mạng Viettel",
+       "amount": 180000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1171.211806000094,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t098",
+    "text": "ăn bún bò 40k thứ 7 tuần trước trả momo",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn bún bò",
+       "amount": 40000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-03",
+       "walletName": "MoMo"
+      }
+     ],
+     "meta": {
+      "ms": 1298.6609669999452,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t099",
+    "text": "mua vé concert 1tr5",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua vé concert",
+       "amount": 1500000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1127.6648640000494,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Di chuyển\"→\"Giải trí\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t100",
+    "text": "uống cà phê với khách 2 ly 90k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Uống Cà Phê",
+       "amount": 90000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1247.0625320000108,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t101",
+    "text": "bảo dưỡng xe máy 350k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Bảo dưỡng Xe Máy",
+       "amount": 350000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1159.621472000028,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Di chuyển\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t102",
+    "text": "mua kem chống nắng 250k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Kem",
+       "amount": 250000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1126.8161039999686,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "title:\"Mua Kem\"→\"Kem chống nắng\""
+    ],
+    "ok": true,
+    "accept": false,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t103",
+    "text": "ck cho mẹ 1tr bằng mb",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "CK Mẹ",
+       "amount": 1000000,
+       "categoryName": "Gia đình",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "MB Bank"
+      }
+     ],
+     "meta": {
+      "ms": 1122.6401230000192,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t104",
+    "text": "đám giỗ ông 500k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Đám Giỗ Ông",
+       "amount": 500000,
+       "categoryName": "Hiếu hỉ",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1202.6747179999948,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t105",
+    "text": "nhận thưởng KPI quý 3 4tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Nhận thưởng KPI quý 3",
+       "amount": 4000000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1208.0277720000595,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Thu khác\"→\"Thưởng\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t106",
+    "text": "mua gạo 25kg 450k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua Gạo",
+       "amount": 450000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1130.1636840000283,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Ăn uống\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t107",
+    "text": "sáng nay đi taxi ra sân bay 250k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Taxi sân bay",
+       "amount": 250000,
+       "categoryName": "Di chuyển",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1149.6364289999474,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t108",
+    "text": "chiều nay mua bánh sinh nhật 350k tiền mặt",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua bánh sinh nhật",
+       "amount": 350000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "Tiền mặt"
+      }
+     ],
+     "meta": {
+      "ms": 1184.1394070000388,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Ăn uống\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false
+    ]
+   },
+   {
+    "id": "t109",
+    "text": "nhận lương 15tr rồi trả tiền nhà 4tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Lương",
+       "amount": 15000000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      },
+      {
+       "title": "Trả tiền nhà",
+       "amount": 4000000,
+       "categoryName": "Chi khác",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1537.8889770000242,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Thu khác\"→\"Lương\"",
+     "categoryName:\"Chi khác\"→\"Nhà ở\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false,
+     false
+    ]
+   },
+   {
+    "id": "t110",
+    "text": "hôm qua bán đồ cũ 300k, mua sách 150k",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Bán đồ",
+       "amount": 300000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      },
+      {
+       "title": "Mua sách",
+       "amount": 150000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1557.3676919999998,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Thu khác\"",
+     "type:\"EXPENSE\"→\"INCOME\"",
+     "categoryName:\"Mua sắm\"→\"Giáo dục\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     false,
+     false
+    ]
+   },
+   {
+    "id": "t111",
+    "text": "mua nồi chiên không dầu 1.5tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua nồi chiên không dầu",
+       "amount": 1500000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1176.7262129998999,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t112",
+    "text": "45,000đ ăn sáng",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn sáng",
+       "amount": 45000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1216.3944279999705,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t113",
+    "text": "ăn tối ở nhà hàng 5 chục",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Ăn tối",
+       "amount": 50000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1231.222150000045,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t114",
+    "text": "tiền điện 1 triệu 2 trả qua momo",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Tiền Điện",
+       "amount": 1200000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-08",
+       "walletName": "MoMo"
+      }
+     ],
+     "meta": {
+      "ms": 1167.391266999999,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t115",
+    "text": "mua rau 20k, thịt 85k, cá 60k ở chợ hôm qua",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Mua rau",
+       "amount": 20000,
+       "categoryName": "Ăn uống",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      },
+      {
+       "title": "Thịt",
+       "amount": 85000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      },
+      {
+       "title": "Cá",
+       "amount": 60000,
+       "categoryName": "Mua sắm",
+       "type": "EXPENSE",
+       "date": "2026-10-07",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 2141.974571000086,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null,
+       null,
+       null
+      ]
+     }
+    },
+    "errors": [
+     "categoryName:\"Mua sắm\"→\"Ăn uống\"",
+     "categoryName:\"Mua sắm\"→\"Ăn uống\""
+    ],
+    "ok": false,
+    "accept": false,
+    "itemOk": [
+     true,
+     false,
+     false
+    ]
+   },
+   {
+    "id": "t116",
+    "text": "bán xe cũ được 8tr",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Bán xe cũ",
+       "amount": 8000000,
+       "categoryName": "Thu khác",
+       "type": "INCOME",
+       "date": "2026-10-08",
+       "walletName": null
+      }
+     ],
+     "meta": {
+      "ms": 1134.8075529999333,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t117",
+    "text": "trả tiền nước 95k bằng momo hôm thứ 2",
+    "draft": {
+     "ask": false,
+     "items": [
+      {
+       "title": "Trả tiền nước",
+       "amount": 95000,
+       "categoryName": "Hóa đơn",
+       "type": "EXPENSE",
+       "date": "2026-10-05",
+       "walletName": "MoMo"
+      }
+     ],
+     "meta": {
+      "ms": 1164.9898249999387,
+      "calls": 1,
+      "retried": false,
+      "fallback": 0,
+      "shots": 0,
+      "rules": [
+       null
+      ]
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": [
+     true
+    ]
+   },
+   {
+    "id": "t118",
+    "text": "tối qua đi ăn với mấy đứa bạn",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   },
+   {
+    "id": "t119",
+    "text": "đóng tiền học cho con",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   },
+   {
+    "id": "t120",
+    "text": "mua cái này",
+    "draft": {
+     "ask": true,
+     "items": [],
+     "meta": {
+      "ms": 0,
+      "calls": 0,
+      "reason": "không có số tiền"
+     }
+    },
+    "errors": [],
+    "ok": true,
+    "accept": true,
+    "itemOk": []
+   }
+  ]
+ }
+}

@@ -2,23 +2,23 @@ import type { UserContext } from '../../lib/types.js';
 
 // Gợi ý ngắn cho danh mục hệ thống + vài danh mục user hay tạo. Danh mục khác chỉ hiện tên.
 const HINTS: Record<string, string> = {
-  'Ăn uống': 'ăn, uống, cà phê, trà sữa, đi chợ, siêu thị, nhà hàng',
+  'Ăn uống': 'ăn, uống, cà phê, trà sữa, nhậu, nhà hàng, đi chợ, siêu thị, thực phẩm (rau, thịt, cá, gạo, trứng, trái cây…) kể cả khi có chữ "mua"',
   'Di chuyển': 'xăng, grab, be, taxi, gửi xe, vé xe, sửa xe',
-  'Mua sắm': 'quần áo, giày, đồ điện tử, đồ gia dụng, shopee, lazada',
+  'Mua sắm': 'quần áo, giày, mỹ phẩm, đồ điện tử, đồ gia dụng, đơn shopee/lazada; KHÔNG gồm đồ ăn, thực phẩm, thuốc, đồ cho con',
   'Hóa đơn': 'điện, nước, internet, cước điện thoại, nạp tiền điện thoại',
   'Nhà ở': 'tiền nhà, thuê phòng, phí chung cư, sửa nhà',
   'Sức khỏe': 'khám bệnh, thuốc, bảo hiểm y tế, gym',
   'Giáo dục': 'học phí, sách, khóa học',
   'Giải trí': 'phim, game, karaoke, netflix, spotify',
-  'Chi khác': 'chi không rõ loại',
+  'Chi khác': 'cắt tóc, lì xì cho người khác, từ thiện, photo, phạt; chi không rõ loại',
   'Hiếu hỉ': 'đám cưới, đám tang, mừng, phúng viếng',
   'Du lịch': 'khách sạn, vé máy bay, tour',
-  'Gia đình': 'gửi bố mẹ, đồ cho con',
+  'Gia đình': 'gửi/cho/biếu bố mẹ ông bà; bỉm, tã, sữa bột, đồ chơi, đồ cho con',
   'Lương': 'lương tháng',
   'Thưởng': 'thưởng, KPI, thưởng Tết',
   'Đầu tư': 'lãi, cổ tức, chứng khoán',
-  'Được tặng': 'được cho, quà, lì xì nhận',
-  'Thu khác': 'thu nhập khác, bán đồ, hoàn tiền, freelance',
+  'Được tặng': 'người khác cho/tặng/lì xì mình',
+  'Thu khác': 'bán đồ, hoàn tiền, cashback, freelance, dạy kèm, làm thêm, tiền công',
 };
 
 export function categoryBlock(ctx: UserContext): string {
@@ -34,10 +34,13 @@ export const systemV1 = (ctx: UserContext) =>
 - categoryName: đúng MỘT tên trong danh sách.
 ${categoryBlock(ctx)}
 Nhận lương, thưởng, được cho, bán đồ, lãi, hoàn tiền là THU; còn lại là CHI.
+Chữ "mua" KHÔNG có nghĩa là Mua sắm: chọn danh mục theo MÓN được mua (mua rau → Ăn uống, mua thuốc → Sức khỏe).
+Khoản ghi (THU) thì chỉ chọn danh mục THU.
 Chỉ trả JSON.`;
 
-export const userV1 = (text: string, segs: string[]) =>
-  `Câu: «${text}»\nCác khoản:\n${segs.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+/** tags[i] = 'THU' | 'CHI' | undefined — tín hiệu thu/chi của parser, ghi kèm từng khoản. */
+export const userV1 = (text: string, segs: string[], tags: (string | undefined)[] = []) =>
+  `Câu: «${text}»\nCác khoản:\n${segs.map((s, i) => `${i + 1}. ${s}${tags[i] ? ` (${tags[i]})` : ''}`).join('\n')}`;
 
 /** V0: model tự làm hết (tiền, ngày, ví, loại). */
 export const systemV0 = (ctx: UserContext, todayIso: string, weekday: string) =>

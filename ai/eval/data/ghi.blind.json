@@ -1,52 +1,1458 @@
 [
-  {"text": "cà phê 45k", "items": [{"amount": 45000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "ăn trưa 40k với trà đá 5k", "items": [{"amount": 40000, "date": "2026-10-08", "walletName": null}, {"amount": 5000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "lương tháng 9 15tr vào tcb", "items": [{"amount": 15000000, "date": "2026-10-08", "walletName": "Techcombank"}]},
-  {"text": "đổ xăng 1 xị", "items": [{"amount": 100000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "tiền nhà 3tr5 ck mb", "items": [{"amount": 3500000, "date": "2026-10-08", "walletName": "MB Bank"}]},
-  {"text": "hôm qua ăn phở 50", "items": [{"amount": 50000, "date": "2026-10-07", "walletName": null}]},
-  {"text": "mua sách 1tr2 momo", "items": [{"amount": 1200000, "date": "2026-10-08", "walletName": "MoMo"}]},
-  {"text": "nạp điện thoại nửa củ", "items": [{"amount": 500000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "ca phe 30k, banh mi 20k", "items": [{"amount": 30000, "date": "2026-10-08", "walletName": null}, {"amount": 20000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "an trua 40k", "items": [{"amount": 40000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "thứ 2 đi siêu thị 450k", "items": [{"amount": 450000, "date": "2026-10-05", "walletName": null}]},
-  {"text": "chủ nhật đi xem phim 2 vé 180k", "items": [{"amount": 180000, "date": "2026-10-04", "walletName": null}]},
-  {"text": "thứ 6 tuần trước nhậu hết 1tr", "items": [{"amount": 1000000, "date": "2026-10-02", "walletName": null}]},
-  {"text": "thứ 3 tuần trước đóng tiền điện 650k", "items": [{"amount": 650000, "date": "2026-09-29", "walletName": null}]},
-  {"text": "3 ngày trước mua giày 1.5tr", "items": [{"amount": 1500000, "date": "2026-10-05", "walletName": null}]},
-  {"text": "15/09 trả tiền internet 250.000đ", "items": [{"amount": 250000, "date": "2026-09-15", "walletName": null}]},
-  {"text": "được thưởng 2tr", "items": [{"amount": 2000000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "mẹ cho 5 chục", "items": [{"amount": 50000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "mua 2 ly trà sữa 70k", "items": [{"amount": 70000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "đi chợ 3 trăm", "items": [{"amount": 300000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "tiền học thêm 1 triệu 2", "items": [{"amount": 1200000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "grab 45,000 đ", "items": [{"amount": 45000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "mua 5kg gạo 120k tiền mặt", "items": [{"amount": 120000, "date": "2026-10-08", "walletName": "Tiền mặt"}]},
-  {"text": "hôm kia đóng học phí 2tr5 qua mbbank", "items": [{"amount": 2500000, "date": "2026-10-06", "walletName": "MB Bank"}]},
-  {"text": "sáng nay ăn sáng 25k rồi uống cà phê 30k", "items": [{"amount": 25000, "date": "2026-10-08", "walletName": null}, {"amount": 30000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "tối qua ăn lẩu 600k với hát karaoke 400k, trả bằng techcom", "items": [{"amount": 600000, "date": "2026-10-07", "walletName": "Techcombank"}, {"amount": 400000, "date": "2026-10-07", "walletName": "Techcombank"}]},
-  {"text": "nhận lương 12tr", "items": [{"amount": 12000000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "bán đồ cũ được 1 củ", "items": [{"amount": 1000000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "mùng 3 mua quà sinh nhật 800k", "items": [{"amount": 800000, "date": "2026-10-03", "walletName": null}]},
-  {"text": "ngày 1 đóng tiền nhà 4tr", "items": [{"amount": 4000000, "date": "2026-10-01", "walletName": null}]},
-  {"text": "gửi xe 5k", "items": [{"amount": 5000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "mua thuốc 85.000đ tiền mặt", "items": [{"amount": 85000, "date": "2026-10-08", "walletName": "Tiền mặt"}]},
-  {"text": "đóng tiền điện quý 3 hết 1tr8", "items": [{"amount": 1800000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "đi chợ hết 2 lít", "items": [{"amount": 200000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "ăn tối 120k và mua nước 15k momo", "items": [{"amount": 120000, "date": "2026-10-08", "walletName": "MoMo"}, {"amount": 15000, "date": "2026-10-08", "walletName": "MoMo"}]},
-  {"text": "2 ngày trước sửa xe 350k", "items": [{"amount": 350000, "date": "2026-10-06", "walletName": null}]},
-  {"text": "bạn trả nợ 500k vào mb", "items": [{"amount": 500000, "date": "2026-10-08", "walletName": "MB Bank"}]},
-  {"text": "netflix 260k tcb", "items": [{"amount": 260000, "date": "2026-10-08", "walletName": "Techcombank"}]},
-  {"text": "20/9 mua điện thoại 8tr9", "items": [{"amount": 8900000, "date": "2026-09-20", "walletName": null}]},
-  {"text": "cafe 35k, cơm 45k, nước mía 10k", "items": [{"amount": 35000, "date": "2026-10-08", "walletName": null}, {"amount": 45000, "date": "2026-10-08", "walletName": null}, {"amount": 10000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "thứ 4 đóng tiền gym 500k", "items": [{"amount": 500000, "date": "2026-10-07", "walletName": null}]},
-  {"text": "thứ 7 đi đám cưới mừng 1tr", "items": [{"amount": 1000000, "date": "2026-10-03", "walletName": null}]},
-  {"text": "lãi tiết kiệm 320k", "items": [{"amount": 320000, "date": "2026-10-08", "walletName": null}]},
-  {"text": "tiền nước 150k chuyển khoản mb bank", "items": [{"amount": 150000, "date": "2026-10-08", "walletName": "MB Bank"}]},
-  {"text": "đi ăn sáng", "ask": true, "items": []},
-  {"text": "đổ xăng xe", "ask": true, "items": []},
-  {"text": "mua 3 ly trà sữa", "ask": true, "items": []},
-  {"text": "hôm qua đi chợ", "ask": true, "items": []},
-  {"text": "nhận lương tháng 9 rồi", "ask": true, "items": []},
-  {"text": "ca phe voi ban", "ask": true, "items": []}
+ {
+  "id": "b002",
+  "text": "sáng nay ăn phở 50",
+  "items": [
+   {
+    "title": "Phở/Ăn phở",
+    "amount": 50000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b004",
+  "text": "mua bánh mì 2 ổ 30,000 đ",
+  "items": [
+   {
+    "title": "Bánh mì",
+    "amount": 30000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b005",
+  "text": "mua bánh sinh nhật 350k",
+  "items": [
+   {
+    "title": "Bánh sinh nhật",
+    "amount": 350000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b006",
+  "text": "nhậu với tụi bạn 1 xị",
+  "items": [
+   {
+    "title": "Nhậu",
+    "amount": 100000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b007",
+  "text": "tối qua nhậu hết 2 lít ck mb",
+  "items": [
+   {
+    "title": "Nhậu",
+    "amount": 200000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-07",
+    "walletName": "MB Bank"
+   }
+  ]
+ },
+ {
+  "id": "b008",
+  "text": "đi chợ mua rau thịt hết 150k",
+  "items": [
+   {
+    "title": "Đi chợ/Rau thịt",
+    "amount": 150000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b009",
+  "text": "mua 2kg thit heo 240k",
+  "items": [
+   {
+    "title": "Thịt heo/Thịt",
+    "amount": 240000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b010",
+  "text": "tiền chợ hôm qua 230 ngàn tiền mặt",
+  "items": [
+   {
+    "title": "Tiền chợ/Đi chợ",
+    "amount": 230000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-07",
+    "walletName": "Tiền mặt"
+   }
+  ]
+ },
+ {
+  "id": "b011",
+  "text": "mua 1 chục trứng 35k với bó rau 10k",
+  "items": [
+   {
+    "title": "Trứng",
+    "amount": 35000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Rau",
+    "amount": 10000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b012",
+  "text": "bách hóa xanh 312k thẻ tcb",
+  "items": [
+   {
+    "title": "Bách hóa xanh/Đi siêu thị",
+    "amount": 312000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "Techcombank"
+   }
+  ]
+ },
+ {
+  "id": "b013",
+  "text": "mua bao gạo 25kg 450k",
+  "items": [
+   {
+    "title": "Gạo",
+    "amount": 450000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b014",
+  "text": "ra chợ mua cá 120k, mua thêm lốc sữa chua 30k",
+  "items": [
+   {
+    "title": "Cá",
+    "amount": 120000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Sữa chua",
+    "amount": 30000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b015",
+  "text": "đi siêu thị winmart hết 1tr1 quẹt tcb",
+  "items": [
+   {
+    "title": "Đi siêu thị/Winmart",
+    "amount": 1100000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "Techcombank"
+   }
+  ]
+ },
+ {
+  "id": "b016",
+  "text": "hồi sáng ăn hủ tiếu 45 ngàn",
+  "items": [
+   {
+    "title": "Hủ tiếu",
+    "amount": 45000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b017",
+  "text": "bữa qua ăn mì quảng 40k",
+  "items": [
+   {
+    "title": "Mì Quảng",
+    "amount": 40000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-07",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b018",
+  "text": "bánh bèo 25k",
+  "items": [
+   {
+    "title": "Bánh bèo",
+    "amount": 25000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b019",
+  "text": "trưa nay bún chả 55k, xôi sáng 20k",
+  "items": [
+   {
+    "title": "Bún chả",
+    "amount": 55000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Xôi",
+    "amount": 20000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b020",
+  "text": "xe ôm ra bến xe 30 ngàn",
+  "items": [
+   {
+    "title": "Xe ôm",
+    "amount": 30000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b021",
+  "text": "gửi tía 2tr tiền mặt",
+  "items": [
+   {
+    "title": "Gửi tía/Gửi ba/Cho tía",
+    "amount": 2000000,
+    "categoryName": "Gia đình",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "Tiền mặt"
+   }
+  ]
+ },
+ {
+  "id": "b022",
+  "text": "hôm qua đổ xăng 80k trả momo",
+  "items": [
+   {
+    "title": "Đổ xăng/Xăng",
+    "amount": 80000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-07",
+    "walletName": "MoMo"
+   }
+  ]
+ },
+ {
+  "id": "b023",
+  "text": "grab di lam 62k tra bang momo",
+  "items": [
+   {
+    "title": "Grab/Đi Grab",
+    "amount": 62000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "MoMo"
+   }
+  ]
+ },
+ {
+  "id": "b024",
+  "text": "đổ xăng 70k, gửi xe 5k",
+  "items": [
+   {
+    "title": "Đổ xăng/Xăng",
+    "amount": 70000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Gửi xe",
+    "amount": 5000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b025",
+  "text": "rửa xe 40k tiền mặt",
+  "items": [
+   {
+    "title": "Rửa xe",
+    "amount": 40000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "Tiền mặt"
+   }
+  ]
+ },
+ {
+  "id": "b026",
+  "text": "vé xe về quê 250k",
+  "items": [
+   {
+    "title": "Vé xe về quê/Vé xe",
+    "amount": 250000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b027",
+  "text": "mua áo khoác 450k",
+  "items": [
+   {
+    "title": "Áo khoác",
+    "amount": 450000,
+    "categoryName": "Mua sắm",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b028",
+  "text": "mua tai nghe bluetooth 890k trên lazada",
+  "items": [
+   {
+    "title": "Tai nghe/Tai nghe bluetooth",
+    "amount": 890000,
+    "categoryName": "Mua sắm",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b029",
+  "text": "đơn shopee 230k",
+  "items": [
+   {
+    "title": "Đơn Shopee/Shopee",
+    "amount": 230000,
+    "categoryName": "Mua sắm",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b030",
+  "text": "mua kem chống nắng 320k với sữa rửa mặt 150k",
+  "items": [
+   {
+    "title": "Kem chống nắng",
+    "amount": 320000,
+    "categoryName": "Mua sắm",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Sữa rửa mặt",
+    "amount": 150000,
+    "categoryName": "Mua sắm",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b031",
+  "text": "22/9 mua giày 1tr350",
+  "items": [
+   {
+    "title": "Giày",
+    "amount": 1350000,
+    "categoryName": "Mua sắm",
+    "type": "EXPENSE",
+    "date": "2026-09-22",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b032",
+  "text": "mua bỉm cho bé 380k",
+  "items": [
+   {
+    "title": "Bỉm/Tã",
+    "amount": 380000,
+    "categoryName": "Gia đình",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b033",
+  "text": "hộp sữa bột cho con 650k",
+  "items": [
+   {
+    "title": "Sữa bột",
+    "amount": 650000,
+    "categoryName": "Gia đình",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b034",
+  "text": "mua do choi cho con 250k",
+  "items": [
+   {
+    "title": "Đồ chơi",
+    "amount": 250000,
+    "categoryName": "Gia đình",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b035",
+  "text": "ck cho bố mẹ 5tr qua mb",
+  "items": [
+   {
+    "title": "Gửi bố mẹ/Cho bố mẹ",
+    "amount": 5000000,
+    "categoryName": "Gia đình",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "MB Bank"
+   }
+  ]
+ },
+ {
+  "id": "b036",
+  "text": "biếu ông bà nội 1 triệu",
+  "items": [
+   {
+    "title": "Biếu ông bà/Biếu ông bà nội",
+    "amount": 1000000,
+    "categoryName": "Gia đình",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b037",
+  "text": "gửi má 3tr",
+  "items": [
+   {
+    "title": "Gửi má/Cho má",
+    "amount": 3000000,
+    "categoryName": "Gia đình",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b038",
+  "text": "tien dien thang 9 het 1tr250",
+  "items": [
+   {
+    "title": "Tiền điện",
+    "amount": 1250000,
+    "categoryName": "Hóa đơn",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b040",
+  "text": "tiền nước 180k, tiền wifi 220k",
+  "items": [
+   {
+    "title": "Tiền nước",
+    "amount": 180000,
+    "categoryName": "Hóa đơn",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Tiền wifi/Wifi/Internet",
+    "amount": 220000,
+    "categoryName": "Hóa đơn",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b041",
+  "text": "cuoc dien thoai thang nay 150k tru tcb",
+  "items": [
+   {
+    "title": "Cước điện thoại",
+    "amount": 150000,
+    "categoryName": "Hóa đơn",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "Techcombank"
+   }
+  ]
+ },
+ {
+  "id": "b042",
+  "text": "đóng tiền nhà tháng 10 4 triệu rưỡi ck mb",
+  "items": [
+   {
+    "title": "Tiền nhà/Tiền thuê nhà",
+    "amount": 4500000,
+    "categoryName": "Nhà ở",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "MB Bank"
+   }
+  ]
+ },
+ {
+  "id": "b043",
+  "text": "phí quản lý chung cư 650k",
+  "items": [
+   {
+    "title": "Phí chung cư/Phí quản lý",
+    "amount": 650000,
+    "categoryName": "Nhà ở",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b044",
+  "text": "mua thuốc cảm 85k",
+  "items": [
+   {
+    "title": "Thuốc/Thuốc cảm",
+    "amount": 85000,
+    "categoryName": "Sức khỏe",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b045",
+  "text": "20/9 nhổ răng khôn hết 700k",
+  "items": [
+   {
+    "title": "Nhổ răng/Nha khoa",
+    "amount": 700000,
+    "categoryName": "Sức khỏe",
+    "type": "EXPENSE",
+    "date": "2026-09-20",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b046",
+  "text": "dong tien gym thang 10 500k",
+  "items": [
+   {
+    "title": "Gym/Tiền gym",
+    "amount": 500000,
+    "categoryName": "Sức khỏe",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b047",
+  "text": "xét nghiệm máu 450k thanh toán momo",
+  "items": [
+   {
+    "title": "Xét nghiệm/Xét nghiệm máu",
+    "amount": 450000,
+    "categoryName": "Sức khỏe",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "MoMo"
+   }
+  ]
+ },
+ {
+  "id": "b048",
+  "text": "mua vitamin c 120k",
+  "items": [
+   {
+    "title": "Vitamin/Vitamin C",
+    "amount": 120000,
+    "categoryName": "Sức khỏe",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b049",
+  "text": "đóng bảo hiểm y tế 3 trăm",
+  "items": [
+   {
+    "title": "Bảo hiểm y tế/BHYT",
+    "amount": 300000,
+    "categoryName": "Sức khỏe",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b050",
+  "text": "15/9 đóng học phí 2tr5",
+  "items": [
+   {
+    "title": "Học phí",
+    "amount": 2500000,
+    "categoryName": "Giáo dục",
+    "type": "EXPENSE",
+    "date": "2026-09-15",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b051",
+  "text": "đóng học phí cho con 3tr2",
+  "items": [
+   {
+    "title": "Học phí",
+    "amount": 3200000,
+    "categoryName": "Giáo dục",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b052",
+  "text": "dang ky khoa hoc tieng anh 2tr",
+  "items": [
+   {
+    "title": "Khóa học tiếng Anh/Khóa học",
+    "amount": 2000000,
+    "categoryName": "Giáo dục",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b053",
+  "text": "xem phim cgv 2 vé 180k, bắp nước 95k",
+  "items": [
+   {
+    "title": "Xem phim/Vé phim",
+    "amount": 180000,
+    "categoryName": "Giải trí",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Bắp nước",
+    "amount": 95000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b054",
+  "text": "gia hạn netflix 260k",
+  "items": [
+   {
+    "title": "Netflix",
+    "amount": 260000,
+    "categoryName": "Giải trí",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b055",
+  "text": "tối qua đi karaoke 400k",
+  "items": [
+   {
+    "title": "Karaoke",
+    "amount": 400000,
+    "categoryName": "Giải trí",
+    "type": "EXPENSE",
+    "date": "2026-10-07",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b056",
+  "text": "trăm rưỡi tiền bida",
+  "items": [
+   {
+    "title": "Bida",
+    "amount": 150000,
+    "categoryName": "Giải trí",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b057",
+  "text": "cat toc 60k, goi dau 30k",
+  "items": [
+   {
+    "title": "Cắt tóc",
+    "amount": 60000,
+    "categoryName": "Chi khác",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   },
+   {
+    "title": "Gội đầu",
+    "amount": 30000,
+    "categoryName": "Chi khác",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b058",
+  "text": "5 chục tiền gội đầu",
+  "items": [
+   {
+    "title": "Gội đầu",
+    "amount": 50000,
+    "categoryName": "Chi khác",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b059",
+  "text": "lì xì cho cháu 200k",
+  "items": [
+   {
+    "title": "Lì xì cháu/Lì xì",
+    "amount": 200000,
+    "categoryName": "Chi khác",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b060",
+  "text": "ủng hộ từ thiện 200k",
+  "items": [
+   {
+    "title": "Từ thiện/Ủng hộ",
+    "amount": 200000,
+    "categoryName": "Chi khác",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b061",
+  "text": "photo tài liệu 15 nghìn",
+  "items": [
+   {
+    "title": "Photo tài liệu/Photo",
+    "amount": 15000,
+    "categoryName": "Chi khác",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b062",
+  "text": "nộp phạt nguội 800k",
+  "items": [
+   {
+    "title": "Phạt nguội",
+    "amount": 800000,
+    "categoryName": "Chi khác",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b063",
+  "text": "đi đám cưới bạn thân 1tr",
+  "items": [
+   {
+    "title": "Đám cưới",
+    "amount": 1000000,
+    "categoryName": "Hiếu hỉ",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b064",
+  "text": "phúng viếng 500k",
+  "items": [
+   {
+    "title": "Phúng viếng/Đám tang",
+    "amount": 500000,
+    "categoryName": "Hiếu hỉ",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b065",
+  "text": "mung tan gia dong nghiep 300k",
+  "items": [
+   {
+    "title": "Tân gia/Mừng tân gia",
+    "amount": 300000,
+    "categoryName": "Hiếu hỉ",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b066",
+  "text": "thôi nôi con chị Hai nửa củ",
+  "items": [
+   {
+    "title": "Thôi nôi",
+    "amount": 500000,
+    "categoryName": "Hiếu hỉ",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b067",
+  "text": "ngày 3 đi đám giỗ 500k",
+  "items": [
+   {
+    "title": "Đám giỗ",
+    "amount": 500000,
+    "categoryName": "Hiếu hỉ",
+    "type": "EXPENSE",
+    "date": "2026-10-03",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b068",
+  "text": "đặt homestay đà lạt 1tr8",
+  "items": [
+   {
+    "title": "Homestay/Homestay Đà Lạt",
+    "amount": 1800000,
+    "categoryName": "Du lịch",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b069",
+  "text": "ve may bay di phu quoc 2 nguoi 3tr6 the tcb",
+  "items": [
+   {
+    "title": "Vé máy bay",
+    "amount": 3600000,
+    "categoryName": "Du lịch",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": "Techcombank"
+   }
+  ]
+ },
+ {
+  "id": "b070",
+  "text": "đặt tour hạ long 4.5tr",
+  "items": [
+   {
+    "title": "Tour Hạ Long/Tour",
+    "amount": 4500000,
+    "categoryName": "Du lịch",
+    "type": "EXPENSE",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b071",
+  "text": "nhan luong 18tr vao tcb",
+  "items": [
+   {
+    "title": "Lương",
+    "amount": 18000000,
+    "categoryName": "Lương",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": "Techcombank"
+   }
+  ]
+ },
+ {
+  "id": "b072",
+  "text": "thứ 6 tuần trước nhận lương 22 triệu",
+  "items": [
+   {
+    "title": "Lương",
+    "amount": 22000000,
+    "categoryName": "Lương",
+    "type": "INCOME",
+    "date": "2026-10-02",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b073",
+  "text": "hôm qua lương về 16tr, được thưởng thêm 2tr",
+  "items": [
+   {
+    "title": "Lương",
+    "amount": 16000000,
+    "categoryName": "Lương",
+    "type": "INCOME",
+    "date": "2026-10-07",
+    "walletName": null
+   },
+   {
+    "title": "Thưởng",
+    "amount": 2000000,
+    "categoryName": "Thưởng",
+    "type": "INCOME",
+    "date": "2026-10-07",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b074",
+  "text": "nhận thưởng KPI quý 3 5tr về tcb",
+  "items": [
+   {
+    "title": "Thưởng KPI",
+    "amount": 5000000,
+    "categoryName": "Thưởng",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": "Techcombank"
+   }
+  ]
+ },
+ {
+  "id": "b075",
+  "text": "lai tiet kiem thang nay 320k",
+  "items": [
+   {
+    "title": "Lãi tiết kiệm",
+    "amount": 320000,
+    "categoryName": "Đầu tư",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b076",
+  "text": "co tuc vnm 1tr2 ve tcb",
+  "items": [
+   {
+    "title": "Cổ tức/Cổ tức VNM",
+    "amount": 1200000,
+    "categoryName": "Đầu tư",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": "Techcombank"
+   }
+  ]
+ },
+ {
+  "id": "b077",
+  "text": "chốt lời coin được 2tr3",
+  "items": [
+   {
+    "title": "Lãi coin/Chốt lời coin",
+    "amount": 2300000,
+    "categoryName": "Đầu tư",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b078",
+  "text": "má cho 2 triệu",
+  "items": [
+   {
+    "title": "Má cho/Được má cho",
+    "amount": 2000000,
+    "categoryName": "Được tặng",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b079",
+  "text": "ba gửi cho 1tr xài",
+  "items": [
+   {
+    "title": "Ba cho/Được ba cho",
+    "amount": 1000000,
+    "categoryName": "Được tặng",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b080",
+  "text": "được lì xì 500k",
+  "items": [
+   {
+    "title": "Được lì xì/Lì xì",
+    "amount": 500000,
+    "categoryName": "Được tặng",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b082",
+  "text": "bán đồ cũ trên chợ tốt được 650k",
+  "items": [
+   {
+    "title": "Bán đồ cũ",
+    "amount": 650000,
+    "categoryName": "Thu khác",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b083",
+  "text": "ngày 25 bán điện thoại cũ được 3tr5",
+  "items": [
+   {
+    "title": "Bán điện thoại cũ/Bán điện thoại",
+    "amount": 3500000,
+    "categoryName": "Thu khác",
+    "type": "INCOME",
+    "date": "2026-09-25",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b084",
+  "text": "shopee hoan tien 45.000đ",
+  "items": [
+   {
+    "title": "Hoàn tiền/Shopee hoàn tiền",
+    "amount": 45000,
+    "categoryName": "Thu khác",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b086",
+  "text": "day kem dc 1tr5",
+  "items": [
+   {
+    "title": "Dạy kèm",
+    "amount": 1500000,
+    "categoryName": "Thu khác",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b087",
+  "text": "làm freelance thiết kế logo được 3 củ",
+  "items": [
+   {
+    "title": "Freelance/Thiết kế logo",
+    "amount": 3000000,
+    "categoryName": "Thu khác",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b088",
+  "text": "làm thêm cuối tuần được 800 nghìn tiền mặt",
+  "items": [
+   {
+    "title": "Làm thêm",
+    "amount": 800000,
+    "categoryName": "Thu khác",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": "Tiền mặt"
+   }
+  ]
+ },
+ {
+  "id": "b089",
+  "text": "trúng thưởng bốc thăm 1 triệu",
+  "items": [
+   {
+    "title": "Trúng thưởng",
+    "amount": 1000000,
+    "categoryName": "Thu khác",
+    "type": "INCOME",
+    "date": "2026-10-08",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b090",
+  "text": "hôm kia ăn sáng 30k, cf 25k, ăn trưa 45k",
+  "items": [
+   {
+    "title": "Ăn sáng",
+    "amount": 30000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-06",
+    "walletName": null
+   },
+   {
+    "title": "Cà phê/Cafe",
+    "amount": 25000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-06",
+    "walletName": null
+   },
+   {
+    "title": "Ăn trưa",
+    "amount": 45000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-06",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b091",
+  "text": "thứ 2 đổ xăng 80k, thay nhớt 150k, rửa xe 30k, gửi xe 5k",
+  "items": [
+   {
+    "title": "Đổ xăng/Xăng",
+    "amount": 80000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-05",
+    "walletName": null
+   },
+   {
+    "title": "Thay nhớt",
+    "amount": 150000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-05",
+    "walletName": null
+   },
+   {
+    "title": "Rửa xe",
+    "amount": 30000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-05",
+    "walletName": null
+   },
+   {
+    "title": "Gửi xe",
+    "amount": 5000,
+    "categoryName": "Di chuyển",
+    "type": "EXPENSE",
+    "date": "2026-10-05",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b092",
+  "text": "cn vua roi di sieu thi 650k, xem phim 200k tra momo",
+  "items": [
+   {
+    "title": "Đi siêu thị/Siêu thị",
+    "amount": 650000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-04",
+    "walletName": "MoMo"
+   },
+   {
+    "title": "Xem phim",
+    "amount": 200000,
+    "categoryName": "Giải trí",
+    "type": "EXPENSE",
+    "date": "2026-10-04",
+    "walletName": "MoMo"
+   }
+  ]
+ },
+ {
+  "id": "b093",
+  "text": "t7 tuan truoc an lau 450k",
+  "items": [
+   {
+    "title": "Ăn lẩu/Lẩu",
+    "amount": 450000,
+    "categoryName": "Ăn uống",
+    "type": "EXPENSE",
+    "date": "2026-10-03",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b094",
+  "text": "thứ 3 tuần rồi khám bệnh 300k",
+  "items": [
+   {
+    "title": "Khám bệnh",
+    "amount": 300000,
+    "categoryName": "Sức khỏe",
+    "type": "EXPENSE",
+    "date": "2026-09-29",
+    "walletName": null
+   }
+  ]
+ },
+ {
+  "id": "b095",
+  "text": "mùng 5 đóng tiền điện 820k, tiền nước 150k, internet 220k ck mb",
+  "items": [
+   {
+    "title": "Tiền điện",
+    "amount": 820000,
+    "categoryName": "Hóa đơn",
+    "type": "EXPENSE",
+    "date": "2026-10-05",
+    "walletName": "MB Bank"
+   },
+   {
+    "title": "Tiền nước",
+    "amount": 150000,
+    "categoryName": "Hóa đơn",
+    "type": "EXPENSE",
+    "date": "2026-10-05",
+    "walletName": "MB Bank"
+   },
+   {
+    "title": "Internet/Wifi",
+    "amount": 220000,
+    "categoryName": "Hóa đơn",
+    "type": "EXPENSE",
+    "date": "2026-10-05",
+    "walletName": "MB Bank"
+   }
+  ]
+ },
+ {
+  "id": "b098",
+  "text": "hôm nay ăn phở",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b099",
+  "text": "di grab di lam ko nho bao nhieu",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b100",
+  "text": "chuyển 2tr từ mb sang momo",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b101",
+  "text": "rút 500k tiền mặt từ tcb",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b102",
+  "text": "nạp 1tr vào momo từ mb",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b103",
+  "text": "ck tu tcb qua mb 3tr",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b104",
+  "text": "cho Nam vay 2tr",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b105",
+  "text": "vay chị 5tr",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b106",
+  "text": "trả nợ 1tr",
+  "ask": true,
+  "items": []
+ },
+ {
+  "id": "b107",
+  "text": "thằng Tuấn trả lại 500k hôm bữa mượn",
+  "ask": true,
+  "items": []
+ }
 ]
