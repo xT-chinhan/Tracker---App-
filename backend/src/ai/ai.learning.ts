@@ -16,8 +16,10 @@ import { accentedClean, norm, roundAmount, ruleKeys } from './ai.text';
 import type { LlmClient } from './ai.types';
 
 const ADVISORY_KEY = 7_311_001;
-/** k-ẩn danh tối thiểu cho mọi ứng viên chung (kể cả khi admin hạ ngưỡng tự bật) */
-const MIN_USERS_FOR_GLOBAL = 2;
+/** k-ẩn danh tối thiểu cho mọi ứng viên chung: ≥ 5 người khác nhau (đã đồng ý góp), kể cả khi admin hạ ngưỡng tự bật */
+export const MIN_USERS_FOR_GLOBAL = 5;
+/** Giữ lịch sử chat 12 tháng */
+export const RETENTION_DAYS = 365;
 
 type Verdict = 'pass' | 'fail' | 'no-coverage';
 interface EvalReport { verdict: Verdict; matched: number; correct: number; source: 'db' | 'ai' }
@@ -116,12 +118,22 @@ export class AiLearningService implements OnModuleInit {
       const s = lib.parse(text, ctx)[0];
       return s ? accentedClean(s.text, s.clean) || norm(text) : norm(text);
     };
-    // 1) Câu mẫu router (ai/eval/data/router-source.ts → BANK)
-    if (!(await this.prisma.aiExample.count({ where: { ownerKey: GLOBAL, skill: 'router' } }))) {
+    // 1) Câu mẫu router theo scope (ai/router/bank.ts → SCOPED_BANK); bộ cũ không có scope (đợt 1) thì thay
+    const seedRows = await this.prisma.aiExample.findMany({ where: { ownerKey: GLOBAL, skill: 'router', userCount: 0 }, select: { id: true, output: true } });
+    const hasScoped = seedRows.some((r) => (r.output as any)?.scope);
+    if (lib.SCOPED_BANK && !hasScoped) {
+      if (seedRows.length) await this.prisma.aiExample.deleteMany({ where: { id: { in: seedRows.map((r) => r.id) } } });
+      const rows = (['USER', 'ADMIN'] as const).flatMap((scope) => Object.entries(lib.SCOPED_BANK![scope] ?? {}).flatMap(([skill, xs]) => xs.map((input) => ({ scope, skill, input }))));
+      await this.prisma.aiExample.createMany({
+        // inputNorm kèm scope: cùng câu mẫu có thể nằm ở cả 2 scope (vd "hoi-lai")
+        data: rows.map((r) => ({ scope: 'GLOBAL' as const, ownerKey: GLOBAL, skill: 'router', input: r.input, inputNorm: `${norm(r.input)}#${r.scope}`, output: { skill: r.skill, scope: r.scope }, status: 'ACTIVE' as const, userCount: 0 })),
+        skipDuplicates: true,
+      });
+    } else if (!seedRows.length) {
       const src = await aiData<{ BANK?: Record<string, string[]> }>('eval/data/router-source.ts');
       const rows = Object.entries(src?.BANK ?? {}).flatMap(([skill, xs]) => xs.map((input) => ({ skill, input })));
       await this.prisma.aiExample.createMany({
-        data: rows.map((r) => ({ scope: 'GLOBAL' as const, ownerKey: GLOBAL, skill: 'router', input: r.input, inputNorm: norm(r.input), output: { skill: r.skill }, status: 'ACTIVE' as const, userCount: 0 })),
+        data: rows.map((r) => ({ scope: 'GLOBAL' as const, ownerKey: GLOBAL, skill: 'router', input: r.input, inputNorm: norm(r.input), output: { skill: r.skill, scope: 'USER' }, status: 'ACTIVE' as const, userCount: 0 })),
         skipDuplicates: true,
       });
     }
@@ -168,7 +180,28 @@ export class AiLearningService implements OnModuleInit {
     return { verdict: !hit.length ? 'no-coverage' : correct === hit.length ? 'pass' : 'fail', matched: hit.length, correct, source: 'db' };
   }
 
+  /* ============================== giữ lịch sử 12 tháng ============================== */
+
+  @Cron('20 3 * * *', { timeZone: 'Asia/Ho_Chi_Minh' })
+  async retentionCron() {
+    await this.retention(new Date()).catch((e) => this.logger.error(`Dọn lịch sử chat lỗi: ${(e as Error).message}`));
+  }
+
+  /** Xóa tin nhắn cũ hơn 12 tháng (nháp / phản hồi đi theo) rồi xóa hội thoại không còn tin và không cập nhật trong 12 tháng. */
+  async retention(now: Date) {
+    const cutoff = new Date(now.getTime() - RETENTION_DAYS * 86400_000);
+    const messages = await this.prisma.aiMessage.deleteMany({ where: { createdAt: { lt: cutoff } } });
+    const conversations = await this.prisma.aiConversation.deleteMany({ where: { updatedAt: { lt: cutoff }, messages: { none: {} } } });
+    return { cutoff, messages: messages.count, conversations: conversations.count };
+  }
+
   /* ============================== chu trình ban đêm ============================== */
+
+  /** User đã đồng ý góp ví dụ ẩn danh (chưa đồng ý → không lấy gì của họ cho học chung) */
+  private async consenting() {
+    const rows = await this.prisma.aiUserSetting.findMany({ where: { shareExamples: true }, select: { userId: true } });
+    return new Set(rows.map((r) => r.userId));
+  }
 
   @Cron('30 2 * * *', { timeZone: 'Asia/Ho_Chi_Minh' })
   async nightly() {
@@ -217,7 +250,9 @@ export class AiLearningService implements OnModuleInit {
   private async mineRules() {
     const cfg = await this.sys.ai();
     const cases = await this.prisma.aiEvalCase.findMany({ where: { skill: 'ghi-giao-dich' }, select: { inputNorm: true, expected: true } });
-    const all = await this.prisma.aiRule.findMany({ where: { scope: 'USER', kind: 'category', skill: 'ghi-giao-dich' }, select: { userId: true, pattern: true, value: true, support: true, status: true } });
+    const ok = await this.consenting();
+    const all = (await this.prisma.aiRule.findMany({ where: { scope: 'USER', kind: 'category', skill: 'ghi-giao-dich' }, select: { userId: true, pattern: true, value: true, support: true, status: true } })).filter((r) => ok.has(r.userId!));
+    const seen = new Set<string>();
     const totals = new Map<string, number>();
     for (const r of all) totals.set(r.pattern, (totals.get(r.pattern) ?? 0) + r.support);
     const groups = new Map<string, { pattern: string; value: string; users: Set<string>; support: number }>();
@@ -238,6 +273,7 @@ export class AiLearningService implements OnModuleInit {
       const status = this.decide(cfg, g.users.size, g.support, precision, report.verdict, 'rule');
       out.candidates++;
       out[status === 'ACTIVE' ? 'active' : status === 'PROPOSED' ? 'proposed' : 'rejected']++;
+      seen.add(`${g.pattern}\u0000${g.value}`);
       const key = { ownerKey_kind_pattern_value: { ownerKey: GLOBAL, kind: 'category', pattern: g.pattern, value: g.value } };
       const existing = await this.prisma.aiRule.findUnique({ where: key });
       const counters = { support: g.support, userCount: g.users.size, precision, evalReport: report as unknown as Prisma.InputJsonValue };
@@ -249,13 +285,19 @@ export class AiLearningService implements OnModuleInit {
         await this.prisma.aiRule.update({ where: { id: existing.id }, data: { ...counters, status, approvedAt: status === 'ACTIVE' ? existing.approvedAt ?? new Date() : null } });
       }
     }
+    // Luật chung tự bật trước đây nay không còn đủ người đồng ý / đủ ngưỡng → về chờ duyệt
+    const stale = await this.prisma.aiRule.findMany({ where: { ownerKey: GLOBAL, kind: 'category', approvedById: null, status: 'ACTIVE' }, select: { id: true, pattern: true, value: true } });
+    const demote = stale.filter((r) => !seen.has(`${r.pattern}\u0000${r.value}`)).map((r) => r.id);
+    if (demote.length) await this.prisma.aiRule.updateMany({ where: { id: { in: demote } }, data: { status: 'PROPOSED', approvedAt: null } });
+    (out as any).demoted = demote.length;
     return out;
   }
 
   private async mineExamples() {
     const cfg = await this.sys.ai();
     const cases = await this.prisma.aiEvalCase.findMany({ where: { skill: 'ghi-giao-dich' }, select: { inputNorm: true, expected: true } });
-    const rows = await this.prisma.aiExample.findMany({ where: { scope: 'USER', skill: 'ghi-giao-dich' }, select: { userId: true, inputNorm: true, output: true, confirmations: true } });
+    const ok = await this.consenting();
+    const rows = (await this.prisma.aiExample.findMany({ where: { scope: 'USER', skill: 'ghi-giao-dich' }, select: { userId: true, inputNorm: true, output: true, confirmations: true } })).filter((r) => ok.has(r.userId!));
     const groups = new Map<string, { inputNorm: string; categoryName: string; users: Set<string>; confirmations: number; titles: Map<string, number>; amounts: number[] }>();
     const totals = new Map<string, number>();
     for (const r of rows) {

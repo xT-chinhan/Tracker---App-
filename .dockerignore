@@ -1,0 +1,15 @@
+# Build context = gốc repo (backend/Dockerfile cần backend/ + ai/). Admin build riêng với context ./admin.
+**/node_modules
+**/dist
+**/seed-dist
+**/.env
+**/*.log
+.git
+admin
+design
+docs
+scripts
+ai/.cache
+ai/results
+ai/research
+backend/scripts

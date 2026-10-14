@@ -99,10 +99,15 @@ export class AiService {
   async create(p: Principal, title?: string) {
     const repo = this.store.for(p);
     const { maxConversationsPerUser: max } = await this.sys.ai();
-    if ((await repo.countConversations()) >= max) {
-      throw new ConflictException({ statusCode: 409, code: 'AI_CONVERSATION_LIMIT', message: `Tối đa ${max} hội thoại, hãy xóa bớt hội thoại cũ`, limit: max });
+    // Đạt giới hạn (tính cuộc chưa lưu trữ): tự lưu trữ cuộc cũ nhất chưa ghim; tất cả đều ghim → 409
+    let autoArchived: { id: string; title: string | null } | null = null;
+    while ((await repo.countActiveConversations()) >= max) {
+      autoArchived = await repo.archiveOldestUnpinned();
+      if (!autoArchived) {
+        throw new ConflictException({ statusCode: 409, code: 'AI_CONVERSATION_LIMIT', message: `Đã có ${max} hội thoại đang ghim, hãy bỏ ghim hoặc xóa bớt`, limit: max });
+      }
     }
-    return repo.createConversation(title);
+    return { ...(await repo.createConversation(title)), autoArchived };
   }
 
   async get(p: Principal, id: string) {
@@ -111,7 +116,7 @@ export class AiService {
     return { ...c, messages: (await repo.listMessages(id)).map(messageView) };
   }
 
-  update(p: Principal, id: string, dto: { title?: string; archived?: boolean }) {
+  update(p: Principal, id: string, dto: { title?: string; archived?: boolean; pinned?: boolean }) {
     return this.store.for(p).updateConversation(id, dto);
   }
 
@@ -173,7 +178,7 @@ export class AiService {
     const uctx = router.ctx.data.userContext as any;
     let route: RouteResult;
     try {
-      route = opts.forced ? { skill: opts.forced, by: 'reroute' } : await this.router.route(text, router.ctx, conv.scope, uctx);
+      route = opts.forced ? { skill: opts.forced, by: 'reroute' } : await this.router.route(text, router.ctx, conv.scope, uctx, base.provider);
     } catch (e) {
       this.logger.warn(`router lỗi: ${(e as Error).message}`);
       route = { skill: 'hoi-lai', by: 'fallback' };
@@ -318,6 +323,14 @@ export class AiService {
     const llm = await this.llms.get();
     await this.learning.onReroute(repo, llm, m.id, q.content, m.skill, skillName);
     return this.answer(repo, conv, q.content, { forced: skillName, debug: opts.debug });
+  }
+
+  settings(p: Principal) {
+    return this.store.for(p).getSetting();
+  }
+
+  setSettings(p: Principal, shareExamples: boolean) {
+    return this.store.for(p).setSetting(shareExamples);
   }
 
   skillsFor(p: Principal) {

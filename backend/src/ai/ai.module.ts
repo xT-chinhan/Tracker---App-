@@ -2,10 +2,10 @@
  * Trợ lý AI (API). Người dùng và admin dùng chung `/ai/*` (phạm vi hội thoại theo role); admin có thêm `/admin/ai/*` (trung tâm học).
  * Thiết kế cô lập, vòng học, cấu hình: xem backend/README.md mục "Trợ lý AI".
  */
-import { Body, Controller, Delete, Get, HttpCode, HttpException, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsEnum, IsIn, IsInt, IsObject, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsIn, IsInt, IsObject, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { AiKnowledgeStatus } from '@prisma/client';
 import type { Request, Response } from 'express';
 import { AuthUser, CurrentUser, Feature, Roles } from '../common/auth';
@@ -40,6 +40,18 @@ class CreateConversationDto {
 class UpdateConversationDto {
   @IsOptional() @Trim() @IsString() @MinLength(1) @MaxLength(120) title?: string;
   @IsOptional() @IsBoolean() archived?: boolean;
+  /** Ghim: không bị tự lưu trữ khi đạt giới hạn số hội thoại */
+  @IsOptional() @IsBoolean() pinned?: boolean;
+}
+
+class AiSettingsDto {
+  /** Đồng ý góp ví dụ đã ẩn danh vào kho chung (lưu thời điểm đồng ý; tắt bất cứ lúc nào) */
+  @IsBoolean() shareExamples: boolean;
+}
+
+class RetentionQuery {
+  /** Mốc "bây giờ" (dev/test) */
+  @IsOptional() @IsDateString() now?: string;
 }
 
 class PostMessageDto {
@@ -115,7 +127,7 @@ export class AiController {
     return this.ai.list(u, q);
   }
 
-  /** Tạo hội thoại; phạm vi USER/ADMIN theo role. Quá `ai.maxConversationsPerUser` => 409 AI_CONVERSATION_LIMIT */
+  /** Tạo hội thoại; phạm vi USER/ADMIN theo role. Đạt `ai.maxConversationsPerUser` → tự lưu trữ cuộc cũ nhất chưa ghim (`autoArchived`); mọi cuộc đều ghim → 409 AI_CONVERSATION_LIMIT */
   @Post('conversations')
   create(@CurrentUser() u: AuthUser, @Body() dto: CreateConversationDto) {
     return this.ai.create(u, dto.title);
@@ -127,7 +139,7 @@ export class AiController {
     return this.ai.get(u, id);
   }
 
-  /** Đổi tên / lưu trữ / khôi phục */
+  /** Đổi tên / lưu trữ / khôi phục / ghim */
   @Patch('conversations/:id')
   update(@CurrentUser() u: AuthUser, @Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateConversationDto) {
     return this.ai.update(u, id, dto);
@@ -205,6 +217,18 @@ export class AiController {
     return this.ai.deleteMemory(u, id);
   }
 
+  /** Cài đặt AI của mình: `{shareExamples, consentedAt, asked}` (asked = đã từng trả lời câu hỏi đồng ý) */
+  @Get('settings')
+  settings(@CurrentUser() u: AuthUser) {
+    return this.ai.settings(u);
+  }
+
+  /** Bật / tắt góp ví dụ ẩn danh vào kho chung. Chưa đồng ý → dữ liệu của mình không dùng cho học chung */
+  @Put('settings')
+  setSettings(@CurrentUser() u: AuthUser, @Body() dto: AiSettingsDto) {
+    return this.ai.setSettings(u, dto.shareExamples);
+  }
+
   /** Số tin hôm nay / hạn mức, số hội thoại / tối đa */
   @Get('usage')
   usage(@CurrentUser() u: AuthUser) {
@@ -262,6 +286,13 @@ export class AiAdminController {
   run() {
     if (process.env.NODE_ENV === 'production') throw new NotFoundException();
     return this.admin.runLearning('manual');
+  }
+
+  /** Chỉ dev/test (production => 404): chạy ngay dọn lịch sử chat > 12 tháng (cron hằng ngày 03:20 giờ VN) */
+  @Post('retention/run') @HttpCode(200)
+  retention(@Query() q: RetentionQuery) {
+    if (process.env.NODE_ENV === 'production') throw new NotFoundException();
+    return this.admin.retention(q.now ? new Date(q.now) : new Date());
   }
 
   @Get('learning/runs')

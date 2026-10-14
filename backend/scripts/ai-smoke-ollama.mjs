@@ -17,10 +17,10 @@ const admin = await login(process.env.ADMIN_EMAIL ?? 'admin@thuchi.vn', process.
 
 const CONVS = [
   { who: 'user', title: 'Ghi nhiều khoản', turns: ['cà phê 45k với bánh mì 20k sáng nay', 'hôm qua đổ xăng 80k trả momo'], confirm: true },
-  { who: 'user', title: 'Thu nhập + chi', turns: ['nhận lương 15tr', 'tiền điện tháng này 780k ck mb'], confirm: true },
-  { who: 'user', title: 'Hỏi đáp', turns: ['mình còn bao nhiêu tiền', 'tháng này tiêu bao nhiêu rồi', 'ngân sách tháng này thế nào'] },
+  { who: 'user', title: 'Tổng kết + gợi ý (Track B)', turns: ['tuần này tiêu hết bao nhiêu', 'gợi ý ngân sách tháng sau', 'mẹo tiết kiệm cho mình với'] },
+  { who: 'user', title: 'Tìm + hỏi đáp (Track B)', turns: ['tìm các khoản ăn uống trên 100k tháng này', 'mình còn bao nhiêu tiền', 'ngân sách tháng này thế nào'], confirm: true },
   { who: 'user', title: 'Mơ hồ / ngoài phạm vi', turns: ['ừ', 'thời tiết hôm nay thế nào', 'mua giày 1tr2 shopee'] },
-  { who: 'admin', title: 'Admin', turns: ['tổng quan hệ thống', 'có gì bất thường không'] },
+  { who: 'admin', title: 'Admin (Track B)', turns: ['tổng quan hệ thống', 'có tài khoản nào bất thường không', 'soạn thông báo bảo trì hệ thống tối nay lúc 23h'] },
 ];
 
 // Khởi động: lần đầu backend nhúng (bge-m3) câu mẫu router + kho ví dụ chung và nạp model vào GPU — đo riêng
@@ -41,7 +41,7 @@ for (const c of CONVS) {
     const m = r.data.message ?? {};
     const ok = r.status === 201 && m.status !== 'error';
     if (!ok) fails++;
-    rows.push({ conv: c.title, text, status: r.status, skill: m.skill, by: m.routeBy, msgStatus: m.status, serverMs: m.latencyMs, httpMs: r.ms, tokens: m.tokens ? `${m.tokens.prompt}/${m.tokens.eval}` : '', draft: r.data.draft ? r.data.draft.payload.items?.map((i) => `${i.title}|${i.amount}|${i.categoryName}|${i.walletName}`).join('; ') ?? r.data.draft.kind : '' });
+    rows.push({ conv: c.title, text, status: r.status, skill: m.skill, by: m.routeBy, msgStatus: m.status, serverMs: m.latencyMs, httpMs: r.ms, tokens: m.tokens ? `${m.tokens.prompt}/${m.tokens.eval}` : '', draft: r.data.draft ? r.data.draft.payload.items?.map((i) => `${i.title}|${i.amount}|${i.categoryName}|${i.walletName}`).join('; ') ?? `${r.data.draft.kind} ${JSON.stringify(r.data.draft.payload).slice(0, 120)}` : '', reply: (m.content ?? '').replace(/\n/g, ' ⏎ ').slice(0, 160) });
     if (c.confirm && r.data.draft) {
       const k = await req('POST', `/ai/drafts/${r.data.draft.id}/confirm`, token, {});
       if (k.status !== 200) fails++;
@@ -51,11 +51,11 @@ for (const c of CONVS) {
   await req('DELETE', `/ai/conversations/${conv.id}`, token);
 }
 
-const cols = ['conv', 'text', 'status', 'skill', 'by', 'msgStatus', 'serverMs', 'httpMs', 'tokens', 'draft'];
+const cols = ['conv', 'text', 'status', 'skill', 'by', 'msgStatus', 'serverMs', 'httpMs', 'tokens', 'draft', 'reply'];
 console.log(cols.join(' | '));
 for (const r of rows) console.log(cols.map((k) => String(r[k] ?? '')).join(' | '));
 const lat = rows.filter((r) => typeof r.serverMs === 'number').map((r) => r.serverMs).sort((a, b) => a - b);
 const p = (q) => lat[Math.min(lat.length - 1, Math.floor(q * lat.length))];
-const llm = rows.filter((r) => r.skill === 'ghi-giao-dich').map((r) => r.serverMs).sort((a, b) => a - b);
-console.log(`\n${lat.length} tin, độ trễ server p50 ${p(0.5)}ms, p95 ${p(0.95)}ms, max ${lat.at(-1)}ms; ghi-giao-dich (gọi LLM) p50 ${llm[Math.floor(llm.length / 2)]}ms; lỗi ${fails}`);
+const llm = rows.filter((r) => r.tokens).map((r) => r.serverMs).sort((a, b) => a - b);
+console.log(`\n${lat.length} tin, độ trễ server p50 ${p(0.5)}ms, p95 ${p(0.95)}ms, max ${lat.at(-1)}ms; tin có gọi LLM p50 ${llm[Math.floor(llm.length / 2)]}ms; lỗi ${fails}`);
 process.exit(fails ? 1 : 0);

@@ -1,4 +1,6 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, ForbiddenException, Get, HttpCode, Injectable, Logger, Module, Patch, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
+import type { Request } from 'express';
+import { Req, BadRequestException, Body, ConflictException, Controller, Delete, ForbiddenException, Get, HttpCode, Injectable, Logger, Module, Patch, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AppThrottlerGuard } from '../common/throttle';
 import { ApiBearerAuth, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
@@ -119,15 +121,23 @@ export class AuthService {
     return this.issue(user);
   }
 
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto, ip?: string) {
     const user = await this.prisma.user.findUnique({ where: { email: dto.email.toLowerCase().trim() } });
     const ok = await bcrypt.compare(dto.password, user?.passwordHash ?? DUMMY_HASH);
     if (!user || !ok) {
+      // Ghi nhận lần sai của tài khoản có thật (không lưu mật khẩu) → admin / AI phát hiện dò mật khẩu
+      if (user) await this.prisma.loginFailure.create({ data: { userId: user.id, ip: ip?.slice(0, 64) ?? null } }).catch(() => undefined);
       throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
     if (user.status === 'LOCKED') throw new ForbiddenException('Tài khoản đã bị khóa');
     await this.sys.assertNotMaintenance(user.role);
     return this.issue(await this.prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } }));
+  }
+
+  /** Xóa log đăng nhập sai quá 30 ngày (hằng ngày 03:10 giờ VN). */
+  @Cron('10 3 * * *', { timeZone: 'Asia/Ho_Chi_Minh' })
+  async pruneLoginFailures() {
+    await this.prisma.loginFailure.deleteMany({ where: { createdAt: { lt: new Date(Date.now() - 30 * 86400_000) } } }).catch(() => undefined);
   }
 
   async me(userId: string) {
@@ -229,8 +239,8 @@ export class AuthController {
 
   /** Giới hạn theo IP (THROTTLE_*) và theo email (Cấu hình: số lần / khung phút). Bảo trì => user thường 503, admin vẫn vào được */
   @Public() @UseGuards(AppThrottlerGuard) @ApiTooManyRequestsResponse() @Post('auth/login') @HttpCode(200)
-  login(@Body() dto: LoginDto) {
-    return this.auth.login(dto);
+  login(@Body() dto: LoginDto, @Req() req: Request) {
+    return this.auth.login(dto, req.ip);
   }
 
   /** Luôn 204 (chống dò email). Có tài khoản => gửi OTP 6 số; hạn / chờ gửi lại theo Cấu hình hệ thống (mặc định 10 phút / 60s). Giới hạn chặt hơn (THROTTLE_FORGOT_LIMIT). */

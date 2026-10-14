@@ -99,6 +99,10 @@ export class AiAdminService {
     return out;
   }
 
+  retention(now: Date) {
+    return this.learning.retention(now);
+  }
+
   runLearning(trigger: string) {
     return this.learning.run(trigger);
   }

@@ -51,7 +51,7 @@ export class AiRepo {
     const [items, total] = await this.db.$transaction([
       this.db.aiConversation.findMany({
         where,
-        orderBy: { updatedAt: 'desc' },
+        orderBy: [{ pinned: 'desc' }, { updatedAt: 'desc' }],
         skip: (q.page - 1) * q.limit,
         take: q.limit,
         include: { _count: { select: { messages: true } } },
@@ -65,6 +65,35 @@ export class AiRepo {
     return this.db.aiConversation.count({ where: { userId: this.uid } });
   }
 
+  countActiveConversations() {
+    return this.db.aiConversation.count({ where: { userId: this.uid, archived: false } });
+  }
+
+  /** Đạt giới hạn: lưu trữ cuộc cũ nhất CHƯA GHIM (null = mọi cuộc đều ghim) */
+  async archiveOldestUnpinned() {
+    const c = await this.db.aiConversation.findFirst({ where: { userId: this.uid, archived: false, pinned: false }, orderBy: { updatedAt: 'asc' } });
+    if (!c) return null;
+    await this.db.aiConversation.updateMany({ where: { id: c.id, userId: this.uid }, data: { archived: true } });
+    return { id: c.id, title: c.title };
+  }
+
+  /* ---------- cài đặt AI của user ---------- */
+
+  async getSetting() {
+    const s = await this.db.aiUserSetting.findUnique({ where: { userId: this.uid } });
+    return { shareExamples: s?.shareExamples ?? false, consentedAt: s?.consentedAt ?? null, asked: !!s };
+  }
+
+  async setSetting(shareExamples: boolean) {
+    const now = new Date();
+    await this.db.aiUserSetting.upsert({
+      where: { userId: this.uid },
+      create: { userId: this.uid, shareExamples, consentedAt: shareExamples ? now : null },
+      update: { shareExamples, ...(shareExamples ? { consentedAt: now } : {}) },
+    });
+    return this.getSetting();
+  }
+
   createConversation(title?: string | null) {
     return this.db.aiConversation.create({ data: { userId: this.uid, scope: this.principal.role === 'ADMIN' ? 'ADMIN' : 'USER', title: title || null } });
   }
@@ -75,7 +104,7 @@ export class AiRepo {
     return c;
   }
 
-  async updateConversation(id: string, data: { title?: string | null; archived?: boolean }) {
+  async updateConversation(id: string, data: { title?: string | null; archived?: boolean; pinned?: boolean }) {
     await this.getConversation(id);
     return this.db.aiConversation.update({ where: { id }, data });
   }

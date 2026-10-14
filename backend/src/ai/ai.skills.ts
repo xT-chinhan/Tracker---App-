@@ -58,7 +58,7 @@ interface SimRow { input: string; output: any; scope: string; score: number }
 
 const ghiGiaoDich: Skill = {
   name: 'ghi-giao-dich',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Ghi khoản thu/chi từ câu tự nhiên (nhiều khoản một lúc) thành nháp để xác nhận',
   context: ['userContext'],
   async run({ input, context, llm, now }) {
@@ -137,7 +137,7 @@ const ghiGiaoDich: Skill = {
 
 const hoiSoDu: Skill = {
   name: 'hoi-so-du',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Số dư tổng và từng ví',
   context: ['balance'],
   async run({ input, context }) {
@@ -152,7 +152,7 @@ const hoiSoDu: Skill = {
 
 const tongKetThang: Skill = {
   name: 'tong-ket-thang',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Tổng thu, chi, chênh lệch và danh mục chi nhiều nhất của một tháng',
   async run({ input, context, now }) {
     const s = await context.get<any>('monthSummary', { month: monthFromText(input, now) });
@@ -163,7 +163,7 @@ const tongKetThang: Skill = {
 
 const kiemTraNganSach: Skill = {
   name: 'kiem-tra-ngan-sach',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Tình hình ngân sách tháng (tổng + theo danh mục)',
   async run({ input, context, now }) {
     const b = await context.get<any>('budgets', { month: monthFromText(input, now) });
@@ -177,7 +177,7 @@ const kiemTraNganSach: Skill = {
 
 const tienDoTietKiem: Skill = {
   name: 'tien-do-tiet-kiem',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Tiến độ các mục tiêu tiết kiệm',
   context: ['savingGoals'],
   async run({ context }) {
@@ -191,7 +191,7 @@ const SEARCH_FILLER = /\b(tim|kiem|liet ke|xem lai|xem|giao dich|cac|nhung|khoan
 
 const timGiaoDich: Skill = {
   name: 'tim-giao-dich',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Tìm giao dịch theo từ khóa / tháng',
   async run({ input, context, now }) {
     const f = fold(input);
@@ -210,7 +210,7 @@ const timGiaoDich: Skill = {
 
 const datNganSach: Skill = {
   name: 'dat-ngan-sach',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Đặt ngân sách tháng (tổng hoặc theo danh mục) thành nháp để xác nhận',
   context: ['userContext'],
   async run({ input, context, now }) {
@@ -231,7 +231,7 @@ const datNganSach: Skill = {
 
 const huongDan: Skill = {
   name: 'huong-dan',
-  scope: 'ANY',
+  scope: 'USER',
   description: 'Hướng dẫn dùng app',
   async run() {
     return {
@@ -262,7 +262,7 @@ const hoiLai: Skill = {
 /* ============================== skill admin ============================== */
 
 const adminTongQuan: Skill = {
-  name: 'admin-tong-quan',
+  name: 'tong-quan-he-thong',
   scope: 'ADMIN',
   description: 'Tổng quan hệ thống (số user, giao dịch)',
   context: ['adminOverview'],
@@ -273,7 +273,7 @@ const adminTongQuan: Skill = {
 };
 
 const adminTimUser: Skill = {
-  name: 'admin-tim-user',
+  name: 'tra-cuu-nguoi-dung',
   scope: 'ADMIN',
   description: 'Tìm người dùng theo email / tên',
   async run({ input, context }) {
@@ -285,7 +285,7 @@ const adminTimUser: Skill = {
 };
 
 const adminKhoaUser: Skill = {
-  name: 'admin-khoa-user',
+  name: 'de-xuat-khoa',
   scope: 'ADMIN',
   description: 'Khóa tài khoản người dùng (nháp, cần xác nhận)',
   async run({ input, context }) {
@@ -300,7 +300,7 @@ const adminKhoaUser: Skill = {
 };
 
 const adminGuiThongBao: Skill = {
-  name: 'admin-gui-thong-bao',
+  name: 'soan-thong-bao',
   scope: 'ADMIN',
   description: 'Soạn thông báo gửi mọi người dùng (nháp, cần xác nhận)',
   async run({ input }) {
@@ -314,7 +314,7 @@ const adminGuiThongBao: Skill = {
 };
 
 const adminBatThuong: Skill = {
-  name: 'admin-bat-thuong',
+  name: 'phat-hien-bat-thuong',
   scope: 'ADMIN',
   description: 'Dấu hiệu bất thường (user ghi quá nhiều trong 24h, số tài khoản khóa)',
   context: ['adminAnomalies'],
@@ -326,7 +326,7 @@ const adminBatThuong: Skill = {
 };
 
 const adminLichSuCauHinh: Skill = {
-  name: 'admin-lich-su-cau-hinh',
+  name: 'tom-tat-cau-hinh',
   scope: 'ADMIN',
   description: 'Các thay đổi cấu hình gần đây',
   context: ['adminConfigHistory'],
@@ -336,6 +336,9 @@ const adminLichSuCauHinh: Skill = {
     return { reply: xs.slice(0, 8).map((c) => `• ${c.section}.${c.key}: ${JSON.stringify(c.oldValue)} → ${JSON.stringify(c.newValue)} (${c.actor?.name ?? 'Hệ thống'})`).join('\n') };
   },
 };
+
+/** Tên cũ (đợt 1) đã bỏ — skill ngoài trùng tên bị bỏ qua */
+export const DEPRECATED_ALIASES = ['admin-tong-quan', 'admin-tim-user', 'admin-khoa-user', 'admin-gui-thong-bao', 'admin-bat-thuong', 'admin-lich-su-cau-hinh'];
 
 export const BUILTIN_SKILLS: Skill[] = [
   ghiGiaoDich, hoiSoDu, tongKetThang, kiemTraNganSach, tienDoTietKiem, timGiaoDich, datNganSach, huongDan, ngoaiPhamVi, hoiLai,
@@ -355,7 +358,8 @@ export class SkillRegistry implements OnModuleInit {
 
   async onModuleInit() {
     if (process.env.AI_EXTERNAL_SKILLS === '0') return;
-    const ext = await loadExternalSkills();
+    // Bí danh cũ admin-* của Track B (trỏ sang skill Track B) không cần nữa: router đã dùng tên Track B
+    const ext = (await loadExternalSkills()).filter((s) => !DEPRECATED_ALIASES.includes(s.name));
     for (const s of ext) this.skills.set(s.name, Object.assign(Object.create(Object.getPrototypeOf(s)), s, { source: 'ai' as const }));
     if (ext.length) this.logger.log(`Nạp ${ext.length} skill từ ai/: ${ext.map((s) => s.name).join(', ')}`);
     // nạp sẵn thư viện ai/ (parser...) để tin nhắn đầu không chậm
@@ -366,11 +370,17 @@ export class SkillRegistry implements OnModuleInit {
     return this.skills.get(name);
   }
 
-  /** Skill principal được phép dùng: admin skill chỉ cho ADMIN trong hội thoại ADMIN. */
+  /**
+   * Skill dùng được trong hội thoại: chặn CẢ HAI chiều.
+   * USER → chỉ hội thoại USER; ADMIN → chỉ hội thoại ADMIN của người đang có role ADMIN; ANY (ngoai-pham-vi, hoi-lai) → cả hai.
+   */
   allowed(name: string, p: Principal, convScope: 'USER' | 'ADMIN') {
     const s = this.skills.get(name);
     if (!s) return false;
-    return (s.scope ?? 'ANY') !== 'ADMIN' || (p.role === 'ADMIN' && convScope === 'ADMIN');
+    const scope = s.scope ?? 'USER';
+    if (scope === 'ANY') return true;
+    if (scope === 'ADMIN') return convScope === 'ADMIN' && p.role === 'ADMIN';
+    return convScope === 'USER';
   }
 
   list(p: Principal, convScope: 'USER' | 'ADMIN' = p.role === 'ADMIN' ? 'ADMIN' : 'USER') {

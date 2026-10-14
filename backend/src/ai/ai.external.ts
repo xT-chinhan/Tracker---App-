@@ -46,6 +46,12 @@ export interface AiLib {
   schemaV1(ctx: AiUserContext, n: number): object;
   /** Router luật của ai/router (có thể không có) */
   routeRules?: (text: string, ctx: AiUserContext) => { skill: string; by: string } | null;
+  /** Router theo scope (Track B): chặn chung + luật của scope; null = để kNN */
+  routeRulesScoped?: (text: string, scope: 'USER' | 'ADMIN') => { skill: string; by: string; reason?: string } | null;
+  /** Ngưỡng kNN bge-m3 Track B chọn */
+  DEFAULT_THRESHOLD?: number;
+  /** Câu mẫu kNN theo scope */
+  SCOPED_BANK?: Record<'USER' | 'ADMIN', Record<string, string[]>>;
 }
 
 let libPromise: Promise<AiLib | null> | null = null;
@@ -59,13 +65,16 @@ export function aiLib(): Promise<AiLib | null> {
         load('skills/ghi-giao-dich/prompt.ts'),
         load('skills/ghi-giao-dich/schema.ts'),
       ]);
-      let routeRules: AiLib['routeRules'];
+      let router: any = {};
       try {
-        routeRules = (await load('router/index.ts')).routeRules;
+        router = await load('router/index.ts');
       } catch (e) {
         logger.warn(`Không nạp được ai/router: ${(e as Error).message}`);
       }
-      return { parse: parser.parse, systemV1: prompt.systemV1, userV1: prompt.userV1, schemaV1: schema.schemaV1, routeRules };
+      return {
+        parse: parser.parse, systemV1: prompt.systemV1, userV1: prompt.userV1, schemaV1: schema.schemaV1,
+        routeRules: router.routeRules, routeRulesScoped: router.routeRulesScoped, DEFAULT_THRESHOLD: router.DEFAULT_THRESHOLD, SCOPED_BANK: router.SCOPED_BANK,
+      };
     } catch (e) {
       logger.warn(`Không nạp được thư viện ai/ (${AI_DIR}): ${(e as Error).message}`);
       return null;

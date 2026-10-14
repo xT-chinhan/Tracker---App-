@@ -4,7 +4,11 @@ Cập nhật: 2026-10-08. Ưu tiên hiện tại: **trợ lý AI** (`ai/`). Các
 
 ## 0. Trợ lý AI — việc còn lại phía backend
 - **pgvector**: embedding đang lưu `Bytes` (Float32) trong `AiExample`, kNN chạy trong tiến trình (`AiRepo.knnRows` → provider `similarExamples`), đủ nhanh vì kho mỗi user nhỏ. Khi kho chung lớn (> vài chục nghìn dòng) chuyển sang pgvector: đổi image `postgres:16-alpine` → image có pgvector (vd `pgvector/pgvector:pg16`, bản Debian) — **phải dump/restore volume `db-data`**, không đổi image tại chỗ; thêm cột `vector(1024)` + index HNSW, thay phần thân `knnRows`/`similar` bằng `ORDER BY embedding <=> $q LIMIT k` (giao diện provider giữ nguyên).
-- Image Docker của API chưa chứa `ai/` (build context chỉ `backend/`) → cần đưa `ai/` vào image (đổi context sang gốc repo hoặc copy) và cài `tsx`; hiện thiếu `ai/` thì ghi-giao-dich báo chưa sẵn sàng.
+- ~~Image Docker thiếu `ai/`~~: xong (build context = gốc repo, `ai/` chép vào `/app/ai`).
+- Thông báo theo nhóm user (quyết định #7 trong `docs/AI-DECISIONS.md`): để sau.
+- Giọng nói → chữ trên máy người dùng (#9): làm cùng app mobile.
+- Merge `ghi-giao-dich` bản mới của Track A (`feat/ai-quality`) để thay bản dự phòng trong backend; khi đó Track B bỏ `ADMIN_ALIASES` trong `ai/skills/index.ts` (backend đã bỏ qua các tên `admin-*`).
+- Trang admin "Cấu hình" chưa có mục `ai`; nhóm "Trợ lý" trong sidebar (Trợ lý AI, Trung tâm học) dựng theo mockup `design/admin-mockup` mục I.
 - Hàng đợi gọi Ollama đang trong tiến trình: chạy nhiều instance API cần hàng đợi chung (Redis / bảng job).
 - Giao diện chat (app + admin "Trung tâm học AI") chờ mockup được duyệt; API đã đủ (`/ai/*`, `/admin/ai/*`).
 

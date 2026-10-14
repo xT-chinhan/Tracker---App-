@@ -66,7 +66,7 @@ Các giá trị `SMTP_*`, `JWT_EXPIRES_IN`, `THROTTLE_AUTH_LIMIT` là **mặc đ
 
 ## Docker
 
-Xem [README gốc](../README.md#triển-khai-bằng-docker). Image `backend/Dockerfile`: multi-stage node 22-alpine, `prisma generate` lúc build, seed + seed demo biên dịch sẵn ra JS (`seed-dist/`). Khi khởi động: chờ DB (tối đa ~30s) → `prisma migrate deploy` → seed (danh mục hệ thống + admin nếu có `ADMIN_*`) → nếu `SEED_DEMO=true` thì nạp lại dữ liệu demo → `node dist/main`. Trong container: `npm run db:seed:demo` chạy bản JS. Có `HEALTHCHECK` gọi `/api/health`.
+Xem [README gốc](../README.md#triển-khai-bằng-docker). Image `backend/Dockerfile` (build context = gốc repo, kèm `ai/`): multi-stage node 22-alpine, `prisma generate` lúc build, seed + seed demo biên dịch sẵn ra JS (`seed-dist/`). Khi khởi động: chờ DB (tối đa ~30s) → `prisma migrate deploy` → seed (danh mục hệ thống + admin nếu có `ADMIN_*`) → nếu `SEED_DEMO=true` thì nạp lại dữ liệu demo → `node dist/main`. Trong container: `npm run db:seed:demo` chạy bản JS. Có `HEALTHCHECK` gọi `/api/health`.
 
 ## E2E
 
@@ -77,7 +77,7 @@ npm run build && NODE_ENV=test node dist/main > /tmp/tracker-api.log 2>&1 &
 npm run test:e2e              # API_URL=http://host:port/api  API_LOG=/đường/dẫn/log  ADMIN_EMAIL / ADMIN_PASSWORD (mặc định admin@thuchi.vn / admin123)
 ```
 
-- 894 kiểm tra (708 cũ + 186 của trợ lý AI ở `scripts/e2e-ai.mjs`, provider FAKE). Email ngẫu nhiên nên chạy lặp được không cần reset DB, kể cả DB đã có dữ liệu demo. Mất khoảng 2 phút: 1 lần chờ 61s (giới hạn gửi lại OTP), ~31s (chờ gửi lại OTP theo cấu hình) và ~11s chờ hết khóa 429 ở cuối.
+- 940 kiểm tra (708 cũ + 232 của trợ lý AI ở `scripts/e2e-ai.mjs`, provider FAKE). Email ngẫu nhiên nên chạy lặp được không cần reset DB, kể cả DB đã có dữ liệu demo. Mất khoảng 2 phút: 1 lần chờ 61s (giới hạn gửi lại OTP), ~31s (chờ gửi lại OTP theo cấu hình) và ~11s chờ hết khóa 429 ở cuối.
 - Nhóm `config:` sửa Cấu hình hệ thống (đủ mọi trường, bảo trì tự tắt theo giờ, máy chủ SMTP giả trong script) rồi khôi phục giá trị ban đầu ở cuối nhóm, kể cả khi lỗi.
 - Có thể chạy server với `TZ=UTC` để chắc chắn không phụ thuộc múi giờ máy chủ (`npm run test` chạy như vậy).
 - In ra ma trận test theo nhóm; exit code 1 nếu có lỗi.
@@ -104,7 +104,7 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 | | POST | `/wallets/:id/restore` | Khôi phục ví đã lưu trữ |
 | categories | GET | `/categories?type=` | Danh mục hệ thống + của mình (xếp theo tiếng Việt) |
 | | POST / PATCH / DELETE | `/categories[/:id]` | Xóa danh mục đã dùng → lưu trữ |
-| transactions | GET | `/transactions?month=&from=&to=&type=&categoryId=&walletId=&q=&page=&limit=` | Có cờ `recurring` |
+| transactions | GET | `/transactions?month=&from=&to=&type=&categoryId=&walletId=&q=&minAmount=&maxAmount=&page=&limit=` | Có cờ `recurring` |
 | | GET / PATCH / DELETE | `/transactions/:id` | |
 | | POST | `/transactions` | `walletId` bắt buộc |
 | | POST | `/transactions/bulk` | 1–100 giao dịch, tất cả hoặc không |
@@ -146,7 +146,7 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 | | POST | `/admin/config/maintenance` | `{enabled, message?, endsAt?}` bật/tắt bảo trì ngay |
 | | POST | `/admin/config/smtp/test` | Gửi email thử tới email admin bằng cấu hình đã lưu → `{ok, response \| error, durationMs}` (5 lần/phút) |
 | ai (USER + ADMIN, tính năng `ai`) | GET / POST | `/ai/conversations` | Hội thoại của chính mình (`?archived=true`) / tạo (phạm vi USER/ADMIN theo role; quá hạn → 409 `AI_CONVERSATION_LIMIT`) |
-| | GET / PATCH / DELETE | `/ai/conversations/:id` | Chi tiết + tin nhắn + nháp / đổi tên, lưu trữ / xóa |
+| | GET / PATCH / DELETE | `/ai/conversations/:id` | Chi tiết + tin nhắn + nháp / đổi tên, lưu trữ, ghim (`pinned`) / xóa |
 | | POST | `/ai/conversations/:id/messages` | `{text}` → `{userMessage, message, draft}`; quá hạn mức ngày → 429 `AI_DAILY_LIMIT` + `Retry-After` |
 | | POST | `/ai/conversations/:id/messages/stream` | Như trên, Server-Sent Events: `user` → `route` → `delta`… → `done` \| `error` |
 | | POST | `/ai/drafts/:id/confirm` | `{payload?}` (bản sửa) → thực thi qua service nghiệp vụ → `{draft, result, idempotent}` |
@@ -154,6 +154,7 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 | | POST | `/ai/messages/:id/feedback` | `{rating: 1 \| -1, comment?}` |
 | | POST | `/ai/messages/:id/reroute` | `{skill}` "ý tôi là…": trả lời lại câu trước bằng skill đó + học định tuyến (skill admin với USER → 403) |
 | | GET | `/ai/skills`, `/ai/usage` | Skill dùng được / số tin hôm nay + hạn mức |
+| | GET / PUT | `/ai/settings` | `{shareExamples, consentedAt, asked}` — đồng ý góp ví dụ ẩn danh vào kho chung (bật/tắt) |
 | | GET / DELETE | `/ai/memory[/:id]` | Trí nhớ AI về chính mình |
 | admin ai (ADMIN) | GET | `/admin/ai/stats?days=` | Theo skill: số tin, độ trễ avg/p50/p95, lỗi, nháp, tỉ lệ chấp nhận không sửa, 👍/👎, reroute; theo ngày |
 | | GET / POST | `/admin/ai/rules`, `/admin/ai/rules/:id/approve\|reject` | Luật CHUNG (lọc `status`, `q`) / duyệt |
@@ -161,6 +162,7 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 | | POST / GET | `/admin/ai/learning/run`, `/admin/ai/learning/runs` | Chạy ngay chu trình học (production → 404) / lịch sử |
 | | GET | `/admin/ai/usage?q=`, `/admin/ai/usage/:userId` | Mức dùng theo user — chỉ số đếm, không nội dung |
 | | GET | `/admin/ai/integrity` | Bất biến: dữ liệu chung không gắn userId |
+| | POST | `/admin/ai/retention/run?now=` | Dev/test (production → 404): chạy ngay dọn lịch sử chat > 12 tháng |
 
 ## Nghiệp vụ v1
 
@@ -207,68 +209,95 @@ Quy ước lỗi: id trên **đường dẫn** thuộc user khác → 404 (khôn
 
 ## Trợ lý AI (`src/ai/`)
 
-Chỉ API (giao diện chat app/admin chờ mockup được duyệt). Mô hình local qua Ollama (`gemma2:2b` + `bge-m3`), thiết kế theo `ai/research/DE-XUAT.md`, số đo ở `ai/results/`.
+Chỉ API (giao diện chat app/admin theo mockup `design/mockup` mục J, `design/admin-mockup` mục I). Mô hình local qua Ollama (`gemma2:2b` + `bge-m3`), thiết kế theo `ai/research/DE-XUAT.md`, quyết định sản phẩm ở `docs/AI-DECISIONS.md`, số đo ở `ai/results/`. Skill nằm ở `ai/skills/` (Track B, 17 skill + `ghi-giao-dich` của Track A); backend chỉ có bản dự phòng cùng tên.
 
 | File | Việc |
 |---|---|
 | `ai.module.ts` | DTO + controller `/ai/*`, `/admin/ai/*` |
-| `ai.service.ts` | Pipeline: tin → router → skill → nháp → lưu; xác nhận / hủy / phản hồi / reroute; chọn LLM |
-| `ai.store.ts` | `AiStore.for(principal)` → `AiRepo`: cửa duy nhất vào dữ liệu AI của user |
+| `ai.service.ts` | Pipeline: tin → router → skill → nháp → lưu; xác nhận / hủy / phản hồi / reroute; giới hạn hội thoại; chọn LLM |
+| `ai.store.ts` | `AiStore.for(principal)` → `AiRepo`: cửa duy nhất vào dữ liệu AI của user (cả cài đặt đồng ý) |
 | `ai.context.ts` | Context provider (dữ liệu cho skill qua service sẵn có) |
-| `ai.router.ts` · `ai.skills.ts` | Định tuyến + skill built-in + registry (nạp skill từ `ai/`) |
-| `ai.drafts.ts` | Loại nháp: chuẩn hóa + thực thi qua service nghiệp vụ |
-| `ai.learning.ts` · `ai.admin.ts` | Vòng học (ngay + ban đêm) · trung tâm học cho admin |
+| `ai.router.ts` · `ai.skills.ts` | Định tuyến theo scope + skill dự phòng + registry (nạp skill từ `ai/`) |
+| `ai.drafts.ts` | Loại nháp: chuẩn hóa (tên → id, phát hiện trùng) + thực thi qua service nghiệp vụ |
+| `ai.learning.ts` · `ai.admin.ts` | Vòng học (ngay + ban đêm), giữ lịch sử 12 tháng · trung tâm học cho admin |
 | `ai.llm.ts` · `ai.external.ts` · `ai.text.ts` | Client Ollama / FAKE · nạp `ai/` bằng tsx · chuẩn hóa chữ, vector |
 
 ### Luồng một tin nhắn
 1. Kiểm tra: hội thoại của mình (404), chưa lưu trữ (409), hạn mức ngày theo giờ VN (429). Lưu tin user; hội thoại chưa có tên → lấy 60 ký tự đầu.
-2. **Router**: luật học được của chính user ("ý tôi là…", khớp nguyên câu chuẩn hóa còn dấu) → luật skill admin (chỉ admin trong hội thoại ADMIN) → luật từ khóa (`dat-ngan-sach` + `routeRules` của `ai/router`) → kNN trên câu mẫu (của user + chung, ngưỡng 0.35) → `hoi-lai`. Skill admin bị chọn cho USER → `ngoai-pham-vi`.
+2. **Router theo scope** của hội thoại (USER / ADMIN, lấy theo role lúc tạo): luật học được của chính user ("ý tôi là…", khớp nguyên câu chuẩn hóa còn dấu) → [USER] "đặt ngân sách …" → `routeRulesScoped(text, scope)` của `ai/router` (chặn prompt injection, chủ đề ngoài phạm vi, hỏi dữ liệu người khác, việc của scope kia + luật của scope) → kNN trên câu mẫu **của scope đó** (`ai/router/bank.ts`, kèm câu user đã sửa định tuyến; ngưỡng 0.6 với bge-m3) → `hoi-lai`. Mọi kết quả qua `SkillRegistry.allowed`: skill `USER` chỉ chạy trong hội thoại USER, skill `ADMIN` chỉ trong hội thoại ADMIN của người đang là ADMIN, `ANY` (`ngoai-pham-vi`, `hoi-lai`) cả hai; sai scope → `ngoai-pham-vi`, reroute sai scope → 403 `AI_SKILL_FORBIDDEN`.
 3. **Skill** chạy với `run({input, context, llm, now})`; context chỉ chứa dữ liệu của principal. Lỗi/timeout skill → vẫn trả 201 với tin `status: error` (không mất tin user).
-4. Nháp (`transactions | budgets | broadcast | lock_user | search_filter`) được **chuẩn hóa** (tên danh mục/ví → id trong dữ liệu của mình; không nói ví → ví nhớ được / Tiền mặt, `walletGuessed`) rồi lưu `PROPOSED`.
-5. `confirm` (tùy chọn kèm bản sửa) → chuyển trạng thái có điều kiện `PROPOSED → EXECUTING` (chặn chạy 2 lần) → thực thi qua **đúng service của API thường**: `TransactionsService.createMany` (cảnh báo ngân sách), `BudgetsService.create`, `AdminService.broadcast`, `AdminService.updateUser` (khóa; không tự khóa được), tìm kiếm. Payload qua `class-validator` như `ValidationPipe`; id của người khác → 400. Lỗi → nháp quay về `PROPOSED`. Thành công → `CONFIRMED`/`EDITED` + `result`; xác nhận lại trả nguyên `result` với `idempotent: true`. Quyền (ADMIN) kiểm tra lại lúc xác nhận.
+4. Nháp được **chuẩn hóa** rồi lưu `PROPOSED`:
+   - `transactions`: tên danh mục/ví → id của mình (không nói ví → ví nhớ được / Tiền mặt, `walletGuessed`); **phát hiện trùng**: mỗi khoản có `possibleDuplicate {transactionId, title, occurredAt, walletId}` nếu đã có giao dịch cùng số tiền + danh mục cách ≤ 1 ngày, nháp có `duplicates` = số khoản nghi trùng (app hiện "Có thể đã ghi rồi").
+   - `budgets`: `categoryName: null` = ngân sách tổng; giữ `median3m/avg3m/monthsSeen` của gợi ý. Xác nhận = **upsert**: tháng đã có ngân sách cùng danh mục (hoặc tổng) → cập nhật hạn mức (`action: 'updated'`), không 409.
+   - `search_filter` target `transactions`: `q, month, from, to, type, categoryName → categoryId, walletName → walletId, minAmount, maxAmount` (validate như `GET /transactions`); target `users` (chỉ ADMIN): `q, status, role`.
+   - `lock_user`: `{userId, email, name, reasons[]}` (lý do lưu cùng nháp và trả lại trong kết quả); `broadcast`: `{title, body}`.
+5. `confirm` (tùy chọn kèm bản sửa) → chuyển trạng thái có điều kiện `PROPOSED → EXECUTING` (chặn chạy 2 lần) → thực thi qua **đúng service của API thường**: `TransactionsService.createMany` (cảnh báo ngân sách), `BudgetsService.create/update`, `AdminService.broadcast`, `AdminService.updateUser` (khóa; không tự khóa được), tìm kiếm. Payload qua `class-validator` như `ValidationPipe`; id của người khác → 400. Lỗi → nháp quay về `PROPOSED`. Thành công → `CONFIRMED`/`EDITED` + `result`; xác nhận lại trả nguyên `result` với `idempotent: true`. Quyền (ADMIN) kiểm tra lại lúc xác nhận.
 
-Skill built-in: `ghi-giao-dich` (parser + prompt + schema của `ai/`, luật học được chạy trước model, kNN few-shot, `format` JSON schema, sửa JSON hỏng + retry 1 lần kèm lỗi, hậu kiểm loại thu/chi theo danh mục), `hoi-so-du`, `tong-ket-thang`, `kiem-tra-ngan-sach`, `tien-do-tiet-kiem`, `tim-giao-dich`, `dat-ngan-sach`, `huong-dan`, `ngoai-pham-vi`, `hoi-lai`; admin: `admin-tong-quan`, `admin-tim-user`, `admin-khoa-user`, `admin-gui-thong-bao`, `admin-bat-thuong`, `admin-lich-su-cau-hinh`. Các skill tra cứu hiện tất định (không gọi LLM).
+**Skill**: nạp từ `ai/skills/index.ts` (`skills`) và `ai/skills/<tên>/index.ts` (`skill`), object `{name, scope: 'USER'|'ADMIN'|'ANY', description, context, run}` (kiểu: `ai/lib/contracts.ts` = `src/ai/ai.types.ts`), trùng tên thì đè bản dự phòng của backend → thêm skill không cần sửa backend. USER: `ghi-giao-dich`, `hoi-so-du`, `tong-ket-thang`, `kiem-tra-ngan-sach`, `tim-giao-dich`, `tien-do-tiet-kiem`, `goi-y-ngan-sach`, `meo-tiet-kiem`, `huong-dan`, `dat-ngan-sach` (backend); ADMIN: `tong-quan-he-thong`, `tra-cuu-nguoi-dung`, `phat-hien-bat-thuong`, `soan-thong-bao`, `de-xuat-khoa`, `tom-tat-cau-hinh`, `huong-dan-quan-tri`; ANY: `ngoai-pham-vi`, `hoi-lai`. Bí danh cũ `admin-*` bị bỏ qua khi nạp. `ghi-giao-dich` hiện chạy bản backend (parser + prompt + schema của `ai/`, luật học được trước model, kNN few-shot, JSON schema, sửa JSON hỏng + retry 1 lần, hậu kiểm thu/chi theo danh mục, cắt số tiền/ví khỏi tên khoản).
 
-**Thêm skill không cần sửa backend**: export từ `ai/skills/index.ts` (`skills` / default = mảng) hoặc `ai/skills/<tên>/index.ts` (`skill` / default) object `{name, scope?: 'USER'|'ADMIN'|'ANY', description?, context?: string[], run}`; backend nạp lúc khởi động (tsx), trùng tên thì ghi đè built-in. Kiểu trong `src/ai/ai.types.ts`.
+**Context provider** (`context` khai báo = nạp sẵn vào `context.data`; `context.get(name, args)` gọi lười). Tham số qua danh sách trắng `q, month, from, to, limit (≤50), skill, texts, k, kind` — không có tham số nào chọn user.
 
-**Context provider** (`context` khai báo = nạp sẵn vào `context.data`; `context.get(name, args)` gọi lười): `userContext` (UserContext của `ai/lib/types.ts`), `balance`, `wallets`, `monthSummary {month?}`, `budgets {month?}`, `savingGoals`, `recentTransactions {limit?}`, `searchTransactions {q?, month?, limit?}`, `categories`, `userMemory`, `userRules {kind, skill}`, `similarExamples {skill, texts, k}`; chỉ ADMIN: `adminOverview`, `adminUsersSearch {q}`, `adminAnomalies`, `adminConfigHistory`. Tham số đi qua danh sách trắng (`q, month, limit, skill, texts, k, kind`) — không có tham số nào chọn user.
+| Provider | Tham số | Dữ liệu |
+|---|---|---|
+| `userContext` | | UserContext của `ai/lib/types.ts` (danh mục + ví) |
+| `balance`, `wallets`, `categories`, `savingGoals`, `userMemory` | | như tên |
+| `monthSummary` | `month?, limit?` (mặc định 5) | thu, chi, net, `topExpenses`, `largestExpense {title, amount, categoryName, date}` |
+| `periodSummary` | `from, to` (to không gồm; mặc định 7 ngày) | thu, chi, net, `incomeCount`, `expenseCount`, `topExpenses`, `largestExpense` |
+| `budgets` | `month?` | tổng + theo danh mục |
+| `recentTransactions`, `searchTransactions` | `limit` / `q, month, limit` | giao dịch của mình |
+| `userRules`, `similarExamples` | `kind, skill` / `skill, texts, k` | luật đang bật (riêng + chung) / kNN few-shot |
+| `publicConfig` | | `{appName, supportEmail, hotline}` |
+| ADMIN: `adminOverview`, `adminUsersSearch {q}`, `adminAnomalies`, `adminConfigHistory {limit}`, `adminBroadcasts {limit}` | | như API admin |
+| ADMIN: `adminUserActivity` | | mỗi user `{id, email, name, role, status, createdAt, lastLoginAt, txCount30d, expenseThisMonth, expenseAvgPrev3, largestExpense30d, failedLogins24h}` (user có đăng nhập sai / giao dịch nhiều trước, rồi user mới; tối đa 200) |
+
+**Đăng nhập sai**: `POST /auth/login` sai mật khẩu với email có thật → 1 dòng `LoginFailure {userId, ip, createdAt}` (không lưu mật khẩu đã nhập; email không tồn tại không ghi gì). Xóa sau 30 ngày (cron 03:10). Dùng cho `failedLogins24h` → `phat-hien-bat-thuong` / `de-xuat-khoa` (≥ 10 lần/24h là dấu hiệu dò mật khẩu).
+
+### Hội thoại
+- Ghim / bỏ ghim: `PATCH /ai/conversations/:id {pinned}`; danh sách xếp cuộc ghim trước.
+- Đạt `ai.maxConversationsPerUser` (đếm cuộc chưa lưu trữ) khi tạo mới → **tự lưu trữ cuộc cũ nhất chưa ghim** (trả `autoArchived {id, title}`); mọi cuộc đều ghim → 409 `AI_CONVERSATION_LIMIT`.
+- Giữ lịch sử **12 tháng**: cron 03:20 giờ VN xóa tin nhắn cũ hơn 12 tháng (nháp / phản hồi đi theo) và hội thoại không còn tin; user tự xóa bất cứ lúc nào. Dev/test: `POST /admin/ai/retention/run?now=ISO`. Trí nhớ / luật / ví dụ đã học không bị xóa theo (user xóa trí nhớ ở `DELETE /ai/memory/:id`).
 
 ### Cô lập dữ liệu
 - Bảng AI đều có `userId` (FK cascade → xóa tài khoản xóa sạch). Code AI chỉ vào dữ liệu user qua `AiStore.for(principal)`; mọi where trong `AiRepo` gắn `userId = principal.id`, không method nào nhận userId làm tham số (e2e đọc mã nguồn để giữ bất biến này). Principal lấy từ JWT qua `AuthGuard` (role đọc từ DB mỗi request).
-- Id thuộc người khác trên đường dẫn → 404 (hội thoại, tin, nháp, trí nhớ), kể cả với admin. Admin **không** có endpoint đọc nội dung hội thoại của user; `/admin/ai/*` chỉ trả số đếm và dữ liệu chung đã ẩn danh.
-- Chống prompt injection: câu người dùng không bao giờ quyết định principal; provider admin chỉ chạy cho role ADMIN; skill admin chỉ route được trong hội thoại ADMIN; nháp admin kiểm tra role lại lúc xác nhận.
+- Id thuộc người khác trên đường dẫn → 404 (hội thoại, tin, nháp, trí nhớ), kể cả với admin. Admin **không** xem được nội dung hội thoại, trí nhớ hay luật riêng của từng user: `/admin/ai/*` chỉ trả số đếm và dữ liệu chung đã ẩn danh.
+- Chống prompt injection: câu người dùng không bao giờ quyết định principal; router Track B chặn câu hỏi về người khác / câu injection; provider admin chỉ chạy cho role ADMIN; skill chặn scope cả hai chiều; nháp admin kiểm tra role lại lúc xác nhận.
 - `x-ai-debug: 1` (không production) trả thêm `debug: {route, context, llmCalls}` để e2e kiểm tra context/prompt của A không chứa dữ liệu B dù câu có email/id của B.
 
 ### Vòng học
 - **Ngay (riêng user)**: xác nhận/sửa → ví dụ (khoản đã làm sạch → tên + danh mục, embedding) + bộ đếm luật theo bigram **còn dấu** (bật khi support ≥ 3, precision ≥ 0.85; tắt khi có hại ≥ 2 và > có ích) + có ích/có hại cho luật đã áp; trí nhớ ví mặc định (đổi 2 lần liên tiếp sang cùng ví → nhớ ví mới). Hủy / sửa → `AiFeedback` (`DRAFT_OUTCOME` kèm diff). "Ý tôi là…" → luật định tuyến của user bật ngay cho câu đó + câu mẫu kNN. 👍/👎 → `THUMBS`.
-- **Ban đêm** (cron 02:30 giờ VN, khóa advisory Postgres, tuần tự; admin chạy tay `POST /admin/ai/learning/run`): gom luật đang bật + ví dụ của mọi user → **ẩn danh**: chỉ giữ mẫu có ≥ 2 user khác nhau (k-ẩn danh), bỏ mẫu chứa số / `@` / từ trùng tên hoặc email của người đóng góp, không mang ghi chú, tiền chỉ giữ trung vị làm tròn 1 chữ số có nghĩa, không lưu userId → ứng viên CHUNG → **cổng kiểm định** trên bộ đề hồi quy `AiEvalCase` (seed từ `ai/eval/data/bank.seed.json` + câu 1 khoản của `ghi.test.json`; ví dụ được admin duyệt được thêm vào; nếu `ai/eval/gate.ts` export `evaluateRule` thì dùng nó): mâu thuẫn bộ đề → `REJECTED`; luật cần có đề phủ và đạt mới tự bật; ví dụ không mâu thuẫn là được → tự `ACTIVE` khi đạt ngưỡng `ai.autoApprove*`, còn lại `PROPOSED` chờ admin. Quyết định của admin không bị lần chạy sau ghi đè.
+- **Đồng ý góp ví dụ** (`GET/PUT /ai/settings {shareExamples}`): hỏi một lần (`asked`), lưu `consentedAt`, tắt được bất cứ lúc nào. Chưa đồng ý / đã tắt → dữ liệu của user không được dùng cho học chung.
+- **Ban đêm** (cron 02:30 giờ VN, khóa advisory Postgres, tuần tự; dev/test chạy tay `POST /admin/ai/learning/run`): gom luật đang bật + ví dụ của **user đã đồng ý** → **ẩn danh**: chỉ giữ mẫu có **≥ 5 người khác nhau** (sàn cứng), bỏ mẫu chứa số / `@` / từ trùng tên hoặc email của người đóng góp, không mang ghi chú, tiền chỉ giữ trung vị làm tròn 1 chữ số có nghĩa, không lưu userId → ứng viên CHUNG → **cổng kiểm định** trên bộ đề hồi quy `AiEvalCase` (seed từ `ai/eval/data/bank.seed.json` + câu 1 khoản của `ghi.test.json`; ví dụ được admin duyệt được thêm vào; nếu `ai/eval/gate.ts` export `evaluateRule` thì dùng nó): mâu thuẫn bộ đề → `REJECTED`; luật cần có đề phủ và đạt mới tự bật; ví dụ không mâu thuẫn là được → tự `ACTIVE` khi đạt `ai.autoApprove*` (mặc định ≥ 50 người, đúng ≥ 97%), còn lại `PROPOSED` chờ admin. Quyết định của admin không bị lần chạy sau ghi đè; luật tự bật không còn đủ người đồng ý → về `PROPOSED`.
 - Luật/ví dụ CHUNG đang bật dùng sau dữ liệu của user (luật user trước, rồi luật chung; few-shot lấy cả hai).
-- Seed hệ thống lúc khởi động (idempotent): câu mẫu router (`ai/eval/data/router-source.ts`), 40 ví dụ khởi đầu, bộ đề hồi quy. Embedding tính lười theo model đang cấu hình.
+- Seed hệ thống lúc khởi động (idempotent): câu mẫu router theo scope (`ai/router/bank.ts`), 40 ví dụ khởi đầu, bộ đề hồi quy. Embedding tính lười theo model đang cấu hình.
 
 ### Vector
 Embedding lưu `Bytes` (Float32) + tên model; kNN chạy trong tiến trình trên ví dụ của user + chung (`AiRepo.knnRows` → `similarExamples`). Postgres đang là image alpine không có pgvector — chuyển sang pgvector ghi ở `docs/BACKLOG.md`.
 
-### Cấu hình (`mục ai` + `business.featureAi`)
+### Cấu hình (mục `ai`; `ai.enabled` ≡ `business.featureAi`)
 | Trường | Mặc định | |
 |---|---|---|
-| `enabled` | true | Tắt (hoặc `business.featureAi` = false) → route ghi `/ai/*` 403 `FEATURE_DISABLED` (cả admin), đọc vẫn được; `/admin/ai/*` vẫn chạy |
+| `enabled` | true | **Cùng một công tắc** với `business.featureAi`: sửa trường nào cũng ghi cả hai (gửi 2 giá trị khác nhau trong 1 PATCH → 400). Tắt → route ghi `/ai/*` 403 `FEATURE_DISABLED` (cả admin), đọc vẫn được; `/admin/ai/*` vẫn chạy |
 | `provider` (`ollama`/`fake`), `ollamaUrl`, `chatModel`, `embedModel` | env `AI_PROVIDER`/`OLLAMA_URL`/`AI_CHAT_MODEL`/`AI_EMBED_MODEL` | Env `AI_PROVIDER` ghi đè; `NODE_ENV=test` → fake |
-| `timeoutSeconds` (5–600) | 60 | Mỗi lời gọi Ollama (retry 2 lần với lỗi mạng/5xx, không retry khi hết giờ); cả skill ≤ 2× |
-| `dailyMessageLimitPerUser` (1–100000) | 200 | Theo ngày giờ VN → 429 |
-| `maxConversationsPerUser` (1–10000) | 100 | → 409 |
-| `autoApproveEnabled`, `autoApproveMinUsers` (≥ 2), `autoApproveMinSupport`, `autoApproveMinPrecision` (%) | true, 3, 5, 90 | Ngưỡng tự bật luật/ví dụ chung |
+| `timeoutSeconds` (5–600) | 15 | Mỗi lời gọi Ollama (retry 2 lần với lỗi mạng/5xx, không retry khi hết giờ); cả skill ≤ 2× |
+| `dailyMessageLimitPerUser` (1–100000) | 30 | Theo ngày giờ VN → 429 |
+| `maxConversationsPerUser` (1–10000) | 50 | Đạt → tự lưu trữ cuộc cũ nhất chưa ghim |
+| `autoApproveEnabled`, `autoApproveMinUsers` (≥ 5), `autoApproveMinSupport`, `autoApproveMinPrecision` (%) | true, 50, 50, 97 | Ngưỡng tự áp dụng luật/ví dụ chung |
 
 Bảo trì: như mọi route khác (USER 503, ADMIN qua). `GET /config/public` có thêm `ai: {enabled, dailyMessageLimitPerUser, maxConversationsPerUser}` (`features` giữ nguyên 5 khóa cũ). Gọi Ollama trong một instance được xếp hàng tuần tự (GPU 1 luồng, `OLLAMA_NUM_PARALLEL=1`).
 
 ### Dữ liệu
-`AiConversation` (userId, scope USER/ADMIN, title, archived) · `AiMessage` (role, content, skill, routeBy, status ok/ask/error/unsupported, latencyMs, tokens, meta) · `AiDraft` (messageId 1–1, kind, payload, status PROPOSED/EXECUTING/CONFIRMED/EDITED/CANCELLED, finalPayload, result, resolvedAt) · `AiFeedback` (DRAFT_OUTCOME/REROUTE/THUMBS, unique theo tin + loại) · `AiMemory` (key/value, helpful/harmful, source, lastUsedAt) · `AiExample` (scope USER/GLOBAL, ownerKey = userId \| "global", skill, input, inputNorm, output, embedding, confirmations, userCount, status) · `AiRule` (scope, kind category/route, pattern còn dấu → value, support/helpful/harmful/precision, status, approvedBy, evalReport) · `AiEvalCase` · `AiLearningRun`. Migration `20261012090000_ai_assistant`.
+`AiConversation` (userId, scope USER/ADMIN, title, archived, pinned) · `AiMessage` (role, content, skill, routeBy, status ok/ask/error/unsupported, latencyMs, tokens, meta) · `AiDraft` (messageId 1–1, kind, payload, status PROPOSED/EXECUTING/CONFIRMED/EDITED/CANCELLED, finalPayload, result, resolvedAt) · `AiFeedback` (DRAFT_OUTCOME/REROUTE/THUMBS, unique theo tin + loại) · `AiMemory` (key/value, helpful/harmful, source, lastUsedAt) · `AiExample` (scope USER/GLOBAL, ownerKey = userId \| "global", skill, input, inputNorm, output, embedding, confirmations, userCount, status) · `AiRule` (scope, kind category/route, pattern còn dấu → value, support/helpful/harmful/precision, status, approvedBy, evalReport) · `AiUserSetting` (shareExamples, consentedAt) · `AiEvalCase` · `AiLearningRun` · `LoginFailure`. Migration `20261012090000_ai_assistant`, `20261014090000_ai_round2`.
 
-### Smoke với Ollama thật (2026-10-12, RTX 3050, gemma2:2b + bge-m3, `scripts/ai-smoke-ollama.mjs`)
-5 hội thoại / 12 tin + 5 lần xác nhận, 0 lỗi. Độ trễ server p50 990 ms, p95 1489 ms; `ghi-giao-dich` (1 lời gọi LLM) p50 1050 ms (~650 token prompt / 20–40 token ra); skill tra cứu tất định 7–24 ms; kNN router (bge-m3) 144–1489 ms; lần đầu (nhúng kho câu mẫu + nạp model) 1,9 s. Xác nhận nháp 150–180 ms. Model hay chép số tiền / ví vào tên khoản → backend cắt bằng code (`cleanTitle`).
+### Docker
+Image API build từ **gốc repo** (`docker build -f backend/Dockerfile .`, compose đã đổi `context: .`) để chép `ai/` (không kèm `ai/node_modules`, `ai/results`, `ai/research` — xem `.dockerignore`) vào `/app/ai` (`AI_DIR`); `tsx` là dependency của backend nên skill nạp được trong container.
+
+### Smoke với Ollama thật (`scripts/ai-smoke-ollama.mjs`, RTX 3050, gemma2:2b + bge-m3, chạy dưới `flock /tmp/app-tracker-gpu.lock`)
+- 2026-10-14 (skill Track B): 5 hội thoại / 14 tin + 3 lần xác nhận, 0 lỗi. Server p50 1036 ms, p95 4520 ms. Tin có gọi LLM p50 1135 ms. Skill tất định (`hoi-so-du`, `tim-giao-dich`, `ngoai-pham-vi`) 4–15 ms. Các skill có câu do LLM viết (`tong-ket-thang`, `goi-y-ngan-sach`, `meo-tiet-kiem`, `kiem-tra-ngan-sach`, `tong-quan-he-thong`, `phat-hien-bat-thuong`) 0,9–1,4 s. `soan-thong-bao` 4,5 s (soạn + kiểm tra + thử lại). Lần kNN đầu tiên trong scope (nhúng câu mẫu) 4,1 s.
+- 2026-10-12 (đợt 1): 12 tin, p50 990 ms, p95 1489 ms; `ghi-giao-dich` p50 1050 ms (~650 token vào / 20–40 token ra); xác nhận nháp 150–180 ms.
 
 ### Giới hạn hiện tại
-- Image Docker chỉ chứa `backend/` → không có `ai/` → `ghi-giao-dich`/`dat-ngan-sach` báo chưa sẵn sàng, router chỉ còn luật admin + kNN. Cần đưa `ai/` vào build context (hoặc đặt `AI_DIR`).
 - Hàng đợi Ollama là trong tiến trình; nhiều instance API cần hàng đợi chung.
+- Skill Track A (`ghi-giao-dich` bản mới trên `feat/ai-quality`) chưa merge; backend dùng bản riêng dựa trên parser/prompt của `ai/`.
 
 ## Cấu hình hệ thống
 

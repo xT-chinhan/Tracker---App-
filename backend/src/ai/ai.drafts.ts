@@ -14,6 +14,7 @@ import { WalletsService } from '../wallets/wallets.module';
 import { SystemConfigService } from '../system-config/system-config.module';
 import type { FeatureName } from '../common/auth';
 import { MONTH_REGEX } from '../common/time';
+import { PrismaService } from '../prisma/prisma.service';
 import type { AiRepo } from './ai.store';
 import type { Principal } from './ai.types';
 import { fold } from './ai.text';
@@ -51,6 +52,7 @@ export class DraftKinds {
     private readonly categories: CategoriesService,
     private readonly wallets: WalletsService,
     private readonly sys: SystemConfigService,
+    private readonly prisma: PrismaService,
   ) {
     this.kinds = {
       transactions: {
@@ -61,7 +63,7 @@ export class DraftKinds {
           const byFold = <T extends { name: string }>(xs: T[], name: unknown) => (typeof name === 'string' ? xs.find((x) => fold(x.name) === fold(name)) : undefined);
           const def = byFold(usable, mem?.value) ?? usable.find((w) => w.type === 'CASH') ?? usable[0];
           const today = new Date(new Date(now).getTime() + 7 * 3600_000).toISOString().slice(0, 10);
-          return {
+          const out = {
             items: items.map((it: any) => {
               // id gửi kèm (user sửa nháp) giữ nguyên để service kiểm tra (id của người khác => 400 như API thường)
               const cat = it.categoryId ? cats.find((c) => c.id === it.categoryId) : byFold(cats, it.categoryName);
@@ -86,6 +88,20 @@ export class DraftKinds {
               };
             }),
           };
+          // Phát hiện trùng: cùng số tiền + danh mục, cách ≤ 1 ngày (giao dịch đã ghi của chính user)
+          let duplicates = 0;
+          for (const it of out.items) {
+            const at = Date.parse(it.occurredAt);
+            const dup = Number.isInteger(it.amount) && it.categoryId && !Number.isNaN(at)
+              ? await this.prisma.transaction.findFirst({
+                  where: { userId: p.id, amount: BigInt(it.amount), categoryId: it.categoryId, occurredAt: { gte: new Date(at - 86400_000), lte: new Date(at + 86400_000) } },
+                  orderBy: { occurredAt: 'desc' }, select: { id: true, title: true, occurredAt: true, walletId: true },
+                })
+              : null;
+            (it as any).possibleDuplicate = dup ? { transactionId: dup.id, title: dup.title, occurredAt: dup.occurredAt, walletId: dup.walletId } : null;
+            if (dup) duplicates++;
+          }
+          return { ...out, duplicates };
         },
         execute: async (p, payload) => {
           const items = Array.isArray(payload?.items) ? payload.items : [];
@@ -102,7 +118,7 @@ export class DraftKinds {
           return {
             items: items.map((it: any) => {
               const cat = it.categoryId ? cats.find((c) => c.id === it.categoryId) : it.categoryName ? cats.find((c) => fold(c.name) === fold(String(it.categoryName))) : null;
-              return { categoryId: it.categoryId ?? cat?.id ?? null, categoryName: cat?.name ?? null, month: it.month, limitAmount: it.limitAmount };
+              return { categoryId: it.categoryId ?? cat?.id ?? null, categoryName: cat?.name ?? null, month: it.month, limitAmount: it.limitAmount, ...(it.median3m != null ? { median3m: it.median3m, avg3m: it.avg3m ?? null, monthsSeen: it.monthsSeen ?? null } : {}) };
             }),
           };
         },
@@ -111,24 +127,60 @@ export class DraftKinds {
           if (items.length < 1 || items.length > 50) throw new BadRequestException('Nháp phải có 1–50 ngân sách');
           const dtos: CreateBudgetDto[] = [];
           for (const [i, it] of items.entries()) dtos.push(await dto(CreateBudgetDto, pick<CreateBudgetDto>(it, ['categoryId', 'month', 'limitAmount']), `items[${i}]`));
-          const created = [];
-          for (const d of dtos) created.push(await this.budgets.create(p.id, d));
-          return { created: created.length, budgets: created.map((b) => ({ id: b.id, categoryId: b.categoryId, month: b.month, limitAmount: b.limitAmount, status: b.status })) };
+          // Tháng đã có ngân sách (cùng danh mục / tổng) → cập nhật hạn mức thay vì 409
+          const out = [];
+          let created = 0, updated = 0;
+          for (const d of dtos) {
+            const ex = await this.prisma.budget.findFirst({ where: { userId: p.id, month: d.month, categoryId: d.categoryId ?? null } });
+            const b = ex ? await this.budgets.update(p.id, ex.id, { limitAmount: d.limitAmount }) : await this.budgets.create(p.id, d);
+            ex ? updated++ : created++;
+            out.push({ id: b.id, categoryId: b.categoryId, month: b.month, limitAmount: b.limitAmount, status: b.status, action: ex ? 'updated' : 'created' });
+          }
+          return { created, updated, budgets: out };
         },
       },
       search_filter: {
-        normalize: async (_p, _repo, payload) => ({
-          target: payload?.target === 'users' ? 'users' : 'transactions',
-          q: typeof payload?.q === 'string' ? payload.q.slice(0, 100) : null,
-          month: typeof payload?.month === 'string' && MONTH_REGEX.test(payload.month) ? payload.month : null,
-        }),
+        normalize: async (p, _repo, payload) => {
+          const str = (v: unknown, n = 100) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, n) : null);
+          const q = str(payload?.q);
+          if (payload?.target === 'users') {
+            return {
+              target: 'users', q,
+              status: payload?.status === 'ACTIVE' || payload?.status === 'LOCKED' ? payload.status : null,
+              role: payload?.role === 'USER' || payload?.role === 'ADMIN' ? payload.role : null,
+            };
+          }
+          // tên danh mục / ví → id TRONG dữ liệu của chính người hỏi (không khớp → bỏ lọc đó, giữ tên để hiển thị)
+          const [cats, ws] = await Promise.all([this.categories.listForUser(p.id), this.wallets.list(p.id)]);
+          const cat = str(payload?.categoryName) ? cats.find((c) => fold(c.name) === fold(payload.categoryName)) : undefined;
+          const w = str(payload?.walletName) ? ws.items.find((x) => fold(x.name) === fold(payload.walletName)) : undefined;
+          const DATE = /^\d{4}-\d{2}-\d{2}(T[\d:.]+(Z|[+-]\d{2}:?\d{2})?)?$/;
+          const amt = (v: unknown) => (Number.isInteger(v) && (v as number) > 0 ? (v as number) : null);
+          return {
+            target: 'transactions', q,
+            month: typeof payload?.month === 'string' && MONTH_REGEX.test(payload.month) ? payload.month : null,
+            from: typeof payload?.from === 'string' && DATE.test(payload.from) ? payload.from : null,
+            to: typeof payload?.to === 'string' && DATE.test(payload.to) ? payload.to : null,
+            type: payload?.type === 'INCOME' || payload?.type === 'EXPENSE' ? payload.type : null,
+            categoryId: cat?.id ?? null, categoryName: cat?.name ?? str(payload?.categoryName),
+            walletId: w?.id ?? null, walletName: w?.name ?? str(payload?.walletName),
+            minAmount: amt(payload?.minAmount), maxAmount: amt(payload?.maxAmount),
+          };
+        },
         // target users (admin): tìm người dùng; transactions: giao dịch của CHÍNH người hỏi
         execute: async (p, payload) => {
           if (payload?.target === 'users') {
             if (p.role !== 'ADMIN') throw new ForbiddenException('Bạn không có quyền thực hiện nháp này');
-            return this.admin.users(Object.assign(new UserListQuery(), { q: payload.q ?? undefined, page: 1, limit: 50 }));
+            return this.admin.users(Object.assign(new UserListQuery(), { q: payload.q ?? undefined, status: payload.status ?? undefined, role: payload.role ?? undefined, page: 1, limit: 50 }));
           }
-          const f = Object.assign(new TransactionFilter(), { page: 1, limit: 50, q: payload?.q ?? undefined, month: payload?.month ?? undefined });
+          const u = (v: unknown) => (v == null ? undefined : v);
+          const f = Object.assign(new TransactionFilter(), {
+            page: 1, limit: 50, q: u(payload?.q), month: u(payload?.month), from: u(payload?.from), to: u(payload?.to), type: u(payload?.type),
+            categoryId: u(payload?.categoryId), walletId: u(payload?.walletId), minAmount: u(payload?.minAmount), maxAmount: u(payload?.maxAmount),
+          });
+          // cùng validate như GET /transactions (from < to, ngày hợp lệ, id là của mình)
+          await dto(TransactionFilter, Object.fromEntries(Object.entries(f).filter(([, v]) => v !== undefined)), 'filter');
+          if (f.walletId) await this.wallets.findOwned(p.id, f.walletId);
           return this.txs.list(p.id, f);
         },
       },
@@ -143,11 +195,14 @@ export class DraftKinds {
       },
       lock_user: {
         role: 'ADMIN',
-        normalize: async (_p, _repo, payload) => ({ userId: payload?.userId, email: payload?.email ?? null, name: payload?.name ?? null }),
+        normalize: async (_p, _repo, payload) => ({
+          userId: payload?.userId, email: payload?.email ?? null, name: payload?.name ?? null,
+          reasons: Array.isArray(payload?.reasons) ? payload.reasons.filter((r: unknown) => typeof r === 'string').slice(0, 10).map((r: string) => r.slice(0, 300)) : [],
+        }),
         execute: async (p, payload) => {
           if (typeof payload?.userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(payload.userId)) throw new BadRequestException('userId không hợp lệ');
           const u = await this.admin.updateUser(p as any, payload.userId, { status: 'LOCKED' });
-          return { userId: u.id, email: u.email, status: u.status };
+          return { userId: u.id, email: u.email, status: u.status, reasons: payload.reasons ?? [] };
         },
       },
     };

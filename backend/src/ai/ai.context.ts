@@ -7,7 +7,7 @@
  */
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { MONTH_REGEX, monthOf, monthRange } from '../common/time';
+import { MONTH_REGEX, monthOf, monthRange, resolveRange, shiftMonth } from '../common/time';
 import { WalletsService } from '../wallets/wallets.module';
 import { StatsService } from '../stats/stats.module';
 import { BudgetsService } from '../budgets/budgets.module';
@@ -18,7 +18,7 @@ import { AdminService } from '../admin/admin.module';
 import { SystemConfigService } from '../system-config/system-config.module';
 import type { AiRepo } from './ai.store';
 import type { LlmClient, Principal, SkillContext } from './ai.types';
-import { cos, toBytes } from './ai.text';
+import { cos, norm, toBytes } from './ai.text';
 
 export interface ProviderArgs {
   q?: string;
@@ -28,6 +28,9 @@ export interface ProviderArgs {
   texts?: string[];
   k?: number;
   kind?: string;
+  /** YYYY-MM-DD hoặc ISO; `to` không bao gồm */
+  from?: string;
+  to?: string;
 }
 
 interface Env {
@@ -52,6 +55,9 @@ export function sanitizeArgs(raw: Record<string, unknown> = {}): ProviderArgs {
   if (Array.isArray(raw.texts)) out.texts = raw.texts.filter((t): t is string => typeof t === 'string').slice(0, 10).map((t) => t.slice(0, 200));
   if (Number.isInteger(raw.k)) out.k = Math.min(Math.max(raw.k as number, 1), 10);
   if (typeof raw.kind === 'string') out.kind = raw.kind.slice(0, 30);
+  const DATE = /^\d{4}-\d{2}-\d{2}(T[\d:.]+(Z|[+-]\d{2}:?\d{2})?)?$/;
+  if (typeof raw.from === 'string' && DATE.test(raw.from)) out.from = raw.from;
+  if (typeof raw.to === 'string' && DATE.test(raw.to)) out.to = raw.to;
   return out;
 }
 
@@ -105,13 +111,40 @@ export class AiContextService {
           return { total: b.balance, savings: b.savings, wallets: b.wallets.filter((w) => !w.isArchived).map((w) => ({ name: w.name, balance: w.balance })) };
         },
       },
+      /** {month?, limit? (số danh mục chi, mặc định 5)} + khoản chi lớn nhất tháng */
       monthSummary: {
         fetch: async ({ p, now }, a) => {
           const month = a.month ?? monthOf(new Date(now));
           const s = await this.stats.summary(p.id, { month } as any);
           const { start, end } = monthRange(month);
           const top = await this.stats.byCategory(p.id, { gte: start, lt: end }, 'EXPENSE');
-          return { month, income: s.income, expense: s.expense, net: s.net, topExpenses: top.slice(0, 5).map((c) => ({ name: c.category.name, amount: c.amount })) };
+          return {
+            month, income: s.income, expense: s.expense, net: s.net,
+            topExpenses: top.slice(0, a.limit ?? 5).map((c) => ({ name: c.category.name, amount: c.amount })),
+            largestExpense: await this.largest(p.id, start, end),
+          };
+        },
+      },
+      /** {from, to} (to không bao gồm; mặc định 7 ngày gần nhất): thu, chi, số khoản, top chi */
+      periodSummary: {
+        fetch: async ({ p, now }, a) => {
+          const to = a.to ?? new Date(now).toISOString();
+          const from = a.from ?? new Date(new Date(now).getTime() - 7 * 86400_000).toISOString();
+          const s = await this.stats.summary(p.id, { from, to } as any);
+          const range = resolveRange({ from, to });
+          const top = await this.stats.byCategory(p.id, range, 'EXPENSE');
+          return {
+            from, to, income: s.income, expense: s.expense, net: s.net, incomeCount: s.incomeCount, expenseCount: s.expenseCount,
+            topExpenses: top.slice(0, a.limit ?? 5).map((c) => ({ name: c.category.name, amount: c.amount })),
+            largestExpense: await this.largest(p.id, range.gte, range.lt),
+          };
+        },
+      },
+      /** Cấu hình công khai rút gọn (tên app, liên hệ) */
+      publicConfig: {
+        fetch: async () => {
+          const c = await this.sys.publicConfig();
+          return { appName: c.appName, supportEmail: c.supportEmail, hotline: c.hotline };
         },
       },
       budgets: {
@@ -165,11 +198,56 @@ export class AiContextService {
           };
         },
       },
+      /** Mỗi user một dòng: hoạt động 30 ngày, chi tháng này vs TB 3 tháng trước, khoản chi lớn nhất, số lần đăng nhập SAI 24h */
+      adminUserActivity: { admin: true, fetch: ({ now }, a) => this.userActivity(new Date(now), a.limit ?? 200) },
+      adminBroadcasts: {
+        admin: true,
+        fetch: async (_e, a) => (await this.admin.broadcasts(Object.assign(Object.create(null), { page: 1, limit: a.limit ?? 5 }))).items.map((b: any) => ({ title: b.title, body: b.body, recipients: b.recipients, readCount: b.readCount, createdAt: b.createdAt })),
+      },
       adminConfigHistory: {
         admin: true,
         fetch: async (_e, a) => (await this.sys.history(Object.assign(Object.create(null), { page: 1, limit: a.limit ?? 10 }))).items,
       },
     };
+  }
+
+  private async largest(userId: string, gte?: Date, lt?: Date) {
+    const t = await this.prisma.transaction.findFirst({
+      where: { userId, type: 'EXPENSE', occurredAt: { gte, lt } },
+      orderBy: [{ amount: 'desc' }, { occurredAt: 'desc' }],
+      include: { category: { select: { name: true } } },
+    });
+    return t ? { title: t.title, amount: Number(t.amount), categoryName: t.category.name, date: new Date(t.occurredAt.getTime() + 7 * 3600_000).toISOString().slice(0, 10) } : null;
+  }
+
+  /** Tổng hợp hoạt động theo user (chỉ admin). Tối đa `limit` user: ưu tiên có đăng nhập sai / giao dịch nhiều. */
+  private async userActivity(now: Date, limit: number) {
+    const d30 = new Date(now.getTime() - 30 * 86400_000), d1 = new Date(now.getTime() - 86400_000);
+    const month = monthOf(now);
+    const cur = monthRange(month), prev = { start: monthRange(shiftMonth(month, -3)).start, end: cur.start };
+    const [tx30, expCur, expPrev, big30, fails] = await Promise.all([
+      this.prisma.transaction.groupBy({ by: ['userId'], where: { occurredAt: { gte: d30, lte: now } }, _count: true }),
+      this.prisma.transaction.groupBy({ by: ['userId'], where: { type: 'EXPENSE', occurredAt: { gte: cur.start, lt: cur.end } }, _sum: { amount: true } }),
+      this.prisma.transaction.groupBy({ by: ['userId'], where: { type: 'EXPENSE', occurredAt: { gte: prev.start, lt: prev.end } }, _sum: { amount: true } }),
+      this.prisma.transaction.groupBy({ by: ['userId'], where: { type: 'EXPENSE', occurredAt: { gte: d30, lte: now } }, _max: { amount: true } }),
+      this.prisma.loginFailure.groupBy({ by: ['userId'], where: { createdAt: { gte: d1 } }, _count: true }),
+    ]);
+    const m = <T extends { userId: string }>(xs: T[]) => new Map(xs.map((x) => [x.userId, x]));
+    const T = m(tx30), C = m(expCur), P = m(expPrev), B = m(big30), F = m(fails);
+    const score = (id: string) => (F.get(id)?._count ?? 0) * 1000 + (T.get(id)?._count ?? 0);
+    // Có đăng nhập sai / giao dịch nhiều trước, rồi các user mới đăng ký gần đây (để tra được cả tài khoản chưa có giao dịch)
+    const active = [...new Set([...F.keys(), ...T.keys()])].sort((a, b) => score(b) - score(a)).slice(0, limit);
+    const recent = active.length < limit ? await this.prisma.user.findMany({ where: { id: { notIn: active } }, orderBy: { createdAt: 'desc' }, take: limit - active.length, select: { id: true } }) : [];
+    const ids = [...active, ...recent.map((u) => u.id)];
+    const users = await this.prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true, email: true, name: true, role: true, status: true, createdAt: true, lastLoginAt: true } });
+    return ids.map((id) => users.find((u) => u.id === id)).filter((u): u is NonNullable<typeof u> => !!u).map((u) => ({
+      ...u,
+      txCount30d: T.get(u.id)?._count ?? 0,
+      expenseThisMonth: Number(C.get(u.id)?._sum.amount ?? 0),
+      expenseAvgPrev3: Math.round(Number(P.get(u.id)?._sum.amount ?? 0) / 3),
+      largestExpense30d: Number(B.get(u.id)?._max.amount ?? 0),
+      failedLogins24h: F.get(u.id)?._count ?? 0,
+    }));
   }
 
   names() {
@@ -209,7 +287,7 @@ export class AiContextService {
     const rows = await repo.knnRows(skill, llm.embedModel);
     const missing = rows.filter((r) => !r.vec);
     if (missing.length) {
-      const vecs = await llm.embed(missing.map((r) => r.inputNorm || r.input));
+      const vecs = await llm.embed(missing.map((r) => norm(r.input)));
       for (let i = 0; i < missing.length; i++) {
         missing[i].vec = Float32Array.from(vecs[i]);
         if (missing[i].scope === 'GLOBAL') {

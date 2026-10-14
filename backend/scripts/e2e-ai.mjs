@@ -47,6 +47,9 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
 
   const initial = (await req('GET', '/admin/config', { token: tAd })).data.values;
   try {
+    // mặc định 30 tin/ngày (quyết định #10) — test nhắn nhiều hơn nên nới tạm, khôi phục ở finally
+    check('defaults (#10): 30 msg/day, 50 conversations, 15s, auto-apply ≥50 users & ≥97%', initial.ai.dailyMessageLimitPerUser === 30 && initial.ai.maxConversationsPerUser === 50 && initial.ai.timeoutSeconds === 15 && initial.ai.autoApproveMinUsers === 50 && initial.ai.autoApproveMinPrecision === 97, initial.ai);
+    await patchCfg({ ai: { dailyMessageLimitPerUser: 5000 } });
     // ---------------------------------------------------------------- hội thoại
     group('ai: hội thoại CRUD / phạm vi theo role');
     const A = await newUser('aiA');
@@ -87,10 +90,22 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('delete own => 204', r.status === 204, r);
     r = await req('GET', `/ai/conversations/${tmp.id}`, { token: A.token });
     check('deleted => 404', r.status === 404, r);
+    r = await req('GET', '/ai/settings', { token: A.token });
+    check('settings default: not sharing, never asked', r.status === 200 && r.data.shareExamples === false && r.data.consentedAt === null && r.data.asked === false, r.data);
+    r = await req('PUT', '/ai/settings', { token: A.token, body: {} });
+    check('settings without shareExamples => 400', r.status === 400, r.data);
+    r = await req('PUT', '/ai/settings', { token: A.token, body: { shareExamples: true } });
+    check('consent once => consentedAt saved', r.status === 200 && r.data.shareExamples === true && !!r.data.consentedAt && r.data.asked === true, r.data);
+    r = await req('PUT', '/ai/settings', { token: A.token, body: { shareExamples: false } });
+    check('turn off => shareExamples false', r.status === 200 && r.data.shareExamples === false && r.data.asked === true, r.data);
+    r = await req('GET', '/ai/settings', { token: B.token });
+    check("B's settings independent", r.data.shareExamples === false && r.data.asked === false, r.data);
     r = await req('GET', '/ai/skills', { token: A.token });
     check('A skills: ghi-giao-dich, no admin-*', r.status === 200 && r.data.some((s) => s.name === 'ghi-giao-dich') && !r.data.some((s) => s.name.startsWith('admin-')), r.data);
     r = await req('GET', '/ai/skills', { token: tAd });
-    check('admin skills include admin-*', r.data.some((s) => s.name === 'admin-khoa-user') && r.data.some((s) => s.name === 'admin-gui-thong-bao'), r.data);
+    check('admin skills: Track B admin skills, no USER-scope skill (ghi-giao-dich), no old admin-* aliases', r.data.some((s) => s.name === 'de-xuat-khoa') && r.data.some((s) => s.name === 'soan-thong-bao') && r.data.every((s) => s.scope !== 'USER') && !r.data.some((s) => s.name.startsWith('admin-')), r.data.map((s) => s.name));
+    r = await req('GET', '/ai/skills', { token: A.token });
+    check('USER skills: none of scope ADMIN', r.data.every((s) => s.scope !== 'ADMIN'), r.data.map((s) => `${s.name}:${s.scope}`));
 
     // ---------------------------------------------------------------- ghi giao dịch
     group('ai: tin nhắn → nháp ghi giao dịch → xác nhận qua API thật');
@@ -122,6 +137,13 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('concurrent re-confirm => idempotent', r.every((x) => x.status === 200 && x.data.idempotent === true), r.map((x) => x.data));
     r = await req('POST', `/ai/drafts/${d1.id}/cancel`, { token: A.token });
     check('cancel after confirm => 409', r.status === 409, r.data);
+    // #8 nháp trùng giao dịch đã ghi
+    r = await say(A.token, cA.id, 'cà phê 45k với grab 30k hôm qua trả momo');
+    check('same sentence again => draft flags possible duplicates with tx ids', r.data.draft?.payload.duplicates === 2 && r.data.draft.payload.items.every((i) => i.possibleDuplicate?.transactionId && i.possibleDuplicate.title), r.data.draft?.payload);
+    await req('POST', `/ai/drafts/${r.data.draft.id}/cancel`, { token: A.token });
+    r = await say(A.token, cA.id, 'cà phê 46k hôm qua trả momo');
+    check('different amount => not a duplicate', r.data.draft?.payload.duplicates === 0 && r.data.draft.payload.items[0].possibleDuplicate === null, r.data.draft?.payload);
+    await req('POST', `/ai/drafts/${r.data.draft.id}/cancel`, { token: A.token });
 
     // song song: 2 lần xác nhận cùng lúc 1 nháp mới => chỉ tạo 1 lần
     r = await say(A.token, cA.id, 'bánh mì 15k');
@@ -138,6 +160,19 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('confirm budget => created via BudgetsService', r.status === 200 && r.data.result.created === 1, r.data);
     let b = (await req('GET', `/budgets?month=${vnMonth()}`, { token: A.token })).data;
     check('budget visible in /budgets', b.items.some((x) => x.category?.name === 'Ăn uống' && x.limitAmount === 100000), b);
+    r = await say(A.token, cA.id, `đặt ngân sách ăn uống 120k tháng này`);
+    r = await confirm(A.token, r.data.draft.id);
+    check('same month+category again => upsert (updated, not 409)', r.status === 200 && r.data.result.updated === 1 && r.data.result.created === 0 && r.data.result.budgets[0].action === 'updated', r.data);
+    b = (await req('GET', `/budgets?month=${vnMonth()}`, { token: A.token })).data;
+    check('…one Ăn uống budget, limit 120k', b.items.filter((x) => x.category?.name === 'Ăn uống').length === 1 && b.items.find((x) => x.category?.name === 'Ăn uống').limitAmount === 120000, b.items);
+    for (const [i, amt] of [[0, '5 triệu'], [1, '6 triệu']]) {
+      r = await say(A.token, cA.id, `đặt ngân sách tổng ${amt} tháng này`);
+      check(`overall budget draft #${i + 1} (categoryName null)`, r.data.draft?.kind === 'budgets' && r.data.draft.payload.items[0].categoryId === null, r.data.draft);
+      r = await confirm(A.token, r.data.draft.id);
+      check(`overall budget #${i + 1} => ${i ? 'updated' : 'created'}`, r.status === 200 && r.data.result[i ? 'updated' : 'created'] === 1, r.data);
+    }
+    b = (await req('GET', `/budgets?month=${vnMonth()}`, { token: A.token })).data;
+    check('overall budget = 6 triệu', b.overall?.limitAmount === 6000000, b.overall);
     const notesBefore = (await req('GET', '/notifications', { token: A.token })).data.total;
     r = await say(A.token, cA.id, 'ăn trưa 90k');
     const d2 = r.data.draft;
@@ -184,6 +219,27 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('unclear => hoi-lai, no draft', r.status === 201 && r.data.message.skill === 'hoi-lai' && r.data.message.status === 'ask' && !r.data.draft, r.data.message);
 
     // ---------------------------------------------------------------- cô lập
+    group('ai: nháp tìm kiếm (thời gian, danh mục, ví, khoảng tiền) + provider tổng kết');
+    r = await say(A.token, cA.id, 'tìm giao dịch ăn uống trả bằng momo tháng này');
+    check('search draft from tim-giao-dich', r.data.message.skill === 'tim-giao-dich' && r.data.draft?.kind === 'search_filter' && r.data.draft.payload.target === 'transactions', r.data);
+    const dS = r.data.draft;
+    const tomorrow = new Date(Date.now() + 7 * 3600000 + DAY).toISOString().slice(0, 10);
+    r = await confirm(A.token, dS.id, { target: 'transactions', categoryName: 'ăn uống', walletName: 'momo', minAmount: 40000, maxAmount: 100000, from: vnYesterday(), to: tomorrow, type: 'EXPENSE' });
+    const its = r.data.result?.items ?? [];
+    check('filter mapped: category/wallet names → A ids, amount range, from/to, type', r.status === 200 && r.data.draft.finalPayload.categoryId && r.data.draft.finalPayload.walletId === momoA
+      && its.length >= 2 && its.every((t) => t.category.name === 'Ăn uống' && t.wallet.id === momoA && Number(t.amount) >= 40000 && Number(t.amount) <= 100000 && t.type === 'EXPENSE') && its.some((t) => Number(t.amount) === 45000) && its.some((t) => Number(t.amount) === 95000), { fp: r.data.draft?.finalPayload, its: its.map((t) => [t.title, t.amount, t.wallet?.name]) });
+    r = await say(A.token, cA.id, 'tìm giao dịch trên 1 triệu');
+    r = await confirm(A.token, r.data.draft.id, { target: 'users', q: 'a' });
+    check('USER editing search to target users => 403', r.status === 403, r.data);
+    r = await req('GET', '/transactions?minAmount=40000&maxAmount=50000', { token: A.token });
+    check('GET /transactions?minAmount&maxAmount (new filter)', r.status === 200 && r.data.items.length >= 1 && r.data.items.every((t) => Number(t.amount) >= 40000 && Number(t.amount) <= 50000), r.data.items?.map((t) => t.amount));
+    r = await say(A.token, cA.id, 'tháng này tiêu bao nhiêu rồi', true);
+    const ms = r.data.debug.context.find((c) => c.name === 'monthSummary');
+    check('monthSummary: limit honoured + largestExpense', r.data.message.skill === 'tong-ket-thang' && ms?.args.limit === 10 && ms.data.largestExpense?.amount >= 95000 && ms.data.largestExpense.categoryName && /^\d{4}-\d{2}-\d{2}$/.test(ms.data.largestExpense.date), ms);
+    r = await say(A.token, cA.id, 'tuần này tiêu hết bao nhiêu', true);
+    const ps = r.data.debug.context.find((c) => c.name === 'periodSummary');
+    check('periodSummary {from,to}: income/expense/counts/top', r.data.message.skill === 'tong-ket-thang' && ps?.args.from && ps.args.to && typeof ps.data.expense === 'number' && typeof ps.data.expenseCount === 'number' && Array.isArray(ps.data.topExpenses), ps);
+
     group('ai: cô lập A ↔ B (404, không lộ dữ liệu)');
     const mA = (await req('GET', `/ai/conversations/${cA.id}`, { token: A.token })).data.messages.find((m) => m.role === 'ASSISTANT');
     r = await say(A.token, cA.id, 'trà sữa 30k');
@@ -229,8 +285,14 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
       const own = (x) => leaks(x).filter((s) => !text.includes(s));
       check(`injection "${text.slice(0, 40)}…": no B data in context/prompt/reply/draft`, r.status === 201 && own({ reply: r.data.message.content, draft: r.data.draft, ctx: r.data.debug.context.map((c) => c.data), llm: r.data.debug.llmCalls }).length === 0,
         { skill: r.data.message?.skill, leaks: own(r.data) });
-      if (/^số dư/.test(text)) check('…balance answered from A only (total = A total)', r.data.message.skill === 'hoi-so-du' && r.data.debug.context.find((c) => c.name === 'balance')?.data.total === balA.balance, r.data.debug.context);
-      if (/^tìm/.test(text)) check('…search ran in A data only (0 hits for B title)', r.data.message.skill === 'tim-giao-dich' && r.data.debug.context.find((c) => c.name === 'searchTransactions')?.data.total === 0, r.data.debug.context);
+      // Track B chặn câu hỏi về người khác (ngoai-pham-vi); nếu vẫn trả lời thì chỉ bằng dữ liệu của A
+      if (/^số dư/.test(text)) check('…refused (other user) or answered from A only', r.data.message.skill === 'ngoai-pham-vi' || (r.data.message.skill === 'hoi-so-du' && r.data.debug.context.find((c) => c.name === 'balance')?.data.total === balA.balance), { skill: r.data.message.skill, ctx: r.data.debug.context.map((c) => c.name) });
+      if (/^tìm/.test(text)) {
+        if (r.data.draft?.kind === 'search_filter') {
+          const x = await confirm(A.token, r.data.draft.id);
+          check('…search draft executes in A data only (no B title)', x.status === 200 && !JSON.stringify(x.data).includes(secretTitleB), x.data);
+        } else check('…refused (other user)', r.data.message.skill === 'ngoai-pham-vi', r.data.message);
+      }
       if (/^ghi/.test(text)) check("…draft wallet is A's, never B's", !r.data.draft || r.data.draft.payload.items.every((i) => i.walletId !== secretWalletB), r.data.draft);
     }
 
@@ -240,34 +302,49 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
       check(`USER ${m} ${p} => 403`, r.status === 403, r.data);
     }
     r = await say(A.token, cA.id, `gửi thông báo cho tất cả: Bảo trì ${S}`);
-    check('USER "gửi thông báo…" => not admin skill, no broadcast draft', r.status === 201 && !r.data.message.skill.startsWith('admin-') && r.data.draft?.kind !== 'broadcast', r.data.message);
+    const ADMIN_NAMES = ['tong-quan-he-thong', 'tra-cuu-nguoi-dung', 'phat-hien-bat-thuong', 'soan-thong-bao', 'de-xuat-khoa', 'tom-tat-cau-hinh', 'huong-dan-quan-tri'];
+    check('USER "gửi thông báo…" => not admin skill, no broadcast draft', r.status === 201 && !ADMIN_NAMES.includes(r.data.message.skill) && r.data.draft?.kind !== 'broadcast', r.data.message);
     r = await say(A.token, cA.id, `khóa tài khoản ${B.email}`);
-    check('USER "khóa tài khoản…" => no lock_user draft', r.status === 201 && r.data.draft?.kind !== 'lock_user' && !r.data.message.skill.startsWith('admin-'), r.data.message);
-    r = await req('POST', `/ai/messages/${r.data.message.id}/reroute`, { token: A.token, body: { skill: 'admin-khoa-user' } });
+    check('USER "khóa tài khoản…" => no lock_user draft', r.status === 201 && r.data.draft?.kind !== 'lock_user' && !ADMIN_NAMES.includes(r.data.message.skill), r.data.message);
+    r = await req('POST', `/ai/messages/${r.data.message.id}/reroute`, { token: A.token, body: { skill: 'de-xuat-khoa' } });
     check('USER reroute to admin skill => 403', r.status === 403 && r.data.code === 'AI_SKILL_FORBIDDEN', r.data);
     r = await req('GET', '/me', { token: B.token });
     check('B still active', r.status === 200, r.status);
+    // chiều ngược lại: skill USER không chạy trong hội thoại ADMIN
+    r = await say(tAd, cAd.id, 'cà phê 45k hôm qua');
+    check('ADMIN conversation: "cà phê 45k" => not ghi-giao-dich, no transactions draft', r.status === 201 && r.data.message.skill !== 'ghi-giao-dich' && r.data.draft?.kind !== 'transactions', r.data.message);
+    r = await req('POST', `/ai/messages/${r.data.message.id}/reroute`, { token: tAd, body: { skill: 'ghi-giao-dich' } });
+    check('ADMIN reroute to USER skill (ghi-giao-dich) => 403', r.status === 403 && r.data.code === 'AI_SKILL_FORBIDDEN', r.data);
+    r = await say(tAd, cAd.id, 'số dư của tôi còn bao nhiêu');
+    check('ADMIN conversation: personal balance question not answered by hoi-so-du', r.data.message.skill !== 'hoi-so-du', r.data.message);
 
     // ---------------------------------------------------------------- skill admin
     group('ai: skill admin → nháp → service thật (khóa user, broadcast, tìm user)');
     const V = await newUser('aiVictim');
-    r = await say(tAd, cAd.id, `khóa tài khoản ${V.email}`);
-    check('admin lock draft', r.status === 201 && r.data.message.skill === 'admin-khoa-user' && r.data.draft?.kind === 'lock_user' && r.data.draft.payload.userId === V.id, r.data);
+    // 10 lần đăng nhập sai → auth ghi nhận (không lưu mật khẩu) → adminUserActivity.failedLogins24h → lý do khóa
+    for (let i = 0; i < 10; i++) await req('POST', '/auth/login', { body: { email: V.email, password: `sai-${i}` } });
+    r = await say(tAd, cAd.id, 'có tài khoản nào bất thường không', true);
+    const act = r.data.debug?.context.find((c) => c.name === 'adminUserActivity')?.data ?? [];
+    const vAct = act.find((u) => u.id === V.id);
+    check('adminUserActivity: failedLogins24h counted for victim', r.data.message.skill === 'phat-hien-bat-thuong' && vAct?.failedLogins24h === 10 && ['txCount30d', 'expenseThisMonth', 'expenseAvgPrev3', 'largestExpense30d', 'lastLoginAt'].every((k) => k in vAct), { skill: r.data.message?.skill, vAct });
+    check('anomaly reply mentions victim', r.data.message.content.includes(V.email.toLowerCase()), r.data.message.content);
+    r = await say(tAd, cAd.id, `đề xuất khóa tài khoản ${V.email}`);
+    check('admin lock draft (de-xuat-khoa) with reasons', r.status === 201 && r.data.message.skill === 'de-xuat-khoa' && r.data.draft?.kind === 'lock_user' && r.data.draft.payload.userId === V.id && r.data.draft.payload.reasons.length >= 1 && /đăng nhập sai/.test(r.data.draft.payload.reasons.join(' ')), r.data);
     r = await confirm(tAd, r.data.draft.id);
-    check('confirm => user LOCKED via AdminService', r.status === 200 && r.data.result.status === 'LOCKED', r.data);
+    check('confirm => user LOCKED via AdminService, reasons kept', r.status === 200 && r.data.result.status === 'LOCKED' && r.data.result.reasons.length >= 1 && r.data.draft.payload.reasons.length >= 1, r.data);
     r = await req('GET', '/me', { token: V.token });
     check('locked user token => 403 (tokenVersion bumped)', r.status === 403 || r.status === 401, r.status);
-    await req('PATCH', `/admin/users/${V.id}`, { token: tAd, body: { status: 'ACTIVE' } });
     r = await say(tAd, cAd.id, `khóa tài khoản ${ADMIN_EMAIL}`);
     if (r.data.draft) {
       r = await confirm(tAd, r.data.draft.id);
       check('admin cannot self-lock via AI (same rule as API) => 400', r.status === 400, r.data);
     } else check('self-lock draft not proposed', true);
     const bcBefore = (await req('GET', '/admin/broadcasts', { token: tAd })).data.total;
-    r = await say(tAd, cAd.id, `gửi thông báo cho tất cả: Tin AI ${S}: Hệ thống nâng cấp trợ lý`);
+    r = await say(tAd, cAd.id, `soạn thông báo cho tất cả người dùng về việc nâng cấp trợ lý AI tối nay`, true);
     const dBc = r.data.draft;
-    check('broadcast draft (title/body)', dBc?.kind === 'broadcast' && dBc.payload.title === `Tin AI ${S}` && /nâng cấp/.test(dBc.payload.body), r.data);
-    r = await confirm(tAd, dBc.id, { title: `Tin AI ${S} (sửa)`, body: dBc.payload.body });
+    check('broadcast draft (soan-thong-bao)', r.data.message.skill === 'soan-thong-bao' && dBc?.kind === 'broadcast' && typeof dBc.payload.title === 'string' && typeof dBc.payload.body === 'string', r.data);
+    check('soan-thong-bao got publicConfig + adminBroadcasts providers', ['publicConfig', 'adminBroadcasts'].every((n) => r.data.debug.context.some((c) => c.name === n)) && typeof r.data.debug.context.find((c) => c.name === 'publicConfig').data.appName === 'string' && Array.isArray(r.data.debug.context.find((c) => c.name === 'adminBroadcasts').data), r.data.debug.context.map((c) => c.name));
+    r = await confirm(tAd, dBc.id, { title: `Tin AI ${S} (sửa)`, body: 'Hệ thống nâng cấp trợ lý AI tối nay, bạn vẫn dùng app bình thường.' });
     check('confirm edited broadcast => EDITED, recipients', r.status === 200 && r.data.draft.status === 'EDITED' && r.data.result.recipients >= 2, r.data);
     r = await confirm(tAd, dBc.id);
     check('double confirm broadcast => idempotent', r.status === 200 && r.data.idempotent === true, r.data);
@@ -275,17 +352,24 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     r = await req('GET', '/notifications', { token: A.token });
     check('user received broadcast notification', r.data.items.some((n) => n.type === 'BROADCAST' && n.title === `Tin AI ${S} (sửa)`), r.data.items.slice(0, 2));
     r = await say(tAd, cAd.id, `tìm user ${A.email}`);
-    check('admin user search', r.data.message.skill === 'admin-tim-user' && r.data.message.content.includes(A.email) && r.data.draft?.kind === 'search_filter', r.data);
-    r = await confirm(tAd, r.data.draft.id);
+    check('admin user search (tra-cuu-nguoi-dung)', r.data.message.skill === 'tra-cuu-nguoi-dung' && r.data.draft?.kind === 'search_filter' && r.data.draft.payload.target === 'users', r.data);
+    const dUs = r.data.draft;
+    r = await confirm(tAd, dUs.id);
     check('confirm search_filter => user list', r.status === 200 && r.data.result.items.some((u) => u.id === A.id), r.data);
+    r = await say(tAd, cAd.id, 'liệt kê tài khoản đang bị khóa');
+    check('users filter: status LOCKED mapped', r.data.draft?.payload.status === 'LOCKED', r.data.draft);
+    r = await confirm(tAd, r.data.draft.id, { target: 'users', status: 'LOCKED', role: 'USER' });
+    check('users filter status+role → only LOCKED USERs (victim included)', r.status === 200 && r.data.result.items.length >= 1 && r.data.result.items.every((u) => u.status === 'LOCKED' && u.role === 'USER') && r.data.result.items.some((u) => u.id === V.id), r.data.result?.items?.slice(0, 3));
     r = await say(tAd, cAd.id, 'tổng quan hệ thống');
-    check('admin overview skill', r.data.message.skill === 'admin-tong-quan' && /Người dùng/.test(r.data.message.content), r.data.message);
+    check('admin overview skill', r.data.message.skill === 'tong-quan-he-thong' && r.data.message.content.length > 10, r.data.message);
+    await req('PATCH', `/admin/users/${V.id}`, { token: tAd, body: { status: 'ACTIVE' } });
     // admin bị hạ quyền: không xác nhận được nháp admin cũ
     const D2 = await newUser('aiAdm2');
     await req('PATCH', `/admin/users/${D2.id}`, { token: tAd, body: { role: 'ADMIN' } });
     const cD2 = await conv(D2.token);
-    r = await say(D2.token, cD2.id, `khóa tài khoản ${V.email}`);
+    r = await say(D2.token, cD2.id, `đề xuất khóa tài khoản ${V.email}`);
     const dD2 = r.data.draft;
+    check('D2 (admin) got lock draft', dD2?.kind === 'lock_user', r.data.message);
     await req('PATCH', `/admin/users/${D2.id}`, { token: tAd, body: { role: 'USER' } });
     r = await confirm(D2.token, dD2.id);
     check('demoted admin confirming lock draft => 403 (role re-checked)', r.status === 403, r.data);
@@ -386,15 +470,28 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('GET /ai/usage', r.status === 200 && r.data.messagesToday === 2 && r.data.dailyMessageLimit === 2, r.data);
     r = await say(A.token, cA.id, 'số dư');
     check('A (already > 2 messages today) => 429 too', r.status === 429, r.status);
-    await patchCfg({ ai: { dailyMessageLimitPerUser: initial.ai.dailyMessageLimitPerUser } });
-    r = await patchCfg({ ai: { maxConversationsPerUser: 1 } });
+    await patchCfg({ ai: { dailyMessageLimitPerUser: 5000 } });
+    // #3 đạt giới hạn → tự lưu trữ cuộc cũ nhất chưa ghim
+    await patchCfg({ ai: { maxConversationsPerUser: 1 } });
     r = await req('POST', '/ai/conversations', { token: L.token, body: {} });
-    check('conversation limit => 409 AI_CONVERSATION_LIMIT', r.status === 409 && r.data.code === 'AI_CONVERSATION_LIMIT', r.data);
+    check('limit reached => 201 + oldest unpinned auto-archived', r.status === 201 && r.data.autoArchived?.id === cL.id, r.data);
+    const cL2 = r.data;
+    r = await req('GET', `/ai/conversations/${cL.id}`, { token: L.token });
+    check('…old conversation archived, not deleted', r.status === 200 && r.data.archived === true && r.data.messages.length >= 2, r.data.archived);
+    r = await req('PATCH', `/ai/conversations/${cL2.id}`, { token: L.token, body: { pinned: true } });
+    check('pin conversation', r.status === 200 && r.data.pinned === true, r.data);
+    r = await req('POST', '/ai/conversations', { token: L.token, body: {} });
+    check('all active pinned => 409 AI_CONVERSATION_LIMIT', r.status === 409 && r.data.code === 'AI_CONVERSATION_LIMIT', r.data);
     await patchCfg({ ai: { maxConversationsPerUser: initial.ai.maxConversationsPerUser } });
+    await req('PATCH', `/ai/conversations/${cL.id}`, { token: L.token, body: { archived: false } });
+    r = await req('GET', '/ai/conversations', { token: L.token });
+    check('list: pinned first', r.data.items[0]?.id === cL2.id && r.data.items.some((c) => c.id === cL.id), r.data.items.map((c) => [c.id === cL2.id, c.pinned]));
+    r = await req('PATCH', `/ai/conversations/${cL2.id}`, { token: L.token, body: { pinned: 'yes' } });
+    check('pinned not boolean => 400', r.status === 400, r.data);
 
     for (const [label, off, on] of [['business.featureAi', { business: { featureAi: false } }, { business: { featureAi: true } }], ['ai.enabled', { ai: { enabled: false } }, { ai: { enabled: true } }]]) {
       r = await patchCfg(off);
-      check(`${label}=false saved`, r.status === 200, r.data);
+      check(`${label}=false saved, BOTH fields off (one switch)`, r.status === 200 && r.data.values.ai.enabled === false && r.data.values.business.featureAi === false, { ai: r.data.values?.ai?.enabled, f: r.data.values?.business?.featureAi });
       r = await req('GET', '/config/public');
       check(`${label} off => public ai.enabled false`, r.data.ai.enabled === false, r.data.ai);
       r = await say(L.token, cL.id, 'cà phê 10k');
@@ -409,8 +506,11 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
       check(`${label} off: applies to admin too (403)`, r.status === 403, r.status);
       r = await req('GET', '/admin/ai/stats', { token: tAd });
       check(`${label} off: admin learning center still works`, r.status === 200, r.status);
-      await patchCfg(on);
+      r = await patchCfg(on);
+      check(`${label}=true => both back on`, r.data.values.ai.enabled === true && r.data.values.business.featureAi === true, r.data.values?.ai);
     }
+    r = await patchCfg({ ai: { enabled: false }, business: { featureAi: true } });
+    check('conflicting ai.enabled / business.featureAi in one PATCH => 400', r.status === 400 && 'ai.enabled' in r.data.errors, r.data);
     r = await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: true, message: `AI bảo trì ${S}` } });
     r = await say(L.token, cL.id, 'cà phê 10k');
     check('maintenance: user POST message => 503 MAINTENANCE', r.status === 503 && r.data.code === 'MAINTENANCE', r.data);
@@ -425,9 +525,16 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('config history records ai changes', r.data.items.some((x) => x.key === 'dailyMessageLimitPerUser') && r.data.items.some((x) => x.key === 'enabled'), r.data.items.slice(0, 3));
 
     // ---------------------------------------------------------------- học ban đêm
-    group('ai: chu trình học ban đêm (ẩn danh, k ≥ 2 user, cổng kiểm định)');
-    await patchCfg({ ai: { autoApproveMinUsers: 2, autoApproveMinSupport: 2, autoApproveMinPrecision: 80 } });
-    const U = [await register(`Quân ${S}`, 'aiU1'), await register(`Quân ${S}`, 'aiU2')];
+    group('ai: chu trình học ban đêm (đồng ý góp, k ≥ 5 user, ẩn danh, cổng kiểm định)');
+    r = await patchCfg({ ai: { autoApproveMinUsers: 4 } });
+    check('autoApproveMinUsers < 5 => 400 (k-anonymity floor)', r.status === 400 && 'ai.autoApproveMinUsers' in r.data.errors, r.data);
+    await patchCfg({ ai: { autoApproveMinUsers: 5, autoApproveMinSupport: 2, autoApproveMinPrecision: 80 } });
+    const U = [];
+    for (let i = 1; i <= 5; i++) {
+      const u = await register(`Quân ${S}`, `aiU${i}`);
+      await req('PUT', '/ai/settings', { token: u.token, body: { shareExamples: true } });
+      U.push(u);
+    }
     // cụm từ riêng của lần chạy này (chạy lặp không đụng quyết định admin của lần trước)
     const tag = `zz${[...S.slice(-7)].map((d) => 'abcdefghij'[d]).join('')}`;
     const novel = `đồ ${tag}`;
@@ -443,13 +550,25 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
         await confirm(u.token, r.data.draft.id, { items: [{ ...r.data.draft.payload.items[0], categoryId: undefined, categoryName: 'Giải trí' }] });
       }
     }
+    // 5 user KHÔNG đồng ý góp cùng dùng một cụm từ riêng → không được thành dữ liệu chung
+    const novelNo = `món ${tag}`;
+    for (let i = 1; i <= 5; i++) {
+      const u = await register(`Khách ${S}`, `aiN${i}`);
+      if (i === 1) { await req('PUT', '/ai/settings', { token: u.token, body: { shareExamples: true } }); await req('PUT', '/ai/settings', { token: u.token, body: { shareExamples: false } }); }
+      const c = await conv(u.token);
+      for (const amt of ['100k', '110k', '120k']) {
+        r = await say(u.token, c.id, `${novelNo} ${amt}`);
+        await confirm(u.token, r.data.draft.id);
+      }
+    }
     r = await req('POST', '/admin/ai/learning/run', { token: tAd });
     check('run learning now => 200 with stats', r.status === 200 && r.data.rules && r.data.examples && r.data.rules.candidates >= 1, r.data);
     check('name-containing pattern skipped (private)', r.data.rules.skippedPrivate >= 1, r.data.rules);
     const rulesQ = async (q) => (await req('GET', `/admin/ai/rules?limit=200&q=${encodeURIComponent(q)}`, { token: tAd })).data.items;
     r = { data: { items: [...await rulesQ('bún riêu'), ...await rulesQ(novel), ...await rulesQ('đá'), ...await rulesQ('quân')] } };
     const rule = r.data.items.find((x) => x.pattern === 'bún riêu' && x.value === 'Ăn uống');
-    check('global rule "bún riêu" → Ăn uống ACTIVE (eval pass, ≥2 users)', rule?.status === 'ACTIVE' && rule.userCount >= 2 && rule.evalReport?.verdict === 'pass', rule);
+    check('global rule "bún riêu" → Ăn uống ACTIVE (eval pass, ≥5 consenting users)', rule?.status === 'ACTIVE' && rule.userCount >= 5 && rule.evalReport?.verdict === 'pass', rule);
+    check('non-consenting users contribute nothing (no global rule/example for their phrase)', (await rulesQ(tag)).every((x) => x.pattern !== `món ${tag}`) && (await req('GET', `/admin/ai/examples?limit=50&q=${encodeURIComponent(novelNo)}`, { token: tAd })).data.items.length === 0);
     const sn = r.data.items.find((x) => x.pattern === novel);
     check('novel phrase (no regression coverage) => PROPOSED (waits admin)', sn?.status === 'PROPOSED' && sn.evalReport?.verdict === 'no-coverage', sn);
     // parser ai/ bỏ "trà" (fold = "tra" trùng từ đệm "trả") nên khóa của "trà đá" là "đá"
@@ -460,7 +579,7 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     r = await req('GET', `/admin/ai/examples?limit=200&skill=ghi-giao-dich&q=${encodeURIComponent('bún riêu')}`, { token: tAd });
     const exQuan = (await req('GET', `/admin/ai/examples?limit=200&q=${encodeURIComponent('quân')}`, { token: tAd })).data.items;
     const ex = r.data.items.find((x) => x.input === 'bún riêu cua');
-    check('global example "bún riêu cua": anonymized (rounded amount, no ids)', ex && ex.output.categoryName === 'Ăn uống' && ex.output.typicalAmount === 50000 && ex.userCount >= 2 && !('userId' in ex), ex);
+    check('global example "bún riêu cua": anonymized (rounded amount, no ids)', ex && ex.output.categoryName === 'Ăn uống' && ex.output.typicalAmount === 50000 && ex.userCount >= 5 && !('userId' in ex), ex);
     check('no global example with contributor name', exQuan.length === 0, exQuan);
     r = await req('GET', '/admin/ai/integrity', { token: tAd });
     check('integrity: global rows have no userId', r.data.rulesWithUser === 0 && r.data.examplesWithUser === 0, r.data);
@@ -512,6 +631,19 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
       r = await req('GET', `/admin/ai/usage/${X.id}`, { token: tAd });
       check('after delete: every AI row gone (cascade)', !r.data.exists && ['conversations', 'messages', 'drafts', 'feedback', 'memory', 'examples', 'rules'].every((k) => r.data[k] === 0), r.data);
     }
+    // ---------------------------------------------------------------- giữ lịch sử 12 tháng (#6)
+    group('ai: giữ lịch sử chat 12 tháng');
+    r = await req('POST', '/admin/ai/retention/run', { token: A.token });
+    check('USER retention/run => 403', r.status === 403, r.status);
+    r = await req('POST', '/admin/ai/retention/run', { token: tAd });
+    check('retention now: nothing recent deleted', r.status === 200 && (await req('GET', `/ai/conversations/${cA.id}`, { token: A.token })).status === 200, r.data);
+    const in13m = new Date(Date.now() + 396 * DAY).toISOString();
+    r = await req('POST', `/admin/ai/retention/run?now=${encodeURIComponent(in13m)}`, { token: tAd });
+    check('retention at now+13 months: old messages + conversations deleted', r.status === 200 && r.data.messages >= 10 && r.data.conversations >= 1, r.data);
+    r = await req('GET', `/ai/conversations/${cA.id}`, { token: A.token });
+    check('…A conversation gone (404)', r.status === 404, r.status);
+    r = await req('GET', `/admin/ai/usage/${A.id}`, { token: tAd });
+    check('…A has no messages/conversations left; learned memory/rules kept', r.data.messages === 0 && r.data.conversations === 0 && r.data.rules >= 1, r.data);
   } finally {
     group('ai: khôi phục cấu hình');
     await req('POST', '/admin/config/maintenance', { token: tAd, body: { enabled: false } });

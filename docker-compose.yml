@@ -22,7 +22,10 @@ services:
 
   api:
     profiles: ["api", "app"]
-    build: ./backend
+    # context = gốc repo: image cần cả ai/ (trợ lý AI)
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     depends_on:
       db:

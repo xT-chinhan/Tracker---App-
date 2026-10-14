@@ -130,21 +130,22 @@ const DEFS: Def[] = [
   { section: 'mobile', field: 'iosStoreUrl', kind: 'string', maxLen: 300, format: 'https', def: () => '' },
   { section: 'mobile', field: 'releaseNotes', kind: 'string', maxLen: 300, def: () => '' },
 
-  // Trợ lý AI. Tắt `enabled` (hoặc business.featureAi) => route ghi của /ai trả 403 FEATURE_DISABLED.
+  // Trợ lý AI. `ai.enabled` và `business.featureAi` là CÙNG MỘT công tắc (sửa trường nào cũng ghi cả hai).
+  // Tắt => route ghi của /ai trả 403 FEATURE_DISABLED.
   // provider: env AI_PROVIDER ghi đè; NODE_ENV=test luôn dùng fake (e2e nhanh, tất định).
   { section: 'ai', field: 'enabled', kind: 'bool', def: () => true },
   { section: 'ai', field: 'provider', kind: 'enum', values: ['ollama', 'fake'], def: (e) => e.aiProvider },
   { section: 'ai', field: 'ollamaUrl', kind: 'string', required: true, maxLen: 300, format: 'url', def: (e) => e.ollamaUrl },
   { section: 'ai', field: 'chatModel', kind: 'string', required: true, maxLen: 100, def: (e) => e.aiChatModel },
   { section: 'ai', field: 'embedModel', kind: 'string', required: true, maxLen: 100, def: (e) => e.aiEmbedModel },
-  { section: 'ai', field: 'timeoutSeconds', kind: 'int', min: 5, max: 600, def: () => 60 },
-  { section: 'ai', field: 'dailyMessageLimitPerUser', kind: 'int', min: 1, max: 100000, def: () => 200 },
-  { section: 'ai', field: 'maxConversationsPerUser', kind: 'int', min: 1, max: 10000, def: () => 100 },
+  { section: 'ai', field: 'timeoutSeconds', kind: 'int', min: 5, max: 600, def: () => 15 },
+  { section: 'ai', field: 'dailyMessageLimitPerUser', kind: 'int', min: 1, max: 100000, def: () => 30 },
+  { section: 'ai', field: 'maxConversationsPerUser', kind: 'int', min: 1, max: 10000, def: () => 50 },
   // Ngưỡng tự bật luật / ví dụ CHUNG do chu trình học ban đêm đề xuất (không đạt => chờ admin duyệt)
   { section: 'ai', field: 'autoApproveEnabled', kind: 'bool', def: () => true },
-  { section: 'ai', field: 'autoApproveMinUsers', kind: 'int', min: 2, max: 100000, def: () => 3 },
-  { section: 'ai', field: 'autoApproveMinSupport', kind: 'int', min: 1, max: 100000, def: () => 5 },
-  { section: 'ai', field: 'autoApproveMinPrecision', kind: 'int', min: 50, max: 100, def: () => 90 },
+  { section: 'ai', field: 'autoApproveMinUsers', kind: 'int', min: 5, max: 100000, def: () => 50 },
+  { section: 'ai', field: 'autoApproveMinSupport', kind: 'int', min: 1, max: 100000, def: () => 50 },
+  { section: 'ai', field: 'autoApproveMinPrecision', kind: 'int', min: 50, max: 100, def: () => 97 },
 ];
 
 const keyOf = (d: Pick<Def, 'section' | 'field'>) => `${d.section}.${d.field}`;
@@ -548,6 +549,11 @@ export class SystemConfigService {
         cross(changes.has(mk) ? mk : lk, 'Bản tối thiểu không được mới hơn bản mới nhất');
       }
     }
+    // Một công tắc AI: ai.enabled ⇔ business.featureAi
+    if (changes.has('ai.enabled') && changes.has('business.featureAi') && changes.get('ai.enabled') !== changes.get('business.featureAi')) {
+      cross('ai.enabled', 'ai.enabled và business.featureAi là cùng một công tắc, phải cùng giá trị');
+    } else if (changes.has('ai.enabled')) changes.set('business.featureAi', changes.get('ai.enabled'));
+    else if (changes.has('business.featureAi')) changes.set('ai.enabled', changes.get('business.featureAi'));
     if (changes.has('access.maintenanceEndsAt')) {
       const v = changes.get('access.maintenanceEndsAt') as string | null;
       if (v && Date.parse(v) <= Date.now()) cross('access.maintenanceEndsAt', 'Giờ dự kiến xong phải ở tương lai');

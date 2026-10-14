@@ -85,6 +85,21 @@ model User {
   aiMemory        AiMemory[]
   aiExamples      AiExample[]
   aiRules         AiRule[]
+  aiSetting       AiUserSetting?
+  loginFailures   LoginFailure[]
+}
+
+/// Lần đăng nhập SAI của tài khoản có thật (không lưu mật khẩu đã nhập) — để phát hiện dò mật khẩu. Giữ 30 ngày.
+model LoginFailure {
+  id        String   @id @default(uuid())
+  userId    String
+  ip        String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
 }
 
 /// Ví / tài khoản tiền. Số dư luôn tính từ dữ liệu (initialBalance + phát sinh), không lưu cộng dồn.
@@ -401,6 +416,8 @@ model AiConversation {
   scope     AiScope
   title     String?
   archived  Boolean  @default(false)
+  /// Ghim: không bị tự lưu trữ khi đạt giới hạn số hội thoại
+  pinned    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -595,4 +612,15 @@ model AiLearningRun {
   finishedAt DateTime?
   stats      Json?
   error      String?
+}
+
+/// Cài đặt AI của user. shareExamples = đồng ý góp ví dụ ẩn danh vào kho chung (hỏi 1 lần, tắt được); consentedAt = lúc đồng ý gần nhất.
+model AiUserSetting {
+  userId        String    @id
+  shareExamples Boolean   @default(false)
+  consentedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
