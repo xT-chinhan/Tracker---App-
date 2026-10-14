@@ -21,4 +21,6 @@ export function normVi(s: string): string {
 }
 
 /** Có dấu tiếng Việt không (kể cả đ). Câu không dấu thì luật/lexicon mới được lùi về so khớp bỏ dấu. */
-export const hasDiacritics = (s: string) => /[^\x00-\x7f]/.test(s.normalize('NFC').replace(/[^\p{L}]/gu, ''));
+// Ký hiệu tiền "45.000đ" / "đồng" sau số không tính là gõ có dấu.
+export const hasDiacritics = (s: string) =>
+  /[^\x00-\x7f]/.test(s.normalize('NFC').replace(/(\d)\s*(?:đồng|đ)(?![\p{L}])/giu, '$1').replace(/[^\p{L}]/gu, ''));

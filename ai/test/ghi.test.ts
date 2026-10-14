@@ -183,3 +183,11 @@ test('từ trông giống số không bị đọc thành tiền ("bằng", "ba m
   assert.deepEqual(amt('trà sữa năm chục'), [50000]);
   assert.equal(analyze('mua cafe hạt 250k bằng zalopay', ctx).segs.length, 1);
 });
+
+test('"45.000đ" không làm câu không dấu thành câu có dấu', async () => {
+  const { hasDiacritics } = await import('../parser/norm.js');
+  assert.equal(hasDiacritics('shopee hoan tien 45.000đ'), false);
+  assert.equal(hasDiacritics('an trua 45000 đồng'), false);
+  assert.equal(hasDiacritics('đi chợ 45k'), true);
+  assert.equal(incomeCategory(seg('shopee hoan tien 45.000đ'), ctx), 'Thu khác');
+});
