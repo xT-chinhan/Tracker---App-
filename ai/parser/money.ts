@@ -2,7 +2,8 @@ export interface Span { start: number; end: number }
 export interface MoneySpan extends Span { amount: number }
 
 const WORDS: Record<string, number> = { mot: 1, hai: 2, ba: 3, bon: 4, nam: 5, sau: 6, bay: 7, tam: 8, chin: 9, muoi: 10, nua: 0.5 };
-const NUM = String.raw`(\d+(?:[.,]\d+)?|mot|hai|ba|bon|nam|sau|bay|tam|chin|muoi|nua)`;
+// Số viết bằng chữ phải có khoảng trắng trước đơn vị: "ba nghìn" là 3.000 nhưng "bang" (bằng) không phải "ba"+"ng".
+const NUM = String.raw`(\d+(?:[.,]\d+)?|(?:mot|hai|ba|bon|nam|sau|bay|tam|chin|muoi|nua)(?=\s))`;
 const num = (s: string) => WORDS[s] ?? parseFloat(s.replace(',', '.'));
 /** "2" sau "tr" = 2 trăm nghìn, "25" = 250 nghìn, "250" = 250 nghìn. */
 const tail = (s: string | undefined, unit: number) =>

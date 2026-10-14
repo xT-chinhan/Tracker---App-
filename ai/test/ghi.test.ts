@@ -165,3 +165,21 @@ test('enum riêng từng khoản: schema chỉ có prefixItems, không kèm item
   assert.equal(s.properties.items.prefixItems.length, 2);
   assert.deepEqual(s.properties.items.prefixItems[0].properties.categoryName.enum, ['Lương']);
 });
+
+// ---------- số viết bằng chữ dễ nhầm ----------
+import { findAmounts } from '../parser/money.js';
+import { fold } from '../lib/text.js';
+test('từ trông giống số không bị đọc thành tiền ("bằng", "ba mẹ", "chúc mừng", "trăm năm", "nghìn lẻ một đêm")', () => {
+  const amt = (t: string) => findAmounts(fold(t)).map((x) => x.amount);
+  for (const t of ['trả bằng momo', 'bằng tiền mặt', 'trả bằng zalopay', 'ba mẹ cho tiền', 'mua ba cái áo', 'chúc mừng sinh nhật', 'trăm năm hạnh phúc', 'nghìn lẻ một đêm', 'năm nay', 'bang ngan hang'])
+    assert.deepEqual(amt(t), [], t);
+  assert.deepEqual(amt('cà phê 45k trả bằng momo'), [45000]);
+  assert.deepEqual(amt('mua cafe hạt 250k bằng zalopay'), [250000]);
+  // số viết bằng chữ thật vẫn đọc được
+  assert.deepEqual(amt('ba trăm'), [300000]);
+  assert.deepEqual(amt('ba chục'), [30000]);
+  assert.deepEqual(amt('sáu nghìn'), [6000]);
+  assert.deepEqual(amt('nửa củ'), [500000]);
+  assert.deepEqual(amt('trà sữa năm chục'), [50000]);
+  assert.equal(analyze('mua cafe hạt 250k bằng zalopay', ctx).segs.length, 1);
+});
