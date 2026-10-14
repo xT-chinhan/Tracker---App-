@@ -478,3 +478,90 @@ body.shoot .sk { animation: none; background-position: 30% 0; }
 .phone-mini .p-sheet .handle { width: 36px; height: 4px; border-radius: 2px; background: #DAD8D2; margin: 0 auto 14px; }
 .phone-mini .p-notes { text-align: left; background: var(--color-surface-container); border-radius: 12px; padding: 10px 12px; margin-top: 12px; font-size: 11.5px; line-height: 1.55; color: #3A3935; }
 .phone-mini .p-btn { height: 40px; border-radius: var(--radius-pill); background: var(--color-primary); color: #fff; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; margin-top: 14px; }
+
+/* =========================================================
+   Trợ lý AI (A10–A13) · chỉ thêm component mới, dùng lại token
+   ========================================================= */
+/* A10 · khung chat: danh sách trái + cuộc trò chuyện */
+.aic { display: grid; grid-template-columns: 296px minmax(0, 1fr); gap: 20px; flex: 1; min-height: 0; }
+.aic-list { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.aic-list .hd { display: flex; gap: 8px; padding: 16px 16px 8px; }
+.aic-list .grp { font-size: 12px; font-weight: 500; color: var(--color-on-surface-faint); padding: 12px 20px 6px; }
+.aic-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; margin: 0 8px; border-radius: var(--radius-sm); }
+.aic-row .bubble { margin-top: 1px; }
+.aic-row .t1 { font-size: 14px; font-weight: 500; white-space: nowrap; }
+.aic-row .t2 { white-space: nowrap; }
+.aic-row .tm { font-size: 12px; color: var(--color-on-surface-faint); flex: none; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.aic-row.on { background: var(--color-surface-container-high); }
+.aic-row.on .bubble { background: var(--color-surface); }
+.aic-list .foot { margin-top: auto; padding: 12px 20px; border-top: 1px solid var(--color-outline-variant); font-size: 13px; color: var(--color-on-surface-variant); display: flex; align-items: center; gap: 8px; }
+.aic-chat { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.aic-chat .hd { display: flex; align-items: center; gap: 12px; padding: 14px 16px 14px 24px; border-bottom: 1px solid var(--color-outline-variant); flex: none; }
+.aic-thread { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 16px; padding: 20px 0 16px; }
+.aic-thread > * { width: 100%; max-width: 780px; margin-left: auto; margin-right: auto; padding: 0 32px; flex: none; }
+.aic-u { display: flex; justify-content: flex-end; }
+.aic-u > div { max-width: 72%; background: var(--color-surface-container-high); border-radius: 18px 18px 6px 18px; padding: 9px 14px; font-size: 14.5px; line-height: 1.5; }
+.aic-a { font-size: 14.5px; line-height: 1.6; }
+.aic-a > * + * { margin-top: 12px; }
+.aic-a b { font-weight: 600; }
+.aic-a ul { padding-left: 18px; } .aic-a li + li { margin-top: 4px; }
+.aic-fb { display: flex; align-items: center; color: var(--color-on-surface-faint); margin-left: -8px; margin-top: 6px !important; }
+.aic-fb .icon-btn { width: 32px; height: 32px; color: var(--color-on-surface-faint); }
+.aic-fb .icon-btn svg.lucide { width: 15px; height: 15px; }
+.aic-fb .meta { margin-left: auto; font-size: 12px; }
+.aic-src { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--color-on-surface-variant); }
+.aic-src svg.lucide { width: 14px; height: 14px; }
+.aic-composer { flex: none; padding: 0 32px 20px; }
+.aic-composer > * { max-width: 716px; margin: 0 auto; }
+.aic-input { min-height: 52px; border-radius: 26px; background: var(--color-surface); border: 1px solid var(--color-outline); box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 8px; padding: 0 8px 0 20px; font-size: 14.5px; }
+.aic-input .ph { color: var(--color-on-surface-faint); flex: 1; }
+.aic-send { width: 36px; height: 36px; border-radius: 50%; background: var(--color-surface-container-high); color: var(--color-on-surface-faint); display: inline-flex; align-items: center; justify-content: center; }
+.aic-send svg.lucide { width: 18px; height: 18px; stroke-width: 2.2; }
+.aic-hint { text-align: center; font-size: 12px; color: var(--color-on-surface-faint); margin-top: 8px; }
+
+/* Thẻ số liệu trong câu trả lời */
+.ai-stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--color-surface); border: 1px solid var(--color-outline); border-radius: var(--radius-md); overflow: hidden; }
+.ai-stats > div { padding: 14px 16px; }
+.ai-stats > div + div { border-left: 1px solid var(--color-outline-variant); }
+.ai-stats .v { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.ai-stats .d { font-size: 12.5px; color: var(--color-on-surface-variant); margin-top: 2px; }
+.ai-box { background: var(--color-surface); border: 1px solid var(--color-outline); border-radius: var(--radius-md); overflow: hidden; }
+.ai-box .bh { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--color-outline-variant); }
+.ai-box .bf { display: flex; align-items: center; gap: 10px; padding: 10px 12px 10px 16px; border-top: 1px solid var(--color-outline-variant); }
+.ai-box .tbl td { height: 52px; }
+.ai-box .tbl th { height: 36px; }
+.ai-box .tbl th:first-child, .ai-box .tbl td:first-child { padding-left: 16px; }
+
+/* Thẻ nháp (admin) */
+.ai-draft { background: var(--color-surface); border: 1.5px dashed #CFCDC7; border-radius: var(--radius-lg); padding: 18px 20px 20px; }
+.ai-draft .dh { display: flex; align-items: center; gap: 10px; }
+.ai-draft .acts { display: flex; gap: 8px; margin-top: 18px; align-items: center; }
+.ai-quote { margin-top: 14px; border: 1px solid var(--color-outline); border-radius: var(--radius-md); padding: 14px 16px; background: var(--color-background); }
+.ai-quote .qt { font-size: 15px; font-weight: 600; line-height: 1.4; }
+.ai-quote .qb { font-size: 13.5px; line-height: 1.55; color: #3A3935; margin-top: 4px; }
+.reasons { margin-top: 14px; }
+.reasons .rs { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; }
+.reasons .rs + .rs { border-top: 1px solid var(--color-outline-variant); }
+.reasons .rs .bubble { margin-top: 1px; }
+.reasons .rs .t1 { font-size: 14px; font-weight: 600; }
+.ai-tag { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 9px; border-radius: var(--radius-pill); background: var(--color-surface-container); font-size: 12px; font-weight: 600; color: #4a4945; }
+.ai-tag svg.lucide { width: 13px; height: 13px; }
+
+/* A11 · Trung tâm học */
+.priv { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-radius: var(--radius-md); background: var(--color-surface-container); font-size: 13px; color: #55544f; line-height: 1.5; }
+.priv svg.lucide { width: 17px; height: 17px; color: var(--color-on-surface-variant); }
+.line-chart .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.line-chart .gl { stroke: #EFEEEA; stroke-width: 1; }
+.line-chart .tk { font-size: 11px; fill: var(--color-on-surface-faint); }
+.line-chart .lb { font-size: 12px; fill: var(--color-on-surface); font-weight: 600; }
+.line-chart .lb2 { font-size: 12px; fill: var(--color-on-surface-variant); }
+.gate { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.log .lr { display: grid; grid-template-columns: 74px 22px 1fr; gap: 10px; align-items: start; padding: 9px 0; font-size: 13.5px; }
+.log .lr .tm { font-size: 12.5px; color: var(--color-on-surface-faint); font-variant-numeric: tabular-nums; padding-top: 1px; }
+.log .lr .ic { display: flex; justify-content: center; padding-top: 2px; }
+.log .lr .ic svg.lucide { width: 15px; height: 15px; color: var(--color-on-surface-variant); }
+.log .lr .ic.ok svg.lucide { color: var(--color-income); }
+.log .lr .ic.bad svg.lucide { color: var(--color-danger); }
+.log .lr .t2 { white-space: normal; }
+.log .lr + .lr { border-top: 1px solid var(--color-outline-variant); }
+.nav a .new { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--color-on-surface-variant); background: var(--color-surface-container-high); border-radius: 999px; padding: 1px 7px; }

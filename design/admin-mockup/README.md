@@ -1,6 +1,6 @@
 # Thu Chi Admin · Mockup
 
-Mở `index.html` trực tiếp (không cần server). Ảnh 1x trong `shots/`, toàn bộ gallery ở `shots/overview.png`.
+Mở `index.html` trực tiếp (không cần server). Ảnh 1x trong `shots/`, toàn bộ gallery ở `shots/overview.png`. Mục **I · Trợ lý AI** (ảnh `shots/20-ai-*.png`) đang **chờ duyệt**, xem cuối file.
 
 ## Màn hình
 | # | File | Màn |
@@ -67,3 +67,29 @@ Khối `:root` trong `styles.css` sao chép 1:1 từ `../mockup/styles.css` / `.
 Card desktop có padding 24 (mobile là 18). Dialog bo 24.
 
 Icon dùng Lucide nét 1.75 (`vendor/lucide.min.js`, chép từ mockup mobile).
+
+## Trợ lý AI (A10–A13) · chờ duyệt
+Mockup mobile tương ứng: `../mockup/` mục J, ảnh `../mockup/shots/30-ai-*.png`.
+
+| # | File | Màn |
+|---|---|---|
+| 20a | `shots/20-ai-a10a-thong-ke.png` | A10 Trợ lý quản trị: danh sách cuộc trò chuyện trái, chat giữa. Câu trả lời “tình hình 7 ngày” = thẻ 4 số liệu + 3 điểm cần xem + nguồn số liệu + gợi ý hỏi tiếp |
+| 20b | `shots/20-ai-a10b-tim-nguoi-dung.png` | A10 Kết quả tìm người dùng: bảng gọn trong chat, “Mở trong Người dùng, đã lọc sẵn”, Xuất CSV; nói rõ thông báo chưa gửi riêng theo nhóm được |
+| 20c | `shots/20-ai-a10c-nhap-thong-bao.png` | A10 Nháp thông báo (viền nét đứt = chưa có hiệu lực): tiêu đề, nội dung, số ký tự, số người nhận; Mở trong trình soạn / Viết lại / Bỏ nháp. Trợ lý không tự gửi |
+| 20d | `shots/20-ai-a10d-soan-thong-bao.png` | A7 Thông báo đã điền sẵn từ nháp, dải ghi chú “do Trợ lý AI soạn · Về cuộc trò chuyện”. Gửi vẫn bằng nút Gửi của A7 |
+| 20e | `shots/20-ai-a10e-de-xuat-khoa.png` | A10 Đề xuất khóa kèm 3 lý do có số liệu → hộp xác nhận khóa giống A3, thêm “Đề xuất bởi Trợ lý AI” và lý do điền sẵn (ghi nhật ký, sửa được) |
+| 20f | `shots/20-ai-a11a-trung-tam-hoc.png` | A11 Trung tâm học: ghi chú riêng tư, 4 KPI, biểu đồ đường “chấp nhận không sửa” theo 4 skill (8 tuần, 1 trục, nhãn cuối đường + legend), bảng đề xuất luật/ví dụ chung chờ duyệt (Duyệt / Từ chối; mục bị bộ đề chặn chỉ còn trạng thái) |
+| 20g | `shots/20-ai-a11b-luot-chay-dem.png` | A11 Lượt chạy đêm: cổng bộ đề v42 → v43 theo từng bộ, phiên bản kho học đang chạy + Hoàn tác về v42, nhật ký từng bước 02:00–02:31 |
+| 20h | `shots/20-ai-a12a-cau-hinh-tro-ly.png` | A12 Cấu hình › Trợ lý AI (đầu trang): Bật trợ lý, Tạm dừng để bảo trì; Mô hình: nhà cung cấp, địa chỉ Ollama + kiểm tra kết nối, model trả lời, model embedding |
+| 20i | `shots/20-ai-a12b-cau-hinh-gioi-han-tu-hoc.png` | A12 (cuộn xuống): giới hạn tin/ngày, số cuộc tối đa, thời gian chờ; ngưỡng tự học (luật riêng, tự áp dụng luật chung, tắt luật, số người tối thiểu cho mẫu câu chung) |
+| 20j | `shots/20-ai-a12c-nghiep-vu-co-tro-ly.png` | A9 Nghiệp vụ: thêm dòng “Trợ lý AI” vào Tính năng trong app |
+| 20k | `shots/20-ai-a13-chi-tiet-nguoi-dung.png` | A13 Chi tiết người dùng (đã cuộn): thẻ Trợ lý AI tháng 9, chỉ số đếm (tin nhắn, cuộc trò chuyện, nháp đề xuất / xác nhận không sửa / sửa / hủy, hữu ích / chưa đúng, ngày chạm giới hạn) |
+
+### Quyết định
+- Sidebar thêm nhóm **Trợ lý**: *Trợ lý AI* (`sparkles`) và *Trung tâm học* (`book-open-check`, số đề xuất chờ duyệt). Nhóm này **chỉ vẽ ở khung mục I** (thuộc tính `data-ai` trên `aside.side`) để khung đã duyệt và ảnh cũ không đổi. Khi duyệt: thêm vào sidebar chung và chụp lại toàn bộ. Sub-nav Cấu hình và dòng Nghiệp vụ cũng chỉ thêm ở các khung mục I.
+- Bố cục chat: danh sách 296px (tìm, nhóm Hôm nay / Tuần trước, mục chọn tô xám như sub-nav, Đã lưu trữ ở đáy) + khung chat. Nội dung chat rộng tối đa 780px, neo đáy như app chat. Tin của admin là bong bóng xám `surface-container-high`, câu trả lời là chữ thường không bong bóng. Màu đen chỉ còn cho nút chính.
+- Ngôn ngữ thẻ dùng chung với mobile: **nét đứt = nháp / đề xuất, chưa có hiệu lực**; nét liền = dữ liệu thật. Mọi thao tác có hậu quả (gửi thông báo, khóa) đều chuyển sang màn/hộp xác nhận sẵn có, không có nút làm thẳng trong chat.
+- Trợ lý quản trị đọc được đúng những gì bảng quản trị đọc được, **không đọc tin nhắn trợ lý của người dùng** (ghi ở dòng nhắc dưới ô nhập). Số liệu do hệ thống tính, câu trả lời luôn có dòng nguồn.
+- Trung tâm học chỉ hiện số tổng hợp và mẫu câu đã bỏ tên/số tài khoản, có ≥ 5 người khác nhau xác nhận. Biểu đồ đường: 4 series `viz-1..4` theo thứ tự cố định, nét 2px, legend + nhãn giá trị cuối đường, có “Xem dạng bảng”. Ví dụ “cuối tuần → Giải trí” bị bộ đề chặn lấy đúng lỗi thật trong `ai/results/BENCHMARK-2026-10-08.md`.
+- Tạm dừng trợ lý (bảo trì) làm giống Bảo trì ở A9: có hiệu lực ngay sau hộp xác nhận, không đi qua thanh Lưu. Các trường còn lại đi qua thanh Lưu như mọi mục cấu hình.
+- Dữ liệu nhất quán: 1.284 / 1.247 / 37 người dùng; số người nhận thông báo 1.247; Nguyễn Minh Anh có 214 tin tháng 9, 96 nháp, 71 xác nhận không sửa (74%). Số trong A11 lấy theo đợt đo 08/10 (76% xác nhận không sửa, p50 ≈ 1,03 giây, router 9 skill, embedding bge-m3).

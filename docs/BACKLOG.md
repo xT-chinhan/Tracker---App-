@@ -33,3 +33,6 @@ Cập nhật: 2026-10-08. Ưu tiên hiện tại: **trợ lý AI** (`ai/`). Các
 ## 6. Dọn dẹp nhỏ
 - Tài khoản cũ `admin@tracker.local` (từ `backend/.env`) vẫn trong DB dev, hiện trong "Đăng ký gần đây" — xóa hoặc đổi `ADMIN_EMAIL` trong `backend/.env` sang `admin@thuchi.vn`.
 - `design/stitch/` (3 màn Stitch dở, đã gitignore) — xóa nếu không cần.
+
+## 7. Thông báo theo nhóm user
+- Broadcast hiện chỉ gửi tất cả user đang hoạt động; thêm lọc theo nhóm (vd. user mới, user bị cảnh báo ngân sách). Trợ lý AI admin cần biết khi có.
