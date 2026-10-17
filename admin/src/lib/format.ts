@@ -60,3 +60,29 @@ export const GOAL_STATUS_LABEL = {
   WITHDRAWN: 'Đã rút (hoàn thành)',
   EARLY_WITHDRAWN: 'Rút trước hạn',
 } as const
+
+/** Tên skill trợ lý AI hiển thị cho admin */
+export const AI_SKILL_LABEL: Record<string, string> = {
+  'ghi-giao-dich': 'Ghi giao dịch',
+  'hoi-so-du': 'Hỏi số dư',
+  'tong-ket-thang': 'Tổng kết tháng',
+  'kiem-tra-ngan-sach': 'Ngân sách',
+  'tim-giao-dich': 'Tìm giao dịch',
+  'tien-do-tiet-kiem': 'Tiết kiệm',
+  'goi-y-ngan-sach': 'Gợi ý ngân sách',
+  'meo-tiet-kiem': 'Mẹo tiết kiệm',
+  'huong-dan': 'Hướng dẫn',
+  'ngoai-pham-vi': 'Ngoài phạm vi',
+  'hoi-lai': 'Hỏi lại',
+  'tong-quan-he-thong': 'Tổng quan hệ thống',
+  'tra-cuu-nguoi-dung': 'Tra cứu người dùng',
+  'phat-hien-bat-thuong': 'Phát hiện bất thường',
+  'soan-thong-bao': 'Soạn thông báo',
+  'de-xuat-khoa': 'Đề xuất khóa',
+  'tom-tat-cau-hinh': 'Tóm tắt cấu hình',
+  'huong-dan-quan-tri': 'Hướng dẫn quản trị',
+}
+export const aiSkillLabel = (s: string | null) => (s ? AI_SKILL_LABEL[s] ?? s : 'Chưa định tuyến')
+/** 97.3 -> "97,3%" (null -> "—") */
+export const formatPercent = (v: number | null | undefined, digits = 0) =>
+  v == null ? '—' : `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: digits }).format(v)}%`

@@ -1,6 +1,6 @@
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeftRight, LayoutDashboard, LogOut, Megaphone, Settings2, Shapes, UserRoundCog, Users } from 'lucide-react'
+import { ArrowLeftRight, BookOpenCheck, LayoutDashboard, LogOut, Megaphone, Settings2, Shapes, Sparkles, UserRoundCog, Users } from 'lucide-react'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -73,6 +73,15 @@ export function Layout() {
     enabled: authed,
   })
   const overview = useQuery({ queryKey: ['overview'], queryFn: api.overview, enabled: authed })
+  // Số đề xuất chung chờ duyệt (luật + ví dụ) cho mục Trung tâm học
+  const pending = useQuery({
+    queryKey: ['ai-pending'],
+    queryFn: async () => {
+      const [r, e] = await Promise.all([api.aiRules({ status: 'PROPOSED', limit: 1 }), api.aiExamples({ status: 'PROPOSED', limit: 1 })])
+      return r.total + e.total
+    },
+    enabled: authed,
+  })
 
   // Token hết hạn: trang login sẽ dọn localStorage
   if (!authed) return <Navigate to={auth.token() ? '/login?reason=expired' : '/login'} replace />
@@ -90,6 +99,11 @@ export function Layout() {
         <p className={cn(groupLabel, 'hidden xl:block')}>Quản lý</p>
         <nav className="flex flex-col gap-0.5">
           {MANAGE.map((n) => <NavItem key={n.to} {...n} count={n.count ? overview.data?.users.total : undefined} />)}
+        </nav>
+        <p className={cn(groupLabel, 'xl:mt-6')} aria-hidden="true">Trợ lý</p>
+        <nav className="flex flex-col gap-0.5" data-testid="nav-ai">
+          <NavItem to="/assistant" label="Trợ lý AI" icon={Sparkles} />
+          <NavItem to="/learning" label="Trung tâm học" icon={BookOpenCheck} count={pending.data || undefined} />
         </nav>
         <p className={cn(groupLabel, 'xl:mt-6')} aria-hidden="true">Cá nhân</p>
         <nav className="flex flex-col gap-0.5">

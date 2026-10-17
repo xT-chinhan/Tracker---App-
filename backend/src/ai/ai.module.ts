@@ -91,6 +91,13 @@ class UsageQuery extends PageQuery {
   @IsOptional() @Trim() @IsString() @MaxLength(100) q?: string;
 }
 
+class OllamaTestDto {
+  /** Bỏ trống = dùng cấu hình đã lưu (cho phép thử địa chỉ / model đang sửa trước khi lưu) */
+  @IsOptional() @Trim() @IsString() @MaxLength(300) url?: string;
+  @IsOptional() @Trim() @IsString() @MaxLength(100) chatModel?: string;
+  @IsOptional() @Trim() @IsString() @MaxLength(100) embedModel?: string;
+}
+
 class RunsQuery {
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit: number = 20;
 }
@@ -293,6 +300,12 @@ export class AiAdminController {
   retention(@Query() q: RetentionQuery) {
     if (process.env.NODE_ENV === 'production') throw new NotFoundException();
     return this.admin.retention(q.now ? new Date(q.now) : new Date());
+  }
+
+  /** Kiểm tra kết nối Ollama: gọi `/api/tags`, báo độ trễ + model trả lời / embedding đã tải chưa */
+  @Post('ollama/test') @HttpCode(200)
+  ollamaTest(@Body() dto: OllamaTestDto) {
+    return this.admin.ollamaTest(dto);
   }
 
   @Get('learning/runs')

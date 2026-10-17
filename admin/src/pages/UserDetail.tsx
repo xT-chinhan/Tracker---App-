@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight, Lock, LockOpen, ShieldCheck, ShieldOff, Tag } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Lock, LockOpen, ShieldCheck, ShieldOff, Sparkles, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -197,9 +197,53 @@ export default function UserDetailPage() {
               ))}
             </dl>
           </Card>
+          <AiUsageCard userId={u.id} email={u.email} />
         </div>
       </div>
       {dialog}
     </>
+  )
+}
+
+/** A13: chỉ số đếm trợ lý AI của người dùng, không có nội dung tin nhắn hay điều trợ lý đã học. */
+function AiUsageCard({ userId, email }: { userId: string; email: string }) {
+  const q = useQuery({ queryKey: ['ai-usage', userId], queryFn: () => api.aiUserUsage({ q: email, limit: 20 }), select: (d) => d.items.find((x) => x.user?.id === userId) ?? null })
+  const a = q.data
+  const resolved = a ? a.drafts.confirmed + a.drafts.edited + a.drafts.cancelled : 0
+  const rows: [string, string][] = a
+    ? [
+        ['Tin nhắn', formatNumber(a.messages)],
+        ['Trong 24 giờ qua', formatNumber(a.messages24h)],
+        ['Cuộc trò chuyện', formatNumber(a.conversations)],
+        ['Nháp đề xuất', formatNumber(resolved + a.drafts.proposed)],
+        ['Xác nhận không sửa', `${formatNumber(a.drafts.confirmed)}${resolved ? ` · ${Math.round((a.drafts.confirmed / resolved) * 100)}%` : ''}`],
+        ['Sửa rồi lưu', formatNumber(a.drafts.edited)],
+        ['Hủy nháp', formatNumber(a.drafts.cancelled)],
+        ['Hỏi gần nhất', a.lastActiveAt ? (isToday(a.lastActiveAt) ? `${formatTime(a.lastActiveAt)} hôm nay` : formatDate(a.lastActiveAt)) : '—'],
+      ]
+    : []
+  return (
+    <Card data-testid="ai-usage-card">
+      <h2 className="flex items-center gap-2 text-title-m"><Sparkles className="size-[18px]" />Trợ lý AI</h2>
+      {q.isPending ? (
+        <div className="mt-4 flex flex-col gap-3"><Skeleton className="h-3 w-full" /><Skeleton className="h-3 w-4/5" /><Skeleton className="h-3 w-3/5" /></div>
+      ) : q.error ? (
+        <p className="mt-3 text-body-s text-destructive">{q.error.message}</p>
+      ) : !a ? (
+        <p className="mt-3 text-body-s text-muted-foreground" data-testid="ai-usage-empty">Chưa dùng trợ lý.</p>
+      ) : (
+        <dl className="mt-3">
+          {rows.map(([k, v]) => (
+            <div key={k} className="flex h-10 items-center justify-between border-line not-first:border-t">
+              <dt className="text-muted-foreground">{k}</dt>
+              <dd className="font-semibold tabular-nums">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      <p className="mt-4 flex items-start gap-2.5 rounded-md bg-background px-3.5 py-3 text-body-s text-muted-foreground">
+        <Lock className="mt-0.5 size-3.5 shrink-0" />Chỉ số đếm. Không hiển thị nội dung tin nhắn hay điều trợ lý đã học về người này.
+      </p>
+    </Card>
   )
 }

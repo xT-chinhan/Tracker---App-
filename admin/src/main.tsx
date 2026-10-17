@@ -15,6 +15,8 @@ import CategoriesPage from '@/pages/Categories'
 import BroadcastsPage from '@/pages/Broadcasts'
 import AccountPage from '@/pages/Account'
 import SettingsPage from '@/pages/Settings'
+import AssistantPage from '@/pages/Assistant'
+import LearningPage from '@/pages/Learning'
 import NotFoundPage from '@/pages/NotFound'
 import './index.css'
 
@@ -40,6 +42,8 @@ const router = createBrowserRouter([
       { path: 'categories', element: <CategoriesPage /> },
       { path: 'broadcasts', element: <BroadcastsPage /> },
       { path: 'settings/:section?', element: <SettingsPage /> },
+      { path: 'learning/:tab?', element: <LearningPage /> },
+      { path: 'assistant/:id?', element: <AssistantPage /> },
       { path: 'account', element: <AccountPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],

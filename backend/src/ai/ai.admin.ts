@@ -5,6 +5,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AiKnowledgeStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { SystemConfigService } from '../system-config/system-config.module';
 import type { AuthUser } from '../common/auth';
 import { AiLearningService } from './ai.learning';
 import { GLOBAL } from './ai.store';
@@ -13,7 +14,30 @@ const pct = (a: number, b: number) => (b ? Math.round((a / b) * 1000) / 10 : nul
 
 @Injectable()
 export class AiAdminService {
-  constructor(private readonly prisma: PrismaService, private readonly learning: AiLearningService) {}
+  constructor(private readonly prisma: PrismaService, private readonly learning: AiLearningService, private readonly sys: SystemConfigService) {}
+
+  /** Gọi `<url>/api/tags` (5 giây). Model khớp cả khi bỏ tag `:latest` ("bge-m3" = "bge-m3:latest"). */
+  async ollamaTest(o: { url?: string; chatModel?: string; embedModel?: string }) {
+    const cfg = await this.sys.ai();
+    const url = (o.url || cfg.ollamaUrl).replace(/\/$/, '');
+    const chatModel = o.chatModel || cfg.chatModel, embedModel = o.embedModel || cfg.embedModel;
+    const at = new Date();
+    const t = performance.now();
+    if (!/^https?:\/\/[^\s]+$/.test(url)) return { ok: false, url, at, ms: 0, error: 'Địa chỉ phải bắt đầu bằng http:// hoặc https://', models: [], chatModel: { name: chatModel, loaded: false }, embedModel: { name: embedModel, loaded: false } };
+    try {
+      const r = await fetch(`${url}/api/tags`, { signal: AbortSignal.timeout(5000) });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const j = (await r.json()) as { models?: { name: string }[] };
+      const models = (j.models ?? []).map((m) => m.name);
+      const has = (name: string) => models.some((m) => m === name || m === `${name}:latest` || m.replace(/:latest$/, '') === name);
+      const ms = Math.round(performance.now() - t);
+      return { ok: has(chatModel) && has(embedModel), url, at, ms, models, chatModel: { name: chatModel, loaded: has(chatModel) }, embedModel: { name: embedModel, loaded: has(embedModel) } };
+    } catch (e) {
+      const err = e as Error;
+      const msg = err.name === 'TimeoutError' ? 'Quá 5 giây không phản hồi' : `Không kết nối được: ${err.message}`;
+      return { ok: false, url, at, ms: Math.round(performance.now() - t), error: msg, models: [], chatModel: { name: chatModel, loaded: false }, embedModel: { name: embedModel, loaded: false } };
+    }
+  }
 
   /** Theo skill: số tin, độ trễ (avg / p50 / p95), lỗi; nháp: tỉ lệ chấp nhận không sửa; theo ngày (giờ VN). */
   async stats(days: number) {

@@ -362,6 +362,12 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
     check('users filter status+role → only LOCKED USERs (victim included)', r.status === 200 && r.data.result.items.length >= 1 && r.data.result.items.every((u) => u.status === 'LOCKED' && u.role === 'USER') && r.data.result.items.some((u) => u.id === V.id), r.data.result?.items?.slice(0, 3));
     r = await say(tAd, cAd.id, 'tổng quan hệ thống');
     check('admin overview skill', r.data.message.skill === 'tong-quan-he-thong' && r.data.message.content.length > 10, r.data.message);
+    r = await req('POST', '/admin/ai/ollama/test', { token: A.token, body: {} });
+    check('ollama test: non-admin => 403', r.status === 403, r.data);
+    r = await req('POST', '/admin/ai/ollama/test', { token: tAd, body: { url: 'ftp://x' } });
+    check('ollama test: bad url => ok false + message (no request)', r.status === 200 && r.data.ok === false && /http/.test(r.data.error) && r.data.chatModel.loaded === false, r.data);
+    r = await req('POST', '/admin/ai/ollama/test', { token: tAd, body: { url: 'http://127.0.0.1:9', chatModel: 'm1', embedModel: 'm2' } });
+    check('ollama test: unreachable => ok false, models echoed', r.status === 200 && r.data.ok === false && r.data.error && r.data.chatModel.name === 'm1' && r.data.embedModel.name === 'm2', r.data);
     await req('PATCH', `/admin/users/${V.id}`, { token: tAd, body: { status: 'ACTIVE' } });
     // admin bị hạ quyền: không xác nhận được nháp admin cũ
     const D2 = await newUser('aiAdm2');

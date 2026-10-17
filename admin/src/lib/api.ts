@@ -129,7 +129,7 @@ export class ApiError extends Error {
 }
 
 /* ===== Cấu hình hệ thống ===== */
-export type ConfigSection = 'general' | 'access' | 'smtp' | 'password' | 'business' | 'mobile'
+export type ConfigSection = 'general' | 'access' | 'smtp' | 'password' | 'business' | 'mobile' | 'ai'
 export type ConfigValue = string | number | boolean | null
 export type ConfigValues = Record<ConfigSection, Record<string, ConfigValue>>
 
@@ -168,6 +168,135 @@ export interface SmtpTestResult {
   durationMs: number
   response?: string
   error?: string
+}
+
+/* ===== Trợ lý AI ===== */
+export type AiDraftStatus = 'PROPOSED' | 'CONFIRMED' | 'EDITED' | 'CANCELLED'
+export type AiKnowledgeStatus = 'PROPOSED' | 'ACTIVE' | 'REJECTED'
+
+export interface AiDraft {
+  id: string
+  messageId: string
+  skill: string
+  kind: 'transactions' | 'budgets' | 'broadcast' | 'lock_user' | 'search_filter' | string
+  status: AiDraftStatus
+  payload: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  finalPayload: unknown
+  result: unknown
+  resolvedAt: string | null
+  createdAt: string
+}
+
+export interface AiMessage {
+  id: string
+  conversationId: string
+  role: 'USER' | 'ASSISTANT'
+  content: string
+  skill: string | null
+  routeBy: string | null
+  status: string | null
+  latencyMs: number | null
+  followUps: string[] | null
+  createdAt: string
+  draft: AiDraft | null
+}
+
+export interface AiConversation {
+  id: string
+  scope: 'USER' | 'ADMIN'
+  title: string
+  archived: boolean
+  pinned: boolean
+  createdAt: string
+  updatedAt: string
+  messageCount?: number
+  autoArchived?: { id: string; title: string | null } | null
+}
+
+export interface AiSkillStat {
+  skill: string | null
+  messages: number
+  errors: number
+  askBacks: number
+  latencyMs: { avg: number | null; p50: number | null; p95: number | null }
+  drafts: { proposed: number; confirmed: number; edited: number; cancelled: number }
+  acceptanceWithoutEditRate: number | null
+  thumbsUp: number
+  thumbsDown: number
+  reroutedAway: number
+}
+
+export interface AiStats {
+  days: number
+  since: string
+  skills: AiSkillStat[]
+  daily: { day: string; skill: string; confirmed: number; edited: number; cancelled: number; proposed: number; acceptanceWithoutEditRate: number | null }[]
+  volume: { day: string; messages: number; users: number }[]
+}
+
+export interface AiEvalReport { verdict: 'pass' | 'fail' | 'no-coverage'; matched: number; correct: number; source: string }
+
+export interface AiRule {
+  id: string
+  kind: string
+  skill: string
+  pattern: string
+  value: string
+  support: number
+  helpful: number
+  harmful: number
+  userCount: number
+  precision: number
+  status: AiKnowledgeStatus
+  approvedById: string | null
+  approvedAt: string | null
+  evalReport: AiEvalReport | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AiExample {
+  id: string
+  skill: string
+  input: string
+  output: { title?: string; categoryName?: string; typicalAmount?: number | null } | null
+  confirmations: number
+  userCount: number
+  status: AiKnowledgeStatus
+  approvedById: string | null
+  approvedAt: string | null
+  evalReport: AiEvalReport | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AiLearningRun {
+  id: string
+  trigger: string
+  startedAt: string
+  finishedAt: string | null
+  stats: Record<string, Record<string, number>> | null
+  error: string | null
+}
+
+export interface AiUsageItem {
+  user: Pick<User, 'id' | 'email' | 'name' | 'role' | 'status'> | null
+  messages: number
+  messages24h: number
+  conversations: number
+  drafts: { confirmed: number; edited: number; cancelled: number; proposed: number }
+  lastActiveAt: string | null
+}
+
+export interface OllamaTestResult {
+  ok: boolean
+  url: string
+  at: string
+  ms: number
+  error?: string
+  models: string[]
+  chatModel: { name: string; loaded: boolean }
+  embedModel: { name: string; loaded: boolean }
 }
 
 export const auth = {
@@ -234,11 +363,13 @@ async function request<T>(method: string, path: string, opts: { body?: unknown; 
   if (!res.ok) {
     const raw = data?.message
     let message = Array.isArray(raw) ? raw.join(', ') : raw || res.statusText || 'Có lỗi xảy ra'
-    if (res.status === 429) {
+    const code = (data as { code?: string } | null)?.code
+    if (res.status === 429 && !code) {
       const wait = Number(res.headers.get('Retry-After'))
       message = `Bạn thử quá nhiều lần. Vui lòng đợi ${wait > 0 ? `${wait} giây` : 'một lát'} rồi thử lại.`
     }
-    if (!opts.anonymous && (res.status === 401 || res.status === 403)) {
+    // 403 có mã nghiệp vụ (vd FEATURE_DISABLED khi tắt trợ lý) không phải lỗi phiên đăng nhập
+    if (!opts.anonymous && (res.status === 401 || (res.status === 403 && !code))) {
       logout(res.status === 401 ? 'expired' : message === 'Tài khoản đã bị khóa' ? 'locked' : 'forbidden')
     }
     throw new ApiError(res.status, message, data)
@@ -278,4 +409,28 @@ export const api = {
     request<Paged<ConfigChange> & { counts: Partial<Record<ConfigSection, number>> }>('GET', '/admin/config/history', { query: q }),
   setMaintenance: (body: { enabled: boolean; message?: string; endsAt?: string | null }) => request<Maintenance>('POST', '/admin/config/maintenance', { body }),
   testSmtp: () => request<SmtpTestResult>('POST', '/admin/config/smtp/test'),
+
+  aiConversations: (q: { archived?: boolean; page?: number; limit?: number }) =>
+    request<Paged<AiConversation>>('GET', '/ai/conversations', { query: { ...q, archived: q.archived ? 'true' : undefined } }),
+  aiConversation: (id: string) => request<AiConversation & { messages: AiMessage[] }>('GET', `/ai/conversations/${id}`),
+  aiCreateConversation: (title?: string) => request<AiConversation>('POST', '/ai/conversations', { body: title ? { title } : {} }),
+  aiUpdateConversation: (id: string, body: { title?: string; archived?: boolean; pinned?: boolean }) =>
+    request<AiConversation>('PATCH', `/ai/conversations/${id}`, { body }),
+  aiDeleteConversation: (id: string) => request<null>('DELETE', `/ai/conversations/${id}`),
+  aiPost: (id: string, text: string) =>
+    request<{ userMessage: AiMessage; message: AiMessage; draft: AiDraft | null }>('POST', `/ai/conversations/${id}/messages`, { body: { text } }),
+  /** Bản sửa (`payload`) bỏ trống = xác nhận nguyên nháp. `result` = kết quả của API nghiệp vụ (vd `{recipients}` khi gửi thông báo) */
+  aiConfirmDraft: (id: string, payload?: unknown) =>
+    request<{ draft: AiDraft; result: unknown; idempotent: boolean }>('POST', `/ai/drafts/${id}/confirm`, { body: payload ? { payload } : {} }),
+  aiCancelDraft: (id: string) => request<{ draft: AiDraft; idempotent: boolean }>('POST', `/ai/drafts/${id}/cancel`),
+  aiFeedback: (id: string, rating: 1 | -1) => request<unknown>('POST', `/ai/messages/${id}/feedback`, { body: { rating } }),
+
+  aiStats: (days: number) => request<AiStats>('GET', '/admin/ai/stats', { query: { days } }),
+  aiRules: (q: { status?: AiKnowledgeStatus; limit?: number }) => request<Paged<AiRule>>('GET', '/admin/ai/rules', { query: q }),
+  aiExamples: (q: { status?: AiKnowledgeStatus; limit?: number }) => request<Paged<AiExample>>('GET', '/admin/ai/examples', { query: q }),
+  aiDecideRule: (id: string, approve: boolean) => request<AiRule>('POST', `/admin/ai/rules/${id}/${approve ? 'approve' : 'reject'}`),
+  aiDecideExample: (id: string, approve: boolean) => request<AiExample>('POST', `/admin/ai/examples/${id}/${approve ? 'approve' : 'reject'}`),
+  aiRuns: (limit = 20) => request<AiLearningRun[]>('GET', '/admin/ai/learning/runs', { query: { limit } }),
+  aiUserUsage: (q: { q?: string; page?: number; limit?: number }) => request<Paged<AiUsageItem>>('GET', '/admin/ai/usage', { query: q }),
+  aiOllamaTest: (body: { url?: string; chatModel?: string; embedModel?: string }) => request<OllamaTestResult>('POST', '/admin/ai/ollama/test', { body }),
 }

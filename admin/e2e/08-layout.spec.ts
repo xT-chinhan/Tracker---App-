@@ -8,6 +8,8 @@ const PAGES = [
   ['/categories', 'Danh mục hệ thống'],
   ['/broadcasts', 'Thông báo hệ thống'],
   ['/account', 'Tài khoản'],
+  ['/assistant', 'Trợ lý AI'],
+  ['/learning', 'Trung tâm học'],
 ] as const
 
 for (const [w, h, label, sidebar] of [[1440, 900, 'desktop', 248], [1024, 768, 'tablet', 72]] as const) {

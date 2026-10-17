@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight, Megaphone, Send, Signal, Users, Wifi } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Megaphone, Send, Signal, Sparkles, Users, Wifi } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Field, Input, Textarea } from '@/components/ui/input'
@@ -88,9 +89,19 @@ function PhonePreview({ mode, title, body, previous }: { mode: 'app' | 'push'; t
   )
 }
 
+/** Nháp do Trợ lý AI soạn (A10 → A7): gửi bằng xác nhận nháp để trợ lý ghi nhận chấp nhận / sửa. */
+type AiDraftState = { id: string; conversationId: string; title: string; body: string }
+
 export default function BroadcastsPage() {
   const qc = useQueryClient()
-  const [draft, setDraft] = useState<Draft>(loadDraft)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [aiDraft, setAiDraft] = useState<AiDraftState | null>(() => (location.state as { aiDraft?: AiDraftState } | null)?.aiDraft ?? null)
+  const [draft, setDraft] = useState<Draft>(() => (aiDraft ? { title: aiDraft.title.slice(0, TITLE_MAX), body: aiDraft.body.slice(0, BODY_MAX) } : loadDraft()))
+  // Bỏ state khỏi lịch sử để tải lại trang không điền lại nháp đã gửi
+  useEffect(() => {
+    if ((location.state as { aiDraft?: unknown } | null)?.aiDraft) navigate(location.pathname, { replace: true, state: null })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const [errors, setErrors] = useState<{ title?: string; body?: string }>({})
   const [mode, setMode] = useState<'app' | 'push'>('app')
   const [confirm, setConfirm] = useState<ConfirmOptions | null>(null)
@@ -117,12 +128,21 @@ export default function BroadcastsPage() {
   }, [draft])
 
   const send = useMutation({
-    mutationFn: () => api.broadcast({ title: draft.title.trim(), body: draft.body.trim() }),
+    mutationFn: async () => {
+      const body = { title: draft.title.trim(), body: draft.body.trim() }
+      if (!aiDraft) return api.broadcast(body)
+      const out = await api.aiConfirmDraft(aiDraft.id, body)
+      return { ...body, recipients: (out.result as { recipients: number }).recipients }
+    },
     onSuccess: (b) => {
       localStorage.removeItem(DRAFT_KEY)
       setDraft({ title: '', body: '' })
       notify.success(`Đã gửi thông báo tới ${formatNumber(b.recipients)} người`, { description: b.title, icon: <Send /> })
       qc.invalidateQueries({ queryKey: ['broadcasts'] })
+      if (aiDraft) {
+        qc.invalidateQueries({ queryKey: ['ai-conv', aiDraft.conversationId] })
+        setAiDraft(null)
+      }
     },
     onError: (e) => notify.error('Không gửi được thông báo', e.message),
   })
@@ -157,6 +177,13 @@ export default function BroadcastsPage() {
         <div className="col-span-12 flex flex-col gap-5 xl:col-span-8">
           <Card>
             <form onSubmit={submit} className="flex flex-col gap-4">
+              {aiDraft && (
+                <div className="-mt-1 flex items-center gap-2.5 rounded-md bg-background px-3.5 py-2.5 text-[13px] text-muted-foreground" data-testid="bc-ai-note">
+                  <Sparkles className="size-4 shrink-0 text-foreground" />
+                  <span className="min-w-0 flex-1">Do Trợ lý AI soạn. Sửa thoải mái trước khi gửi, trợ lý không tự gửi.</span>
+                  <Link to={`/assistant/${aiDraft.conversationId}`} className="inline-flex shrink-0 items-center gap-1 font-semibold text-foreground hover:underline"><ArrowLeft className="size-3.5" />Về cuộc trò chuyện</Link>
+                </div>
+              )}
               <CardHeader
                 title="Soạn thông báo"
                 aside={draft.savedAt && <span className="text-body-s font-medium text-muted-foreground tabular-nums" data-testid="draft-saved">Bản nháp tự lưu lúc {formatTime(draft.savedAt)}</span>}

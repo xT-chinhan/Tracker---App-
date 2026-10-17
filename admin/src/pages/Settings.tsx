@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   AppWindow, ArrowLeftRight, ArrowRight, Banknote, CalendarClock, CircleAlert, CircleCheck, Construction, Download, ExternalLink, History,
   KeyRound, Lock, LogIn, Mail, MailCheck, MailWarning, PencilLine, Phone, PiggyBank, Repeat, RotateCcw, Send, ShieldX, Signal,
-  Smartphone, Timer, WalletCards, Wifi, X, Zap,
+  Smartphone, Sparkles, Timer, WalletCards, Wifi, X, Zap, Server, PlugZap, Cpu, Database,
 } from 'lucide-react'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle,
@@ -21,14 +21,14 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Bubble } from '@/components/CategoryIcon'
 import { ConfirmDialog, type ConfirmOptions } from '@/components/ConfirmDialog'
 import { Chip, ErrorState, PageHeader, Pagination, TableSkeleton, UserBubble } from '@/components/common'
-import { api, ApiError, auth, type ConfigSection, type ConfigValue, type SmtpTestResult, type SystemConfig } from '@/lib/api'
+import { api, ApiError, auth, type ConfigSection, type ConfigValue, type OllamaTestResult, type SmtpTestResult, type SystemConfig } from '@/lib/api'
 import { formatDate, formatDayMonth, formatNumber, formatTime, isToday } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
 /* ============================== Định nghĩa trường ============================== */
 
 type Kind = 'text' | 'int' | 'bool' | 'datetime' | 'enum' | 'secret'
-type Format = 'email' | 'https' | 'version' | 'phone' | 'from'
+type Format = 'email' | 'https' | 'version' | 'phone' | 'from' | 'url'
 interface Def {
   section: ConfigSection
   field: string
@@ -49,7 +49,11 @@ const FEATURES = [
   { field: 'featureTransfers', label: 'Chuyển tiền giữa ví', desc: 'Chuyển số dư từ ví này sang ví khác.', icon: ArrowLeftRight },
   { field: 'featureCsvExport', label: 'Xuất CSV', desc: 'Xuất giao dịch theo tháng ở màn Báo cáo.', icon: Download },
   { field: 'featureQuickTemplates', label: 'Mẫu nhập nhanh', desc: 'Lưu sẵn giao dịch hay dùng để ghi một chạm.', icon: Zap },
+  { field: 'featureAi', label: 'Trợ lý AI', desc: 'Hỏi chi tiêu, ghi nhanh bằng một câu. Cùng công tắc với Cấu hình › Trợ lý AI.', icon: Sparkles },
 ] as const
+/** `business.featureAi` và `ai.enabled` là cùng một công tắc (backend ghi cả hai) → cả hai nơi đều sửa `ai.enabled` */
+const featureKey = (field: string) => (field === 'featureAi' ? 'ai.enabled' : `business.${field}`)
+const PROVIDER_LABEL: Record<string, string> = { ollama: 'Ollama · nội bộ', fake: 'Giả lập (kiểm thử)' }
 
 const DEFS: Def[] = [
   D('general', 'appName', 'Tên ứng dụng', 'text', { required: true, maxLen: 50 }),
@@ -85,6 +89,18 @@ const DEFS: Def[] = [
   D('mobile', 'iosMinVersion', 'Bản tối thiểu · iOS', 'text', { required: true, format: 'version' }),
   D('mobile', 'iosStoreUrl', 'Link App Store', 'text', { format: 'https', maxLen: 300 }),
   D('mobile', 'releaseNotes', 'Ghi chú cập nhật', 'text', { maxLen: 300 }),
+  D('ai', 'enabled', 'Bật trợ lý', 'bool'),
+  D('ai', 'provider', 'Nhà cung cấp', 'enum'),
+  D('ai', 'ollamaUrl', 'Địa chỉ Ollama', 'text', { required: true, maxLen: 300, format: 'url' }),
+  D('ai', 'chatModel', 'Model trả lời', 'text', { required: true, maxLen: 100 }),
+  D('ai', 'embedModel', 'Model embedding', 'text', { required: true, maxLen: 100 }),
+  D('ai', 'timeoutSeconds', 'Chờ tối đa mỗi câu trả lời', 'int', { min: 5, max: 600, unit: 'giây' }),
+  D('ai', 'dailyMessageLimitPerUser', 'Tin nhắn mỗi người mỗi ngày', 'int', { min: 1, max: 100000, unit: 'tin' }),
+  D('ai', 'maxConversationsPerUser', 'Cuộc trò chuyện tối đa mỗi người', 'int', { min: 1, max: 10000, unit: 'cuộc' }),
+  D('ai', 'autoApproveEnabled', 'Tự áp dụng luật chung', 'bool'),
+  D('ai', 'autoApproveMinUsers', 'Tự áp dụng khi đủ số người', 'int', { min: 5, max: 100000, unit: 'người' }),
+  D('ai', 'autoApproveMinSupport', 'Tự áp dụng khi đủ số lần', 'int', { min: 1, max: 100000, unit: 'lần' }),
+  D('ai', 'autoApproveMinPrecision', 'Tự áp dụng khi đúng từ', 'int', { min: 50, max: 100, unit: '%' }),
 ]
 const DEF = new Map(DEFS.map((d) => [`${d.section}.${d.field}`, d]))
 
@@ -95,9 +111,10 @@ const SECTIONS = [
   { slug: 'mat-khau', api: 'password', label: 'Mật khẩu & OTP', short: 'Mật khẩu & OTP', icon: KeyRound },
   { slug: 'nghiep-vu', api: 'business', label: 'Nghiệp vụ', short: 'Nghiệp vụ', icon: WalletCards },
   { slug: 'ung-dung', api: 'mobile', label: 'Ứng dụng di động', short: 'Ứng dụng', icon: Smartphone },
+  { slug: 'tro-ly', api: 'ai', label: 'Trợ lý AI', short: 'Trợ lý AI', icon: Sparkles },
 ] as const
 const SECTION_SHORT = Object.fromEntries(SECTIONS.map((s) => [s.api, s.short])) as Record<ConfigSection, string>
-const SECURITY_LABEL: Record<string, string> = { starttls: 'STARTTLS', ssl: 'SSL/TLS', none: 'Không mã hóa' }
+const SECURITY_LABEL: Record<string, string> = { starttls: 'STARTTLS', ssl: 'SSL/TLS', none: 'Không mã hóa', ...PROVIDER_LABEL }
 
 /* ============================== Giá trị nháp ============================== */
 
@@ -154,6 +171,7 @@ function validateOne(def: Def, v: ConfigValue): string | undefined {
     if (s && def.format === 'version' && !VERSION_RE.test(s)) return 'Phiên bản dạng x.y.z, vd 1.4.0'
     if (s && def.format === 'phone' && !PHONE_RE.test(s)) return 'Số điện thoại không hợp lệ'
     if (s && def.format === 'from' && !FROM_RE.test(s)) return 'Dạng "Tên <email@miền>" hoặc một email'
+    if (s && def.format === 'url' && !/^https?:\/\/[^\s/]+(\/[^\s]*)?$/.test(s)) return 'Link phải bắt đầu bằng http:// hoặc https://'
   }
 }
 
@@ -438,6 +456,8 @@ export default function SettingsPage() {
             <BusinessSection c={ctx} />
           ) : section === 'ung-dung' ? (
             <MobileSection c={ctx} />
+          ) : section === 'tro-ly' ? (
+            <AiSection c={ctx} />
           ) : (
             <HistorySection />
           )}
@@ -1023,7 +1043,7 @@ function BusinessSection({ c }: { c: Ctx }) {
             <p className="mt-1 text-body-s font-medium text-muted-foreground">Tắt thì ẩn khỏi app, dữ liệu cũ vẫn được giữ.</p>
           </div>
           {FEATURES.map((f) => {
-            const k = `business.${f.field}`
+            const k = featureKey(f.field)
             const on = c.value(k) === true
             const offSince = !on && !c.isDirty(k) && c.cfg.updated[k] ? `Tắt từ ${formatDayMonth(c.cfg.updated[k].at)}` : ''
             const meta = offSince || (on ? counts[f.field] : '')
@@ -1234,6 +1254,133 @@ function HistorySection() {
           </>
         )}
       </Card>
+    </>
+  )
+}
+
+/* ============================== Trợ lý AI ============================== */
+
+function AiSection({ c }: { c: Ctx }) {
+  const [test, setTest] = useState<OllamaTestResult | null>(null)
+  const ollama = useMutation({
+    mutationFn: () => api.aiOllamaTest({ url: String(c.value('ai.ollamaUrl')).trim(), chatModel: String(c.value('ai.chatModel')).trim(), embedModel: String(c.value('ai.embedModel')).trim() }),
+    onSuccess: setTest,
+    onError: (e) => notify.error('Không kiểm tra được kết nối', e.message),
+  })
+  const enabled = c.server('ai.enabled') === true
+  const provider = String(c.value('ai.provider'))
+  const fake = provider === 'fake'
+  const models = test?.models ?? []
+  const modelRow = (k: string, desc: string, icon: ReactNode) => (
+    <SettingRow label={DEF.get(k)!.label} desc={desc} changed={c.isDirty(k)} testId={`row-${k}`}>
+      <Input
+        value={String(c.value(k))}
+        onChange={(e) => c.set(k, e.target.value)}
+        aria-label={DEF.get(k)!.label}
+        aria-invalid={!!c.error(k)}
+        icon={icon}
+        list={models.length ? 'ollama-models' : undefined}
+        data-testid={`in-${k}`}
+      />
+      {c.isDirty(k) && !c.error(k) && <Was>{display(k, c.server(k))}</Was>}
+      <FieldError>{c.error(k)}</FieldError>
+    </SettingRow>
+  )
+  return (
+    <>
+      <SectionHead
+        title="Trợ lý AI"
+        desc="Mô hình chạy nội bộ, giới hạn dùng và ngưỡng tự học. Áp dụng cho trợ lý của người dùng và của quản trị."
+        aside={enabled ? <Badge variant="success" data-testid="ai-status"><CircleCheck />Đang chạy</Badge> : <Badge data-testid="ai-status">Đang tắt</Badge>}
+      />
+      <SettingCard title="Trạng thái">
+        <SettingRow label="Bật trợ lý" desc="Tắt thì trợ lý ẩn khỏi app, cuộc trò chuyện cũ vẫn giữ. Cùng công tắc với Nghiệp vụ › Tính năng trong app." inline changed={c.isDirty('ai.enabled')} testId="row-ai.enabled">
+          <Switch checked={c.value('ai.enabled') === true} onCheckedChange={(v) => c.set('ai.enabled', v)} aria-label="Bật trợ lý" data-testid="in-ai.enabled" />
+          {c.isDirty('ai.enabled') && <Was>{display('ai.enabled', c.server('ai.enabled'))}</Was>}
+        </SettingRow>
+      </SettingCard>
+
+      <SettingCard
+        title="Mô hình"
+        aside={<Button variant="secondary" size="sm" disabled={fake || ollama.isPending} onClick={() => ollama.mutate()} data-testid="ollama-test"><PlugZap /> Kiểm tra kết nối</Button>}
+      >
+        <SettingRow label="Nhà cung cấp" desc={fake ? 'Trả lời tất định, không gọi model. Chỉ dùng khi kiểm thử.' : 'Model chạy trên máy chủ của Thu Chi. Dữ liệu không gửi ra ngoài.'} changed={c.isDirty('ai.provider')} testId="row-ai.provider">
+          <Tabs value={provider} onValueChange={(v) => c.set('ai.provider', v)}>
+            <TabsList className="w-full">
+              {Object.entries(PROVIDER_LABEL).map(([v, label]) => <TabsTrigger key={v} value={v} className="flex-1" data-testid={`provider-${v}`}>{label}</TabsTrigger>)}
+            </TabsList>
+          </Tabs>
+          {c.isDirty('ai.provider') && <Was>{display('ai.provider', c.server('ai.provider'))}</Was>}
+        </SettingRow>
+        <SettingRow label="Địa chỉ Ollama" desc="Máy chủ Ollama trong mạng nội bộ." changed={c.isDirty('ai.ollamaUrl')} testId="row-ai.ollamaUrl">
+          <TextSetting c={c} k="ai.ollamaUrl" icon={<Server />} placeholder="http://localhost:11434" />
+          {c.isDirty('ai.ollamaUrl') && !c.error('ai.ollamaUrl') && <Was>{display('ai.ollamaUrl', c.server('ai.ollamaUrl'))}</Was>}
+          <FieldError>{c.error('ai.ollamaUrl')}</FieldError>
+          {test && (
+            <div
+              className={cn('flex items-start gap-2.5 rounded-md px-3.5 py-3 text-[13px] leading-normal', test.ok ? 'bg-success-soft text-income' : 'bg-destructive-soft text-destructive')}
+              role="status"
+              data-testid="ollama-result"
+            >
+              {test.ok ? <CircleCheck className="mt-px size-4 shrink-0" /> : <CircleAlert className="mt-px size-4 shrink-0" />}
+              <p>
+                {test.error ? (
+                  <>{test.error} · {formatTime(test.at)}</>
+                ) : (
+                  <>
+                    Kết nối được lúc {formatTime(test.at)} · {formatNumber(test.ms)} ms ·{' '}
+                    {[test.chatModel, test.embedModel].map((m, i) => (
+                      <span key={m.name}>{i > 0 && ', '}<b className="font-semibold">{m.name}</b> {m.loaded ? 'đã tải' : 'chưa tải'}</span>
+                    ))}
+                  </>
+                )}
+              </p>
+            </div>
+          )}
+          {models.length > 0 && <datalist id="ollama-models">{models.map((m) => <option key={m} value={m} />)}</datalist>}
+        </SettingRow>
+        {modelRow('ai.chatModel', 'Model chỉ điền khuôn trả lời. Số tiền, ngày, ví luôn do code tính.', <Cpu />)}
+        {modelRow('ai.embedModel', 'Dùng để định tuyến câu hỏi và tìm ví dụ giống nhau. Đổi model thì kho ví dụ cũ phải tính lại.', <Database />)}
+      </SettingCard>
+
+      <SettingCard title="Giới hạn">
+        <NumberRow c={c} k="ai.dailyMessageLimitPerUser" desc="Hết lượt thì app báo giờ mở lại. Xác nhận nháp và đọc lại không tính lượt." range="1–100.000 tin" />
+        <NumberRow c={c} k="ai.maxConversationsPerUser" desc="Đạt giới hạn thì cuộc cũ nhất không ghim tự lưu trữ." range="1–10.000 cuộc" />
+        <NumberRow c={c} k="ai.timeoutSeconds" desc="Quá thời gian thì app báo “Trợ lý đang bận, thử lại sau”." range="5–600 giây" />
+      </SettingCard>
+
+      <SettingCard title="Tự học" aside={<span className="text-body-s font-medium text-muted-foreground">Chạy lúc 02:30 mỗi đêm, tuần tự</span>}>
+        <SettingRow label="Tự áp dụng luật chung" desc="Tắt thì mọi luật chung chờ duyệt ở Trung tâm học. Luật làm bộ đề tụt điểm luôn bị loại." inline changed={c.isDirty('ai.autoApproveEnabled')} testId="row-ai.autoApproveEnabled">
+          <Switch checked={c.value('ai.autoApproveEnabled') === true} onCheckedChange={(v) => c.set('ai.autoApproveEnabled', v)} aria-label="Tự áp dụng luật chung" data-testid="in-ai.autoApproveEnabled" />
+          {c.isDirty('ai.autoApproveEnabled') && <Was>{display('ai.autoApproveEnabled', c.server('ai.autoApproveEnabled'))}</Was>}
+        </SettingRow>
+        <SettingRow
+          label="Tự áp dụng khi"
+          desc="Không đủ thì chờ duyệt ở Trung tâm học."
+          changed={['ai.autoApproveMinUsers', 'ai.autoApproveMinSupport', 'ai.autoApproveMinPrecision'].some(c.isDirty)}
+          testId="row-ai.autoApprove"
+        >
+          <div className="flex flex-wrap items-center gap-2.5">
+            <NumberBox c={c} k="ai.autoApproveMinUsers" width={128} />
+            <NumberBox c={c} k="ai.autoApproveMinSupport" width={116} />
+            <span className="text-muted-foreground">đúng ≥</span>
+            <NumberBox c={c} k="ai.autoApproveMinPrecision" width={100} />
+          </div>
+          {['ai.autoApproveMinUsers', 'ai.autoApproveMinSupport', 'ai.autoApproveMinPrecision'].some(c.isDirty) && (
+            <Was>{display('ai.autoApproveMinUsers', c.server('ai.autoApproveMinUsers'))} · {display('ai.autoApproveMinSupport', c.server('ai.autoApproveMinSupport'))} · đúng ≥ {display('ai.autoApproveMinPrecision', c.server('ai.autoApproveMinPrecision'))}</Was>
+          )}
+          <FieldError>{c.error('ai.autoApproveMinUsers') ?? c.error('ai.autoApproveMinSupport') ?? c.error('ai.autoApproveMinPrecision')}</FieldError>
+        </SettingRow>
+        {([
+          ['Luật riêng của một người bật khi', 'Chỉ áp dụng cho chính người đó.', '3 lần khớp, đúng ≥ 85%'],
+          ['Tắt luật khi', 'Số lần có hại đạt mức này và nhiều hơn số lần có ích.', '2 lần có hại'],
+          ['Mẫu câu vào kho chung cần', 'Số người khác nhau đã xác nhận cùng mẫu. Người dùng tắt “Góp ví dụ ẩn danh” thì không được tính.', '5 người'],
+        ] as const).map(([label, desc, value]) => (
+          <SettingRow key={label} label={label} desc={desc} inline>
+            <span className="inline-flex items-center gap-1.5 text-sm font-semibold tabular-nums">{value}<Lock className="size-3.5 text-faint" aria-label="Cố định" /></span>
+          </SettingRow>
+        ))}
+      </SettingCard>
     </>
   )
 }
