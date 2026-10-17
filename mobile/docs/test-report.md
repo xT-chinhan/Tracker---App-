@@ -142,3 +142,17 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Hạn mức & Bảo trì `30-ai-11` & `30-ai-12a` | Đạt (Card cảnh báo vượt hạn mức ngày 30/30 tin kèm thời gian làm mới `resetAt`, banner vàng cảnh báo chế độ bảo trì tạm thời 503) |
 | Màn hình Cài đặt trợ lý AI `30-ai-14` (`AiSettingsScreen`) | Đạt (Card hạn mức hôm nay với thanh tiến độ xanh/vàng/đỏ, số tin đã dùng / tổng hạn mức; danh sách 'Điều trợ lý đã học' với icon Sparkles và nút xóa bộ nhớ; toggle 'Đóng góp ví dụ ẩn danh'; liên kết đến màn hình Cuộc trò chuyện đã lưu trữ) |
 
+## M11 — Tối ưu hóa, Skeleton loading & Phục hồi lỗi mạng (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 61 test (Bao gồm test skeleton loading mockup `23-dang-tai.png`, AI, Settings, Wallets, Recurring, Budgets, Savings, Reports, History, Home, Notifications, Auth, Formatter) |
+| Skeleton loading Trang chủ `23-dang-tai.png` | Đạt (Card Số dư với thanh 'Tổng số dư', khối số tiền lớn, divider nét đứt, thanh 'Ngân sách' và 2 thanh chi tiết mỗi ngày; 2 nút hành động đen/trắng '+ Ghi giao dịch' & 'Chuyển tiền' hiển thị sẵn sàng tương tác; 3 pill skeleton cho mục thường dùng; card danh sách giao dịch gần đây với avatar tròn 40px, 2 dòng nội dung và khối số tiền bên phải) |
+| `AppSkeleton` Animation & Khả năng tiếp cận | Đạt (Shimmer gradient mượt mà với `ShaderMask`, hỗ trợ hình dạng `BoxShape.circle` và tùy biến `borderRadius`, tự động tắt hoạt ảnh khi bật `disableAnimations` / reduceMotion của hệ thống) |
+| Skeleton & Tải danh sách các màn hình khác | Đạt (Lịch sử giao dịch hiển thị card skeleton đầy đủ icon/dòng/số tiền thay vì box đơn thuần; Báo cáo, Ngân sách, Tiết kiệm, Ví đều có skeleton có cấu trúc) |
+| Kéo để làm mới (Pull-to-refresh) | Đạt (`RefreshIndicator` tích hợp trên toàn bộ các màn hình dữ liệu: Trang chủ, Lịch sử, Báo cáo, Ngân sách, Tiết kiệm, Ví) |
+| Xử lý mất mạng & Phục hồi lỗi | Đạt (Tất cả thông báo lỗi kết nối được chuyển ngữ tiếng Việt thân thiện trong `ApiException`, có nút 'Thử lại' trên các card báo cáo/trạng thái lỗi để gọi lại API an toàn) |
+
+

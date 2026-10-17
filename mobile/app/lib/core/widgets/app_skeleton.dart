@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 import '../theme/app_tokens.dart';
 
 class AppSkeleton extends StatefulWidget {
-  const AppSkeleton({required this.width, required this.height, super.key});
+  const AppSkeleton({
+    required this.width,
+    required this.height,
+    this.borderRadius,
+    this.shape = BoxShape.rectangle,
+    super.key,
+  });
 
   final double width;
   final double height;
+  final BorderRadiusGeometry? borderRadius;
+  final BoxShape shape;
 
   @override
   State<AppSkeleton> createState() => _AppSkeletonState();
@@ -40,7 +48,11 @@ class _AppSkeletonState extends State<AppSkeleton>
       height: widget.height,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(context.radius.xs),
+          shape: widget.shape,
+          borderRadius: widget.shape == BoxShape.circle
+              ? null
+              : (widget.borderRadius ??
+                    BorderRadius.circular(context.radius.xs)),
           color: const Color(0xFFECEBE7),
         ),
       ),

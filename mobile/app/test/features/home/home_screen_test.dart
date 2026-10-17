@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:app/core/widgets/app_skeleton.dart';
 
 import 'package:app/core/theme/app_theme.dart';
 import 'package:app/features/auth/application/app_session.dart';
@@ -190,6 +193,52 @@ void main() {
     expect(fakeRepo.useTemplateCallCount, 1);
     expect(find.text('Đã ghi: Cà phê sáng'), findsOneWidget);
   });
+
+  testWidgets('HomeScreen hiển thị skeleton đang tải khớp mockup 23-dang-tai', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    final completer = Completer<StatsBalance>();
+    final session = AppSessionController();
+    session.authenticate(
+      value: userFixture(),
+      publicConfig: publicConfigFixture(),
+    );
+
+    final slowRepo = _DelayedHomeRepository(completer.future);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appSessionProvider.overrideWith((ref) => session),
+          homeRepositoryProvider.overrideWithValue(slowRepo),
+          unreadCountProvider.overrideWith(() => _FakeUnreadCountNotifier(0)),
+        ],
+        child: MaterialApp(theme: AppTheme.light, home: const HomeScreen()),
+      ),
+    );
+
+    await tester.pump();
+
+    // Kiểm tra skeleton cards và nút hành động xuất hiện khớp mockup 23-dang-tai
+    expect(find.byType(AppSkeleton), findsWidgets);
+    expect(find.text('Ghi giao dịch'), findsOneWidget);
+    expect(find.text('Chuyển tiền'), findsOneWidget);
+
+    completer.complete(statsBalanceFixture());
+    await tester.pumpAndSettle();
+  });
+}
+
+class _DelayedHomeRepository extends FakeHomeRepository {
+  _DelayedHomeRepository(this.future);
+  final Future<StatsBalance> future;
+
+  @override
+  Future<StatsBalance> getBalance() => future;
 }
 
 class _FakeUnreadCountNotifier extends UnreadCountNotifier {

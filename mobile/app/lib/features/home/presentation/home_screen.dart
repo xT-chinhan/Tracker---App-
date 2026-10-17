@@ -152,7 +152,7 @@ class HomeScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
 
                 if (state.isLoading && state.balance == null)
-                  const _HomeSkeleton()
+                  _HomeSkeleton(transfersEnabled: transfersEnabled)
                 else ...[
                   // Balance & Budget Card
                   _BalanceCard(
@@ -666,42 +666,175 @@ class _TransactionRow extends StatelessWidget {
 }
 
 class _HomeSkeleton extends StatelessWidget {
-  const _HomeSkeleton();
+  const _HomeSkeleton({this.transfersEnabled = true});
+
+  final bool transfersEnabled;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: const [
-        AppSkeleton(width: double.infinity, height: 190),
-        SizedBox(height: 16),
+      children: [
+        // Balance Card Skeleton matching 23-dang-tai.png
+        AppCard(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppSkeleton(
+                width: 110,
+                height: 14,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              const SizedBox(height: 12),
+              AppSkeleton(
+                width: double.infinity,
+                height: 44,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              const SizedBox(height: 16),
+              const Divider(height: 1, color: Color(0xFFF0EFEC)),
+              const SizedBox(height: 14),
+              AppSkeleton(
+                width: 170,
+                height: 14,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  AppSkeleton(
+                    width: 100,
+                    height: 14,
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  const SizedBox(width: 24),
+                  AppSkeleton(
+                    width: 110,
+                    height: 14,
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Action Buttons: Ghi giao dịch & Chuyển tiền matching 23-dang-tai.png
         Row(
           children: [
             Expanded(
               flex: 145,
-              child: AppSkeleton(width: double.infinity, height: 48),
+              child: AppButton(
+                label: 'Ghi giao dịch',
+                icon: LucideIcons.plus,
+                onPressed: () => context.push('/transactions/new'),
+              ),
             ),
-            SizedBox(width: 10),
-            Expanded(
-              flex: 100,
-              child: AppSkeleton(width: double.infinity, height: 48),
-            ),
+            if (transfersEnabled) ...[
+              const SizedBox(width: 10),
+              Expanded(
+                flex: 100,
+                child: AppButton(
+                  label: 'Chuyển tiền',
+                  icon: LucideIcons.arrow_left_right,
+                  style: AppButtonStyle.secondary,
+                  onPressed: () => context.push('/transfers/new'),
+                ),
+              ),
+            ],
           ],
         ),
-        SizedBox(height: 20),
-        AppSkeleton(width: 100, height: 16),
-        SizedBox(height: 8),
+        const SizedBox(height: 20),
+
+        // Thường dùng / Filter chips title skeleton
+        AppSkeleton(
+          width: 80,
+          height: 14,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        const SizedBox(height: 10),
         Row(
           children: [
-            AppSkeleton(width: 80, height: 36),
-            SizedBox(width: 8),
-            AppSkeleton(width: 90, height: 36),
-            SizedBox(width: 8),
-            AppSkeleton(width: 80, height: 36),
+            Expanded(
+              child: AppSkeleton(
+                width: double.infinity,
+                height: 44,
+                borderRadius: BorderRadius.circular(22),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: AppSkeleton(
+                width: double.infinity,
+                height: 44,
+                borderRadius: BorderRadius.circular(22),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: AppSkeleton(
+                width: double.infinity,
+                height: 44,
+                borderRadius: BorderRadius.circular(22),
+              ),
+            ),
           ],
         ),
-        SizedBox(height: 20),
-        AppSkeleton(width: double.infinity, height: 210),
+        const SizedBox(height: 20),
+
+        // Gần đây title skeleton
+        AppSkeleton(
+          width: 70,
+          height: 14,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        const SizedBox(height: 10),
+
+        // Recent transactions card skeleton
+        AppCard(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            children: [
+              _buildTransactionRowSkeleton(),
+              const Divider(height: 20, indent: 56, color: Color(0xFFF0EFEC)),
+              _buildTransactionRowSkeleton(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTransactionRowSkeleton() {
+    return Row(
+      children: [
+        const AppSkeleton(width: 40, height: 40, shape: BoxShape.circle),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppSkeleton(
+                width: 110,
+                height: 14,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              const SizedBox(height: 6),
+              AppSkeleton(
+                width: 70,
+                height: 12,
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ],
+          ),
+        ),
+        AppSkeleton(
+          width: 60,
+          height: 14,
+          borderRadius: BorderRadius.circular(7),
+        ),
       ],
     );
   }

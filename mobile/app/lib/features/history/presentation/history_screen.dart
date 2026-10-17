@@ -326,7 +326,45 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) => Padding(
                         padding: const EdgeInsets.only(bottom: 12),
-                        child: AppSkeleton(width: double.infinity, height: 84),
+                        child: AppCard(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          child: Row(
+                            children: [
+                              const AppSkeleton(
+                                width: 40,
+                                height: 40,
+                                shape: BoxShape.circle,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppSkeleton(
+                                      width: 120,
+                                      height: 14,
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    AppSkeleton(
+                                      width: 80,
+                                      height: 12,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              AppSkeleton(
+                                width: 70,
+                                height: 16,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       childCount: 4,
                     ),
