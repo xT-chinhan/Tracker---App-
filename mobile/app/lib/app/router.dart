@@ -15,12 +15,14 @@ import '../features/foundation/presentation/foundation_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
+import '../features/recurring/presentation/recurring_screen.dart';
 import '../features/reports/presentation/reports_screen.dart';
 import '../features/savings/presentation/saving_detail_screen.dart';
 import '../features/savings/presentation/savings_screen.dart';
 import '../features/transfers/presentation/transfer_screen.dart';
 import '../features/transactions/presentation/transaction_detail_screen.dart';
 import '../features/transactions/presentation/transaction_entry_screen.dart';
+import '../features/wallets/presentation/wallets_screen.dart';
 import 'shell/app_shell.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -149,10 +151,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/wallets',
-        builder: (context, state) => const FoundationScreen(
-          title: 'Ví',
-          description: 'Danh sách và quản lý các ví tiền.',
-        ),
+        builder: (context, state) => const WalletsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/recurring',
+        builder: (context, state) => const RecurringScreen(),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

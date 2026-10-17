@@ -33,3 +33,31 @@ abstract class WalletListResponse with _$WalletListResponse {
   factory WalletListResponse.fromJson(Map<String, dynamic> json) =>
       _$WalletListResponseFromJson(json);
 }
+
+@freezed
+abstract class CreateWalletDto with _$CreateWalletDto {
+  const factory CreateWalletDto({
+    required String name,
+    required String type,
+    int? initialBalance,
+    String? icon,
+    String? color,
+  }) = _CreateWalletDto;
+
+  factory CreateWalletDto.fromJson(Map<String, dynamic> json) =>
+      _$CreateWalletDtoFromJson(json);
+}
+
+@freezed
+abstract class UpdateWalletDto with _$UpdateWalletDto {
+  const factory UpdateWalletDto({
+    String? name,
+    String? type,
+    int? initialBalance,
+    String? icon,
+    String? color,
+  }) = _UpdateWalletDto;
+
+  factory UpdateWalletDto.fromJson(Map<String, dynamic> json) =>
+      _$UpdateWalletDtoFromJson(json);
+}

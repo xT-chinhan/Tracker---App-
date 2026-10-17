@@ -102,4 +102,16 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Nạp tiền mục tiêu `14-nap-tien-muc-tieu.png` | Đạt (BottomSheet nạp tiền, ô nhập số tiền lớn kèm suffix `đ`, 3 chip số tiền nhanh `500k`, `1M`, số tiền còn lại, danh sách chọn ví trích tiền hiển thị số dư hiện tại và xem trước số dư sau khi nạp `balance → newBalance`, validation không cho nạp vượt số dư ví) |
 | Rút tiền mục tiêu | Đạt (Hộp thoại xác nhận rút toàn bộ số tiền tiết kiệm về ví đã chọn, hoàn trả số dư ví và cập nhật lại tiến độ mục tiêu) |
 
+## M8 — Ví & Giao dịch định kỳ (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 50 test (Bao gồm WalletsScreen, WalletFormSheet, RecurringScreen, RecurringFormSheet, BudgetsScreen, SavingsScreen, ReportsScreen, HistoryScreen, Home, Notifications, Auth, Formatter) |
+| Màn hình Ví `15-vi.png` | Đạt (Tổng số dư 4 ví, thông điệp phân bổ '% nằm ở...', thanh phân bổ tài sản dạng phân đoạn màu, danh sách từng ví với icon/loại, nút 'Chuyển tiền giữa ví', lịch sử các giao dịch chuyển tiền gần đây giữa các ví) |
+| Thao tác Ví (Tạo / Sửa / Lưu trữ / Khôi phục) | Đạt (Sheet tạo/sửa ví, chọn loại BANK / CASH / EWALLET, số dư ban đầu, hỗ trợ lưu trữ ví và khôi phục ví đã lưu trữ) |
+| Màn hình Giao dịch định kỳ `17-dinh-ky.png` | Đạt (Tiêu đề, phân tách nhóm Quy tắc đang chạy và Tạm dừng, card quy tắc với icon tròn, tên quy tắc, danh mục, ví, tần suất 'Hàng tháng vào ngày 1', số tiền màu xanh/đen theo loại, badge trạng thái 'Đang chạy'/'Tạm dừng', menu hành động Tạm dừng/Tiếp tục/Sửa/Xóa quy tắc) |
+| Sheet tạo/sửa giao dịch định kỳ `18-tao-dinh-ky.png` | Đạt (Segment chọn Khoản chi / Thu nhập, ô nhập số tiền lớn kèm suffix `đ`, tên quy tắc, chọn danh mục, chọn ví, chọn tần suất Hàng ngày / Hàng tuần / Hàng tháng / Hàng năm, bộ chọn ngày trong tuần khi lặp hàng tuần, ngày bắt đầu và kết thúc) |
+
 

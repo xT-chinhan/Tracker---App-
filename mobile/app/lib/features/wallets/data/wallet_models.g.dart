@@ -54,3 +54,39 @@ Map<String, dynamic> _$WalletListResponseToJson(_WalletListResponse instance) =>
       'totalBalance': instance.totalBalance,
       'items': instance.items,
     };
+
+_CreateWalletDto _$CreateWalletDtoFromJson(Map<String, dynamic> json) =>
+    _CreateWalletDto(
+      name: json['name'] as String,
+      type: json['type'] as String,
+      initialBalance: (json['initialBalance'] as num?)?.toInt(),
+      icon: json['icon'] as String?,
+      color: json['color'] as String?,
+    );
+
+Map<String, dynamic> _$CreateWalletDtoToJson(_CreateWalletDto instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': instance.type,
+      'initialBalance': instance.initialBalance,
+      'icon': instance.icon,
+      'color': instance.color,
+    };
+
+_UpdateWalletDto _$UpdateWalletDtoFromJson(Map<String, dynamic> json) =>
+    _UpdateWalletDto(
+      name: json['name'] as String?,
+      type: json['type'] as String?,
+      initialBalance: (json['initialBalance'] as num?)?.toInt(),
+      icon: json['icon'] as String?,
+      color: json['color'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateWalletDtoToJson(_UpdateWalletDto instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': instance.type,
+      'initialBalance': instance.initialBalance,
+      'icon': instance.icon,
+      'color': instance.color,
+    };
