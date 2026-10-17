@@ -16,7 +16,7 @@ export const KEY: Record<string, string> = {
   minLength: 'độ dài mật khẩu tối thiểu', otpExpiryMinutes: 'hạn mã OTP (phút)', otpMaxAttempts: 'số lần nhập OTP', otpResendSeconds: 'thời gian chờ gửi lại OTP (giây)',
   budgetWarningPercent: 'ngưỡng cảnh báo ngân sách (%)', budgetExceededPercent: 'ngưỡng vượt ngân sách (%)', defaultWalletName: 'tên ví mặc định',
   featureSavingGoals: 'tính năng tiết kiệm', featureRecurring: 'tính năng định kỳ', featureTransfers: 'tính năng chuyển tiền', featureCsvExport: 'tính năng xuất CSV', featureQuickTemplates: 'tính năng mẫu nhập nhanh',
-  androidLatestVersion: 'phiên bản Android mới nhất', androidMinVersion: 'phiên bản Android tối thiểu', iosLatestVersion: 'phiên bản iOS mới nhất', iosMinVersion: 'phiên bản iOS tối thiểu', releaseNotes: 'ghi chú phát hành', featureAi: 'tính năng trợ lý AI',
+  androidLatestVersion: 'phiên bản Android mới nhất', androidMinVersion: 'phiên bản Android tối thiểu', iosLatestVersion: 'phiên bản iOS mới nhất', iosMinVersion: 'phiên bản iOS tối thiểu', releaseNotes: 'ghi chú phát hành', featureAi: 'tính năng trợ lý AI', featureBankNotifications: 'tính năng ghi từ thông báo ngân hàng',
   enabled: 'bật trợ lý', provider: 'nhà cung cấp mô hình', ollamaUrl: 'địa chỉ Ollama', chatModel: 'model trả lời', embedModel: 'model embedding',
   timeoutSeconds: 'thời gian chờ trả lời (giây)', dailyMessageLimitPerUser: 'tin nhắn mỗi người mỗi ngày', maxConversationsPerUser: 'số cuộc trò chuyện tối đa',
   autoApproveEnabled: 'tự áp dụng luật chung', autoApproveMinUsers: 'số người tối thiểu để tự áp dụng', autoApproveMinSupport: 'số lần tối thiểu để tự áp dụng', autoApproveMinPrecision: 'độ đúng tối thiểu để tự áp dụng (%)',

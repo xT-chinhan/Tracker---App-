@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link, useBlocker, useParams } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  AppWindow, ArrowLeftRight, ArrowRight, Banknote, CalendarClock, CircleAlert, CircleCheck, Construction, Download, ExternalLink, History,
+  AppWindow, ArrowLeftRight, BellRing, ArrowRight, Banknote, CalendarClock, CircleAlert, CircleCheck, Construction, Download, ExternalLink, History,
   KeyRound, Lock, LogIn, Mail, MailCheck, MailWarning, PencilLine, Phone, PiggyBank, Repeat, RotateCcw, Send, ShieldX, Signal,
   Smartphone, Sparkles, Timer, WalletCards, Wifi, X, Zap, Server, PlugZap, Cpu, Database,
 } from 'lucide-react'
@@ -50,6 +50,7 @@ const FEATURES = [
   { field: 'featureCsvExport', label: 'Xuất CSV', desc: 'Xuất giao dịch theo tháng ở màn Báo cáo.', icon: Download },
   { field: 'featureQuickTemplates', label: 'Mẫu nhập nhanh', desc: 'Lưu sẵn giao dịch hay dùng để ghi một chạm.', icon: Zap },
   { field: 'featureAi', label: 'Trợ lý AI', desc: 'Hỏi chi tiêu, ghi nhanh bằng một câu. Cùng công tắc với Cấu hình › Trợ lý AI.', icon: Sparkles },
+  { field: 'featureBankNotifications', label: 'Ghi từ thông báo ngân hàng', desc: 'Chỉ Android. Đọc thông báo biến động số dư của ngân hàng, ví để gợi ý giao dịch; người dùng tự bật, cấp quyền và xác nhận từng khoản.', icon: BellRing },
 ] as const
 /** `business.featureAi` và `ai.enabled` là cùng một công tắc (backend ghi cả hai) → cả hai nơi đều sửa `ai.enabled` */
 const featureKey = (field: string) => (field === 'featureAi' ? 'ai.enabled' : `business.${field}`)

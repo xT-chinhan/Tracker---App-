@@ -29,7 +29,7 @@ export const Public = () => SetMetadata(IS_PUBLIC, true);
 export const Roles = (...roles: Role[]) => SetMetadata(ROLES, roles);
 
 /** Tính năng app bật/tắt được trong Cấu hình hệ thống. */
-export type FeatureName = 'savingGoals' | 'recurring' | 'transfers' | 'csvExport' | 'quickTemplates' | 'ai';
+export type FeatureName = 'savingGoals' | 'recurring' | 'transfers' | 'csvExport' | 'quickTemplates' | 'ai' | 'bankNotifications';
 /** Đánh dấu controller/route thuộc 1 tính năng: tắt => route ghi (khác GET) trả 403 FEATURE_DISABLED; `reads: true` => chặn cả GET. */
 export const Feature = (name: FeatureName, opts: { reads?: boolean } = {}) => SetMetadata(FEATURE, { name, reads: !!opts.reads });
 /** Token DI của SystemConfigService (tránh import vòng giữa common/auth và system-config). */

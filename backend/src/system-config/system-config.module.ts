@@ -76,6 +76,9 @@ const FEATURE_FIELDS: Record<FeatureName, string> = {
   csvExport: 'featureCsvExport',
   quickTemplates: 'featureQuickTemplates',
   ai: 'featureAi',
+  // Chỉ app Android: đọc thông báo biến động số dư ngân hàng / ví (mobile/modules/bank_notification_listener) để gợi ý ghi giao dịch.
+  // Không có route riêng ở backend (app tạo giao dịch qua POST /transactions sau khi người dùng xác nhận); cờ chỉ để app ẩn / hiện.
+  bankNotifications: 'featureBankNotifications',
 };
 
 export const FEATURE_LABELS: Record<FeatureName, string> = {
@@ -85,6 +88,7 @@ export const FEATURE_LABELS: Record<FeatureName, string> = {
   csvExport: 'Xuất CSV',
   quickTemplates: 'Mẫu nhập nhanh',
   ai: 'Trợ lý AI',
+  bankNotifications: 'Ghi từ thông báo ngân hàng',
 };
 
 export const DEFAULT_MAINTENANCE_MESSAGE = 'Ứng dụng đang bảo trì để nâng cấp hệ thống. Dữ liệu của bạn vẫn an toàn, vui lòng quay lại sau ít phút.';

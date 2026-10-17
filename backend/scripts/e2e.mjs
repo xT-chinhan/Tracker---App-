@@ -1606,13 +1606,13 @@ group('auth: quên mật khẩu OTP');
     check('defaults = old behaviour (6 chars, OTP 10/5/60, 80/100, "Tiền mặt", features on, 30 ngày)',
       initial.password.minLength === 6 && initial.password.otpExpiryMinutes === 10 && initial.password.otpMaxAttempts === 5 && initial.password.otpResendSeconds === 60
       && initial.business.budgetWarningPercent === 80 && initial.business.budgetExceededPercent === 100 && initial.business.defaultWalletName === 'Tiền mặt'
-      && ['featureSavingGoals', 'featureRecurring', 'featureTransfers', 'featureCsvExport', 'featureQuickTemplates'].every((k) => initial.business[k] === true)
+      && ['featureSavingGoals', 'featureRecurring', 'featureTransfers', 'featureCsvExport', 'featureQuickTemplates', 'featureBankNotifications'].every((k) => initial.business[k] === true)
       && initial.access.registrationEnabled === true && initial.access.sessionDays === 30, initial);
     r = await req('GET', '/config/public');
     const pub = r.data;
     check('GET /config/public no auth 200, full shape', r.status === 200 && typeof pub.appName === 'string' && pub.currency === 'VND' && typeof pub.registrationEnabled === 'boolean'
       && pub.maintenance && 'enabled' in pub.maintenance && 'message' in pub.maintenance && 'endsAt' in pub.maintenance
-      && ['savingGoals', 'recurring', 'transfers', 'csvExport', 'quickTemplates'].every((k) => typeof pub.features[k] === 'boolean')
+      && ['savingGoals', 'recurring', 'transfers', 'csvExport', 'quickTemplates', 'bankNotifications'].every((k) => typeof pub.features[k] === 'boolean')
       && pub.budget.warningPercent === 80 && pub.budget.exceededPercent === 100 && pub.password.minLength === 6
       && pub.mobile.android && pub.mobile.ios && 'latestVersion' in pub.mobile.android && 'minVersion' in pub.mobile.ios && 'storeUrl' in pub.mobile.ios && 'releaseNotes' in pub.mobile
       && 'supportEmail' in pub && 'hotline' in pub && 'termsUrl' in pub && 'privacyUrl' in pub, pub);
@@ -1867,7 +1867,7 @@ group('auth: quên mật khẩu OTP');
       const tpl = (await req('POST', '/quick-templates', { token: U.token, body: { label: 'Cà phê', title: 'Cà phê', amount: 30000, categoryId: C2('Ăn uống'), walletId: U.cash } })).data;
       const rule = (await req('POST', '/recurring', { token: U.token, body: { walletId: U.cash, categoryId: C2('Hóa đơn'), amount: 100, title: 'Điện', frequency: 'DAILY', startDate: iso(Date.now() + DAY) } })).data;
       check('setup data for 5 features', goal?.id && tr?.id && tpl?.id && rule?.id, { goal, tr, tpl, rule });
-      r = await patch({ business: { featureSavingGoals: false, featureRecurring: false, featureTransfers: false, featureCsvExport: false, featureQuickTemplates: false } });
+      r = await patch({ business: { featureSavingGoals: false, featureRecurring: false, featureTransfers: false, featureCsvExport: false, featureQuickTemplates: false, featureBankNotifications: false } });
       check('disable 5 features', r.status === 200 && r.data.values.business.featureTransfers === false, r.data.values.business);
       r = await req('GET', '/config/public');
       check('public features all false', Object.values(r.data.features).every((v) => v === false), r.data.features);
@@ -1896,7 +1896,7 @@ group('auth: quên mật khẩu OTP');
       check('cron path (admin run-due) paused while recurring disabled', r.status === 200 && r.data.skipped === true && r.data.reason === 'FEATURE_DISABLED', r.data);
       off('GET /export/transactions.csv (export is the feature itself)', await req('GET', '/export/transactions.csv?month=2026-12', { token: U.token }));
       on('GET /transactions unaffected', await req('GET', '/transactions', { token: U.token }));
-      r = await patch({ business: { featureSavingGoals: true, featureRecurring: true, featureTransfers: true, featureCsvExport: true, featureQuickTemplates: true } });
+      r = await patch({ business: { featureSavingGoals: true, featureRecurring: true, featureTransfers: true, featureCsvExport: true, featureQuickTemplates: true, featureBankNotifications: true } });
       check('re-enable features', r.status === 200 && r.data.values.business.featureCsvExport === true, r.data.values.business);
       r = await req('POST', '/transfers', { token: U.token, body: { fromWalletId: bank, toWalletId: U.cash, amount: 1000 } });
       check('re-enabled: POST /transfers 201', r.status === 201, r.data);

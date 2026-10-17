@@ -157,6 +157,8 @@ test('đăng ký & truy cập, mật khẩu & OTP, nghiệp vụ, ứng dụng: 
   // Nghiệp vụ: thanh xem trước theo ngưỡng, ví mặc định, tính năng
   await openSection(page, 'nghiep-vu', 'Nghiệp vụ')
   await expect(page.getByTestId('feature-featureSavingGoals')).toContainText('mục tiêu')
+  await expect(page.getByTestId('feature-featureBankNotifications')).toContainText('Chỉ Android')
+  await expect(input(page, 'business.featureBankNotifications')).toHaveAttribute('aria-checked', 'true')
   await input(page, 'business.budgetWarningPercent').fill('100')
   await expect(page.getByTestId('budget-card').getByRole('alert')).toHaveText('Ngưỡng cảnh báo phải nhỏ hơn ngưỡng vượt')
   await expect(page.getByTestId('savebar-save')).toBeDisabled()
