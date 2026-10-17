@@ -3,10 +3,8 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_tokens.dart';
-import '../../core/widgets/app_card.dart';
-import '../../core/widgets/app_skeleton.dart';
-import '../../core/widgets/icon_bubble.dart';
 import '../../core/widgets/pressable.dart';
+import 'plus_action_menu_sheet.dart';
 
 class AppShell extends StatelessWidget {
   const AppShell({required this.navigationShell, super.key});
@@ -29,25 +27,7 @@ class AppShell extends StatelessWidget {
         currentIndex: navigationShell.currentIndex,
         onSelect: _selectBranch,
         onCreate: () => context.push('/transactions/new'),
-        onCreateLongPress: () => _showQuickCreate(context),
-      ),
-    );
-  }
-
-  Future<void> _showQuickCreate(BuildContext context) {
-    return showModalBottomSheet<void>(
-      context: context,
-      useSafeArea: true,
-      isScrollControlled: true,
-      builder: (sheetContext) => _QuickCreateSheet(
-        onIncome: () {
-          Navigator.of(sheetContext).pop();
-          context.push('/transactions/new?type=income');
-        },
-        onTransfer: () {
-          Navigator.of(sheetContext).pop();
-          context.push('/transfers/new');
-        },
+        onCreateLongPress: () => PlusActionMenuSheet.show(context),
       ),
     );
   }
@@ -168,120 +148,6 @@ class AppBottomBar extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _QuickCreateSheet extends StatelessWidget {
-  const _QuickCreateSheet({required this.onIncome, required this.onTransfer});
-
-  final VoidCallback onIncome;
-  final VoidCallback onTransfer;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        context.spacing.screenPadding,
-        10,
-        context.spacing.screenPadding,
-        24 + MediaQuery.paddingOf(context).bottom,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-            child: Container(
-              width: 36,
-              height: 5,
-              decoration: BoxDecoration(
-                color: const Color(0xFFDAD8D2),
-                borderRadius: BorderRadius.circular(99),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text('Thêm nhanh', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 12),
-          AppCard(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Column(
-              children: [
-                _QuickRow(
-                  icon: LucideIcons.circle_plus,
-                  label: 'Thu nhập',
-                  income: true,
-                  onTap: onIncome,
-                ),
-                const Divider(height: 1, indent: 68),
-                _QuickRow(
-                  icon: LucideIcons.arrow_left_right,
-                  label: 'Chuyển tiền',
-                  onTap: onTransfer,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            'Mẫu nhập nhanh',
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Row(
-            children: [
-              Expanded(child: AppSkeleton(width: double.infinity, height: 46)),
-              SizedBox(width: 8),
-              Expanded(child: AppSkeleton(width: double.infinity, height: 46)),
-              SizedBox(width: 8),
-              Expanded(child: AppSkeleton(width: double.infinity, height: 46)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _QuickRow extends StatelessWidget {
-  const _QuickRow({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.income = false,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final bool income;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: SizedBox(
-        height: 64,
-        child: Row(
-          children: [
-            const SizedBox(width: 16),
-            IconBubble(icon: icon, selected: income),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(label, style: Theme.of(context).textTheme.bodyLarge),
-            ),
-            Icon(
-              LucideIcons.chevron_right,
-              size: 18,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 16),
-          ],
         ),
       ),
     );

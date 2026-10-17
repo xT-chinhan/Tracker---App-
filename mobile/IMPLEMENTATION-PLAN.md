@@ -615,5 +615,6 @@ Tiến độ hiện tại:
 - [x] M1: scaffold Android/iOS, theme/token/font, router/tab bar/nút ＋, widget nền, Dio/token storage, formatter và APK debug chạy trên AVD API 36.
 - [x] M2: cấu hình công khai, khởi động app, luồng xác thực (Login, Register, Forgot/Reset password), quản lý phiên và điều hướng router guard.
 - [x] M3: Trang chủ (số dư, ngân sách, chi tiêu hôm nay/tháng, giao dịch gần đây, mẫu nhanh) và Thông báo (danh sách phân nhóm, đánh dấu đọc, badge).
-- [ ] M4–M10: đang tiếp tục triển khai theo thứ tự của kế hoạch (tiếp theo: M4 Ghi giao dịch, danh mục, mẫu và chuyển tiền).
+- [x] M4: Ghi giao dịch (chi/thu), danh mục (sheet 4-cột, thêm mới), chọn ví, bàn phím số numeric keypad, mẫu nhập nhanh và chuyển tiền giữa các ví.
+- [ ] M5–M10: đang tiếp tục triển khai theo thứ tự của kế hoạch (tiếp theo: M5 Lịch sử, chi tiết giao dịch, sửa/xóa).
 

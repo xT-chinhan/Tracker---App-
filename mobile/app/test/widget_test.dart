@@ -67,7 +67,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Ghi giao dịch'), findsWidgets);
-    expect(find.text('Khoản chi'), findsOneWidget);
+    expect(find.text('Khoản chi'), findsWidgets);
     expect(find.text('0đ'), findsOneWidget);
   });
 
@@ -82,6 +82,6 @@ void main() {
     await tester.pump();
 
     expect(find.text('5.000đ'), findsOneWidget);
-    expect(find.text('Tiếp tục ghi khoản chi'), findsOneWidget);
+    expect(find.text('Lưu khoản chi'), findsOneWidget);
   });
 }

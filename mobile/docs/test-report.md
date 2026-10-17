@@ -49,3 +49,17 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Ẩn/hiện số dư cục bộ không đổi dữ liệu gốc | Đạt |
 | Xử lý timezone Việt Nam độc lập locale | Đạt |
 
+## M4 — Ghi giao dịch, Danh mục, Mẫu nhanh & Chuyển tiền (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 28 test (Bao gồm TransactionEntryScreen, CategoryPickerSheet, TransferScreen, Home, Notifications, Auth, Formatter) |
+| Đọc và tạo danh mục `/categories` (loại EXPENSE, INCOME) | Đạt (Freezed models, sheet UI, 4-cột tròn, chọn & thêm mới) |
+| Đọc danh sách ví `/wallets` cho giao dịch và chuyển tiền | Đạt (Freezed models, sheet chọn ví kèm số dư) |
+| Bàn phím số numeric keypad `05-ghi-giao-dich.png` | Đạt (nhập số tiền, đọc thành chữ tiếng Việt, tự động định dạng) |
+| Tạo giao dịch `/transactions` (chi/thu) | Đạt (validation, lưu khoản chi/thu nhập, refresh home) |
+| Màn hình chuyển tiền `/transfers` (`16-chuyen-tien.png`) | Đạt (đổi chiều ví, chip số tiền nhanh, kiểm tra số dư vượt mức, gọi API) |
+| Menu nút cộng nổi `05b-menu-nut-cong.png` | Đạt (Thu nhập, Chuyển tiền, Mẫu nhập nhanh, xoay `+` thành `×`) |
+

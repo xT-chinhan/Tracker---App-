@@ -1,7 +1,9 @@
 import 'package:app/core/config/public_config.dart';
 import 'package:app/features/auth/data/auth_models.dart';
+import 'package:app/features/categories/data/category_models.dart';
 import 'package:app/features/home/data/home_models.dart';
 import 'package:app/features/notifications/data/notification_models.dart';
+import 'package:app/features/wallets/data/wallet_models.dart';
 
 PublicConfig publicConfigFixture({
   bool maintenance = false,
@@ -149,4 +151,44 @@ NotificationItem notificationItemFixture({
   body: body,
   readAt: readAt,
   createdAt: DateTime.now(),
+);
+
+CategoryItem categoryItemFixture({
+  String id = 'cat-1',
+  String name = 'Ăn uống',
+  String type = 'EXPENSE',
+  String icon = 'utensils',
+  String color = '#EB6834',
+}) => CategoryItem(id: id, name: name, type: type, icon: icon, color: color);
+
+WalletItem walletItemFixture({
+  String id = 'w-1',
+  String name = 'Tiền mặt',
+  String type = 'CASH',
+  int balance = 1000000,
+  int initialBalance = 1000000,
+  String icon = 'wallet',
+  String color = '#10B981',
+}) => WalletItem(
+  id: id,
+  name: name,
+  type: type,
+  balance: balance,
+  initialBalance: initialBalance,
+  icon: icon,
+  color: color,
+);
+
+TransactionPage transactionPageFixture({
+  List<TransactionItem> items = const [],
+  int total = 0,
+  int page = 1,
+  int limit = 20,
+  int totalPages = 1,
+}) => TransactionPage(
+  items: items,
+  total: total,
+  page: page,
+  limit: limit,
+  totalPages: totalPages,
 );

@@ -13,6 +13,7 @@ import '../features/auth/presentation/update_required_screen.dart';
 import '../features/foundation/presentation/foundation_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
+import '../features/transfers/presentation/transfer_screen.dart';
 import '../features/transactions/presentation/transaction_entry_screen.dart';
 import 'shell/app_shell.dart';
 
@@ -150,9 +151,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/transfers/new',
-        builder: (context, state) => const FoundationScreen(
-          title: 'Chuyển tiền',
-          description: 'Chuyển tiền giữa các ví.',
+        builder: (context, state) => const TransferScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/transfer',
+        builder: (context, state) => const TransferScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/transaction-entry',
+        builder: (context, state) => TransactionEntryScreen(
+          initialType: state.uri.queryParameters['type'] == 'income'
+              ? TransactionType.income
+              : TransactionType.expense,
         ),
       ),
       GoRoute(
