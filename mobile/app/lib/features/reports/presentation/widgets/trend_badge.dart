@@ -39,8 +39,8 @@ class TrendBadge extends StatelessWidget {
         : (isUp == false ? LucideIcons.arrow_down_right : LucideIcons.minus);
 
     final pctStr = percentage.abs().toStringAsFixed(
-          percentage.abs() % 1 == 0 ? 0 : 1,
-        );
+      percentage.abs() % 1 == 0 ? 0 : 1,
+    );
 
     return Container(
       height: 26,

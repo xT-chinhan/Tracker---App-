@@ -108,12 +108,42 @@ ReportData mockReportData() {
       ),
     ),
     history: [
-      MonthlyTrendItem(month: '2026-04', income: 22000000, expense: 9200000, net: 12800000),
-      MonthlyTrendItem(month: '2026-05', income: 22000000, expense: 8950000, net: 13050000),
-      MonthlyTrendItem(month: '2026-06', income: 23500000, expense: 10400000, net: 13100000),
-      MonthlyTrendItem(month: '2026-07', income: 22000000, expense: 9750000, net: 12250000),
-      MonthlyTrendItem(month: '2026-08', income: 24200000, expense: 9860000, net: 14340000),
-      MonthlyTrendItem(month: '2026-09', income: 23500000, expense: 8680000, net: 14820000),
+      MonthlyTrendItem(
+        month: '2026-04',
+        income: 22000000,
+        expense: 9200000,
+        net: 12800000,
+      ),
+      MonthlyTrendItem(
+        month: '2026-05',
+        income: 22000000,
+        expense: 8950000,
+        net: 13050000,
+      ),
+      MonthlyTrendItem(
+        month: '2026-06',
+        income: 23500000,
+        expense: 10400000,
+        net: 13100000,
+      ),
+      MonthlyTrendItem(
+        month: '2026-07',
+        income: 22000000,
+        expense: 9750000,
+        net: 12250000,
+      ),
+      MonthlyTrendItem(
+        month: '2026-08',
+        income: 24200000,
+        expense: 9860000,
+        net: 14340000,
+      ),
+      MonthlyTrendItem(
+        month: '2026-09',
+        income: 23500000,
+        expense: 8680000,
+        net: 14820000,
+      ),
     ],
     topCategoryComparison: ComparisonMetric(
       current: 1380000,
@@ -151,10 +181,7 @@ class FakeReportRepository extends ReportRepository {
   }) async {
     return const [
       CategoryReportItem(
-        category: CategorySummaryItem(
-          id: 'cat-1',
-          name: 'Ăn uống',
-        ),
+        category: CategorySummaryItem(id: 'cat-1', name: 'Ăn uống'),
         amount: 2080000,
         count: 10,
         percentage: 25.0,
@@ -179,9 +206,7 @@ class FakeReportRepository extends ReportRepository {
 }
 
 void main() {
-  Widget buildTestableWidget({
-    required FakeReportRepository repo,
-  }) {
+  Widget buildTestableWidget({required FakeReportRepository repo}) {
     final session = AppSessionController();
     session.authenticate(
       value: userFixture(),
@@ -193,10 +218,7 @@ void main() {
         reportRepositoryProvider.overrideWithValue(repo),
         appSessionProvider.overrideWith((ref) => session),
       ],
-      child: MaterialApp(
-        theme: AppTheme.light,
-        home: const ReportsScreen(),
-      ),
+      child: MaterialApp(theme: AppTheme.light, home: const ReportsScreen()),
     );
   }
 
@@ -252,51 +274,49 @@ void main() {
     },
   );
 
-  testWidgets(
-    'ReportsScreen xuất CSV thành công và mở bottom sheet xác nhận',
-    (tester) async {
-      final repo = FakeReportRepository();
+  testWidgets('ReportsScreen xuất CSV thành công và mở bottom sheet xác nhận', (
+    tester,
+  ) async {
+    final repo = FakeReportRepository();
 
-      await tester.pumpWidget(buildTestableWidget(repo: repo));
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(buildTestableWidget(repo: repo));
+    await tester.pumpAndSettle();
 
-      final exportButton = find.byIcon(LucideIcons.download);
-      expect(exportButton, findsOneWidget);
+    final exportButton = find.byIcon(LucideIcons.download);
+    expect(exportButton, findsOneWidget);
 
-      await tester.tap(exportButton);
-      await tester.pumpAndSettle();
+    await tester.tap(exportButton);
+    await tester.pumpAndSettle();
 
-      expect(repo.exportCalls, 1);
-      expect(find.text('Xuất file CSV thành công'), findsOneWidget);
-      expect(find.text('Sao chép nội dung CSV'), findsOneWidget);
-    },
-  );
+    expect(repo.exportCalls, 1);
+    expect(find.text('Xuất file CSV thành công'), findsOneWidget);
+    expect(find.text('Sao chép nội dung CSV'), findsOneWidget);
+  });
 
-  testWidgets(
-    'ReportsScreen chuyển tháng qua lại tải lại báo cáo',
-    (tester) async {
-      final repo = FakeReportRepository();
+  testWidgets('ReportsScreen chuyển tháng qua lại tải lại báo cáo', (
+    tester,
+  ) async {
+    final repo = FakeReportRepository();
 
-      await tester.pumpWidget(buildTestableWidget(repo: repo));
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(buildTestableWidget(repo: repo));
+    await tester.pumpAndSettle();
 
-      final initialCalls = repo.getReportCalls;
+    final initialCalls = repo.getReportCalls;
 
-      // Tap chevron left (tháng trước)
-      final prevBtn = find.byTooltip('Tháng trước');
-      expect(prevBtn, findsOneWidget);
-      await tester.tap(prevBtn);
-      await tester.pumpAndSettle();
+    // Tap chevron left (tháng trước)
+    final prevBtn = find.byTooltip('Tháng trước');
+    expect(prevBtn, findsOneWidget);
+    await tester.tap(prevBtn);
+    await tester.pumpAndSettle();
 
-      expect(repo.getReportCalls, greaterThan(initialCalls));
+    expect(repo.getReportCalls, greaterThan(initialCalls));
 
-      // Tap chevron right (tháng sau)
-      final nextBtn = find.byTooltip('Tháng sau');
-      expect(nextBtn, findsOneWidget);
-      await tester.tap(nextBtn);
-      await tester.pumpAndSettle();
+    // Tap chevron right (tháng sau)
+    final nextBtn = find.byTooltip('Tháng sau');
+    expect(nextBtn, findsOneWidget);
+    await tester.tap(nextBtn);
+    await tester.pumpAndSettle();
 
-      expect(repo.getReportCalls, greaterThan(initialCalls + 1));
-    },
-  );
+    expect(repo.getReportCalls, greaterThan(initialCalls + 1));
+  });
 }

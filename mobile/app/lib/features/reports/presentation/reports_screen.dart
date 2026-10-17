@@ -50,8 +50,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       return currentExpense;
     }
 
-    final daysInMonth =
-        DateTime(selectedMonth.year, selectedMonth.month + 1, 0).day;
+    final daysInMonth = DateTime(
+      selectedMonth.year,
+      selectedMonth.month + 1,
+      0,
+    ).day;
     final currentDay = now.day.clamp(1, daysInMonth);
     if (currentDay == 0 || currentExpense == 0) return currentExpense;
     return ((currentExpense / currentDay) * daysInMonth).round();
@@ -115,19 +118,17 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                       children: [
                         Text(
                           'Xuất file CSV thành công',
-                          style:
-                              Theme.of(sheetContext).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                          style: Theme.of(sheetContext).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
                         ),
                         Text(
                           '$lineCount dòng dữ liệu đã được xuất.',
-                          style:
-                              Theme.of(sheetContext).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(sheetContext)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
+                          style: Theme.of(sheetContext).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  sheetContext,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -185,11 +186,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                       Expanded(
                         child: Text(
                           'Báo cáo',
-                          style:
-                              Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: colors.onSurface,
-                                  ),
+                          style: Theme.of(context).textTheme.headlineLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: colors.onSurface,
+                              ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -220,9 +221,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                                 ),
                                 Text(
                                   _formatMonthLabel(state.selectedMonth),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
+                                  style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: colors.onSurface,
@@ -253,8 +252,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                                       ),
                                     )
                                   : const Icon(LucideIcons.download, size: 20),
-                              onPressed:
-                                  state.isExporting ? null : _handleExportCsv,
+                              onPressed: state.isExporting
+                                  ? null
+                                  : _handleExportCsv,
                               tooltip: 'Xuất CSV',
                               style: IconButton.styleFrom(
                                 backgroundColor: colors.surfaceContainer,
@@ -342,16 +342,12 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                           const SizedBox(height: 8),
                           Text(
                             err.toString(),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: colors.onSurfaceVariant,
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colors.onSurfaceVariant),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
-                          AppButton(
-                            label: 'Thử lại',
-                            onPressed: notifier.load,
-                          ),
+                          AppButton(label: 'Thử lại', onPressed: notifier.load),
                         ],
                       ),
                     ),
@@ -409,20 +405,20 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           Text(
             'Chênh lệch thu chi',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: colors.onSurfaceVariant,
-                  fontSize: 13,
-                ),
+              color: colors.onSurfaceVariant,
+              fontSize: 13,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             MoneyFormatter.format(report.net, signed: true),
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 32,
-                  letterSpacing: -0.03 * 32,
-                  color: colors.onSurface,
-                  fontFeatures: MoneyFormatter.tabularFeatures,
-                ),
+              fontWeight: FontWeight.w700,
+              fontSize: 32,
+              letterSpacing: -0.03 * 32,
+              color: colors.onSurface,
+              fontFeatures: MoneyFormatter.tabularFeatures,
+            ),
           ),
           const SizedBox(height: 12),
           Divider(color: colors.outlineVariant, height: 1),
@@ -446,9 +442,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         const SizedBox(width: 6),
                         Text(
                           'Thu nhập',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: colors.onSurfaceVariant,
-                              ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: colors.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -456,19 +451,15 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                     Text(
                       MoneyFormatter.format(report.income),
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: context.appColors.income,
-                            fontFeatures: MoneyFormatter.tabularFeatures,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        color: context.appColors.income,
+                        fontFeatures: MoneyFormatter.tabularFeatures,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                width: 1,
-                height: 38,
-                color: colors.outlineVariant,
-              ),
+              Container(width: 1, height: 38, color: colors.outlineVariant),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -487,9 +478,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         const SizedBox(width: 6),
                         Text(
                           'Chi tiêu',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: colors.onSurfaceVariant,
-                              ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: colors.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -497,10 +487,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                     Text(
                       MoneyFormatter.format(report.expense),
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: colors.onSurface,
-                            fontFeatures: MoneyFormatter.tabularFeatures,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        color: colors.onSurface,
+                        fontFeatures: MoneyFormatter.tabularFeatures,
+                      ),
                     ),
                   ],
                 ),
@@ -528,15 +518,15 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
             children: [
               Text(
                 'Chi theo danh mục',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
               Text(
                 '${categories.length} nhóm',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: colors.onSurfaceVariant,
-                    ),
+                  color: colors.onSurfaceVariant,
+                ),
               ),
             ],
           ),
@@ -556,23 +546,23 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                     Text(
                       'Tổng chi',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: colors.onSurfaceVariant,
-                          ),
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       MoneyFormatter.format(report.expense),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontFeatures: MoneyFormatter.tabularFeatures,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        fontFeatures: MoneyFormatter.tabularFeatures,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       'Lớn nhất',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colors.onSurfaceVariant,
-                          ),
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -580,8 +570,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                           ? '${topCategory.category.name} · ${topCategory.percentage.toInt()}%'
                           : 'Chưa có',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -613,29 +603,19 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         Expanded(
                           child: Text(
                             item.category.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.w500),
                           ),
                         ),
                         Text(
                           '${item.percentage.toInt()}%',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: colors.onSurfaceVariant,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: colors.onSurfaceVariant),
                         ),
                         const SizedBox(width: 14),
                         Text(
                           MoneyFormatter.format(item.amount),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 fontFeatures: MoneyFormatter.tabularFeatures,
@@ -644,8 +624,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                       ],
                     ),
                   ),
-                  if (!isLast)
-                    Divider(color: colors.outlineVariant, height: 1),
+                  if (!isLast) Divider(color: colors.outlineVariant, height: 1),
                 ],
               );
             }),
@@ -674,8 +653,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 child: Text(
                   'Thu chi 6 tháng',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -693,8 +672,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   Text(
                     'Thu',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
+                      color: colors.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Container(
@@ -709,8 +688,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   Text(
                     'Chi',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
+                      color: colors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -725,9 +704,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           const SizedBox(height: 8),
           Text(
             'Tháng ${state.selectedMonth.month} tính đến hôm nay. Đơn vị: triệu đồng.',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.appColors.faint,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: context.appColors.faint),
           ),
         ],
       ),
@@ -761,9 +740,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         children: [
           Text(
             'So với tháng $prevMonthNum',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
 
@@ -777,7 +756,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
             isUp: expenseDiff > 0 ? true : (expenseDiff < 0 ? false : null),
             badgeType: expenseBadgeType,
           ),
-          Divider(color: Theme.of(context).colorScheme.outlineVariant, height: 1),
+          Divider(
+            color: Theme.of(context).colorScheme.outlineVariant,
+            height: 1,
+          ),
 
           // Row 2: Thu nhập
           _buildComparisonRow(
@@ -836,26 +818,22 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               children: [
                 Text(
                   label,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   '${MoneyFormatter.format(previousAmount)} → ${MoneyFormatter.format(currentAmount)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colors.onSurfaceVariant,
-                        fontFeatures: MoneyFormatter.tabularFeatures,
-                      ),
+                    color: colors.onSurfaceVariant,
+                    fontFeatures: MoneyFormatter.tabularFeatures,
+                  ),
                 ),
               ],
             ),
           ),
-          TrendBadge(
-            percentage: pct,
-            isUp: isUp,
-            type: badgeType,
-          ),
+          TrendBadge(percentage: pct, isUp: isUp, type: badgeType),
         ],
       ),
     );
@@ -872,8 +850,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       report.expense,
       state.selectedMonth,
     );
-    final nextMonthNum =
-        report.forecast.month.split('-').lastOrNull ?? '';
+    final nextMonthNum = report.forecast.month.split('-').lastOrNull ?? '';
 
     return AppCard(
       child: Column(
@@ -881,9 +858,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         children: [
           Text(
             'Dự báo',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 14),
           Row(
@@ -895,32 +872,28 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                     Text(
                       'Cuối tháng ${state.selectedMonth.month}',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: colors.onSurfaceVariant,
-                          ),
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '≈ ${MoneyFormatter.format(forecastEndOfMonth)}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontFeatures: MoneyFormatter.tabularFeatures,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        fontFeatures: MoneyFormatter.tabularFeatures,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       'Dự kiến cả tháng',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: context.appColors.warning,
-                          ),
+                        color: context.appColors.warning,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                width: 1,
-                height: 48,
-                color: colors.outlineVariant,
-              ),
+              Container(width: 1, height: 48, color: colors.outlineVariant),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -929,16 +902,16 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                     Text(
                       'Tháng $nextMonthNum',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: colors.onSurfaceVariant,
-                          ),
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '≈ ${MoneyFormatter.format(report.forecast.expense.predicted)}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontFeatures: MoneyFormatter.tabularFeatures,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        fontFeatures: MoneyFormatter.tabularFeatures,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -946,8 +919,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                           ? 'TB có trọng số'
                           : 'TB các tháng gần nhất',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colors.onSurfaceVariant,
-                          ),
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),

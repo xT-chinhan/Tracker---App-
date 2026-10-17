@@ -88,4 +88,18 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Xu hướng & So sánh `10-bao-cao-xu-huong.png` | Đạt (Biểu đồ cột thu chi 6 tháng với 2 cột xanh/đen mỗi tháng và nhãn T4-T9, Card So sánh tháng trước với badge tỷ lệ % tăng/giảm đổi màu xanh/đỏ chuẩn token, Card Dự báo cuối tháng và tháng tiếp theo) |
 | Xuất CSV `GET /export/transactions.csv` | Đạt (Kiểm tra cờ `features.csvExport`, nút tải xuống trong appbar, hộp thoại thông báo thành công và sao chép nội dung CSV vào clipboard) |
 
+## M7 — Ngân sách & Tiết kiệm (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 44 test (Bao gồm BudgetsScreen, BudgetFormSheet, SavingsScreen, SavingDetailScreen, DepositSheet, SavingFormSheet, ReportsScreen, HistoryScreen, Home, Notifications, Auth, Formatter) |
+| Ngân sách `11-ngan-sach.png` | Đạt (Thanh chuyển tháng `< Tháng 9 >`, card Ngân sách tổng với số tiền còn lại lớn `32px`, nhãn ngày còn lại trong tháng, thanh tiến độ dày `8px` đổi màu theo ngưỡng 80% cảnh báo và 100% vượt hạn mức, nhãn gợi ý chi tiêu hàng ngày "Mỗi ngày còn chi được ... để không vượt", card danh sách ngân sách theo danh mục với icon tròn, tên, số tiền đã chi / hạn mức, badge cảnh báo vàng cam hoặc vượt hạn mức đỏ) |
+| Thao tác Ngân sách | Đạt (Sheet tạo/sửa ngân sách tổng hoặc theo danh mục, chọn danh mục chi tiêu khả dụng, xóa ngân sách có xác nhận, sao chép nhanh ngân sách từ tháng trước) |
+| Tiết kiệm `12-tiet-kiem.png` | Đạt (Card Tổng đã tiết kiệm trên tổng mục tiêu, danh sách thẻ mục tiêu với icon tròn, tên, ngày hạn và số ngày còn lại, thanh tiến độ % hoàn thành, số tiền đã tích lũy / mục tiêu, empty state) |
+| Chi tiết mục tiêu `13-chi-tiet-muc-tieu.png` | Đạt (Header căn giữa với icon tròn 56px, tên mục tiêu, số tiền đã tiết kiệm lớn 40px, ngày hạn, card tiến độ chi tiết tính số tiền cần nạp trung bình mỗi tháng để kịp hạn, 2 nút hành động `+ Nạp tiền` và `Rút tiền`, card danh sách lịch sử nạp/rút từ ví) |
+| Nạp tiền mục tiêu `14-nap-tien-muc-tieu.png` | Đạt (BottomSheet nạp tiền, ô nhập số tiền lớn kèm suffix `đ`, 3 chip số tiền nhanh `500k`, `1M`, số tiền còn lại, danh sách chọn ví trích tiền hiển thị số dư hiện tại và xem trước số dư sau khi nạp `balance → newBalance`, validation không cho nạp vượt số dư ví) |
+| Rút tiền mục tiêu | Đạt (Hộp thoại xác nhận rút toàn bộ số tiền tiết kiệm về ví đã chọn, hoàn trả số dư ví và cập nhật lại tiến độ mục tiêu) |
+
 

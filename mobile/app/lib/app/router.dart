@@ -10,11 +10,14 @@ import '../features/auth/presentation/maintenance_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/reset_password_screen.dart';
 import '../features/auth/presentation/update_required_screen.dart';
+import '../features/budgets/presentation/budgets_screen.dart';
 import '../features/foundation/presentation/foundation_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
 import '../features/reports/presentation/reports_screen.dart';
+import '../features/savings/presentation/saving_detail_screen.dart';
+import '../features/savings/presentation/savings_screen.dart';
 import '../features/transfers/presentation/transfer_screen.dart';
 import '../features/transactions/presentation/transaction_detail_screen.dart';
 import '../features/transactions/presentation/transaction_entry_screen.dart';
@@ -173,10 +176,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/budgets',
-        builder: (context, state) => const FoundationScreen(
-          title: 'Ngân sách',
-          description: 'Quản lý ngân sách chi tiêu.',
-        ),
+        builder: (context, state) => const BudgetsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/savings',
+        builder: (context, state) => const SavingsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/savings/:id',
+        builder: (context, state) =>
+            SavingDetailScreen(goalId: state.pathParameters['id']!),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

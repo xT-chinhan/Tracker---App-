@@ -65,10 +65,7 @@ class ReportRepository {
         .toList();
   }
 
-  Future<String> exportCsv({
-    String? month,
-    String? walletId,
-  }) async {
+  Future<String> exportCsv({String? month, String? walletId}) async {
     final response = await _dio.get<String>(
       'export/transactions.csv',
       queryParameters: {

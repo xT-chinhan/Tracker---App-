@@ -33,8 +33,9 @@ class ReportsState {
   }) {
     return ReportsState(
       selectedMonth: selectedMonth ?? this.selectedMonth,
-      selectedWalletId:
-          clearWallet ? null : (selectedWalletId ?? this.selectedWalletId),
+      selectedWalletId: clearWallet
+          ? null
+          : (selectedWalletId ?? this.selectedWalletId),
       report: report ?? this.report,
       isExporting: isExporting ?? this.isExporting,
       exportError: clearExportError ? null : (exportError ?? this.exportError),
@@ -42,8 +43,9 @@ class ReportsState {
   }
 }
 
-final reportsProvider =
-    NotifierProvider<ReportsNotifier, ReportsState>(ReportsNotifier.new);
+final reportsProvider = NotifierProvider<ReportsNotifier, ReportsState>(
+  ReportsNotifier.new,
+);
 
 class ReportsNotifier extends Notifier<ReportsState> {
   ReportRepository get _repository => ref.read(reportRepositoryProvider);
@@ -129,17 +131,13 @@ class ReportsNotifier extends Notifier<ReportsState> {
 
   void previousMonth() {
     final cur = state.selectedMonth;
-    state = state.copyWith(
-      selectedMonth: DateTime(cur.year, cur.month - 1),
-    );
+    state = state.copyWith(selectedMonth: DateTime(cur.year, cur.month - 1));
     load();
   }
 
   void nextMonth() {
     final cur = state.selectedMonth;
-    state = state.copyWith(
-      selectedMonth: DateTime(cur.year, cur.month + 1),
-    );
+    state = state.copyWith(selectedMonth: DateTime(cur.year, cur.month + 1));
     load();
   }
 

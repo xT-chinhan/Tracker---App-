@@ -158,7 +158,10 @@ class _MonthlyBarChartPainter extends CustomPainter {
 
       // Income bar (left)
       final inRatio = (item.income / scaleMax).clamp(0.0, 1.0);
-      final inBarHeight = (inRatio * availableHeight).clamp(0.0, availableHeight);
+      final inBarHeight = (inRatio * availableHeight).clamp(
+        0.0,
+        availableHeight,
+      );
       final inLeft = centerX - barWidth - (barGap / 2);
       final inTop = baselineY - inBarHeight;
       if (inBarHeight > 0) {
@@ -172,7 +175,10 @@ class _MonthlyBarChartPainter extends CustomPainter {
 
       // Expense bar (right)
       final exRatio = (item.expense / scaleMax).clamp(0.0, 1.0);
-      final exBarHeight = (exRatio * availableHeight).clamp(0.0, availableHeight);
+      final exBarHeight = (exRatio * availableHeight).clamp(
+        0.0,
+        availableHeight,
+      );
       final exLeft = centerX + (barGap / 2);
       final exTop = baselineY - exBarHeight;
       if (exBarHeight > 0) {
