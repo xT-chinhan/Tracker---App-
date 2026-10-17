@@ -22,3 +22,21 @@ APK debug: `mobile/app/build/app/outputs/flutter-apk/app-debug.apk` (build artif
 - `mobile/docs/screenshots/m1-transaction-entry.png`
 
 Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạo AVD `ThuChi_API36` từ system image đã cài, boot với 1 GB RAM/GPU host và xác thực ADB; ứng dụng chạy thành công. iOS chưa thể build trên Windows.
+
+## M2 — Auth & Session Restore (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 13 test (Auth models, bootstrap service, version compare, navigation guard, money formatter) |
+| Chạy trên AVD API 36 với mock API `node mobile/app/.dart_tool/mock_m2_api.mjs` | Đạt |
+| Luồng kiểm tra public config, chặn bảo trì & bắt buộc cập nhật app | Đạt |
+| Luồng đăng nhập bằng tài khoản và khôi phục phiên (`/api/me`) | Đạt |
+| Luồng điều hướng guard Router theo trạng thái phiên | Đạt |
+
+Ảnh bằng chứng:
+
+- `mobile/docs/screenshots/m2-login.png`
+- `mobile/docs/screenshots/m2-session-restored.png`
+

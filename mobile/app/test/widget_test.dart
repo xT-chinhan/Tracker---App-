@@ -1,19 +1,50 @@
 import 'package:app/app/app.dart';
-import 'package:app/app/router.dart';
+import 'package:app/features/auth/application/app_session.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:timezone/data/latest.dart' as tz;
+
+import 'helpers/fixtures.dart';
 
 void main() {
   setUpAll(tz.initializeTimeZones);
-  setUp(() => appRouter.go('/home'));
+
+  Future<void> pumpAuthenticatedApp(WidgetTester tester) async {
+    final session = AppSessionController()..authenticate(value: userFixture());
+    addTearDown(session.dispose);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appSessionProvider.overrideWithValue(session)],
+        child: const ThuChiApp(),
+      ),
+    );
+    await tester.pump();
+  }
+
+  testWidgets('phiên chưa đăng nhập bị điều hướng tới màn đăng nhập', (
+    tester,
+  ) async {
+    final session = AppSessionController()
+      ..unauthenticate(publicConfig: publicConfigFixture());
+    addTearDown(session.dispose);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appSessionProvider.overrideWithValue(session)],
+        child: const ThuChiApp(),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Chào bạn trở lại'), findsOneWidget);
+    expect(find.text('Đăng nhập'), findsWidgets);
+    expect(find.text('Trang chủ'), findsNothing);
+  });
 
   testWidgets('hiển thị khung điều hướng và mở màn ghi giao dịch', (
     tester,
   ) async {
-    await tester.pumpWidget(const ProviderScope(child: ThuChiApp()));
-    await tester.pump();
+    await pumpAuthenticatedApp(tester);
 
     expect(find.text('Trang chủ'), findsWidgets);
     expect(find.text('Lịch sử'), findsOneWidget);
@@ -30,8 +61,7 @@ void main() {
   });
 
   testWidgets('keypad cập nhật số tiền và bật nút tiếp tục', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: ThuChiApp()));
-    await tester.pump();
+    await pumpAuthenticatedApp(tester);
     await tester.tap(find.byIcon(LucideIcons.plus));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));

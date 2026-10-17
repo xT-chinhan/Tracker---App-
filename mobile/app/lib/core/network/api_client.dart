@@ -13,7 +13,7 @@ class ApiClient {
     Dio? dio,
   }) : dio = dio ?? Dio() {
     this.dio.options = BaseOptions(
-      baseUrl: baseUri.toString(),
+      baseUrl: _normalizedBaseUrl(baseUri),
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 30),
       sendTimeout: const Duration(seconds: 30),
@@ -28,6 +28,9 @@ class ApiClient {
   final TokenStore tokenStore;
   final SessionExpiredCallback? onSessionExpired;
   Future<void>? _expirationInProgress;
+
+  static String _normalizedBaseUrl(Uri uri) =>
+      '${uri.toString().replaceFirst(RegExp(r'/+$'), '')}/';
 
   Future<void> _authorize(
     RequestOptions options,

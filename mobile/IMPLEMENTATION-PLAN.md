@@ -613,4 +613,6 @@ Tiến độ hiện tại:
 
 - [x] P0: Flutter/Android SDK/license/emulator, ma trận màn và quy ước API.
 - [x] M1: scaffold Android/iOS, theme/token/font, router/tab bar/nút ＋, widget nền, Dio/token storage, formatter và APK debug chạy trên AVD API 36.
-- [ ] M2–M10: đang tiếp tục triển khai theo thứ tự của kế hoạch.
+- [x] M2: cấu hình công khai, khởi động app, luồng xác thực (Login, Register, Forgot/Reset password), quản lý phiên và điều hướng router guard.
+- [ ] M3–M10: đang tiếp tục triển khai theo thứ tự của kế hoạch (tiếp theo: M3 Trang chủ và thông báo).
+
