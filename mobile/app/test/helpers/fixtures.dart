@@ -1,5 +1,7 @@
 import 'package:app/core/config/public_config.dart';
 import 'package:app/features/auth/data/auth_models.dart';
+import 'package:app/features/home/data/home_models.dart';
+import 'package:app/features/notifications/data/notification_models.dart';
 
 PublicConfig publicConfigFixture({
   bool maintenance = false,
@@ -49,3 +51,102 @@ AppUser userFixture() {
     updatedAt: now,
   );
 }
+
+StatsBalance statsBalanceFixture({int balance = 26022000}) => StatsBalance(
+  balance: balance,
+  totalIncome: 22000000,
+  totalExpense: 8680000,
+  savings: 5000000,
+  wallets: [
+    WalletItemSummary(
+      id: 'w-1',
+      name: 'Tiền mặt',
+      type: 'CASH',
+      balance: 1022000,
+    ),
+    WalletItemSummary(
+      id: 'w-2',
+      name: 'MB Bank',
+      type: 'BANK',
+      balance: 25000000,
+    ),
+  ],
+);
+
+StatsSummary statsSummaryFixture({int expense = 120000}) => StatsSummary(
+  income: 0,
+  expense: expense,
+  net: -expense,
+  incomeCount: 0,
+  expenseCount: 2,
+  balance: 26022000,
+);
+
+BudgetSummary budgetSummaryFixture({
+  int limit = 14000000,
+  int spent = 8680000,
+}) => BudgetSummary(
+  month: '2026-09',
+  thresholds: BudgetThresholds(warningPercent: 80, exceededPercent: 100),
+  overall: BudgetOverall(
+    id: 'b-overall',
+    month: '2026-09',
+    limitAmount: limit,
+    spent: spent,
+    remaining: limit - spent,
+    percentage: (spent / limit) * 100,
+    status: spent >= limit ? 'exceeded' : 'ok',
+  ),
+  totalLimit: limit,
+  totalSpent: spent,
+  totalRemaining: limit - spent,
+);
+
+TransactionItem transactionItemFixture({
+  String id = 'tx-1',
+  String title = 'Cơm trưa văn phòng',
+  int amount = 55000,
+  String type = 'EXPENSE',
+}) => TransactionItem(
+  id: id,
+  type: type,
+  amount: amount,
+  title: title,
+  occurredAt: DateTime.utc(2026, 9, 22, 12, 10),
+  category: CategoryMeta(
+    id: 'cat-1',
+    name: 'Ăn uống',
+    icon: 'utensils',
+    color: '#EB6834',
+  ),
+  wallet: WalletMeta(id: 'w-1', name: 'Tiền mặt', type: 'CASH'),
+);
+
+QuickTemplateItem quickTemplateItemFixture({
+  String id = 'qt-1',
+  String label = 'Cà phê',
+  int amount = 45000,
+}) => QuickTemplateItem(
+  id: id,
+  label: label,
+  title: 'Cà phê sáng',
+  amount: amount,
+  categoryId: 'cat-1',
+  walletId: 'w-1',
+  category: CategoryMeta(id: 'cat-1', name: 'Ăn uống', icon: 'coffee'),
+);
+
+NotificationItem notificationItemFixture({
+  String id = 'notif-1',
+  String title = 'Ăn uống đã dùng 89% ngân sách',
+  String body = 'Đã chi 3.120.000đ / 3.500.000đ',
+  String type = 'BUDGET_WARNING',
+  DateTime? readAt,
+}) => NotificationItem(
+  id: id,
+  type: type,
+  title: title,
+  body: body,
+  readAt: readAt,
+  createdAt: DateTime.now(),
+);

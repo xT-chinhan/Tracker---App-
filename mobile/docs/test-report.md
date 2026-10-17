@@ -35,8 +35,17 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Luồng đăng nhập bằng tài khoản và khôi phục phiên (`/api/me`) | Đạt |
 | Luồng điều hướng guard Router theo trạng thái phiên | Đạt |
 
-Ảnh bằng chứng:
+## M3 — Trang chủ và Thông báo (17/10/2026)
 
-- `mobile/docs/screenshots/m2-login.png`
-- `mobile/docs/screenshots/m2-session-restored.png`
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 22 test (Bao gồm Home models, Notifications models, HomeScreen widget, NotificationsScreen widget, Auth, Formatter, Version compare) |
+| Đọc số dư ví `/stats/balance`, tổng quan chi `/stats/summary` | Đạt (Freezed models, service, UI presentation) |
+| Ngân sách `/budgets` và tiến độ cảnh báo/vượt ngưỡng | Đạt |
+| Giao dịch gần đây `/transactions?limit=5` và mẫu nhập nhanh `/quick-templates` | Đạt |
+| Danh sách thông báo `/notifications`, số chưa đọc `/notifications/unread-count`, đọc hết `/notifications/read-all` | Đạt |
+| Ẩn/hiện số dư cục bộ không đổi dữ liệu gốc | Đạt |
+| Xử lý timezone Việt Nam độc lập locale | Đạt |
 

@@ -11,6 +11,8 @@ import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/reset_password_screen.dart';
 import '../features/auth/presentation/update_required_screen.dart';
 import '../features/foundation/presentation/foundation_screen.dart';
+import '../features/home/presentation/home_screen.dart';
+import '../features/notifications/presentation/notifications_screen.dart';
 import '../features/transactions/presentation/transaction_entry_screen.dart';
 import 'shell/app_shell.dart';
 
@@ -84,10 +86,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: <RouteBase>[
               GoRoute(
                 path: '/home',
-                builder: (context, state) => const FoundationScreen(
-                  title: 'Trang chủ',
-                  description: 'Tổng quan tài chính sẽ hiển thị tại đây.',
-                ),
+                builder: (context, state) => const HomeScreen(),
               ),
             ],
           ),
@@ -133,6 +132,43 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           initialType: state.uri.queryParameters['type'] == 'income'
               ? TransactionType.income
               : TransactionType.expense,
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/wallets',
+        builder: (context, state) => const FoundationScreen(
+          title: 'Ví',
+          description: 'Danh sách và quản lý các ví tiền.',
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/transfers/new',
+        builder: (context, state) => const FoundationScreen(
+          title: 'Chuyển tiền',
+          description: 'Chuyển tiền giữa các ví.',
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/budgets',
+        builder: (context, state) => const FoundationScreen(
+          title: 'Ngân sách',
+          description: 'Quản lý ngân sách chi tiêu.',
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/ai',
+        builder: (context, state) => const FoundationScreen(
+          title: 'Trợ lý AI',
+          description: 'Hội thoại và trợ lý tài chính thông minh.',
         ),
       ),
     ],

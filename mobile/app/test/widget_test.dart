@@ -5,6 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+import 'package:app/features/home/data/home_repository.dart';
+import 'package:app/features/notifications/data/notification_repository.dart';
+
+import 'features/home/home_screen_test.dart';
+import 'features/notifications/notifications_screen_test.dart';
 import 'helpers/fixtures.dart';
 
 void main() {
@@ -15,7 +20,13 @@ void main() {
     addTearDown(session.dispose);
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appSessionProvider.overrideWithValue(session)],
+        overrides: [
+          appSessionProvider.overrideWithValue(session),
+          homeRepositoryProvider.overrideWithValue(FakeHomeRepository()),
+          notificationRepositoryProvider.overrideWithValue(
+            FakeNotificationRepository(),
+          ),
+        ],
         child: const ThuChiApp(),
       ),
     );
@@ -51,18 +62,18 @@ void main() {
     expect(find.text('Báo cáo'), findsOneWidget);
     expect(find.text('Cài đặt'), findsOneWidget);
 
-    await tester.tap(find.byIcon(LucideIcons.plus));
+    await tester.tap(find.byIcon(LucideIcons.plus).first);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(find.text('Ghi giao dịch'), findsOneWidget);
+    expect(find.text('Ghi giao dịch'), findsWidgets);
     expect(find.text('Khoản chi'), findsOneWidget);
     expect(find.text('0đ'), findsOneWidget);
   });
 
   testWidgets('keypad cập nhật số tiền và bật nút tiếp tục', (tester) async {
     await pumpAuthenticatedApp(tester);
-    await tester.tap(find.byIcon(LucideIcons.plus));
+    await tester.tap(find.byIcon(LucideIcons.plus).first);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 

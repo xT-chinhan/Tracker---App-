@@ -44,7 +44,10 @@ class AppShell extends StatelessWidget {
           Navigator.of(sheetContext).pop();
           context.push('/transactions/new?type=income');
         },
-        onTransfer: () => Navigator.of(sheetContext).pop(),
+        onTransfer: () {
+          Navigator.of(sheetContext).pop();
+          context.push('/transfers/new');
+        },
       ),
     );
   }
