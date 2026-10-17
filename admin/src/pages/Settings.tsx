@@ -114,7 +114,9 @@ const SECTIONS = [
   { slug: 'tro-ly', api: 'ai', label: 'Trợ lý AI', short: 'Trợ lý AI', icon: Sparkles },
 ] as const
 const SECTION_SHORT = Object.fromEntries(SECTIONS.map((s) => [s.api, s.short])) as Record<ConfigSection, string>
-const SECURITY_LABEL: Record<string, string> = { starttls: 'STARTTLS', ssl: 'SSL/TLS', none: 'Không mã hóa', ...PROVIDER_LABEL }
+const SECURITY_LABEL: Record<string, string> = { starttls: 'STARTTLS', ssl: 'SSL/TLS', none: 'Không mã hóa' }
+/** Nhãn hiển thị mọi trường enum (Trước: …, lịch sử) */
+const ENUM_LABEL: Record<string, string> = { ...SECURITY_LABEL, ...PROVIDER_LABEL }
 
 /* ============================== Giá trị nháp ============================== */
 
@@ -182,7 +184,7 @@ function display(key: string, v: ConfigValue, secret = false): string {
   if (v === null || v === undefined || v === '') return def?.kind === 'datetime' ? 'Không hẹn giờ' : '(trống)'
   if (typeof v === 'boolean') return v ? 'Bật' : 'Tắt'
   if (def?.kind === 'datetime') return `${formatTime(String(v))} · ${formatDate(String(v))}`
-  if (def?.kind === 'enum') return SECURITY_LABEL[String(v)] ?? String(v)
+  if (def?.kind === 'enum') return ENUM_LABEL[String(v)] ?? String(v)
   if (typeof v === 'number') return def?.unit === '%' ? `${v}%` : def?.unit ? `${formatNumber(v)} ${def.unit}` : String(v)
   return String(v).replace(/^https:\/\//, '')
 }

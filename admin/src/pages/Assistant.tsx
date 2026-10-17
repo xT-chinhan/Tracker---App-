@@ -19,6 +19,7 @@ import { notify } from '@/components/ui/sonner'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Bubble } from '@/components/CategoryIcon'
 import { ConfirmDialog, type ConfirmOptions } from '@/components/ConfirmDialog'
+import { FormattedText, ReplyBlocks } from '@/components/ReplyBlocks'
 import { ErrorState, PageHeader } from '@/components/common'
 import { api, ApiError, type AiConversation, type AiDraft, type AiMessage } from '@/lib/api'
 import { formatNumber, formatShortWhen, formatTime, isToday, ROLE_LABEL, STATUS_LABEL } from '@/lib/format'
@@ -453,7 +454,9 @@ function AssistantMsg({ m, conversationId, isLast, rating, onRate, onAsk, busy }
   const failed = m.status === 'error'
   return (
     <div className="flex flex-col gap-3" data-testid="ai-msg-assistant" data-skill={m.skill ?? ''}>
-      <p className={cn('text-[15px] leading-[1.6] break-words whitespace-pre-line', failed && 'text-destructive')}>{m.content}</p>
+      {m.blocks?.length && !failed
+        ? <ReplyBlocks blocks={m.blocks} className="text-[15px] leading-[1.6] break-words" />
+        : <FormattedText text={m.content} className={cn('text-[15px] leading-[1.6] break-words', failed && 'text-destructive')} />}
       {m.draft && <DraftCard d={m.draft} conversationId={conversationId} onAsk={onAsk} busy={busy} />}
       <div className="flex items-center gap-1 text-faint">
         <button type="button" aria-label="Hữu ích" aria-pressed={rating === 1} onClick={() => onRate(1)} className={cn('flex size-7 cursor-pointer items-center justify-center rounded-full hover:bg-muted hover:text-foreground [&_svg]:size-4', rating === 1 && 'text-foreground')} data-testid="ai-thumb-up"><ThumbsUp /></button>

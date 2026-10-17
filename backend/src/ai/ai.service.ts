@@ -68,6 +68,7 @@ export function messageView(m: AiMessage & { draft?: AiDraft | null }) {
     latencyMs: m.latencyMs,
     tokens: m.promptTokens != null || m.evalTokens != null ? { prompt: m.promptTokens, eval: m.evalTokens } : null,
     followUps: (meta.followUps as string[] | undefined) ?? [],
+    blocks: (meta.blocks as unknown[] | undefined) ?? [],
     createdAt: m.createdAt,
     draft: draftView(m.draft),
   };
@@ -236,7 +237,7 @@ export class AiService {
       latencyMs: Date.now() - t0,
       promptTokens: typeof sm.promptTokens === 'number' ? sm.promptTokens : null,
       evalTokens: typeof sm.evalTokens === 'number' ? sm.evalTokens : null,
-      meta: JSON.parse(JSON.stringify({ ...meta, skillMeta: sm, followUps: result.followUps ?? [], context: traced.map((t) => t.name), llm: `${llm.provider}:${llm.chatModel}` })) as Prisma.InputJsonValue,
+      meta: JSON.parse(JSON.stringify({ ...meta, skillMeta: sm, followUps: result.followUps ?? [], blocks: result.blocks ?? [], context: traced.map((t) => t.name), llm: `${llm.provider}:${llm.chatModel}` })) as Prisma.InputJsonValue,
     });
     const draft = draftPayload ? await repo.createDraft(msg.id, route.skill, result.draft!.kind, draftPayload as Prisma.InputJsonValue) : null;
     const message = messageView({ ...msg, draft });

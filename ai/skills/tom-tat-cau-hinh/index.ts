@@ -1,12 +1,12 @@
-import type { ConfigChangeRow as ConfigChangeCtx, Skill } from '../../lib/contracts.js';
+import type { ConfigChangeRow as ConfigChangeCtx, ReplyBlock, Skill } from '../../lib/contracts.js';
 import { parsePeriod } from '../../lib/period.js';
 import { adminGuard, fetchP, int, llmMeta, llmSentence } from '../../lib/skillkit.js';
 import { fold } from '../../lib/text.js';
 
-export const SECTION: Record<string, string> = { general: 'Chung', access: 'Đăng ký & truy cập', smtp: 'Email (SMTP)', password: 'Bảo mật', business: 'Nghiệp vụ', mobile: 'Ứng dụng mobile' };
+export const SECTION: Record<string, string> = { general: 'Chung', access: 'Đăng ký & truy cập', smtp: 'Email (SMTP)', password: 'Bảo mật', business: 'Nghiệp vụ', mobile: 'Ứng dụng mobile', ai: 'Trợ lý AI' };
 const SECTION_WORDS: [string, RegExp][] = [
   ['smtp', /\b(smtp|email|mail)\b/], ['access', /\b(bao tri|dang ky|dang nhap|truy cap|phien)\b/], ['password', /\b(mat khau|otp|bao mat)\b/],
-  ['business', /\b(nghiep vu|ngan sach|tinh nang|csv|vi mac dinh)\b/], ['mobile', /\b(mobile|phien ban|android|ios|cap nhat app)\b/], ['general', /\b(ten app|hotline|ho tro|dieu khoan|chung)\b/],
+  ['business', /\b(nghiep vu|ngan sach|tinh nang|csv|vi mac dinh)\b/], ['mobile', /\b(mobile|phien ban|android|ios|cap nhat app)\b/], ['ai', /\b(tro ly|ollama|model)\b/], ['general', /\b(ten app|hotline|ho tro|dieu khoan|chung)\b/],
 ];
 export const KEY: Record<string, string> = {
   appName: 'tên ứng dụng', supportEmail: 'email hỗ trợ', hotline: 'hotline', termsUrl: 'link điều khoản', privacyUrl: 'link quyền riêng tư',
@@ -16,7 +16,10 @@ export const KEY: Record<string, string> = {
   minLength: 'độ dài mật khẩu tối thiểu', otpExpiryMinutes: 'hạn mã OTP (phút)', otpMaxAttempts: 'số lần nhập OTP', otpResendSeconds: 'thời gian chờ gửi lại OTP (giây)',
   budgetWarningPercent: 'ngưỡng cảnh báo ngân sách (%)', budgetExceededPercent: 'ngưỡng vượt ngân sách (%)', defaultWalletName: 'tên ví mặc định',
   featureSavingGoals: 'tính năng tiết kiệm', featureRecurring: 'tính năng định kỳ', featureTransfers: 'tính năng chuyển tiền', featureCsvExport: 'tính năng xuất CSV', featureQuickTemplates: 'tính năng mẫu nhập nhanh',
-  androidLatestVersion: 'phiên bản Android mới nhất', androidMinVersion: 'phiên bản Android tối thiểu', iosLatestVersion: 'phiên bản iOS mới nhất', iosMinVersion: 'phiên bản iOS tối thiểu', releaseNotes: 'ghi chú phát hành',
+  androidLatestVersion: 'phiên bản Android mới nhất', androidMinVersion: 'phiên bản Android tối thiểu', iosLatestVersion: 'phiên bản iOS mới nhất', iosMinVersion: 'phiên bản iOS tối thiểu', releaseNotes: 'ghi chú phát hành', featureAi: 'tính năng trợ lý AI',
+  enabled: 'bật trợ lý', provider: 'nhà cung cấp mô hình', ollamaUrl: 'địa chỉ Ollama', chatModel: 'model trả lời', embedModel: 'model embedding',
+  timeoutSeconds: 'thời gian chờ trả lời (giây)', dailyMessageLimitPerUser: 'tin nhắn mỗi người mỗi ngày', maxConversationsPerUser: 'số cuộc trò chuyện tối đa',
+  autoApproveEnabled: 'tự áp dụng luật chung', autoApproveMinUsers: 'số người tối thiểu để tự áp dụng', autoApproveMinSupport: 'số lần tối thiểu để tự áp dụng', autoApproveMinPrecision: 'độ đúng tối thiểu để tự áp dụng (%)',
 };
 const actorOf = (c: ConfigChangeCtx) => c.actor?.name ?? 'Hệ thống';
 const vnTime = (iso: string) => { const d = new Date(new Date(iso as any).getTime() + 7 * 3600000).toISOString(); return `${d.slice(8, 10)}/${d.slice(5, 7)} ${d.slice(11, 16)}`; };
@@ -52,7 +55,17 @@ export const skill: Skill = {
     const notable = h.filter((c) => /^feature|maintenance|registrationEnabled|loginMaxAttempts|minLength|password/.test(c.key)).map((c) => `${KEY[c.key] ?? c.key}${c.secret ? ' đã đổi' : typeof c.newValue === 'boolean' ? (c.newValue ? ' được bật' : ' bị tắt') : ' được sửa'}`);
     const s = await llmSentence(llm, 'Viết một câu tóm tắt cho quản trị viên những thay đổi cấu hình đáng chú ý.', notable.length ? [...new Set(notable)].slice(0, 5) : ['chỉ có thay đổi nhỏ'], 'Hãy rà lại các thay đổi về bảo mật và tính năng để chắc chắn đúng ý.');
     lines.push(s.text);
-    return { reply: lines.join('\n'), followUps: ['Chỉ các thay đổi về SMTP', 'Thay đổi trong tuần này'], meta: { computed: [h.length, ...[...by.values()], Math.max(0, h.length - 12)], llm: llmMeta(s), llmText: s.text } };
+    const blocks: ReplyBlock[] = [
+      { type: 'text', text: `**${int(h.length)} thay đổi** gần nhất${where}, theo người sửa: ${[...by].map(([a, n]) => `${a} **${int(n)}**`).join(', ')}.` },
+      {
+        type: 'table', columns: ['Lúc', 'Người sửa', 'Mục', 'Thay đổi'],
+        rows: h.slice(0, 12).map((c) => [vnTime(c.createdAt), actorOf(c), `${SECTION[c.section] ?? c.section}\n${KEY[c.key] ?? c.key}`, c.secret ? 'đã đổi (giá trị ẩn)' : `${val(c.oldValue)} → **${val(c.newValue)}**`]),
+        more: h.length > 12 ? `… và ${int(h.length - 12)} thay đổi cũ hơn` : undefined,
+      },
+      { type: 'text', text: s.text },
+      { type: 'source', text: 'Từ lịch sử thay đổi cấu hình' },
+    ];
+    return { reply: lines.join('\n'), blocks, followUps: ['Chỉ các thay đổi về SMTP', 'Thay đổi trong tuần này'], meta: { computed: [h.length, ...[...by.values()], Math.max(0, h.length - 12)], llm: llmMeta(s), llmText: s.text } };
   },
 };
 export const run = skill.run;

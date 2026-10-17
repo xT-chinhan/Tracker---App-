@@ -21,6 +21,14 @@ export async function fetchP<T>(ctx: SkillContext, name: string, args?: Record<s
 export const money = (n: number) => `${n < 0 ? '−' : ''}${Math.abs(Math.round(n)).toLocaleString('vi-VN')}đ`;
 export const pct = (n: number) => `${(Math.round(n * 10) / 10).toLocaleString('vi-VN')}%`;
 export const int = (n: number) => Math.round(n).toLocaleString('vi-VN');
+/** Số tiền gọn cho thẻ số liệu: 853.654.000 → "853,7 tr", 13.679.739.000 → "13,68 tỷ" (bản đầy đủ để ở `reply`). */
+export const moneyShort = (n: number) => {
+  const a = Math.abs(n), sign = n < 0 ? '−' : '';
+  const f = (x: number, d: number) => x.toLocaleString('vi-VN', { maximumFractionDigits: d });
+  return a >= 1e9 ? `${sign}${f(a / 1e9, 2)} tỷ` : a >= 1e6 ? `${sign}${f(a / 1e6, 1)} tr` : money(n);
+};
+/** "HH:mm" giờ VN của mốc ISO */
+export const vnHm = (iso: string) => new Date(new Date(iso).getTime() + 7 * 3600000).toISOString().slice(11, 16);
 
 // ───────── tìm tên trong câu (bỏ dấu, hoa thường) ─────────
 const ALIAS: Record<string, string[]> = {
@@ -111,6 +119,8 @@ export function checkSentence(s: string, maxLen = 220): string | null {
   if (/\d/.test(t)) return 'có chữ số';
   if (NUMBER_WORDS.test(fold(t))) return 'có số viết bằng chữ';
   if (/https?:|www\.|@/.test(t)) return 'có link/email';
+  // model chép khuôn mẫu: "[nhập thông tin thay đổi]", "{tên}", "<...>"
+  if (/[[\]{}<>]/.test(t)) return 'có chỗ trống chưa điền';
   if (!VI_CHARS.test(t)) return 'không phải tiếng Việt';
   return null;
 }

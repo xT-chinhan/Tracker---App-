@@ -17,8 +17,8 @@
    "pass%": 100,
    "gọi model": 20,
    "model đạt%": 100,
-   "p50 ms": 1377,
-   "p95 ms": 1709
+   "p50 ms": 1373,
+   "p95 ms": 1778
   },
   {
    "skill": "kiem-tra-ngan-sach",
@@ -27,8 +27,8 @@
    "pass%": 100,
    "gọi model": 18,
    "model đạt%": 100,
-   "p50 ms": 1416,
-   "p95 ms": 1687
+   "p50 ms": 1351,
+   "p95 ms": 1536
   },
   {
    "skill": "tim-giao-dich",
@@ -38,7 +38,7 @@
    "gọi model": 6,
    "model đạt%": 100,
    "p50 ms": 1,
-   "p95 ms": 486
+   "p95 ms": 694
   },
   {
    "skill": "tien-do-tiet-kiem",
@@ -46,9 +46,9 @@
    "cases": 21,
    "pass%": 100,
    "gọi model": 19,
-   "model đạt%": 47.4,
-   "p50 ms": 796,
-   "p95 ms": 1087
+   "model đạt%": 100,
+   "p50 ms": 1109,
+   "p95 ms": 1427
   },
   {
    "skill": "goi-y-ngan-sach",
@@ -57,8 +57,8 @@
    "pass%": 100,
    "gọi model": 11,
    "model đạt%": 100,
-   "p50 ms": 796,
-   "p95 ms": 887
+   "p50 ms": 1042,
+   "p95 ms": 1255
   },
   {
    "skill": "meo-tiet-kiem",
@@ -67,8 +67,8 @@
    "pass%": 100,
    "gọi model": 11,
    "model đạt%": 100,
-   "p50 ms": 696,
-   "p95 ms": 775
+   "p50 ms": 944,
+   "p95 ms": 1019
   },
   {
    "skill": "huong-dan",
@@ -77,7 +77,7 @@
    "pass%": 100,
    "gọi model": 0,
    "model đạt%": "-",
-   "p50 ms": 0,
+   "p50 ms": 1,
    "p95 ms": 1
   },
   {
@@ -88,7 +88,7 @@
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
-   "p95 ms": 0
+   "p95 ms": 1
   },
   {
    "skill": "hoi-lai",
@@ -98,7 +98,7 @@
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
-   "p95 ms": 0
+   "p95 ms": 1
   },
   {
    "skill": "tong-quan-he-thong",
@@ -107,8 +107,8 @@
    "pass%": 100,
    "gọi model": 9,
    "model đạt%": 100,
-   "p50 ms": 1041,
-   "p95 ms": 1262
+   "p50 ms": 1302,
+   "p95 ms": 1393
   },
   {
    "skill": "tra-cuu-nguoi-dung",
@@ -118,7 +118,7 @@
    "gọi model": 1,
    "model đạt%": 100,
    "p50 ms": 0,
-   "p95 ms": 483
+   "p95 ms": 634
   },
   {
    "skill": "phat-hien-bat-thuong",
@@ -126,9 +126,9 @@
    "cases": 11,
    "pass%": 100,
    "gọi model": 10,
-   "model đạt%": 100,
-   "p50 ms": 1083,
-   "p95 ms": 1538
+   "model đạt%": 60,
+   "p50 ms": 1309,
+   "p95 ms": 1778
   },
   {
    "skill": "soan-thong-bao",
@@ -137,8 +137,8 @@
    "pass%": 100,
    "gọi model": 10,
    "model đạt%": 70,
-   "p50 ms": 1557,
-   "p95 ms": 3884
+   "p50 ms": 1580,
+   "p95 ms": 4258
   },
   {
    "skill": "de-xuat-khoa",
@@ -148,7 +148,7 @@
    "gọi model": 0,
    "model đạt%": "-",
    "p50 ms": 0,
-   "p95 ms": 1
+   "p95 ms": 2
   },
   {
    "skill": "tom-tat-cau-hinh",
@@ -156,9 +156,9 @@
    "cases": 11,
    "pass%": 100,
    "gọi model": 9,
-   "model đạt%": 100,
-   "p50 ms": 904,
-   "p95 ms": 1360
+   "model đạt%": 88.9,
+   "p50 ms": 1160,
+   "p95 ms": 1641
   },
   {
    "skill": "huong-dan-quan-tri",
@@ -167,15 +167,15 @@
    "pass%": 100,
    "gọi model": 0,
    "model đạt%": "-",
-   "p50 ms": 0,
-   "p95 ms": 0
+   "p50 ms": 1,
+   "p95 ms": 2
   }
  ],
  "total": {
   "cases": 269,
   "pass": 269,
   "p50": 1,
-  "p95": 1557
+  "p95": 1641
  },
  "cases": [
   {
@@ -184,7 +184,7 @@
    "input": "ví momo còn bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 25,
+   "ms": 18,
    "llm": null,
    "reply": "Ví MoMo hiện còn 1.500.000đ. Tổng 4 ví: 26.022.000đ.",
    "draft": null,
@@ -208,7 +208,7 @@
    "input": "tài khoản mb còn bao nhiêu tiền",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": null,
    "reply": "Ví MB Bank hiện còn 18.672.000đ. Tổng 4 ví: 26.022.000đ.",
    "draft": null,
@@ -280,7 +280,7 @@
    "input": "tổng cộng mình đang có bao nhiêu tiền",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Tổng số dư 4 ví: 26.022.000đ.\n• MB Bank: 18.672.000đ\n• Techcombank: 4.000.000đ\n• Tiền mặt: 1.850.000đ\n• MoMo: 1.500.000đ\nNgoài ra 52.200.000đ đang nằm trong các mục tiêu tiết kiệm (không tính vào số dư ví).",
    "draft": null,
@@ -292,7 +292,7 @@
    "input": "số dư zalopay",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Bạn chưa có ví ZaloPay trong ứng dụng. Các ví hiện có:\n• MB Bank: 18.672.000đ\n• Techcombank: 4.000.000đ\n• Tiền mặt: 1.850.000đ\n• MoMo: 1.500.000đ",
    "draft": null,
@@ -460,10 +460,10 @@
    "input": "tháng này tiêu bao nhiêu rồi",
    "pass": true,
    "fails": [],
-   "ms": 1587,
+   "ms": 1861,
    "llm": {
     "calls": 1,
-    "ms": 1580,
+    "ms": 1856,
     "accepted": true
    },
    "reply": "Tháng 10 (tính đến 08/10): thu 22.560.000đ, chi 8.404.000đ, chênh lệch +14.156.000đ.\nChi nhiều nhất: Nhà ở 2.500.000đ (29,7%), Ăn uống 1.978.000đ (23,5%), Mua sắm 1.690.000đ (20,1%).\nSo với tháng 9 (17.324.000đ): chi giảm 51,5%, lưu ý tháng này chưa hết.\nKhoản chi lớn nhất: Tiền nhà 2.500.000đ (01/10).\nTình hình thu chi hiện tại rất tốt! Hãy tiếp tục kiên trì tiết kiệm, đặc biệt là chi phí nhà ở. 🏘️",
@@ -476,10 +476,10 @@
    "input": "tổng kết tháng 9",
    "pass": true,
    "fails": [],
-   "ms": 1324,
+   "ms": 1415,
    "llm": {
     "calls": 1,
-    "ms": 1322,
+    "ms": 1413,
     "accepted": true
    },
    "reply": "Tháng 9: thu 27.540.000đ, chi 17.324.000đ, chênh lệch +10.216.000đ.\nChi nhiều nhất: Ăn uống 9.502.000đ (54,8%), Nhà ở 2.500.000đ (14,4%), Gia đình 2.000.000đ (11,5%).\nSo với tháng 8 (45.349.000đ): chi giảm 61,8%.\nKhoản chi lớn nhất: Tiền nhà 2.500.000đ (01/09).\nThật vui khi thấy bạn đang quản lý tài chính hiệu quả, hãy giữ vững nhịp điệu này nhé!",
@@ -492,10 +492,10 @@
    "input": "tháng trước chi những gì nhiều nhất",
    "pass": true,
    "fails": [],
-   "ms": 1078,
+   "ms": 1100,
    "llm": {
     "calls": 1,
-    "ms": 1076,
+    "ms": 1099,
     "accepted": true
    },
    "reply": "Tháng 9: thu 27.540.000đ, chi 17.324.000đ, chênh lệch +10.216.000đ.\nChi nhiều nhất: Ăn uống 9.502.000đ (54,8%), Nhà ở 2.500.000đ (14,4%), Gia đình 2.000.000đ (11,5%).\nSo với tháng 8 (45.349.000đ): chi giảm 61,8%.\nKhoản chi lớn nhất: Tiền nhà 2.500.000đ (01/09).\nThật vui khi thấy bạn đang quản lý tài chính hiệu quả, hãy giữ vững nhịp điệu này nhé!",
@@ -508,10 +508,10 @@
    "input": "tháng 8 thu chi thế nào",
    "pass": true,
    "fails": [],
-   "ms": 1621,
+   "ms": 1778,
    "llm": {
     "calls": 1,
-    "ms": 1619,
+    "ms": 1777,
     "accepted": true
    },
    "reply": "Tháng 8: thu 26.474.000đ, chi 45.349.000đ, chênh lệch −18.875.000đ.\nChi nhiều nhất: Mua sắm 27.849.000đ (61,4%), Ăn uống 9.945.000đ (21,9%), Nhà ở 2.500.000đ (5,5%).\nSo với tháng 7 (23.814.000đ): chi tăng 90,4%.\nKhoản chi lớn nhất: Máy giặt LG + tủ lạnh Panasonic 27.849.000đ (24/08).\nDạo này chi tiêu khá bùng nổ, bạn nên cân nhắc xem có thể tiết kiệm thêm một chút cho mục tiêu sắp tới không?",
@@ -524,10 +524,10 @@
    "input": "tháng này thu nhập bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1438,
+   "ms": 1508,
    "llm": {
     "calls": 1,
-    "ms": 1437,
+    "ms": 1507,
     "accepted": true
    },
    "reply": "Tháng 10 (tính đến 08/10): thu 22.560.000đ, chi 8.404.000đ, chênh lệch +14.156.000đ.\nChi nhiều nhất: Nhà ở 2.500.000đ (29,7%), Ăn uống 1.978.000đ (23,5%), Mua sắm 1.690.000đ (20,1%).\nSo với tháng 9 (17.324.000đ): chi giảm 51,5%, lưu ý tháng này chưa hết.\nKhoản chi lớn nhất: Tiền nhà 2.500.000đ (01/10).\nTình hình thu chi hiện tại rất tốt! Hãy tiếp tục kiên trì tiết kiệm, đặc biệt là chi phí nhà ở. 🏘️",
@@ -540,10 +540,10 @@
    "input": "tuần này xài hết bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1185,
+   "ms": 1191,
    "llm": {
     "calls": 1,
-    "ms": 1183,
+    "ms": 1190,
     "accepted": true
    },
    "reply": "Tuần này: chi 3.671.000đ (13 khoản), thu 22.560.000đ (2 khoản).\nChi nhiều nhất: Mua sắm 1.690.000đ (46%), Sức khỏe 1.310.000đ (35,7%), Ăn uống 410.000đ (11,2%).\nTình hình thu chi khá tốt, nhưng hãy cân nhắc việc mua sắm để kiểm soát chi tiêu nhé!",
@@ -556,10 +556,10 @@
    "input": "tuần trước tiêu bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1373,
+   "ms": 1335,
    "llm": {
     "calls": 1,
-    "ms": 1372,
+    "ms": 1333,
     "accepted": true
    },
    "reply": "Tuần trước: chi 5.321.000đ (22 khoản), thu 3.000.000đ (1 khoản).\nChi nhiều nhất: Nhà ở 2.500.000đ (47%), Ăn uống 1.779.000đ (33,4%), Di chuyển 439.000đ (8,3%).\nDạo này chi tiêu nhà ở khá cao, bạn nên xem lại mục đích chi tiêu và tìm cách tiết kiệm để cân bằng tài chính nhé!",
@@ -588,10 +588,10 @@
    "input": "hôm nay tiêu bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1140,
+   "ms": 1142,
    "llm": {
     "calls": 1,
-    "ms": 1138,
+    "ms": 1141,
     "accepted": true
    },
    "reply": "Hôm nay: chi 85.000đ (2 khoản), thu 560.000đ (1 khoản).\nChi nhiều nhất: Ăn uống 59.000đ (69,4%), Di chuyển 26.000đ (30,6%).\nTình hình thu chi khá tốt, nhưng hãy cân nhắc việc tiết kiệm chi phí ăn uống nhé!",
@@ -604,10 +604,10 @@
    "input": "hôm qua chi hết bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1219,
+   "ms": 1157,
    "llm": {
     "calls": 1,
-    "ms": 1218,
+    "ms": 1156,
     "accepted": true
    },
    "reply": "Hôm qua: chi 133.000đ (2 khoản), thu 0đ (0 khoản).\nChi nhiều nhất: Ăn uống 133.000đ (100%).\nDạo này chi tiêu ăn uống khá thoải mái, nhưng hãy cân nhắc lại để đảm bảo thu nhập ổn định nhé!",
@@ -620,10 +620,10 @@
    "input": "thang nay tieu het bao nhieu",
    "pass": true,
    "fails": [],
-   "ms": 1469,
+   "ms": 1434,
    "llm": {
     "calls": 1,
-    "ms": 1466,
+    "ms": 1431,
     "accepted": true
    },
    "reply": "Tháng 10 (tính đến 08/10): thu 22.560.000đ, chi 8.404.000đ, chênh lệch +14.156.000đ.\nChi nhiều nhất: Nhà ở 2.500.000đ (29,7%), Ăn uống 1.978.000đ (23,5%), Mua sắm 1.690.000đ (20,1%).\nSo với tháng 9 (17.324.000đ): chi giảm 51,5%, lưu ý tháng này chưa hết.\nKhoản chi lớn nhất: Tiền nhà 2.500.000đ (01/10).\nTình hình thu chi hiện tại rất tốt! Hãy tiếp tục kiên trì tiết kiệm, đặc biệt là chi phí nhà ở. 🏘️",
@@ -636,10 +636,10 @@
    "input": "so với tháng trước tháng này chi nhiều hơn không",
    "pass": true,
    "fails": [],
-   "ms": 1460,
+   "ms": 1349,
    "llm": {
     "calls": 1,
-    "ms": 1459,
+    "ms": 1348,
     "accepted": true
    },
    "reply": "Tháng 10 (tính đến 08/10): thu 22.560.000đ, chi 8.404.000đ, chênh lệch +14.156.000đ.\nChi nhiều nhất: Nhà ở 2.500.000đ (29,7%), Ăn uống 1.978.000đ (23,5%), Mua sắm 1.690.000đ (20,1%).\nSo với tháng 9 (17.324.000đ): chi giảm 51,5%, lưu ý tháng này chưa hết.\nKhoản chi lớn nhất: Tiền nhà 2.500.000đ (01/10).\nTình hình thu chi hiện tại rất tốt! Hãy tiếp tục kiên trì tiết kiệm, đặc biệt là chi phí nhà ở. 🏘️",
@@ -652,10 +652,10 @@
    "input": "báo cáo tháng 7",
    "pass": true,
    "fails": [],
-   "ms": 1419,
+   "ms": 1373,
    "llm": {
     "calls": 1,
-    "ms": 1416,
+    "ms": 1371,
     "accepted": true
    },
    "reply": "Tháng 7: thu 26.940.000đ, chi 23.814.000đ, chênh lệch +3.126.000đ.\nChi nhiều nhất: Giáo dục 8.900.000đ (37,4%), Ăn uống 7.007.000đ (29,4%), Nhà ở 2.500.000đ (10,5%).\nSo với tháng 6 (50.001.000đ): chi giảm 52,4%.\nKhoản chi lớn nhất: Khóa học UX/UI Design 8.900.000đ (25/07).\nThật vui khi thấy bạn đang quản lý tài chính hiệu quả, hãy giữ vững nhịp độ này nhé!",
@@ -684,10 +684,10 @@
    "input": "tháng này tiêu bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1709,
+   "ms": 1614,
    "llm": {
     "calls": 1,
-    "ms": 1708,
+    "ms": 1613,
     "accepted": true
    },
    "reply": "Tháng 10 (tính đến 08/10): thu 0đ, chi 2.847.000đ, chênh lệch −2.847.000đ.\nChi nhiều nhất: Ăn uống 1.849.000đ (64,9%), Giải trí 835.000đ (29,3%), Di chuyển 163.000đ (5,7%).\nSo với tháng 9 (13.636.000đ): chi giảm 79,1%, lưu ý tháng này chưa hết.\nKhoản chi lớn nhất: Pizza 4P's 590.000đ (04/10).\nDạo này chi tiêu khá vội vã, hãy thử xem xét lại nhu cầu về ẩm thực nhé! 😊",
@@ -700,10 +700,10 @@
    "input": "tổng kết tháng 9",
    "pass": true,
    "fails": [],
-   "ms": 1377,
+   "ms": 1427,
    "llm": {
     "calls": 1,
-    "ms": 1376,
+    "ms": 1425,
     "accepted": true
    },
    "reply": "Tháng 9: thu 23.504.000đ, chi 13.636.000đ, chênh lệch +9.868.000đ.\nChi nhiều nhất: Ăn uống 9.291.000đ (68,1%), Hóa đơn 1.022.000đ (7,5%), Hiếu hỉ 1.000.000đ (7,3%).\nSo với tháng 8 (29.633.000đ): chi giảm 54%.\nKhoản chi lớn nhất: Sushi Hokkaido 1.050.000đ (07/09).\nThật vui khi thấy bạn đang quản lý tài chính hiệu quả, hãy giữ vững nhịp điệu này nhé!",
@@ -716,10 +716,10 @@
    "input": "tháng 8 tiêu nhiều nhất vào đâu",
    "pass": true,
    "fails": [],
-   "ms": 1752,
+   "ms": 1776,
    "llm": {
     "calls": 1,
-    "ms": 1750,
+    "ms": 1775,
     "accepted": true
    },
    "reply": "Tháng 8: thu 23.638.000đ, chi 29.633.000đ, chênh lệch −5.995.000đ.\nChi nhiều nhất: Ăn uống 14.609.000đ (49,3%), Du lịch 9.910.000đ (33,4%), Giải trí 2.344.000đ (7,9%).\nSo với tháng 7 (18.299.000đ): chi tăng 61,9%.\nKhoản chi lớn nhất: Vé máy bay Đà Lạt 5.260.000đ (12/08).\nDạo này bạn đang khá vội vàng trong việc chi tiêu, nhưng hãy nhớ rằng bữa ăn ngon miệng cũng cần được cân bằng. Hãy thử xem lại những khoản chi tiêu không cần thiết nhé!",
@@ -744,10 +744,10 @@
    "input": "how much did I spend this month",
    "pass": true,
    "fails": [],
-   "ms": 1443,
+   "ms": 1431,
    "llm": {
     "calls": 1,
-    "ms": 1442,
+    "ms": 1430,
     "accepted": true
    },
    "reply": "Tháng 10 (tính đến 08/10): thu 22.560.000đ, chi 8.404.000đ, chênh lệch +14.156.000đ.\nChi nhiều nhất: Nhà ở 2.500.000đ (29,7%), Ăn uống 1.978.000đ (23,5%), Mua sắm 1.690.000đ (20,1%).\nSo với tháng 9 (17.324.000đ): chi giảm 51,5%, lưu ý tháng này chưa hết.\nKhoản chi lớn nhất: Tiền nhà 2.500.000đ (01/10).\nTình hình thu chi hiện tại rất tốt! Hãy tiếp tục kiên trì tiết kiệm, đặc biệt là chi phí nhà ở. 🏘️",
@@ -760,10 +760,10 @@
    "input": "last week spending",
    "pass": true,
    "fails": [],
-   "ms": 1265,
+   "ms": 1295,
    "llm": {
     "calls": 1,
-    "ms": 1265,
+    "ms": 1295,
     "accepted": true
    },
    "reply": "Tuần trước: chi 5.321.000đ (22 khoản), thu 3.000.000đ (1 khoản).\nChi nhiều nhất: Nhà ở 2.500.000đ (47%), Ăn uống 1.779.000đ (33,4%), Di chuyển 439.000đ (8,3%).\nDạo này chi tiêu nhà ở khá cao, bạn nên xem lại mục đích chi tiêu và tìm cách tiết kiệm để cân bằng tài chính nhé!",
@@ -776,10 +776,10 @@
    "input": "tuần này xài bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1131,
+   "ms": 1272,
    "llm": {
     "calls": 1,
-    "ms": 1130,
+    "ms": 1272,
     "accepted": true
    },
    "reply": "Tuần này: chi 1.053.000đ (11 khoản), thu 0đ (0 khoản).\nChi nhiều nhất: Ăn uống 918.000đ (87,2%), Di chuyển 135.000đ (12,8%).\nDạo này chi tiêu ăn uống khá thoải mái, nhưng hãy cân nhắc lại để đảm bảo thu nhập ổn định nhé!",
@@ -792,7 +792,7 @@
    "input": "tháng này dư được bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1532,
+   "ms": 1534,
    "llm": {
     "calls": 1,
     "ms": 1532,
@@ -808,10 +808,10 @@
    "input": "ngân sách tháng này thế nào",
    "pass": true,
    "fails": [],
-   "ms": 1444,
+   "ms": 1475,
    "llm": {
     "calls": 1,
-    "ms": 1439,
+    "ms": 1471,
     "accepted": true
    },
    "reply": "Ngân sách tổng tháng 10: đã chi 8.404.000đ / 14.000.000đ (60%), còn 5.596.000đ. Mỗi ngày còn chi được khoảng 233.166đ (còn 24 ngày).\n• Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ.\n• Trong hạn mức: Ăn uống 56,5%, Di chuyển 51%, Giải trí 39,3%.\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -824,10 +824,10 @@
    "input": "ngân sách ăn uống còn bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1314,
+   "ms": 1305,
    "llm": {
     "calls": 1,
-    "ms": 1313,
+    "ms": 1304,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Ăn uống: đã chi 1.978.000đ / 3.500.000đ (56,5%), còn 1.522.000đ. Mỗi ngày còn chi được khoảng 63.416đ (còn 24 ngày).\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -840,10 +840,10 @@
    "input": "hạn mức mua sắm còn lại",
    "pass": true,
    "fails": [],
-   "ms": 1465,
+   "ms": 1502,
    "llm": {
     "calls": 1,
-    "ms": 1464,
+    "ms": 1502,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ.\nHey, nhớ kiểm tra lại ngân sách mua sắm nhé!  Hãy giữ nó trong tầm kiểm soát để không bị quá tải đâu!",
@@ -856,10 +856,10 @@
    "input": "tháng này có vượt ngân sách không",
    "pass": true,
    "fails": [],
-   "ms": 1476,
+   "ms": 1386,
    "llm": {
     "calls": 1,
-    "ms": 1473,
+    "ms": 1385,
     "accepted": true
    },
    "reply": "Ngân sách tổng tháng 10: đã chi 8.404.000đ / 14.000.000đ (60%), còn 5.596.000đ. Mỗi ngày còn chi được khoảng 233.166đ (còn 24 ngày).\n• Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ.\n• Trong hạn mức: Ăn uống 56,5%, Di chuyển 51%, Giải trí 39,3%.\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -872,10 +872,10 @@
    "input": "budget giải trí còn không",
    "pass": true,
    "fails": [],
-   "ms": 1438,
+   "ms": 1316,
    "llm": {
     "calls": 1,
-    "ms": 1437,
+    "ms": 1315,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Giải trí: đã chi 314.000đ / 800.000đ (39,3%), còn 486.000đ. Mỗi ngày còn chi được khoảng 20.250đ (còn 24 ngày).\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -888,10 +888,10 @@
    "input": "kiểm tra ngân sách di chuyển",
    "pass": true,
    "fails": [],
-   "ms": 1345,
+   "ms": 1311,
    "llm": {
     "calls": 1,
-    "ms": 1345,
+    "ms": 1310,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Di chuyển: đã chi 612.000đ / 1.200.000đ (51%), còn 588.000đ. Mỗi ngày còn chi được khoảng 24.500đ (còn 24 ngày).\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -904,10 +904,10 @@
    "input": "còn được tiêu bao nhiêu cho grab",
    "pass": true,
    "fails": [],
-   "ms": 1462,
+   "ms": 1345,
    "llm": {
     "calls": 1,
-    "ms": 1461,
+    "ms": 1343,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Di chuyển: đã chi 612.000đ / 1.200.000đ (51%), còn 588.000đ. Mỗi ngày còn chi được khoảng 24.500đ (còn 24 ngày).\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -920,10 +920,10 @@
    "input": "ngân sách tháng trước sao rồi",
    "pass": true,
    "fails": [],
-   "ms": 1687,
+   "ms": 1482,
    "llm": {
     "calls": 1,
-    "ms": 1685,
+    "ms": 1480,
     "accepted": true
    },
    "reply": "Ngân sách tổng tháng 9: đã chi 17.324.000đ / 14.000.000đ (123,7%), vượt 3.324.000đ.\n• Ăn uống: đã chi 9.502.000đ / 3.500.000đ (271,5%), vượt 6.002.000đ.\n• Giải trí: đã chi 742.000đ / 800.000đ (92,8%), còn 58.000đ, sắp chạm hạn mức.\n• Di chuyển: đã chi 1.063.000đ / 1.200.000đ (88,6%), còn 137.000đ, sắp chạm hạn mức.\nCần kiểm tra lại chi tiêu và xem xét cách sắp xếp để đảm bảo ngân sách trong tháng này nhé!",
@@ -936,10 +936,10 @@
    "input": "ngân sách tháng 8",
    "pass": true,
    "fails": [],
-   "ms": 1928,
+   "ms": 1536,
    "llm": {
     "calls": 1,
-    "ms": 1927,
+    "ms": 1534,
     "accepted": true
    },
    "reply": "Ngân sách tổng tháng 8: đã chi 45.349.000đ / 14.000.000đ (323,9%), vượt 31.349.000đ.\n• Mua sắm: đã chi 27.849.000đ / 2.000.000đ (1.392,5%), vượt 25.849.000đ.\n• Ăn uống: đã chi 9.945.000đ / 3.500.000đ (284,1%), vượt 6.445.000đ.\n• Giải trí: đã chi 830.000đ / 800.000đ (103,8%), vượt 30.000đ.\n• Trong hạn mức: Di chuyển 60,2%.\nHey!  Tháng này bạn đã sử dụng khá nhiều cho các mục tiêu vui chơi. Hãy xem lại ngân sách và sắp xếp chi tiêu cho tháng sau nhé!",
@@ -952,10 +952,10 @@
    "input": "ngân sách nhà ở còn bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1451,
+   "ms": 1387,
    "llm": {
     "calls": 1,
-    "ms": 1450,
+    "ms": 1386,
     "accepted": true
    },
    "reply": "Bạn chưa đặt ngân sách riêng cho Nhà ở trong tháng 10.\nNgân sách tổng tháng 10: đã chi 8.404.000đ / 14.000.000đ (60%), còn 5.596.000đ. Mỗi ngày còn chi được khoảng 233.166đ (còn 24 ngày).\n• Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ.\n• Trong hạn mức: Ăn uống 56,5%, Di chuyển 51%, Giải trí 39,3%.\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -968,10 +968,10 @@
    "input": "ngan sach an uong con nhieu khong",
    "pass": true,
    "fails": [],
-   "ms": 1360,
+   "ms": 1354,
    "llm": {
     "calls": 1,
-    "ms": 1360,
+    "ms": 1353,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Ăn uống: đã chi 1.978.000đ / 3.500.000đ (56,5%), còn 1.522.000đ. Mỗi ngày còn chi được khoảng 63.416đ (còn 24 ngày).\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -984,10 +984,10 @@
    "input": "mỗi ngày còn tiêu được bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1341,
+   "ms": 1351,
    "llm": {
     "calls": 1,
-    "ms": 1340,
+    "ms": 1350,
     "accepted": true
    },
    "reply": "Ngân sách tổng tháng 10: đã chi 8.404.000đ / 14.000.000đ (60%), còn 5.596.000đ. Mỗi ngày còn chi được khoảng 233.166đ (còn 24 ngày).\n• Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ.\n• Trong hạn mức: Ăn uống 56,5%, Di chuyển 51%, Giải trí 39,3%.\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -1000,10 +1000,10 @@
    "input": "ngân sách tháng này",
    "pass": true,
    "fails": [],
-   "ms": 1351,
+   "ms": 1220,
    "llm": {
     "calls": 1,
-    "ms": 1350,
+    "ms": 1219,
     "accepted": true
    },
    "reply": "Ngân sách tổng tháng 10: đã chi 2.847.000đ / 16.000.000đ (17,8%), còn 13.153.000đ. Mỗi ngày còn chi được khoảng 548.041đ (còn 24 ngày).\n• Di chuyển: đã chi 163.000đ / 100.000đ (163%), vượt 63.000đ.\n• Ăn uống: đã chi 1.849.000đ / 2.200.000đ (84%), còn 351.000đ, sắp chạm hạn mức.\n• Giải trí: đã chi 835.000đ / 1.000.000đ (83,5%), còn 165.000đ, sắp chạm hạn mức.\nCẩn trọng với chi tiêu, hãy kiểm tra lại ngân sách nhé!",
@@ -1016,10 +1016,10 @@
    "input": "ngân sách ăn uống còn bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 1416,
+   "ms": 1269,
    "llm": {
     "calls": 1,
-    "ms": 1414,
+    "ms": 1268,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Ăn uống: đã chi 1.849.000đ / 2.200.000đ (84%), còn 351.000đ, sắp chạm hạn mức. Mỗi ngày còn chi được khoảng 14.625đ (còn 24 ngày).\nHey! Hãy kiểm tra lại ngân sách giải trí và ăn uống nhé.  Cần giữ vững giới hạn để không bị bất ngờ đâu!",
@@ -1076,10 +1076,10 @@
    "input": "am I over budget",
    "pass": true,
    "fails": [],
-   "ms": 1443,
+   "ms": 1474,
    "llm": {
     "calls": 1,
-    "ms": 1442,
+    "ms": 1473,
     "accepted": true
    },
    "reply": "Ngân sách tổng tháng 10: đã chi 8.404.000đ / 14.000.000đ (60%), còn 5.596.000đ. Mỗi ngày còn chi được khoảng 233.166đ (còn 24 ngày).\n• Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ.\n• Trong hạn mức: Ăn uống 56,5%, Di chuyển 51%, Giải trí 39,3%.\nCần kiểm tra lại ngân sách mua sắm nhé, còn nhiều thời gian để hoàn thành mục tiêu! 😊",
@@ -1092,10 +1092,10 @@
    "input": "lố ngân sách mua sắm chưa",
    "pass": true,
    "fails": [],
-   "ms": 1606,
+   "ms": 1540,
    "llm": {
     "calls": 1,
-    "ms": 1605,
+    "ms": 1539,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Mua sắm: đã chi 1.690.000đ / 1.500.000đ (112,7%), vượt 190.000đ.\nHey, nhớ kiểm tra lại ngân sách mua sắm nhé!  Hãy giữ nó trong tầm kiểm soát để không bị quá tải đâu!",
@@ -1108,10 +1108,10 @@
    "input": "giải trí sắp hết hạn mức chưa",
    "pass": true,
    "fails": [],
-   "ms": 1387,
+   "ms": 1300,
    "llm": {
     "calls": 1,
-    "ms": 1386,
+    "ms": 1299,
     "accepted": true
    },
    "reply": "Ngân sách tháng 10 — Giải trí: đã chi 835.000đ / 1.000.000đ (83,5%), còn 165.000đ, sắp chạm hạn mức. Mỗi ngày còn chi được khoảng 6.875đ (còn 24 ngày).\nHey! Hãy kiểm tra lại ngân sách giải trí và ăn uống nhé.  Cần giữ vững giới hạn để không bị bất ngờ đâu!",
@@ -1124,10 +1124,10 @@
    "input": "ngân sách tháng 9 ăn uống",
    "pass": true,
    "fails": [],
-   "ms": 1369,
+   "ms": 1382,
    "llm": {
     "calls": 1,
-    "ms": 1369,
+    "ms": 1380,
     "accepted": true
    },
    "reply": "Ngân sách tháng 9 — Ăn uống: đã chi 9.502.000đ / 3.500.000đ (271,5%), vượt 6.002.000đ.\nCần kiểm tra lại chi tiêu và xem xét cách sắp xếp để đảm bảo ngân sách trong tháng này nhé!",
@@ -1140,10 +1140,10 @@
    "input": "tìm các khoản grab tuần trước",
    "pass": true,
    "fails": [],
-   "ms": 509,
+   "ms": 695,
    "llm": {
     "calls": 1,
-    "ms": 507,
+    "ms": 690,
     "accepted": true
    },
    "reply": "Mình sẽ tìm giao dịch: tuần trước (28/09–04/10) · có chữ \"grab\".",
@@ -1164,7 +1164,7 @@
    "input": "hôm qua mình chi những gì",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 2,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1188,10 +1188,10 @@
    "input": "liệt kê giao dịch shopee tháng này",
    "pass": true,
    "fails": [],
-   "ms": 476,
+   "ms": 617,
    "llm": {
     "calls": 1,
-    "ms": 475,
+    "ms": 616,
     "accepted": true
    },
    "reply": "Mình sẽ tìm giao dịch: tháng 10 (01/10–31/10) · có chữ \"shopee\".",
@@ -1213,10 +1213,10 @@
    "input": "lần cuối đổ xăng là khi nào",
    "pass": true,
    "fails": [],
-   "ms": 485,
+   "ms": 692,
    "llm": {
     "calls": 1,
-    "ms": 485,
+    "ms": 690,
     "accepted": true
    },
    "reply": "Mình sẽ tìm giao dịch: có chữ \"xăng\".",
@@ -1260,10 +1260,10 @@
    "input": "xem lại giao dịch tiền điện",
    "pass": true,
    "fails": [],
-   "ms": 485,
+   "ms": 662,
    "llm": {
     "calls": 1,
-    "ms": 485,
+    "ms": 660,
     "accepted": true
    },
    "reply": "Mình sẽ tìm giao dịch: có chữ \"tien dien\".",
@@ -1306,7 +1306,7 @@
    "input": "tìm giao dịch trên 1 triệu",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1328,7 +1328,7 @@
    "input": "liệt kê các khoản trên 500k tháng 9",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1379,7 +1379,7 @@
    "input": "thu nhập tháng 8",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1429,10 +1429,10 @@
    "input": "tìm khoản tiền nhà",
    "pass": true,
    "fails": [],
-   "ms": 442,
+   "ms": 582,
    "llm": {
     "calls": 1,
-    "ms": 442,
+    "ms": 582,
     "accepted": true
    },
    "reply": "Mình sẽ tìm giao dịch: có chữ \"nhà\".",
@@ -1451,7 +1451,7 @@
    "input": "từ 1/9 đến 15/9 mua sắm những gì",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1476,7 +1476,7 @@
    "input": "các khoản từ 200k đến 500k",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 2,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1499,10 +1499,10 @@
    "input": "tim giao dich ca phe",
    "pass": true,
    "fails": [],
-   "ms": 486,
+   "ms": 694,
    "llm": {
     "calls": 1,
-    "ms": 485,
+    "ms": 693,
     "accepted": true
    },
    "reply": "Mình sẽ tìm giao dịch: có chữ \"ca phe\".",
@@ -1521,7 +1521,7 @@
    "input": "xem các giao dịch",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1630,7 +1630,7 @@
    "input": "khoản 1tr2 hôm thứ 3 là gì vậy",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -1655,15 +1655,13 @@
    "input": "tiết kiệm đi Đà Lạt tới đâu rồi",
    "pass": true,
    "fails": [],
-   "ms": 1087,
+   "ms": 1545,
    "llm": {
     "calls": 1,
-    "ms": 1087,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1543,
+    "accepted": true
    },
-   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1673,10 +1671,10 @@
    "input": "mục tiêu macbook được bao nhiêu phần trăm rồi",
    "pass": true,
    "fails": [],
-   "ms": 796,
+   "ms": 1109,
    "llm": {
     "calls": 1,
-    "ms": 796,
+    "ms": 1108,
     "accepted": true
    },
    "reply": "MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\nTiếp tục nỗ lực, bạn sẽ chạm tới mục tiêu tiết kiệm của mình! 💪",
@@ -1689,10 +1687,10 @@
    "input": "quỹ khẩn cấp được bao nhiêu rồi",
    "pass": true,
    "fails": [],
-   "ms": 737,
+   "ms": 1033,
    "llm": {
     "calls": 1,
-    "ms": 736,
+    "ms": 1032,
     "accepted": true
    },
    "reply": "Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\nTiếp tục nỗ lực, bạn sẽ chạm tới mục tiêu tiết kiệm của mình! 💪",
@@ -1705,15 +1703,13 @@
    "input": "các mục tiêu tiết kiệm của mình",
    "pass": true,
    "fails": [],
-   "ms": 1053,
+   "ms": 1427,
    "llm": {
     "calls": 1,
-    "ms": 1052,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1425,
+    "accepted": true
    },
-   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1723,15 +1719,13 @@
    "input": "tiến độ tiết kiệm",
    "pass": true,
    "fails": [],
-   "ms": 1121,
+   "ms": 1364,
    "llm": {
     "calls": 1,
-    "ms": 1120,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1363,
+    "accepted": true
    },
-   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1741,10 +1735,10 @@
    "input": "bao giờ thì đủ tiền mua macbook",
    "pass": true,
    "fails": [],
-   "ms": 787,
+   "ms": 1054,
    "llm": {
     "calls": 1,
-    "ms": 787,
+    "ms": 1053,
     "accepted": true
    },
    "reply": "MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\nTiếp tục nỗ lực, bạn sẽ chạm tới mục tiêu tiết kiệm của mình! 💪",
@@ -1757,15 +1751,13 @@
    "input": "muc tieu tiet kiem du lich",
    "pass": true,
    "fails": [],
-   "ms": 1062,
+   "ms": 1373,
    "llm": {
     "calls": 1,
-    "ms": 1062,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1372,
+    "accepted": true
    },
-   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1775,15 +1767,13 @@
    "input": "mục tiêu mua xe tới đâu rồi",
    "pass": true,
    "fails": [],
-   "ms": 1004,
+   "ms": 1377,
    "llm": {
     "calls": 1,
-    "ms": 1003,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1377,
+    "accepted": true
    },
-   "reply": "Mình không thấy mục tiêu nào khớp \"xe\". Các mục tiêu hiện có:\nĐã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Mình không thấy mục tiêu nào khớp \"xe\". Các mục tiêu hiện có:\nĐã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1793,15 +1783,13 @@
    "input": "còn bao lâu nữa đủ tiền mua laptop",
    "pass": true,
    "fails": [],
-   "ms": 1007,
+   "ms": 1269,
    "llm": {
     "calls": 1,
-    "ms": 1007,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1268,
+    "accepted": true
    },
-   "reply": "Mình không thấy mục tiêu nào khớp \"laptop\". Các mục tiêu hiện có:\nĐã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Mình không thấy mục tiêu nào khớp \"laptop\". Các mục tiêu hiện có:\nĐã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1811,10 +1799,10 @@
    "input": "quỹ khẩn cấp còn thiếu bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 759,
+   "ms": 1082,
    "llm": {
     "calls": 1,
-    "ms": 759,
+    "ms": 1081,
     "accepted": true
    },
    "reply": "Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\nTiếp tục nỗ lực, bạn sẽ chạm tới mục tiêu tiết kiệm của mình! 💪",
@@ -1827,15 +1815,13 @@
    "input": "mỗi ngày phải góp bao nhiêu cho chuyến đà lạt",
    "pass": true,
    "fails": [],
-   "ms": 1065,
+   "ms": 1342,
    "llm": {
     "calls": 1,
-    "ms": 1065,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1342,
+    "accepted": true
    },
-   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1845,10 +1831,10 @@
    "input": "mục tiêu laptop mới",
    "pass": true,
    "fails": [],
-   "ms": 701,
+   "ms": 929,
    "llm": {
     "calls": 1,
-    "ms": 701,
+    "ms": 929,
     "accepted": true
    },
    "reply": "Laptop mới: đã có 20.500.000đ / 20.500.000đ (100%). Mục tiêu đã hoàn thành.\nTiếp tục nỗ lực, bạn đã làm được rất nhiều! 🎉",
@@ -1861,10 +1847,10 @@
    "input": "các mục tiêu tiết kiệm",
    "pass": true,
    "fails": [],
-   "ms": 642,
+   "ms": 810,
    "llm": {
     "calls": 1,
-    "ms": 642,
+    "ms": 809,
     "accepted": true
    },
    "reply": "Đã tiết kiệm 23.000.000đ trên tổng 23.000.000đ của 2 mục tiêu:\n• Laptop mới: đã có 20.500.000đ / 20.500.000đ (100%). Mục tiêu đã hoàn thành.\n• Quà sinh nhật mẹ: đã có 2.500.000đ / 2.500.000đ (100%). Mục tiêu đã hoàn thành.\nTiếp tục nỗ lực, bạn đã làm được rất nhiều! 🎉",
@@ -1877,10 +1863,10 @@
    "input": "quỹ khẩn cấp",
    "pass": true,
    "fails": [],
-   "ms": 769,
+   "ms": 953,
    "llm": {
     "calls": 1,
-    "ms": 769,
+    "ms": 952,
     "accepted": true
    },
    "reply": "Quỹ khẩn cấp: đã rút tiền trước hạn, mục tiêu đã đóng.\nTiếp tục nỗ lực, bạn sẽ chạm tới mục tiêu tiết kiệm của mình! 💪",
@@ -1893,10 +1879,10 @@
    "input": "quà sinh nhật mẹ tới đâu rồi",
    "pass": true,
    "fails": [],
-   "ms": 694,
+   "ms": 968,
    "llm": {
     "calls": 1,
-    "ms": 694,
+    "ms": 968,
     "accepted": true
    },
    "reply": "Quà sinh nhật mẹ: đã có 2.500.000đ / 2.500.000đ (100%). Mục tiêu đã hoàn thành.\nTiếp tục nỗ lực, bạn đã làm được rất nhiều! 🎉",
@@ -1925,7 +1911,7 @@
    "input": "mục tiêu tiết kiệm của anh Nam",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Xin lỗi, mình chỉ xem được dữ liệu trong tài khoản của chính bạn, không thể cung cấp thông tin của người dùng khác.",
    "draft": null,
@@ -1937,15 +1923,13 @@
    "input": "how are my savings goals",
    "pass": true,
    "fails": [],
-   "ms": 1081,
+   "ms": 1351,
    "llm": {
     "calls": 1,
-    "ms": 1080,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1350,
+    "accepted": true
    },
-   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1955,15 +1939,13 @@
    "input": "ong heo cua minh sao roi",
    "pass": true,
    "fails": [],
-   "ms": 1012,
+   "ms": 1284,
    "llm": {
     "calls": 1,
-    "ms": 1011,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1283,
+    "accepted": true
    },
-   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Đã tiết kiệm 52.200.000đ trên tổng 91.000.000đ của 3 mục tiêu:\n• Quỹ khẩn cấp: đã có 30.000.000đ / 50.000.000đ (60%), còn thiếu 20.000.000đ. Hạn 31/12/2028 (còn 815 ngày) → cần góp khoảng 24.540đ/ngày (~736.200đ/tháng).\n• MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\n• Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -1973,10 +1955,10 @@
    "input": "tiết kiệm macbook tháng này góp chưa",
    "pass": true,
    "fails": [],
-   "ms": 784,
+   "ms": 1009,
    "llm": {
     "calls": 1,
-    "ms": 784,
+    "ms": 1008,
     "accepted": true
    },
    "reply": "MacBook Air M4: đã có 18.000.000đ / 35.000.000đ (51,4%), còn thiếu 17.000.000đ. Hạn 31/03/2027 (còn 174 ngày) → cần góp khoảng 97.702đ/ngày (~2.931.060đ/tháng).\nTiếp tục nỗ lực, bạn sẽ chạm tới mục tiêu tiết kiệm của mình! 💪",
@@ -1989,15 +1971,13 @@
    "input": "Đà Lạt",
    "pass": true,
    "fails": [],
-   "ms": 1053,
+   "ms": 1359,
    "llm": {
     "calls": 1,
-    "ms": 1053,
-    "accepted": false,
-    "reason": "có số viết bằng chữ",
-    "raw": "Chúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!"
+    "ms": 1359,
+    "accepted": true
    },
-   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nCứ góp đều đặn mỗi tháng, bạn sẽ đạt mục tiêu đúng hạn.",
+   "reply": "Du lịch Đà Lạt: đã có 4.200.000đ / 6.000.000đ (70%), còn thiếu 1.800.000đ. Hạn 15/12/2026 (còn 68 ngày) → cần góp khoảng 26.471đ/ngày (~794.130đ/tháng).\nChúc mừng bạn đã tiến xa trong mục tiêu du lịch Đà Lạt! Còn rất nhiều điều thú vị chờ đợi bạn, hãy tiếp tục nỗ lực nhé!",
    "draft": null,
    "askBack": null
   },
@@ -2007,10 +1987,10 @@
    "input": "gợi ý ngân sách tháng sau cho mình",
    "pass": true,
    "fails": [],
-   "ms": 887,
+   "ms": 1255,
    "llm": {
     "calls": 1,
-    "ms": 885,
+    "ms": 1252,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2083,10 +2063,10 @@
    "input": "nên đặt ngân sách bao nhiêu cho hợp lý",
    "pass": true,
    "fails": [],
-   "ms": 796,
+   "ms": 1049,
    "llm": {
     "calls": 1,
-    "ms": 795,
+    "ms": 1046,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2159,10 +2139,10 @@
    "input": "lập ngân sách tháng này giúp mình",
    "pass": true,
    "fails": [],
-   "ms": 798,
+   "ms": 1013,
    "llm": {
     "calls": 1,
-    "ms": 797,
+    "ms": 1011,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 10 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!\nLưu ý: tháng 10 đã có ngân sách; xác nhận sẽ cập nhật hạn mức theo gợi ý.",
@@ -2235,10 +2215,10 @@
    "input": "đề xuất hạn mức chi tiêu cho từng danh mục",
    "pass": true,
    "fails": [],
-   "ms": 794,
+   "ms": 966,
    "llm": {
     "calls": 1,
-    "ms": 793,
+    "ms": 963,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2311,10 +2291,10 @@
    "input": "tư vấn ngân sách ăn uống nên để bao nhiêu",
    "pass": true,
    "fails": [],
-   "ms": 788,
+   "ms": 1101,
    "llm": {
     "calls": 1,
-    "ms": 787,
+    "ms": 1099,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2387,10 +2367,10 @@
    "input": "suggest a budget for next month",
    "pass": true,
    "fails": [],
-   "ms": 803,
+   "ms": 1047,
    "llm": {
     "calls": 1,
-    "ms": 802,
+    "ms": 1046,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2463,10 +2443,10 @@
    "input": "goi y ngan sach thang toi",
    "pass": true,
    "fails": [],
-   "ms": 790,
+   "ms": 1119,
    "llm": {
     "calls": 1,
-    "ms": 789,
+    "ms": 1118,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2539,10 +2519,10 @@
    "input": "gợi ý ngân sách tháng 12",
    "pass": true,
    "fails": [],
-   "ms": 801,
+   "ms": 1049,
    "llm": {
     "calls": 1,
-    "ms": 800,
+    "ms": 1047,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 12 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2615,10 +2595,10 @@
    "input": "gợi ý ngân sách cho mình",
    "pass": true,
    "fails": [],
-   "ms": 790,
+   "ms": 1042,
    "llm": {
     "calls": 1,
-    "ms": 790,
+    "ms": 1040,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 18.300.000đ (trung vị 18.299.000đ/tháng)\n• Ăn uống: 11.400.000đ (trung vị 11.377.000đ, TB 11.759.000đ)\n• Hóa đơn: 1.300.000đ (trung vị 1.265.000đ, TB 1.329.000đ)\n• Mua sắm: 850.000đ (trung vị 838.000đ, TB 1.218.333đ)\n• Giải trí: 850.000đ (trung vị 832.000đ, TB 1.194.667đ)\n• Thú cưng: 450.000đ (trung vị 417.000đ, TB 379.667đ)\n• Di chuyển: 250.000đ (trung vị 248.000đ, TB 297.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2691,10 +2671,10 @@
    "input": "tháng sau nên đặt ngân sách thế nào",
    "pass": true,
    "fails": [],
-   "ms": 808,
+   "ms": 1023,
    "llm": {
     "calls": 1,
-    "ms": 807,
+    "ms": 1022,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 11 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 18.300.000đ (trung vị 18.299.000đ/tháng)\n• Ăn uống: 11.400.000đ (trung vị 11.377.000đ, TB 11.759.000đ)\n• Hóa đơn: 1.300.000đ (trung vị 1.265.000đ, TB 1.329.000đ)\n• Mua sắm: 850.000đ (trung vị 838.000đ, TB 1.218.333đ)\n• Giải trí: 850.000đ (trung vị 832.000đ, TB 1.194.667đ)\n• Thú cưng: 450.000đ (trung vị 417.000đ, TB 379.667đ)\n• Di chuyển: 250.000đ (trung vị 248.000đ, TB 297.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!",
@@ -2767,7 +2747,7 @@
    "input": "gợi ý ngân sách tháng sau",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -2795,10 +2775,10 @@
    "input": "dựa vào mấy tháng trước đặt ngân sách giúp mình",
    "pass": true,
    "fails": [],
-   "ms": 805,
+   "ms": 965,
    "llm": {
     "calls": 1,
-    "ms": 804,
+    "ms": 963,
     "accepted": true
    },
    "reply": "Gợi ý ngân sách tháng 9 (theo mức chi trung vị 3 tháng 7, 8, 9, làm tròn lên):\n• Ngân sách tổng: 23.900.000đ (trung vị 23.814.000đ/tháng)\n• Ăn uống: 9.550.000đ (trung vị 9.502.000đ, TB 8.818.000đ)\n• Nhà ở: 2.500.000đ (trung vị 2.500.000đ, TB 2.500.000đ)\n• Gia đình: 2.000.000đ (trung vị 2.000.000đ, TB 2.000.000đ)\n• Hóa đơn: 1.250.000đ (trung vị 1.238.000đ, TB 1.399.000đ)\n• Giải trí: 750.000đ (trung vị 742.000đ, TB 620.333đ)\n• Di chuyển: 750.000đ (trung vị 722.000đ, TB 831.333đ)\nBạn có muốn thử nghiệm với mức chi gợi ý cho bữa ăn? Nếu cần, bạn vẫn có thể chỉnh sửa!\nLưu ý: tháng 9 đã có ngân sách; xác nhận sẽ cập nhật hạn mức theo gợi ý.",
@@ -2871,10 +2851,10 @@
    "input": "cho mình vài mẹo tiết kiệm",
    "pass": true,
    "fails": [],
-   "ms": 775,
+   "ms": 925,
    "llm": {
     "calls": 1,
-    "ms": 773,
+    "ms": 923,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi nhiều nhất cho Mua sắm (TB 9.309.000đ/tháng), Ăn uống (TB 8.818.000đ/tháng), Giáo dục (TB 2.966.667đ/tháng). Vài mẹo:\n• Áp dụng quy tắc chờ một ngày trước khi mua món không cần thiết.\n• Đi chợ theo danh sách đã lên trước, tránh mua theo hứng ở siêu thị.\n• Xem báo cáo cuối mỗi tuần để phát hiện sớm khoản chi tăng bất thường.",
@@ -2887,10 +2867,10 @@
    "input": "làm sao bớt tiền cà phê",
    "pass": true,
    "fails": [],
-   "ms": 694,
+   "ms": 939,
    "llm": {
     "calls": 1,
-    "ms": 693,
+    "ms": 938,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi trung bình 8.818.000đ/tháng cho Ăn uống. Vài mẹo:\n• Pha cà phê ở nhà hoặc dùng mẫu nhập nhanh để thấy rõ mỗi ly cà phê cộng dồn bao nhiêu.\n• Đặt ngân sách riêng cho Ăn uống và xem cảnh báo khi chạm ngưỡng.",
@@ -2903,10 +2883,10 @@
    "input": "mẹo giảm tiền grab",
    "pass": true,
    "fails": [],
-   "ms": 652,
+   "ms": 934,
    "llm": {
     "calls": 1,
-    "ms": 651,
+    "ms": 933,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi trung bình 831.333đ/tháng cho Di chuyển. Vài mẹo:\n• Gộp các chuyến đi gần nhau, dùng xe buýt hoặc đi chung cho quãng đường quen thuộc.\n• So giá giữa các ứng dụng gọi xe và tránh giờ cao điểm có phụ phí.",
@@ -2919,10 +2899,10 @@
    "input": "tiêu nhiều quá phải làm sao",
    "pass": true,
    "fails": [],
-   "ms": 758,
+   "ms": 970,
    "llm": {
     "calls": 1,
-    "ms": 757,
+    "ms": 969,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi nhiều nhất cho Mua sắm (TB 9.309.000đ/tháng), Ăn uống (TB 8.818.000đ/tháng), Giáo dục (TB 2.966.667đ/tháng). Vài mẹo:\n• Áp dụng quy tắc chờ một ngày trước khi mua món không cần thiết.\n• Đi chợ theo danh sách đã lên trước, tránh mua theo hứng ở siêu thị.\n• Xem báo cáo cuối mỗi tuần để phát hiện sớm khoản chi tăng bất thường.",
@@ -2935,10 +2915,10 @@
    "input": "cách giảm tiền shopee",
    "pass": true,
    "fails": [],
-   "ms": 696,
+   "ms": 1011,
    "llm": {
     "calls": 1,
-    "ms": 696,
+    "ms": 1009,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi trung bình 9.309.000đ/tháng cho Mua sắm. Vài mẹo:\n• Áp dụng quy tắc chờ một ngày trước khi mua món không cần thiết.\n• Lập danh sách món cần mua cho cả tháng và chỉ mua trong dịp giảm giá thật sự.",
@@ -2951,10 +2931,10 @@
    "input": "mẹo tiết kiệm cho mình",
    "pass": true,
    "fails": [],
-   "ms": 765,
+   "ms": 1019,
    "llm": {
     "calls": 1,
-    "ms": 764,
+    "ms": 1017,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi nhiều nhất cho Ăn uống (TB 11.759.000đ/tháng), Du lịch (TB 3.303.333đ/tháng), Hóa đơn (TB 1.329.000đ/tháng). Vài mẹo:\n• Đi chợ theo danh sách đã lên trước, tránh mua theo hứng ở siêu thị.\n• Tắt thiết bị điện khi không dùng và để điều hòa ở mức vừa phải.\n• Xem báo cáo cuối mỗi tuần để phát hiện sớm khoản chi tăng bất thường.",
@@ -2967,10 +2947,10 @@
    "input": "bí quyết để dành tiền",
    "pass": true,
    "fails": [],
-   "ms": 703,
+   "ms": 936,
    "llm": {
     "calls": 1,
-    "ms": 703,
+    "ms": 935,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi nhiều nhất cho Ăn uống (TB 11.759.000đ/tháng), Du lịch (TB 3.303.333đ/tháng), Hóa đơn (TB 1.329.000đ/tháng). Vài mẹo:\n• Đi chợ theo danh sách đã lên trước, tránh mua theo hứng ở siêu thị.\n• Đặt ngân sách riêng cho Ăn uống và xem cảnh báo khi chạm ngưỡng.\n• Đặt vé và phòng sớm, đi ngoài mùa cao điểm, và lập mục tiêu tiết kiệm riêng cho chuyến đi.",
@@ -2983,10 +2963,10 @@
    "input": "làm sao bớt tiền đi chơi giải trí",
    "pass": true,
    "fails": [],
-   "ms": 693,
+   "ms": 998,
    "llm": {
     "calls": 1,
-    "ms": 692,
+    "ms": 996,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi trung bình 1.194.667đ/tháng cho Giải trí. Vài mẹo:\n• Rà lại các gói đăng ký xem phim, nghe nhạc và hủy gói ít dùng.\n• Trả tiền cho bản thân trước: chuyển tiền vào mục tiêu tiết kiệm ngay khi nhận lương.",
@@ -2999,10 +2979,10 @@
    "input": "mẹo tiết kiệm",
    "pass": true,
    "fails": [],
-   "ms": 659,
+   "ms": 980,
    "llm": {
     "calls": 1,
-    "ms": 659,
+    "ms": 979,
     "accepted": true
    },
    "reply": "Bạn chưa có nhiều dữ liệu chi tiêu, đây là vài mẹo chung:\n• Trả tiền cho bản thân trước: chuyển tiền vào mục tiêu tiết kiệm ngay khi nhận lương.\n• Xem báo cáo cuối mỗi tuần để phát hiện sớm khoản chi tăng bất thường.",
@@ -3027,10 +3007,10 @@
    "input": "give me some saving tips",
    "pass": true,
    "fails": [],
-   "ms": 762,
+   "ms": 944,
    "llm": {
     "calls": 1,
-    "ms": 761,
+    "ms": 943,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi nhiều nhất cho Mua sắm (TB 9.309.000đ/tháng), Ăn uống (TB 8.818.000đ/tháng), Giáo dục (TB 2.966.667đ/tháng). Vài mẹo:\n• Áp dụng quy tắc chờ một ngày trước khi mua món không cần thiết.\n• Đi chợ theo danh sách đã lên trước, tránh mua theo hứng ở siêu thị.\n• Xem báo cáo cuối mỗi tuần để phát hiện sớm khoản chi tăng bất thường.",
@@ -3043,10 +3023,10 @@
    "input": "tiền điện cao quá có cách nào giảm",
    "pass": true,
    "fails": [],
-   "ms": 679,
+   "ms": 944,
    "llm": {
     "calls": 1,
-    "ms": 678,
+    "ms": 943,
     "accepted": true
    },
    "reply": "3 tháng qua bạn chi trung bình 1.399.000đ/tháng cho Hóa đơn. Vài mẹo:\n• Tắt thiết bị điện khi không dùng và để điều hòa ở mức vừa phải.\n• Xem báo cáo cuối mỗi tuần để phát hiện sớm khoản chi tăng bất thường.",
@@ -3059,7 +3039,7 @@
    "input": "làm sao thêm ví mới",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 2,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3091,7 +3071,7 @@
    "input": "xuất báo cáo ra excel thế nào",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3171,7 +3151,7 @@
    "input": "cách chuyển tiền giữa hai ví",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3203,7 +3183,7 @@
    "input": "muốn xóa giao dịch thì bấm vào đâu",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3235,7 +3215,7 @@
    "input": "nạp tiền vào mục tiêu như thế nào",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3283,7 +3263,7 @@
    "input": "app có chế độ tối không",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3331,7 +3311,7 @@
    "input": "how do I change my password",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3363,7 +3343,7 @@
    "input": "sửa giao dịch thế nào",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3379,7 +3359,7 @@
    "input": "xem báo cáo tháng ở đâu",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3411,7 +3391,7 @@
    "input": "trợ lý này dùng sao",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -3439,7 +3419,7 @@
    "input": "thời tiết hôm nay thế nào",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Xin lỗi, câu này nằm ngoài phạm vi của mình. Mình hỗ trợ ghi thu chi, xem số dư, báo cáo, ngân sách, tiết kiệm và cách dùng ứng dụng.",
    "draft": null,
@@ -3583,7 +3563,7 @@
    "input": "ghi cà phê 30k",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Phiên quản trị không xem hay ghi dữ liệu tài chính cá nhân. Hãy đăng nhập ứng dụng bằng tài khoản người dùng để làm việc này.",
    "draft": null,
@@ -3631,7 +3611,7 @@
    "input": "ừ",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Bạn muốn mình làm gì? Ví dụ: ghi một khoản chi, xem số dư, tổng kết tháng, kiểm tra ngân sách.",
    "draft": null,
@@ -3643,7 +3623,7 @@
    "input": "cái đó",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Bạn đang nói tới việc nào? Mình chưa có ngữ cảnh trước đó, bạn nói rõ giúp mình nhé.",
    "draft": null,
@@ -3763,13 +3743,13 @@
    "input": "tổng quan hệ thống hôm nay",
    "pass": true,
    "fails": [],
-   "ms": 1262,
+   "ms": 1393,
    "llm": {
     "calls": 1,
-    "ms": 1261,
+    "ms": 1390,
     "accepted": true
    },
-   "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống hiện có một số tài khoản bị khóa, cũng như sự gia tăng của người dùng mới.  Tổng chi toàn hệ thống đã giảm xuống so với tháng trước.",
+   "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
    "draft": null,
    "askBack": null
   },
@@ -3779,10 +3759,10 @@
    "input": "có bao nhiêu người dùng mới trong 30 ngày",
    "pass": true,
    "fails": [],
-   "ms": 1030,
+   "ms": 1315,
    "llm": {
     "calls": 1,
-    "ms": 1030,
+    "ms": 1315,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3795,10 +3775,10 @@
    "input": "thống kê giao dịch toàn hệ thống",
    "pass": true,
    "fails": [],
-   "ms": 1043,
+   "ms": 1332,
    "llm": {
     "calls": 1,
-    "ms": 1043,
+    "ms": 1331,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3811,10 +3791,10 @@
    "input": "tình hình hệ thống tháng này",
    "pass": true,
    "fails": [],
-   "ms": 1045,
+   "ms": 1288,
    "llm": {
     "calls": 1,
-    "ms": 1044,
+    "ms": 1287,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3827,10 +3807,10 @@
    "input": "bao nhiêu tài khoản đang hoạt động",
    "pass": true,
    "fails": [],
-   "ms": 1042,
+   "ms": 1285,
    "llm": {
     "calls": 1,
-    "ms": 1042,
+    "ms": 1284,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3843,10 +3823,10 @@
    "input": "tong so giao dich he thong",
    "pass": true,
    "fails": [],
-   "ms": 1041,
+   "ms": 1286,
    "llm": {
     "calls": 1,
-    "ms": 1040,
+    "ms": 1285,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3859,10 +3839,10 @@
    "input": "give me a system overview",
    "pass": true,
    "fails": [],
-   "ms": 1029,
+   "ms": 1333,
    "llm": {
     "calls": 1,
-    "ms": 1029,
+    "ms": 1332,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3875,10 +3855,10 @@
    "input": "how many users do we have",
    "pass": true,
    "fails": [],
-   "ms": 1033,
+   "ms": 1332,
    "llm": {
     "calls": 1,
-    "ms": 1033,
+    "ms": 1331,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3891,10 +3871,10 @@
    "input": "số mục tiêu tiết kiệm đã hoàn thành",
    "pass": true,
    "fails": [],
-   "ms": 1057,
+   "ms": 1302,
    "llm": {
     "calls": 1,
-    "ms": 1057,
+    "ms": 1301,
     "accepted": true
    },
    "reply": "Người dùng: 42 tài khoản (39 hoạt động, 3 bị khóa), 9 tài khoản mới trong 30 ngày.\nGiao dịch: 41.669 tổng (11.460 trong 30 ngày); tổng thu 13.477.739.000đ, tổng chi 10.834.605.000đ.\nMục tiêu tiết kiệm: 21 rút sớm, 10 đã rút, 16 đã hoàn thành, 29 đang chạy.\nChi toàn hệ thống tháng 9: 853.654.000đ (giảm 13,7% so với tháng 8); thu 1.030.078.000đ.\nTháng 10 đến nay: thu 337.876.000đ, chi 291.803.000đ.\nTình hình hệ thống ổn định, nhưng cần kiểm tra các tài khoản bị khóa và onboarding mới. Tổng chi toàn hệ thống cũng giảm xuống.",
@@ -3953,7 +3933,7 @@
    "input": "tra cứu nam.tran@demo.thuchi.vn",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 0,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -4063,7 +4043,7 @@
    "input": "xem danh sách người dùng đang hoạt động",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -4107,10 +4087,10 @@
    "input": "list locked accounts",
    "pass": true,
    "fails": [],
-   "ms": 483,
+   "ms": 634,
    "llm": {
     "calls": 1,
-    "ms": 483,
+    "ms": 634,
     "accepted": null
    },
    "reply": "Mình sẽ tìm người dùng: đang bị khóa.",
@@ -4185,10 +4165,10 @@
    "input": "có tài khoản nào bất thường không",
    "pass": true,
    "fails": [],
-   "ms": 1083,
+   "ms": 1364,
    "llm": {
     "calls": 1,
-    "ms": 1082,
+    "ms": 1363,
     "accepted": true
    },
    "reply": "Phát hiện 3 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nLưu ý: hệ thống chưa ghi nhận số lần đăng nhập sai nên chưa kiểm tra được dấu hiệu dò mật khẩu.\nDấu hiệu bất thường: Chi tiêu tăng vọt và tài khoản bị khóa, vui lòng xem chi tiết trước khi xử lý.",
@@ -4201,10 +4181,10 @@
    "input": "rà soát giao dịch đáng ngờ tuần này",
    "pass": true,
    "fails": [],
-   "ms": 996,
+   "ms": 1218,
    "llm": {
     "calls": 1,
-    "ms": 995,
+    "ms": 1217,
     "accepted": true
    },
    "reply": "Phát hiện 3 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nLưu ý: hệ thống chưa ghi nhận số lần đăng nhập sai nên chưa kiểm tra được dấu hiệu dò mật khẩu.\nDấu hiệu bất thường: Chi tiêu tăng vọt và tài khoản bị khóa, vui lòng xem chi tiết trước khi xử lý.",
@@ -4217,10 +4197,10 @@
    "input": "ai chi tiêu tăng đột biến",
    "pass": true,
    "fails": [],
-   "ms": 973,
+   "ms": 1194,
    "llm": {
     "calls": 1,
-    "ms": 973,
+    "ms": 1193,
     "accepted": true
    },
    "reply": "Phát hiện 3 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nLưu ý: hệ thống chưa ghi nhận số lần đăng nhập sai nên chưa kiểm tra được dấu hiệu dò mật khẩu.\nDấu hiệu bất thường: Chi tiêu tăng vọt và tài khoản bị khóa, vui lòng xem chi tiết trước khi xử lý.",
@@ -4233,10 +4213,10 @@
    "input": "kiem tra bat thuong he thong",
    "pass": true,
    "fails": [],
-   "ms": 981,
+   "ms": 1175,
    "llm": {
     "calls": 1,
-    "ms": 980,
+    "ms": 1174,
     "accepted": true
    },
    "reply": "Phát hiện 3 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nLưu ý: hệ thống chưa ghi nhận số lần đăng nhập sai nên chưa kiểm tra được dấu hiệu dò mật khẩu.\nDấu hiệu bất thường: Chi tiêu tăng vọt và tài khoản bị khóa, vui lòng xem chi tiết trước khi xử lý.",
@@ -4249,10 +4229,10 @@
    "input": "any anomalies today",
    "pass": true,
    "fails": [],
-   "ms": 978,
+   "ms": 1309,
    "llm": {
     "calls": 1,
-    "ms": 978,
+    "ms": 1308,
     "accepted": true
    },
    "reply": "Phát hiện 3 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nLưu ý: hệ thống chưa ghi nhận số lần đăng nhập sai nên chưa kiểm tra được dấu hiệu dò mật khẩu.\nDấu hiệu bất thường: Chi tiêu tăng vọt và tài khoản bị khóa, vui lòng xem chi tiết trước khi xử lý.",
@@ -4265,13 +4245,15 @@
    "input": "có tài khoản nào bất thường không",
    "pass": true,
    "fails": [],
-   "ms": 1538,
+   "ms": 1778,
    "llm": {
     "calls": 1,
-    "ms": 1538,
-    "accepted": true
+    "ms": 1777,
+    "accepted": false,
+    "reason": "có chỗ trống chưa điền",
+    "raw": "Dấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang bị khóa."
    },
-   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nDấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang bị khóa.",
+   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nNên xem chi tiết từng tài khoản trước khi quyết định khóa.",
    "draft": null,
    "askBack": null
   },
@@ -4281,13 +4263,15 @@
    "input": "có ai bị dò mật khẩu không",
    "pass": true,
    "fails": [],
-   "ms": 1465,
+   "ms": 1727,
    "llm": {
     "calls": 1,
-    "ms": 1465,
-    "accepted": true
+    "ms": 1727,
+    "accepted": false,
+    "reason": "có chỗ trống chưa điền",
+    "raw": "Dấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang chờ bạn."
    },
-   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nDấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang chờ bạn.",
+   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nNên xem chi tiết từng tài khoản trước khi quyết định khóa.",
    "draft": null,
    "askBack": null
   },
@@ -4297,13 +4281,15 @@
    "input": "user nào giao dịch dồn dập",
    "pass": true,
    "fails": [],
-   "ms": 1465,
+   "ms": 1717,
    "llm": {
     "calls": 1,
-    "ms": 1465,
-    "accepted": true
+    "ms": 1717,
+    "accepted": false,
+    "reason": "có chỗ trống chưa điền",
+    "raw": "Dấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang chờ bạn."
    },
-   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nDấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang chờ bạn.",
+   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nNên xem chi tiết từng tài khoản trước khi quyết định khóa.",
    "draft": null,
    "askBack": null
   },
@@ -4313,13 +4299,15 @@
    "input": "khoản chi nào lớn bất thường",
    "pass": true,
    "fails": [],
-   "ms": 1473,
+   "ms": 1660,
    "llm": {
     "calls": 1,
-    "ms": 1472,
-    "accepted": true
+    "ms": 1660,
+    "accepted": false,
+    "reason": "có chỗ trống chưa điền",
+    "raw": "Dấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang chờ bạn."
    },
-   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nDấu hiệu bất thường: khoản chi lớn, đăng nhập sai nhiều lần, số giao dịch dồn dập, chi tiêu tăng vọt.  Cần xem chi tiết trước khi xử lý! Tài khoản [tài khoản bị khóa] đang chờ bạn.",
+   "reply": "Phát hiện 6 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Lý Đình Khoa (khoa.ly@demo.thuchi.vn): khoản chi lớn bất thường — một khoản chi 45.000.000đ trong 30 ngày, lớn so với mức chi TB 8.183.333đ/tháng.\n• Vũ Văn Hùng (hung.vu89@demo.thuchi.vn): đăng nhập sai nhiều lần — 25 lần đăng nhập sai trong 24 giờ.\n• Ngô Gia Huy (giahuy.ngo@demo.thuchi.vn): số giao dịch dồn dập — 480 giao dịch trong 30 ngày, gấp 5,5 lần trung vị (87).\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nNên xem chi tiết từng tài khoản trước khi quyết định khóa.",
    "draft": null,
    "askBack": null
   },
@@ -4329,10 +4317,10 @@
    "input": "danh sách tài khoản bị khóa có gì lạ",
    "pass": true,
    "fails": [],
-   "ms": 1098,
+   "ms": 1275,
    "llm": {
     "calls": 1,
-    "ms": 1098,
+    "ms": 1274,
     "accepted": true
    },
    "reply": "Phát hiện 3 tài khoản có dấu hiệu bất thường (xếp theo mức độ):\n• Đỗ Phương Linh (phuonglinh.do@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 8.745.000đ, nếu giữ nhịp sẽ thành ~33.886.875đ (gấp 2,4 lần TB 3 tháng 14.244.667đ).\n• Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\n• Huỳnh Tuấn Kiệt (kiet.huynh88@demo.thuchi.vn): chi tiêu tăng vọt — chi 8 ngày đầu tháng 7.231.000đ, nếu giữ nhịp sẽ thành ~28.020.125đ (gấp 2,1 lần TB 3 tháng 13.035.333đ).\nĐang bị khóa: Phạm Trọng Nghĩa (nghia.pham@demo.thuchi.vn, đăng nhập cuối 27/08/2026), Bùi Thanh Tùng (tung.bui93@demo.thuchi.vn, đăng nhập cuối 12/09/2026), Hồ Thùy Dương (thuyduong.ho@demo.thuchi.vn, đăng nhập cuối 06/10/2026).\nLưu ý: hệ thống chưa ghi nhận số lần đăng nhập sai nên chưa kiểm tra được dấu hiệu dò mật khẩu.\nDấu hiệu bất thường: Chi tiêu tăng vọt và tài khoản bị khóa, vui lòng xem chi tiết trước khi xử lý.",
@@ -4357,10 +4345,10 @@
    "input": "soạn thông báo bảo trì từ 0h đến 2h ngày 20/10",
    "pass": true,
    "fails": [],
-   "ms": 2107,
+   "ms": 2126,
    "llm": {
     "calls": 1,
-    "ms": 2103,
+    "ms": 2123,
     "accepted": true
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Bảo trì hệ thống đêm 20/10\nNội dung: Hệ thống sẽ bảo trì từ 0h đến 2h ngày 20/10 để nâng cấp. Trong thời gian này bạn tạm thời chưa đăng nhập và ghi chép được. Mong bạn thông cảm vì sự bất tiện này. Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.\nLưu ý: đã có thông báo tương tự \"Bảo trì hệ thống đêm 12/10\".",
@@ -4379,10 +4367,10 @@
    "input": "viết thông báo ra mắt tính năng mẫu nhập nhanh",
    "pass": true,
    "fails": [],
-   "ms": 1541,
+   "ms": 1522,
    "llm": {
     "calls": 1,
-    "ms": 1539,
+    "ms": 1521,
     "accepted": true
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Mẫu nhập nhanh ra mắt!\nNội dung: Bạn có thể dễ dàng tạo và sử dụng mẫu nhập nhanh trong ứng dụng. Hãy thử ngay để tiết kiệm thời gian! Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4401,10 +4389,10 @@
    "input": "soạn broadcast nhắc mọi người đặt ngân sách tháng 11",
    "pass": true,
    "fails": [],
-   "ms": 1688,
+   "ms": 1772,
    "llm": {
     "calls": 1,
-    "ms": 1688,
+    "ms": 1772,
     "accepted": true
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Khao khát ngân sách tháng 11!\nNội dung: Mọi người ơi, hãy nhớ đặt ngân sách cho tháng 11 vào ngày hôm nay để tránh bị thiếu tiền. Còn chờ gì nữa? Hãy gõ\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4423,10 +4411,10 @@
    "input": "thông báo cho tất cả người dùng là app có phiên bản mới",
    "pass": true,
    "fails": [],
-   "ms": 1493,
+   "ms": 1542,
    "llm": {
     "calls": 1,
-    "ms": 1493,
+    "ms": 1542,
     "accepted": true
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Cập nhật phiên bản mới\nNội dung: App Thu Chi đã được cập nhật với nhiều cải tiến. Hãy tải về phiên bản mới nhất để trải nghiệm các tính năng mới! Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4445,10 +4433,10 @@
    "input": "nháp thông báo chúc mừng ngày phụ nữ Việt Nam 20/10",
    "pass": true,
    "fails": [],
-   "ms": 2685,
+   "ms": 2551,
    "llm": {
     "calls": 2,
-    "ms": 2684,
+    "ms": 2550,
     "accepted": false
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Thông báo: Chúc mừng ngày phụ nữ Việt Nam 20/10\nNội dung: Kính gửi bạn, chúc mừng ngày phụ nữ Việt Nam 20/10. Cảm ơn bạn đã đồng hành cùng Thu Chi. Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4467,10 +4455,10 @@
    "input": "soan thong bao xin loi vi su co dong bo du lieu",
    "pass": true,
    "fails": [],
-   "ms": 1808,
+   "ms": 1580,
    "llm": {
     "calls": 1,
-    "ms": 1807,
+    "ms": 1579,
     "accepted": true
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Xin lỗi về sự cố dữ liệu\nNội dung: Chúng tôi đang xử lý sự cố với dữ liệu. Xin lỗi vì bất tiện này. Chúng tôi sẽ thông báo khi có update. Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4489,10 +4477,10 @@
    "input": "viết giúp tin nhắn cảnh báo lừa đảo mạo danh nhân viên Thu Chi",
    "pass": true,
    "fails": [],
-   "ms": 1152,
+   "ms": 1246,
    "llm": {
     "calls": 1,
-    "ms": 1151,
+    "ms": 1246,
     "accepted": true
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Cảnh báo về lừa đảo\nNội dung: Có thông tin rằng một kẻ gian lận đang sử dụng tên\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4511,10 +4499,10 @@
    "input": "tạo thông báo tạm dừng tính năng xuất CSV từ ngày 15/10",
    "pass": true,
    "fails": [],
-   "ms": 1557,
+   "ms": 1669,
    "llm": {
     "calls": 1,
-    "ms": 1557,
+    "ms": 1668,
     "accepted": true
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Tạm dừng tính năng xuất CSV\nNội dung: Tính năng xuất dữ liệu CSV sẽ tạm dừng từ ngày 15/10. Chúng tôi đang hoàn thiện và cập nhật tính năng mới, mong bạn thông cảm. Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4533,10 +4521,10 @@
    "input": "soạn thông báo bảo trì hệ thống đêm 12/10",
    "pass": true,
    "fails": [],
-   "ms": 3884,
+   "ms": 4258,
    "llm": {
     "calls": 2,
-    "ms": 3884,
+    "ms": 4257,
     "accepted": false
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Thông báo: Bảo trì hệ thống đêm 12/10\nNội dung: Kính gửi bạn, bảo trì hệ thống đêm 12/10. Cảm ơn bạn đã đồng hành cùng Thu Chi. Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.\nLưu ý: đã có thông báo tương tự \"Bảo trì hệ thống đêm 12/10\".",
@@ -4579,10 +4567,10 @@
    "input": "draft a broadcast about scheduled maintenance tonight from 23h",
    "pass": true,
    "fails": [],
-   "ms": 3162,
+   "ms": 3520,
    "llm": {
     "calls": 2,
-    "ms": 3162,
+    "ms": 3519,
     "accepted": false
    },
    "reply": "Bản nháp thông báo (CHƯA gửi):\nTiêu đề: Thông báo: A broadcast about scheduled maintenance tonight from 23h\nNội dung: Kính gửi bạn, a broadcast about scheduled maintenance tonight from 23h. Cảm ơn bạn đã đồng hành cùng Thu Chi. Trân trọng, đội ngũ Thu Chi.\nKhi bạn xác nhận, thông báo sẽ gửi tới 39 người dùng đang hoạt động.",
@@ -4613,7 +4601,7 @@
    "input": "đề xuất khóa tuanh.hoang@demo.thuchi.vn",
    "pass": true,
    "fails": [],
-   "ms": 1,
+   "ms": 2,
    "llm": null,
    "reply": "Đề xuất khóa Hoàng Tú Anh (tuanh.hoang@demo.thuchi.vn) — CHƯA thực hiện, cần bạn xác nhận:\n• Chi 8 ngày đầu tháng 16.620.000đ, nếu giữ nhịp sẽ thành ~64.402.500đ (gấp 2,2 lần TB 3 tháng 28.993.667đ).\nKhóa sẽ làm mọi phiên đăng nhập của tài khoản này hết hiệu lực ngay.",
    "draft": {
@@ -4635,7 +4623,7 @@
    "input": "có nên khóa user Phạm Đức Anh không",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": null,
    "reply": "Không thấy dấu hiệu bất thường nào của Phạm Đức Anh (ducanh.pham92@demo.thuchi.vn) trong dữ liệu hiện có, nên mình không đề xuất khóa. Nếu có lý do khác (khiếu nại, gian lận), bạn có thể khóa thủ công ở trang Người dùng.",
    "draft": null,
@@ -4797,10 +4785,10 @@
    "input": "tóm tắt thay đổi cấu hình",
    "pass": true,
    "fails": [],
-   "ms": 1360,
+   "ms": 1641,
    "llm": {
     "calls": 1,
-    "ms": 1359,
+    "ms": 1637,
     "accepted": true
    },
    "reply": "10 thay đổi cấu hình gần nhất, theo người sửa: Administrator 6, Trần Quốc Bảo 3, Hệ thống 1.\n• 08/10 09:12 · Administrator · Đăng ký & truy cập › giờ kết thúc bảo trì: (trống) → 12/10 05:00\n• 08/10 09:11 · Administrator · Đăng ký & truy cập › thông điệp bảo trì: \"Hệ thống đang bảo trì, vui lòng quay lại sau.\" → \"Bảo trì nâng cấp máy chủ từ 0h đến 5h ngày 12/10.\"\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › ngưỡng cảnh báo ngân sách (%): 80 → 75\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › tính năng xuất CSV: bật → tắt\n• 06/10 10:05 · Administrator · Email (SMTP) › mật khẩu SMTP: đã đổi (giá trị ẩn)\n• 06/10 10:05 · Administrator · Email (SMTP) › máy chủ SMTP: (trống) → \"smtp.thuchi.vn\"\n• 05/10 08:30 · Administrator · Bảo mật › độ dài mật khẩu tối thiểu: 6 → 8\n• 03/10 14:00 · Trần Quốc Bảo · Đăng ký & truy cập › số lần đăng nhập tối đa: 10 → 5\n• 01/10 00:00 · Hệ thống · Đăng ký & truy cập › chế độ bảo trì: bật → tắt\n• 28/09 11:20 · Administrator · Ứng dụng mobile › phiên bản Android tối thiểu: \"1.0.0\" → \"1.1.0\"\nCấu hình sau đây cần lưu ý: giờ kết thúc bảo trì, thông điệp bảo trì, tính năng xuất CSV, mật khẩu SMTP và độ dài mật khẩu tối thiểu đã thay đổi.",
@@ -4813,10 +4801,10 @@
    "input": "lịch sử cấu hình smtp",
    "pass": true,
    "fails": [],
-   "ms": 904,
+   "ms": 1076,
    "llm": {
     "calls": 1,
-    "ms": 903,
+    "ms": 1075,
     "accepted": true
    },
    "reply": "2 thay đổi cấu hình gần nhất (mục Email (SMTP)), theo người sửa: Administrator 2.\n• 06/10 10:05 · Administrator · Email (SMTP) › mật khẩu SMTP: đã đổi (giá trị ẩn)\n• 06/10 10:05 · Administrator · Email (SMTP) › máy chủ SMTP: (trống) → \"smtp.thuchi.vn\"\nMật khẩu SMTP đã được cập nhật, vui lòng kiểm tra lại các thiết bị liên quan.",
@@ -4829,10 +4817,10 @@
    "input": "ai đã đổi cấu hình tuần này",
    "pass": true,
    "fails": [],
-   "ms": 1304,
+   "ms": 1513,
    "llm": {
     "calls": 1,
-    "ms": 1304,
+    "ms": 1512,
     "accepted": true
    },
    "reply": "7 thay đổi cấu hình gần nhất (tuần này), theo người sửa: Administrator 5, Trần Quốc Bảo 2.\n• 08/10 09:12 · Administrator · Đăng ký & truy cập › giờ kết thúc bảo trì: (trống) → 12/10 05:00\n• 08/10 09:11 · Administrator · Đăng ký & truy cập › thông điệp bảo trì: \"Hệ thống đang bảo trì, vui lòng quay lại sau.\" → \"Bảo trì nâng cấp máy chủ từ 0h đến 5h ngày 12/10.\"\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › ngưỡng cảnh báo ngân sách (%): 80 → 75\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › tính năng xuất CSV: bật → tắt\n• 06/10 10:05 · Administrator · Email (SMTP) › mật khẩu SMTP: đã đổi (giá trị ẩn)\n• 06/10 10:05 · Administrator · Email (SMTP) › máy chủ SMTP: (trống) → \"smtp.thuchi.vn\"\n• 05/10 08:30 · Administrator · Bảo mật › độ dài mật khẩu tối thiểu: 6 → 8\nCấu hình sau đây cần lưu ý: giờ kết thúc bảo trì, thông điệp bảo trì, tính năng xuất CSV, mật khẩu SMTP và độ dài mật khẩu tối thiểu đã thay đổi.",
@@ -4845,10 +4833,10 @@
    "input": "cấu hình hôm qua ai sửa",
    "pass": true,
    "fails": [],
-   "ms": 790,
+   "ms": 961,
    "llm": {
     "calls": 1,
-    "ms": 789,
+    "ms": 961,
     "accepted": true
    },
    "reply": "2 thay đổi cấu hình gần nhất (hôm qua), theo người sửa: Trần Quốc Bảo 2.\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › ngưỡng cảnh báo ngân sách (%): 80 → 75\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › tính năng xuất CSV: bật → tắt\nTài khoản quản trị, tính năng xuất CSV đã bị tắt.",
@@ -4861,10 +4849,10 @@
    "input": "thay đổi về mật khẩu",
    "pass": true,
    "fails": [],
-   "ms": 831,
+   "ms": 1004,
    "llm": {
     "calls": 1,
-    "ms": 831,
+    "ms": 1004,
     "accepted": true
    },
    "reply": "1 thay đổi cấu hình gần nhất (mục Bảo mật), theo người sửa: Administrator 1.\n• 05/10 08:30 · Administrator · Bảo mật › độ dài mật khẩu tối thiểu: 6 → 8\nCấu hình độ dài mật khẩu tối thiểu đã được cập nhật.",
@@ -4877,10 +4865,10 @@
    "input": "ai bật bảo trì",
    "pass": true,
    "fails": [],
-   "ms": 1177,
+   "ms": 1428,
    "llm": {
     "calls": 1,
-    "ms": 1177,
+    "ms": 1428,
     "accepted": true
    },
    "reply": "4 thay đổi cấu hình gần nhất (mục Đăng ký & truy cập), theo người sửa: Administrator 2, Trần Quốc Bảo 1, Hệ thống 1.\n• 08/10 09:12 · Administrator · Đăng ký & truy cập › giờ kết thúc bảo trì: (trống) → 12/10 05:00\n• 08/10 09:11 · Administrator · Đăng ký & truy cập › thông điệp bảo trì: \"Hệ thống đang bảo trì, vui lòng quay lại sau.\" → \"Bảo trì nâng cấp máy chủ từ 0h đến 5h ngày 12/10.\"\n• 03/10 14:00 · Trần Quốc Bảo · Đăng ký & truy cập › số lần đăng nhập tối đa: 10 → 5\n• 01/10 00:00 · Hệ thống · Đăng ký & truy cập › chế độ bảo trì: bật → tắt\nCấu hình sau khi sửa đổi: giờ kết thúc bảo trì, thông điệp bảo trì, số lần đăng nhập tối đa và chế độ bảo trì đã được bật",
@@ -4893,13 +4881,15 @@
    "input": "thay đổi cấu hình tháng 9",
    "pass": true,
    "fails": [],
-   "ms": 901,
+   "ms": 1160,
    "llm": {
     "calls": 1,
-    "ms": 901,
-    "accepted": true
+    "ms": 1160,
+    "accepted": false,
+    "reason": "có chỗ trống chưa điền",
+    "raw": "Cấu hình cần cập nhật, các thay đổi nhỏ như [nhập thông tin thay đổi]"
    },
-   "reply": "1 thay đổi cấu hình gần nhất (tháng 9), theo người sửa: Administrator 1.\n• 28/09 11:20 · Administrator · Ứng dụng mobile › phiên bản Android tối thiểu: \"1.0.0\" → \"1.1.0\"\nCấu hình cần cập nhật, các thay đổi nhỏ như [nhập thông tin thay đổi]",
+   "reply": "1 thay đổi cấu hình gần nhất (tháng 9), theo người sửa: Administrator 1.\n• 28/09 11:20 · Administrator · Ứng dụng mobile › phiên bản Android tối thiểu: \"1.0.0\" → \"1.1.0\"\nHãy rà lại các thay đổi về bảo mật và tính năng để chắc chắn đúng ý.",
    "draft": null,
    "askBack": null
   },
@@ -4925,10 +4915,10 @@
    "input": "summarize recent config changes",
    "pass": true,
    "fails": [],
-   "ms": 1319,
+   "ms": 1544,
    "llm": {
     "calls": 1,
-    "ms": 1319,
+    "ms": 1544,
     "accepted": true
    },
    "reply": "10 thay đổi cấu hình gần nhất (30 ngày qua), theo người sửa: Administrator 6, Trần Quốc Bảo 3, Hệ thống 1.\n• 08/10 09:12 · Administrator · Đăng ký & truy cập › giờ kết thúc bảo trì: (trống) → 12/10 05:00\n• 08/10 09:11 · Administrator · Đăng ký & truy cập › thông điệp bảo trì: \"Hệ thống đang bảo trì, vui lòng quay lại sau.\" → \"Bảo trì nâng cấp máy chủ từ 0h đến 5h ngày 12/10.\"\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › ngưỡng cảnh báo ngân sách (%): 80 → 75\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › tính năng xuất CSV: bật → tắt\n• 06/10 10:05 · Administrator · Email (SMTP) › mật khẩu SMTP: đã đổi (giá trị ẩn)\n• 06/10 10:05 · Administrator · Email (SMTP) › máy chủ SMTP: (trống) → \"smtp.thuchi.vn\"\n• 05/10 08:30 · Administrator · Bảo mật › độ dài mật khẩu tối thiểu: 6 → 8\n• 03/10 14:00 · Trần Quốc Bảo · Đăng ký & truy cập › số lần đăng nhập tối đa: 10 → 5\n• 01/10 00:00 · Hệ thống · Đăng ký & truy cập › chế độ bảo trì: bật → tắt\n• 28/09 11:20 · Administrator · Ứng dụng mobile › phiên bản Android tối thiểu: \"1.0.0\" → \"1.1.0\"\nCấu hình sau đây cần lưu ý: giờ kết thúc bảo trì, thông điệp bảo trì, tính năng xuất CSV, mật khẩu SMTP và độ dài mật khẩu tối thiểu đã thay đổi.",
@@ -4941,10 +4931,10 @@
    "input": "tom tat lich su cau hinh",
    "pass": true,
    "fails": [],
-   "ms": 1243,
+   "ms": 1562,
    "llm": {
     "calls": 1,
-    "ms": 1243,
+    "ms": 1561,
     "accepted": true
    },
    "reply": "10 thay đổi cấu hình gần nhất, theo người sửa: Administrator 6, Trần Quốc Bảo 3, Hệ thống 1.\n• 08/10 09:12 · Administrator · Đăng ký & truy cập › giờ kết thúc bảo trì: (trống) → 12/10 05:00\n• 08/10 09:11 · Administrator · Đăng ký & truy cập › thông điệp bảo trì: \"Hệ thống đang bảo trì, vui lòng quay lại sau.\" → \"Bảo trì nâng cấp máy chủ từ 0h đến 5h ngày 12/10.\"\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › ngưỡng cảnh báo ngân sách (%): 80 → 75\n• 07/10 16:40 · Trần Quốc Bảo · Nghiệp vụ › tính năng xuất CSV: bật → tắt\n• 06/10 10:05 · Administrator · Email (SMTP) › mật khẩu SMTP: đã đổi (giá trị ẩn)\n• 06/10 10:05 · Administrator · Email (SMTP) › máy chủ SMTP: (trống) → \"smtp.thuchi.vn\"\n• 05/10 08:30 · Administrator · Bảo mật › độ dài mật khẩu tối thiểu: 6 → 8\n• 03/10 14:00 · Trần Quốc Bảo · Đăng ký & truy cập › số lần đăng nhập tối đa: 10 → 5\n• 01/10 00:00 · Hệ thống · Đăng ký & truy cập › chế độ bảo trì: bật → tắt\n• 28/09 11:20 · Administrator · Ứng dụng mobile › phiên bản Android tối thiểu: \"1.0.0\" → \"1.1.0\"\nCấu hình sau đây cần lưu ý: giờ kết thúc bảo trì, thông điệp bảo trì, tính năng xuất CSV, mật khẩu SMTP và độ dài mật khẩu tối thiểu đã thay đổi.",
@@ -4969,7 +4959,7 @@
    "input": "cách bật chế độ bảo trì",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5017,7 +5007,7 @@
    "input": "hướng dẫn thêm danh mục hệ thống",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5033,7 +5023,7 @@
    "input": "đổi ngưỡng cảnh báo ngân sách ở đâu",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5049,7 +5039,7 @@
    "input": "cach tat dang ky tai khoan moi",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5065,7 +5055,7 @@
    "input": "làm thế nào để bắt buộc cập nhật app",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5081,7 +5071,7 @@
    "input": "cách nâng quyền quản trị cho user",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 2,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5097,7 +5087,7 @@
    "input": "how do I enable maintenance mode",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5113,7 +5103,7 @@
    "input": "muốn xem lịch sử cấu hình thì vào đâu",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,
@@ -5145,7 +5135,7 @@
    "input": "chỉnh độ dài mật khẩu tối thiểu ở đâu",
    "pass": true,
    "fails": [],
-   "ms": 0,
+   "ms": 1,
    "llm": {
     "calls": 0,
     "ms": 0,

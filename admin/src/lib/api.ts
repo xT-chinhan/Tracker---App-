@@ -187,6 +187,14 @@ export interface AiDraft {
   createdAt: string
 }
 
+/** Khối hiển thị kèm câu trả lời (ai/lib/contracts.ts ReplyBlock). Chữ hỗ trợ **đậm**, ô bảng xuống dòng bằng \n. */
+export type AiReplyBlock =
+  | { type: 'text'; text: string }
+  | { type: 'stats'; items: { label: string; value: string; sub?: string }[] }
+  | { type: 'list'; items: string[] }
+  | { type: 'table'; columns: string[]; rows: string[][]; align?: ('left' | 'right')[]; links?: (string | null)[]; more?: string }
+  | { type: 'source'; text: string }
+
 export interface AiMessage {
   id: string
   conversationId: string
@@ -197,6 +205,7 @@ export interface AiMessage {
   status: string | null
   latencyMs: number | null
   followUps: string[] | null
+  blocks?: AiReplyBlock[]
   createdAt: string
   draft: AiDraft | null
 }
