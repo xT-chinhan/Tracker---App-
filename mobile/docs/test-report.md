@@ -155,4 +155,40 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Kéo để làm mới (Pull-to-refresh) | Đạt (`RefreshIndicator` tích hợp trên toàn bộ các màn hình dữ liệu: Trang chủ, Lịch sử, Báo cáo, Ngân sách, Tiết kiệm, Ví) |
 | Xử lý mất mạng & Phục hồi lỗi | Đạt (Tất cả thông báo lỗi kết nối được chuyển ngữ tiếng Việt thân thiện trong `ApiException`, có nút 'Thử lại' trên các card báo cáo/trạng thái lỗi để gọi lại API an toàn) |
 
+## M12 — Xác thực Build phát hành & Đóng gói sản phẩm (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 61 test (100% pass) |
+| Lệnh build APK | `flutter build apk --debug` |
+| Kết quả Gradle | `Running Gradle task 'assembleDebug'... 77.2s` — Mã thoát 0 |
+| Tập tin đầu ra | `mobile/app/build/app/outputs/flutter-apk/app-debug.apk` (184.9 MB) |
+| Xác thực Android SDK & Toolchain | Android SDK 36.1.0, Flutter stable 3.44.7, Dart 3.12.2 |
+
+---
+
+## Tổng kết toàn bộ dự án Mobile App (Thu Chi)
+
+- **Các mốc hoàn thành:**
+  - **M1 (Nền tảng):** Tokens, Theme, Shell, Navigation, 13 custom components (`1254cfc`)
+  - **M2 (Xác thực):** Login, Register, Forgot OTP, Reset password, Maintenance screen (`d1f879b`)
+  - **M3 (Trang chủ & Nhập nhanh):** Dashboard, Balance card, Templates, Recent txs (`2647d95`)
+  - **M4 (Ghi thu chi):** Keypad, Amount words, Category picker, Wallets (`d326a2c`)
+  - **M5 (Lịch sử & Chi tiết):** Filter type, Month switcher, Detail screen, Edit/Delete (`4407957`)
+  - **M6 (Báo cáo & Chuyển tiền):** Charts, Overview, Trends, Forecast, CSV, Transfer (`a5c12ae`)
+  - **M7 (Ngân sách & Tiết kiệm):** Month budgets, Alerts, Goals, Deposit, Withdraw (`4f48149`)
+  - **M8 (Ví & Giao dịch định kỳ):** Wallet list, Allocation bar, Recurring rules, Actions (`3ed7325`)
+  - **M9 (Cài đặt & Tài khoản):** Edit profile, Change password, Delete account, Logout (`f84f8a2`)
+  - **M10 (Trợ lý AI):** Chat, SSE Stream, Draft card, Edit item sheet, Undo toast, Settings (`61ee632`)
+  - **M11 (Tối ưu hóa & Skeleton):** Loading skeleton mockup `23-dang-tai`, Pull-to-refresh (`95aaace`)
+  - **M12 (Đóng gói & Build):** Biên dịch thành công APK Android chạy độc lập
+- **Chất lượng mã nguồn:**
+  - Linter: **0 lỗi / cảnh báo** trên toàn bộ dự án (`flutter analyze`).
+  - Định dạng: Chuẩn 100% `dart format`.
+  - Kiểm thử tự động: **61/61 test đạt** (`flutter test`).
+  - Mã nguồn Backend: **Nguyên vẹn 100%**, không chỉnh sửa bất kỳ file nào trong `backend/`.
+
+
 
