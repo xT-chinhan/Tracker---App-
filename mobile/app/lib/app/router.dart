@@ -19,6 +19,7 @@ import '../features/recurring/presentation/recurring_screen.dart';
 import '../features/reports/presentation/reports_screen.dart';
 import '../features/savings/presentation/saving_detail_screen.dart';
 import '../features/savings/presentation/savings_screen.dart';
+import '../features/settings/presentation/settings_screen.dart';
 import '../features/transfers/presentation/transfer_screen.dart';
 import '../features/transactions/presentation/transaction_detail_screen.dart';
 import '../features/transactions/presentation/transaction_entry_screen.dart';
@@ -119,10 +120,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: <RouteBase>[
               GoRoute(
                 path: '/settings',
-                builder: (context, state) => const FoundationScreen(
-                  title: 'Cài đặt',
-                  description: 'Các thiết lập tài khoản sẽ hiển thị tại đây.',
-                ),
+                builder: (context, state) => const SettingsScreen(),
               ),
             ],
           ),

@@ -57,6 +57,41 @@ class AuthRepository {
     return AppUser.fromJson(response.data!);
   }
 
+  Future<AppUser> updateProfile({required String name}) async {
+    final response = await _request(
+      () => _dio.patch<Map<String, dynamic>>(
+        'me',
+        data: <String, dynamic>{'name': name.trim()},
+      ),
+    );
+    return AppUser.fromJson(response.data!);
+  }
+
+  Future<AuthResult> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final response = await _request(
+      () => _dio.post<Map<String, dynamic>>(
+        'me/password',
+        data: <String, dynamic>{
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+        },
+      ),
+    );
+    return AuthResult.fromJson(response.data!);
+  }
+
+  Future<void> deleteAccount({required String password}) async {
+    await _request(
+      () => _dio.delete<void>(
+        'me',
+        data: <String, dynamic>{'password': password},
+      ),
+    );
+  }
+
   Future<void> logoutAll() async {
     await _request(() => _dio.post<void>('auth/logout-all'));
   }

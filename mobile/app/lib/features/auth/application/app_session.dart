@@ -35,6 +35,11 @@ class AppSessionController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateUser(AppUser value) {
+    user = value;
+    notifyListeners();
+  }
+
   void unauthenticate({PublicConfig? publicConfig, String? message}) {
     user = null;
     if (publicConfig != null) config = publicConfig;

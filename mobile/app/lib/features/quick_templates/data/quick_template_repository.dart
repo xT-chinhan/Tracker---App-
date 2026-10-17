@@ -11,6 +11,10 @@ final quickTemplateRepositoryProvider = Provider<QuickTemplateRepository>((
   return QuickTemplateRepository(ref.watch(dioProvider));
 });
 
+final quickTemplatesProvider = FutureProvider<List<QuickTemplateItem>>((ref) {
+  return ref.watch(quickTemplateRepositoryProvider).getQuickTemplates();
+});
+
 class QuickTemplateRepository {
   QuickTemplateRepository(this._dio);
 

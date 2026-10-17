@@ -112,6 +112,15 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Màn hình Ví `15-vi.png` | Đạt (Tổng số dư 4 ví, thông điệp phân bổ '% nằm ở...', thanh phân bổ tài sản dạng phân đoạn màu, danh sách từng ví với icon/loại, nút 'Chuyển tiền giữa ví', lịch sử các giao dịch chuyển tiền gần đây giữa các ví) |
 | Thao tác Ví (Tạo / Sửa / Lưu trữ / Khôi phục) | Đạt (Sheet tạo/sửa ví, chọn loại BANK / CASH / EWALLET, số dư ban đầu, hỗ trợ lưu trữ ví và khôi phục ví đã lưu trữ) |
 | Màn hình Giao dịch định kỳ `17-dinh-ky.png` | Đạt (Tiêu đề, phân tách nhóm Quy tắc đang chạy và Tạm dừng, card quy tắc với icon tròn, tên quy tắc, danh mục, ví, tần suất 'Hàng tháng vào ngày 1', số tiền màu xanh/đen theo loại, badge trạng thái 'Đang chạy'/'Tạm dừng', menu hành động Tạm dừng/Tiếp tục/Sửa/Xóa quy tắc) |
-| Sheet tạo/sửa giao dịch định kỳ `18-tao-dinh-ky.png` | Đạt (Segment chọn Khoản chi / Thu nhập, ô nhập số tiền lớn kèm suffix `đ`, tên quy tắc, chọn danh mục, chọn ví, chọn tần suất Hàng ngày / Hàng tuần / Hàng tháng / Hàng năm, bộ chọn ngày trong tuần khi lặp hàng tuần, ngày bắt đầu và kết thúc) |
+## M9 — Cài đặt & Tài khoản (17/10/2026)
 
-
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 55 test (Bao gồm SettingsScreen, EditProfileSheet, ChangePasswordSheet, DeleteAccountSheet, LogoutSheet, Wallets, Recurring, Budgets, Savings, Reports, History, Home, Notifications, Auth, Formatter) |
+| Màn hình Cài đặt `20-cai-dat.png` & `20b-cai-dat-cuoi.png` | Đạt (Thẻ profile người dùng với avatar viết tắt chữ cái initials, tên, email, nút 'Sửa >'; Nhóm Quản lý tiền với số dư ví động, % ngân sách đã dùng, số mục tiêu tiết kiệm, số quy tắc định kỳ; Nhóm Nhập liệu với số danh mục, số mẫu nhập nhanh; Nhóm Ứng dụng với badge thông báo chưa đọc, Xuất CSV, Đổi mật khẩu; Card Đăng xuất độc lập, Nút đỏ Xóa tài khoản, Phiên bản ứng dụng `Thu Chi · phiên bản 1.0.0 (42)`, liên kết Hỗ trợ / Điều khoản / Quyền riêng tư theo cấu hình) |
+| Chỉnh sửa thông tin cá nhân `EditProfileSheet` | Đạt (Prefill tên hiện tại, email chỉ đọc, xác thực tên không trống, gọi API `PATCH /auth/profile`, cập nhật `AppSessionController` tức thì) |
+| Đổi mật khẩu `ChangePasswordSheet` | Đạt (Nhập mật khẩu hiện tại, mật khẩu mới kiểm tra độ dài theo config `password.minLength`, xác nhận mật khẩu mới, gọi API `POST /auth/change-password`, cập nhật token mới vào store) |
+| Đăng xuất thiết bị & mọi thiết bị `LogoutSheet` | Đạt (BottomSheet lựa chọn 'Đăng xuất thiết bị này' hoặc 'Đăng xuất mọi thiết bị' qua API `POST /auth/logout-all`, xóa token cục bộ và chuyển hướng về màn hình đăng nhập) |
+| Xóa tài khoản `21-xoa-tai-khoan.png` (`DeleteAccountSheet`) | Đạt (Icon thùng rác đỏ nền `#FDE8E8`, cảnh báo mất toàn bộ dữ liệu giao dịch/ví/mục tiêu tiết kiệm, card gợi ý 'Muốn giữ lại dữ liệu? Xuất CSV', nhập mật khẩu xác nhận, nút đỏ 'Xóa vĩnh viễn' gọi API `DELETE /auth/account`, nút 'Hủy') |
