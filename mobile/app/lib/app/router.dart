@@ -14,6 +14,7 @@ import '../features/foundation/presentation/foundation_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
+import '../features/reports/presentation/reports_screen.dart';
 import '../features/transfers/presentation/transfer_screen.dart';
 import '../features/transactions/presentation/transaction_detail_screen.dart';
 import '../features/transactions/presentation/transaction_entry_screen.dart';
@@ -105,10 +106,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: <RouteBase>[
               GoRoute(
                 path: '/reports',
-                builder: (context, state) => const FoundationScreen(
-                  title: 'Báo cáo',
-                  description: 'Báo cáo thu chi sẽ hiển thị tại đây.',
-                ),
+                builder: (context, state) => const ReportsScreen(),
               ),
             ],
           ),

@@ -77,3 +77,15 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Xóa giao dịch `DELETE /transactions/:id` | Đạt (hộp thoại xác nhận, hoàn tác cập nhật số dư ví, tự động refresh lịch sử & trang chủ) |
 | Sửa giao dịch `PATCH /transactions/:id` | Đạt (tái sử dụng form ghi giao dịch với dữ liệu prefill, cập nhật và refresh) |
 
+## M6 — Báo cáo, Xu hướng & Xuất CSV (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 37 test (Bao gồm ReportsScreen, DonutChart, MonthlyBarChart, TrendBadge, ReportsService, ReportsModels, CSV Export) |
+| Báo cáo tháng `09-bao-cao.png` | Đạt (Thanh chuyển tháng `< Tháng 9 >`, card Chênh lệch thu chi `+14.820.000đ` với 2 cột Thu nhập `23.500.000đ` và Chi tiêu `8.680.000đ`, card Chi theo danh mục với DonutChart 132x132, tổng chi, danh mục lớn nhất, danh sách từng nhóm kèm % và số tiền) |
+| Xu hướng & So sánh `10-bao-cao-xu-huong.png` | Đạt (Biểu đồ cột thu chi 6 tháng với 2 cột xanh/đen mỗi tháng và nhãn T4-T9, Card So sánh tháng trước với badge tỷ lệ % tăng/giảm đổi màu xanh/đỏ chuẩn token, Card Dự báo cuối tháng và tháng tiếp theo) |
+| Xuất CSV `GET /export/transactions.csv` | Đạt (Kiểm tra cờ `features.csvExport`, nút tải xuống trong appbar, hộp thoại thông báo thành công và sao chép nội dung CSV vào clipboard) |
+
+
