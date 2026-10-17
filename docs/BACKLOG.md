@@ -7,7 +7,9 @@ Cập nhật: 2026-10-08. Ưu tiên hiện tại: **trợ lý AI** (`ai/`). Các
 - ~~Image Docker thiếu `ai/`~~: xong (build context = gốc repo, `ai/` chép vào `/app/ai`).
 - Thông báo theo nhóm user (quyết định #7 trong `docs/AI-DECISIONS.md`): để sau.
 - Giọng nói → chữ trên máy người dùng (#9): làm cùng app mobile.
-- Merge `ghi-giao-dich` bản mới của Track A (`feat/ai-quality`) để thay bản dự phòng trong backend; khi đó Track B bỏ `ADMIN_ALIASES` trong `ai/skills/index.ts` (backend đã bỏ qua các tên `admin-*`).
+- ~~Nối `ghi-giao-dich` bản Track A vào backend~~: xong 17/10 (parser `analyze` + hỏi lại khi chuyển ví / vay nợ / thiếu nội dung, chốt danh mục bằng code: luật DB → tín hiệu THU → từ điển, enum riêng từng khoản, nhãn THU, `cleanTitle`). Từ điển thêm món ăn / đồ uống làm sẵn (cf, cà phê, cơm, phở, ăn sáng…); parser sửa regex ví cắt giữa chữ ("cashba|ck momo"). Còn lại: Track B bỏ `ADMIN_ALIASES` trong `ai/skills/index.ts`.
+- Câu ghi giao dịch đầu tiên sau khi bật API chậm ~7–16 giây (nạp model + nhúng kho câu mẫu), sát `ai.timeoutSeconds` 15: cần làm nóng lúc khởi động.
+- Router admin: "người mới đăng ký chưa ghi giao dịch nào" đang vào `phat-hien-bat-thuong` thay vì `tra-cuu-nguoi-dung`.
 - Trang admin "Cấu hình" chưa có mục `ai`; nhóm "Trợ lý" trong sidebar (Trợ lý AI, Trung tâm học) dựng theo mockup `design/admin-mockup` mục I.
 - Hàng đợi gọi Ollama đang trong tiến trình: chạy nhiều instance API cần hàng đợi chung (Redis / bảng job).
 - Giao diện chat (app + admin "Trung tâm học AI") chờ mockup được duyệt; API đã đủ (`/ai/*`, `/admin/ai/*`).

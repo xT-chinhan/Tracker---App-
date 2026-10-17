@@ -133,12 +133,14 @@ export class FakeLlm implements LlmClient {
 
   private fill(schema: Schema, userText: string): unknown {
     const itemsSchema = schema.properties?.items;
-    const catEnum = itemsSchema?.items?.properties?.categoryName?.enum as string[] | undefined;
-    if (itemsSchema?.type === 'array' && catEnum) {
-      const lines = [...userText.matchAll(/^\d+\.\s+(.*)$/gm)].map((m) => m[1]);
+    // enum chung (`items`) hoặc enum riêng từng khoản (`prefixItems`)
+    const enumAt = (i: number) => (itemsSchema?.prefixItems?.[i] ?? itemsSchema?.items)?.properties?.categoryName?.enum as string[] | undefined;
+    if (itemsSchema?.type === 'array' && enumAt(0)) {
+      const lines = [...userText.matchAll(/^\d+\.\s+(.*?)(?:\s+\((?:THU|CHI)\))?$/gm)].map((m) => m[1]);
       const segs = lines.length ? lines : [userText];
       return {
-        items: segs.map((line) => {
+        items: segs.map((line, i) => {
+          const catEnum = enumAt(i) ?? enumAt(0)!;
           const f = fold(line);
           const hit = FAKE_CATS.find(([re, cat]) => re.test(f) && catEnum.includes(cat))?.[1];
           const words = line.replace(/[0-9][0-9.,]*\s*(k|tr|triệu|nghìn|ngàn|đ|củ)?\b/giu, ' ').replace(/[^\p{L}\s]/gu, ' ').trim().split(/\s+/).filter(Boolean).slice(0, 3);
@@ -190,6 +192,7 @@ interface Schema {
   anyOf?: Schema[];
   properties?: Record<string, Schema & { enum?: unknown[] }>;
   items?: Schema & { properties?: Record<string, Schema> };
+  prefixItems?: (Schema & { properties?: Record<string, Schema> })[];
   minItems?: number;
 }
 

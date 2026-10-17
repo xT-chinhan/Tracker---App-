@@ -1,8 +1,9 @@
 /**
  * Từ điển danh mục bằng code (độ chính xác cao, chạy SAU luật học được của user, TRƯỚC model).
  * Chỉ chốt khi chắc:
- *  - Ăn uống: MỌI từ nội dung của khoản đều là thực phẩm/đồ ăn/đi chợ (sau khi bỏ "mua", "ở chợ", từ chỉ lượng).
- *    "mua rau 20k" → Ăn uống; "mua dầu gội 90k" → không chốt (gội không phải thực phẩm) → model.
+ *  - Ăn uống: MỌI từ nội dung của khoản đều là thực phẩm/đồ ăn/đi chợ hoặc món ăn, đồ uống làm sẵn
+ *    (sau khi bỏ "mua", "ở chợ", từ chỉ lượng / buổi). "mua rau 20k", "cf 45k", "cơm trưa 55k" → Ăn uống;
+ *    "mua dầu gội 90k", "nồi cơm điện 900k" → không chốt (có từ không phải đồ ăn) → model.
  *  - Gia đình: đồ riêng cho con nhỏ (bỉm, tã, sữa bột, đồ chơi).
  *  - Sức khỏe: thuốc (trừ thuốc lá), khám bệnh/răng/mắt…, nha khoa, xét nghiệm.
  *  - Thu: loại thu lấy theo tín hiệu của parser (lương / thưởng / đầu tư / được tặng / thu khác).
@@ -18,13 +19,16 @@ const FOOD = `rau|rau muống|rau cải|rau củ|củ quả|thịt|thịt heo|th
 trứng|trứng gà|trứng vịt|gạo|nếp|bún|bún tươi|phở khô|mì gói|mì tôm|miến|đậu phụ|đậu hũ|đậu|giá|nấm|hành|tỏi|ớt|gừng|sả|chanh|gia vị|
 nước mắm|dầu ăn|nước tương|xì dầu|đường|muối|bột ngọt|mắm|tương ớt|
 trái cây|hoa quả|cam|quýt|táo|chuối|xoài|nho|dưa hấu|bưởi|ổi|lê|thanh long|sầu riêng|măng cụt|vải|nhãn|dưa|cà chua|khoai|khoai tây|khoai lang|bí|bầu|mướp|cà rốt|bắp cải|súp lơ|dưa leo|bắp|
-sữa chua|sữa tươi|bánh|bánh mì|bánh kẹo|kẹo|bia|nước ngọt|nước suối|đồ ăn|thức ăn|thực phẩm|đồ ăn vặt|đi chợ|tiền chợ|chợ|hải sản|thịt cá`
+sữa chua|sữa tươi|bánh|bánh mì|bánh kẹo|kẹo|bia|nước ngọt|nước suối|đồ ăn|thức ăn|thực phẩm|đồ ăn vặt|đi chợ|tiền chợ|chợ|hải sản|thịt cá|
+cf|cafe|cà phê|cafê|trà|trà sữa|trà đá|trà chanh|nước mía|sinh tố|nước ép|đồ uống|nước uống|
+cơm|cơm trưa|cơm tấm|cơm gà|cơm văn phòng|cơm bụi|phở|phở bò|bún bò|bún chả|bún riêu|bún đậu|hủ tiếu|mì quảng|bánh cuốn|bánh xèo|xôi|cháo|lẩu|gà rán|pizza|
+ăn|ăn sáng|ăn trưa|ăn tối|ăn vặt|ăn uống|bữa sáng|bữa trưa|bữa tối`
   .replace(/\s*\n\s*/g, '|').split('|').filter(Boolean);
 // Bản bỏ dấu dùng cho câu không dấu: chỉ cụm không nhập nhằng (bỏ "ca" = cá/cà/ca, "bo" = bò/bố, "cho" = chợ/cho, "trung" = trứng/Trung…)
-const FOOD_PLAIN = 'rau|rau muong|rau cu|cu qua|thit|thit heo|thit lon|thit bo|thit ga|thit vit|ba chi|suon|ca thu|ca hoi|ca loc|tom|muc|trung ga|trung vit|gao|mi goi|mi tom|dau phu|dau hu|nuoc mam|dau an|trai cay|hoa qua|ca chua|ca rot|khoai tay|khoai lang|bap cai|dua hau|sua chua|sua tuoi|banh|banh mi|banh keo|keo|bia|nuoc ngot|do an|thuc an|thuc pham|di cho|tien cho|hai san'.split('|');
-// Từ không mang nội dung khi nói chuyện đi chợ (động từ, lượng, nơi chốn).
-const GLUE = new Set('mua đi ra về ở tại ngoài thêm cho nhà về nhà ký kí kg ki lô lạng cân bó gói hộp lốc thùng lon chai túi bịch vỉ quả trái con cái miếng phần nửa và với vs tiền'.split(' '));
-const GLUE_PLAIN = new Set('mua di ra ve o tai ngoai them nha ky ki kg ki lo can goi hop loc thung lon chai tui bich vi qua trai con mieng phan nua va voi vs tien'.split(' '));
+const FOOD_PLAIN = 'rau|rau muong|rau cu|cu qua|thit|thit heo|thit lon|thit bo|thit ga|thit vit|ba chi|suon|ca thu|ca hoi|ca loc|tom|muc|trung ga|trung vit|gao|mi goi|mi tom|dau phu|dau hu|nuoc mam|dau an|trai cay|hoa qua|ca chua|ca rot|khoai tay|khoai lang|bap cai|dua hau|sua chua|sua tuoi|banh|banh mi|banh keo|keo|bia|nuoc ngot|do an|thuc an|thuc pham|di cho|tien cho|hai san|cf|cafe|ca phe|tra sua|tra da|tra chanh|nuoc mia|sinh to|nuoc ep|com|com trua|com tam|com ga|com van phong|com bui|pho|pho bo|bun bo|bun cha|bun rieu|bun dau|hu tieu|mi quang|banh cuon|banh xeo|xoi|chao|ga ran|pizza|an sang|an trua|an toi|an vat|bua sang|bua trua|bua toi'.split('|');
+// Từ không mang nội dung khi nói chuyện đi chợ / ăn uống (động từ, lượng, nơi chốn, buổi).
+const GLUE = new Set('mua đi ra về ở tại ngoài thêm cho nhà về nhà ký kí kg ki lô lạng cân bó gói hộp lốc thùng lon chai túi bịch vỉ quả trái con cái miếng phần nửa và với vs tiền sáng trưa chiều tối khuya ly cốc tô bát suất'.split(' '));
+const GLUE_PLAIN = new Set('mua di ra ve o tai ngoai them nha ky ki kg ki lo can goi hop loc thung lon chai tui bich vi qua trai con mieng phan nua va voi vs tien sang trua chieu toi khuya ly coc to bat suat'.split(' '));
 
 /** Phủ chuỗi bằng các cụm trong từ điển (tham lam, cụm dài trước). Trả về true nếu mọi từ nội dung đều được phủ. */
 function covered(words: string[], dict: string[], glue: Set<string>): boolean {

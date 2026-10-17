@@ -115,7 +115,7 @@ export class AiLearningService implements OnModuleInit {
     if (!lib) return;
     const ctx = await this.seedCtx();
     const cleanOf = (text: string) => {
-      const s = lib.parse(text, ctx)[0];
+      const s = lib.analyze(text, ctx).segs[0];
       return s ? accentedClean(s.text, s.clean) || norm(text) : norm(text);
     };
     // 1) Câu mẫu router theo scope (ai/router/bank.ts → SCOPED_BANK); bộ cũ không có scope (đợt 1) thì thay

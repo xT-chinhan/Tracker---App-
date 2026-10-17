@@ -18,7 +18,7 @@ export function findWallets(f: string, wallets: { name: string }[]): WalletSpan[
   for (const w of wallets) {
     const key = fold(w.name);
     const names = [...new Set([key, key.replace(/\s+/g, ''), ...(ALIASES[key] ?? [])])].sort((a, b) => b.length - a.length);
-    const re = new RegExp(String.raw`(?:(?:tra|thanh toan|ck|chuyen khoan|quet the|quet|bang|qua|vao|tu|the)\s+)*\b(?:${names.join('|')})\b`, 'g');
+    const re = new RegExp(String.raw`(?:\b(?:tra|thanh toan|ck|chuyen khoan|quet the|quet|bang|qua|vao|tu|the)\s+)*\b(?:${names.join('|')})\b`, 'g');
     for (const m of f.matchAll(re)) out.push({ start: m.index!, end: m.index! + m[0].length, walletName: w.name });
   }
   return out.sort((a, b) => a.start - b.start);

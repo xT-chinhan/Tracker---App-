@@ -19,7 +19,7 @@ model: gemma2:2b (Ollama, format = JSON schema, temperature 0)
 2. Chốt danh mục bằng code (`decide()` trong `pipeline.ts`), theo thứ tự:
    1. luật đã học của user (V4): `từ khóa → danh mục` đủ ≥ 3 lần, độ chính xác ≥ 0.85, và cùng loại thu/chi với tín hiệu parser;
    2. tín hiệu THU (`lương`, `thưởng`, `lãi`/`cổ tức`, `được … cho/tặng/lì xì`, `mẹ cho`, `bán`, `hoàn tiền`, `cashback`, `freelance`, `… được 2tr`) → Lương / Thưởng / Đầu tư / Được tặng / Thu khác (`lexicon.ts: incomeCategory`). Câu bắt đầu bằng động từ chi (`mua`, `trả`, `cho mẹ`, `ck cho`, `lì xì cháu`) là CHI;
-   3. từ điển (`lexicon.ts: lexiconCategory`): mọi từ nội dung là thực phẩm/đi chợ → Ăn uống ("mua rau 20k", "mua thịt gà ở chợ"); bỉm/tã/sữa bột/đồ chơi → Gia đình; thuốc/khám/nha khoa → Sức khỏe.
+   3. từ điển (`lexicon.ts: lexiconCategory`): mọi từ nội dung là thực phẩm/đi chợ hoặc món ăn / đồ uống làm sẵn → Ăn uống ("mua rau 20k", "mua thịt gà ở chợ", "cf 45k", "cơm trưa 55k", "an sang 30k"; "nồi cơm điện", "cà phê hạt" thì không); bỉm/tã/sữa bột/đồ chơi → Gia đình; thuốc/khám/nha khoa → Sức khỏe.
 3. Prompt ngắn (`prompt.ts`) + ví dụ: V2 = 5 ví dụ cố định, V3/V4 = 5 ví dụ gần nhất (kNN embedding bge-m3). Khoản có tín hiệu thu được đánh dấu `(THU)`.
 4. gemma2:2b chỉ điền `title` + `categoryName` cho từng khoản đã tách (`schema.ts`). Enum **riêng từng khoản** qua `prefixItems`: khoản đã chốt → đúng 1 danh mục; khoản có tín hiệu thu/chi → chỉ danh mục loại đó; còn lại → mọi danh mục.
 5. Sửa JSON không cần LLM → validate (kể cả enum từng khoản) → retry 1 lần kèm lỗi → lùi về "Chi khác"/"Thu khác".
@@ -37,6 +37,9 @@ model: gemma2:2b (Ollama, format = JSON schema, temperature 0)
 
 ## Đầu ra
 `Draft { ask: boolean, items: { title, amount, categoryName, type, date (YYYY-MM-DD), walletName | null }[], meta: { reason?, decidedBy[], rules[], … } }`
+
+## Backend
+Backend (`backend/src/ai/ai.skills.ts`) chạy đúng các bước trên với dữ liệu học trong DB (luật `AiRule`, kNN `AiExample`) và LLM do backend tiêm vào; nạp `analyze`, `incomeCategory`, `lexiconCategory`, `cleanTitle`, `schemaV1`, `userV1` qua `ai.external.ts`. Sửa code trong `ai/` phải khởi động lại API.
 
 ## Đo
 Bộ đề và cách chạy: `ai/results/BENCHMARK-2026-10-12-trackA.md`. Tập `test` là held-out; chỉ chỉnh trên `dev`.
