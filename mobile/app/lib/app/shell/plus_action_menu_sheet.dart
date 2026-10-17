@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/formatting/money_formatter.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_icon_helper.dart';
+import '../../features/auth/application/app_session.dart';
 import '../../features/home/application/home_service.dart';
 
 class PlusActionMenuSheet extends ConsumerWidget {
@@ -25,6 +26,7 @@ class PlusActionMenuSheet extends ConsumerWidget {
     final homeState = ref.watch(homeControllerProvider);
     final templates = homeState.quickTemplates;
     final colors = Theme.of(context).colorScheme;
+    final aiEnabled = ref.watch(appSessionProvider).config?.ai.enabled ?? true;
 
     return SafeArea(
       child: Padding(
@@ -50,6 +52,19 @@ class PlusActionMenuSheet extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (aiEnabled) ...[
+                    _ActionRow(
+                      icon: LucideIcons.sparkles,
+                      iconBg: const Color(0xFFF3F2EE),
+                      iconColor: const Color(0xFF111111),
+                      title: 'Hỏi trợ lý',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.push('/ai');
+                      },
+                    ),
+                    const Divider(height: 12),
+                  ],
                   // Thu nhập
                   _ActionRow(
                     icon: LucideIcons.arrow_down_left,

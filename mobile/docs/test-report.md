@@ -124,3 +124,21 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Đổi mật khẩu `ChangePasswordSheet` | Đạt (Nhập mật khẩu hiện tại, mật khẩu mới kiểm tra độ dài theo config `password.minLength`, xác nhận mật khẩu mới, gọi API `POST /auth/change-password`, cập nhật token mới vào store) |
 | Đăng xuất thiết bị & mọi thiết bị `LogoutSheet` | Đạt (BottomSheet lựa chọn 'Đăng xuất thiết bị này' hoặc 'Đăng xuất mọi thiết bị' qua API `POST /auth/logout-all`, xóa token cục bộ và chuyển hướng về màn hình đăng nhập) |
 | Xóa tài khoản `21-xoa-tai-khoan.png` (`DeleteAccountSheet`) | Đạt (Icon thùng rác đỏ nền `#FDE8E8`, cảnh báo mất toàn bộ dữ liệu giao dịch/ví/mục tiêu tiết kiệm, card gợi ý 'Muốn giữ lại dữ liệu? Xuất CSV', nhập mật khẩu xác nhận, nút đỏ 'Xóa vĩnh viễn' gọi API `DELETE /auth/account`, nút 'Hủy') |
+
+## M10 — Trợ lý AI (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 60 test (Bao gồm AiConversationsScreen, ConversationActionSheet, AiChatScreen, TransactionDraftCard, DraftItemEditSheet, UndoToast, RerouteMenuCard, AiSettingsScreen, Settings, Wallets, Recurring, Budgets, Savings, Reports, History, Home, Notifications, Auth, Formatter) |
+| Màn hình danh sách hội thoại `30-ai-01a` & `30-ai-01b` | Đạt (Thanh điều hướng tiêu đề Trợ lý AI, nút Cài đặt trợ lý, ô tìm kiếm cuộc trò chuyện, nhóm Ghim / Hôm nay / Tuần này / Trước đó, badge số tin nhắn, menu dấu 3 chấm hành động, nút nổi 'Cuộc trò chuyện mới' kèm icon Sparkles, empty state cuộc hội thoại và trạng thái bảo trì/vô hiệu hóa `30-ai-12b`) |
+| Thao tác hội thoại `30-ai-01c` (`ConversationActionSheet`) | Đạt (Đổi tên cuộc trò chuyện với dialog prefill, ghim / bỏ ghim, lưu trữ / bỏ lưu trữ, xóa hội thoại có dialog cảnh báo) |
+| Màn hình Chat rỗng & Hero khởi đầu `30-ai-02` | Đạt (Greeting "Chào bạn, hôm nay có khoản chi nào cần ghi không?", 4 gợi ý nhanh có icon: Ghi nhiều khoản, Hỏi ngân sách, Báo cáo tuần, Mẹo tiết kiệm; ô nhập tin nhắn lớn kèm nút gửi) |
+| Streaming phản hồi & Reading skeleton `30-ai-03` | Đạt (Server-Sent Events streaming SSE `user`, `route`, `delta`, `done`, `error`; hiển thị skeleton đang xử lý kèm tên skill định tuyến, hiển thị text dồn thời gian thực) |
+| Thẻ Draft giao dịch & Sửa từng khoản `30-ai-04` & `30-ai-05` | Đạt (Card viền nét đứt dashed border, badge Trợ lý đề xuất + Chưa lưu, danh sách từng khoản với danh mục, số tiền, ngày, ví; nút Sửa mở `DraftItemEditSheet` sửa số tiền, tên, danh mục, ví, ngày hoặc Xóa khỏi nháp; nút 'Lưu X khoản chi' và nút 'Hủy') |
+| Xác nhận lưu & Hoàn tác giao dịch `30-ai-06` | Đạt (Cập nhật trạng thái draft thành ĐÃ LƯU, hiển thị banner nổi `UndoToast` "Đã lưu X khoản chi - Chạm để hoàn tác giao dịch vừa lưu", nút 'Hoàn tác' rollback xóa các giao dịch vừa tạo) |
+| Đánh giá phản hồi & Đổi hướng kỹ năng `30-ai-08` | Đạt (Nút Thumbs up / Thumbs down; khi thumbs down mở card 'Ý tôi là...' liệt kê các skill khác: Ghi chi tiêu, Hỏi ngân sách, Tra cứu lịch sử, Đổi ví... gọi API reroute) |
+| Hạn mức & Bảo trì `30-ai-11` & `30-ai-12a` | Đạt (Card cảnh báo vượt hạn mức ngày 30/30 tin kèm thời gian làm mới `resetAt`, banner vàng cảnh báo chế độ bảo trì tạm thời 503) |
+| Màn hình Cài đặt trợ lý AI `30-ai-14` (`AiSettingsScreen`) | Đạt (Card hạn mức hôm nay với thanh tiến độ xanh/vàng/đỏ, số tin đã dùng / tổng hạn mức; danh sách 'Điều trợ lý đã học' với icon Sparkles và nút xóa bộ nhớ; toggle 'Đóng góp ví dụ ẩn danh'; liên kết đến màn hình Cuộc trò chuyện đã lưu trữ) |
+

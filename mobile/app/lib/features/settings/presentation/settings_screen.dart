@@ -318,6 +318,14 @@ class SettingsScreen extends ConsumerWidget {
                     onTap: () => _handleExportCsv(context, ref),
                   ),
                 ],
+                if (config?.ai.enabled ?? true) ...[
+                  const _RowDivider(),
+                  _buildSettingRow(
+                    icon: LucideIcons.sparkles,
+                    title: 'Trợ lý AI',
+                    onTap: () => context.push('/ai/settings'),
+                  ),
+                ],
                 const _RowDivider(),
                 _buildSettingRow(
                   icon: LucideIcons.lock,

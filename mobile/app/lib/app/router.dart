@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/ai/presentation/ai_chat_screen.dart';
+import '../features/ai/presentation/ai_conversations_screen.dart';
+import '../features/ai/presentation/ai_settings_screen.dart';
+import '../features/ai/presentation/archived_conversations_screen.dart';
 import '../features/auth/application/app_session.dart';
 import '../features/auth/presentation/bootstrap_screen.dart';
 import '../features/auth/presentation/forgot_password_screen.dart';
@@ -11,7 +15,6 @@ import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/reset_password_screen.dart';
 import '../features/auth/presentation/update_required_screen.dart';
 import '../features/budgets/presentation/budgets_screen.dart';
-import '../features/foundation/presentation/foundation_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
@@ -194,10 +197,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/ai',
-        builder: (context, state) => const FoundationScreen(
-          title: 'Trợ lý AI',
-          description: 'Hội thoại và trợ lý tài chính thông minh.',
-        ),
+        builder: (context, state) => const AiConversationsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/ai/new',
+        builder: (context, state) =>
+            AiChatScreen(initialPrompt: state.extra as String?),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/ai/conversations/:id',
+        builder: (context, state) =>
+            AiChatScreen(conversationId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/ai/settings',
+        builder: (context, state) => const AiSettingsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/ai/archived',
+        builder: (context, state) => const ArchivedConversationsScreen(),
       ),
     ],
   );
