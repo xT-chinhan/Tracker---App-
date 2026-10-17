@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/formatting/vietnam_time.dart';
 import '../../categories/data/category_models.dart';
 import '../../home/application/home_service.dart';
+import '../../home/data/home_models.dart';
 import '../../quick_templates/data/quick_template_models.dart';
 import '../../quick_templates/data/quick_template_repository.dart';
 import '../../wallets/data/wallet_models.dart';
@@ -81,6 +82,36 @@ class TransactionEntryNotifier extends Notifier<TransactionEntryState> {
     state = TransactionEntryState(type: type, occurredAt: VietnamTime.now());
   }
 
+  void initFromTransaction(TransactionItem tx) {
+    state = TransactionEntryState(
+      type: tx.type == 'EXPENSE'
+          ? TransactionType.expense
+          : TransactionType.income,
+      digits: '${tx.amount}',
+      note: tx.note ?? tx.title,
+      occurredAt: tx.occurredAt,
+      selectedCategory: tx.category != null
+          ? CategoryItem(
+              id: tx.category!.id,
+              name: tx.category!.name,
+              type: tx.type,
+              icon: tx.category!.icon,
+              color: tx.category!.color,
+            )
+          : null,
+      selectedWallet: tx.wallet != null
+          ? WalletItem(
+              id: tx.wallet!.id,
+              name: tx.wallet!.name,
+              type: tx.wallet!.type,
+              icon: tx.wallet!.icon,
+              color: tx.wallet!.color,
+              isArchived: tx.wallet!.isArchived,
+            )
+          : null,
+    );
+  }
+
   void appendDigit(String value) {
     if (state.digits.length >= 14) return;
     final candidate = '${state.digits}$value'.replaceFirst(RegExp(r'^0+'), '');
@@ -119,7 +150,7 @@ class TransactionEntryNotifier extends Notifier<TransactionEntryState> {
     state = state.copyWith(note: note, errorMessage: null);
   }
 
-  Future<bool> submitTransaction() async {
+  Future<bool> submitTransaction({String? updateTransactionId}) async {
     if (state.amount <= 0) {
       state = state.copyWith(errorMessage: 'Vui lòng nhập số tiền lớn hơn 0');
       return false;
@@ -141,16 +172,28 @@ class TransactionEntryNotifier extends Notifier<TransactionEntryState> {
       final trimmedNote = state.note.trim();
       final title = trimmedNote.isNotEmpty ? trimmedNote : category.name;
 
-      final dto = CreateTransactionDto(
-        categoryId: category.id,
-        walletId: state.selectedWallet!.id,
-        amount: state.amount,
-        title: title,
-        note: trimmedNote.isNotEmpty ? trimmedNote : null,
-        occurredAt: state.occurredAt.toUtc().toIso8601String(),
-      );
+      if (updateTransactionId != null) {
+        final updateDto = UpdateTransactionDto(
+          categoryId: category.id,
+          walletId: state.selectedWallet!.id,
+          amount: state.amount,
+          title: title,
+          note: trimmedNote.isNotEmpty ? trimmedNote : null,
+          occurredAt: state.occurredAt.toUtc().toIso8601String(),
+        );
+        await repo.updateTransaction(updateTransactionId, updateDto);
+      } else {
+        final dto = CreateTransactionDto(
+          categoryId: category.id,
+          walletId: state.selectedWallet!.id,
+          amount: state.amount,
+          title: title,
+          note: trimmedNote.isNotEmpty ? trimmedNote : null,
+          occurredAt: state.occurredAt.toUtc().toIso8601String(),
+        );
+        await repo.createTransaction(dto);
+      }
 
-      await repo.createTransaction(dto);
       // Refresh Home state so balances, budgets, recent transactions are updated immediately
       ref.read(homeControllerProvider.notifier).load(refresh: true);
       state = state.copyWith(isSaving: false);
@@ -158,7 +201,9 @@ class TransactionEntryNotifier extends Notifier<TransactionEntryState> {
     } catch (e) {
       state = state.copyWith(
         isSaving: false,
-        errorMessage: 'Lưu giao dịch thất bại. Vui lòng thử lại.',
+        errorMessage: updateTransactionId != null
+            ? 'Cập nhật giao dịch thất bại. Vui lòng thử lại.'
+            : 'Lưu giao dịch thất bại. Vui lòng thử lại.',
       );
       return false;
     }

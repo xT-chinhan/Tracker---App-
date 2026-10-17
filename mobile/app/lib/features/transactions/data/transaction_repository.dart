@@ -30,6 +30,9 @@ class TransactionRepository {
   Future<TransactionPage> getTransactions({
     int page = 1,
     int limit = 20,
+    String? month,
+    String? from,
+    String? to,
     String? type,
     String? categoryId,
     String? walletId,
@@ -40,12 +43,31 @@ class TransactionRepository {
       queryParameters: {
         'page': page,
         'limit': limit,
-        'type': ?type,
-        'categoryId': ?categoryId,
-        'walletId': ?walletId,
+        if (month != null && month.isNotEmpty) 'month': month,
+        if (from != null && from.isNotEmpty) 'from': from,
+        if (to != null && to.isNotEmpty) 'to': to,
+        if (type != null && type.isNotEmpty) 'type': type,
+        if (categoryId != null && categoryId.isNotEmpty)
+          'categoryId': categoryId,
+        if (walletId != null && walletId.isNotEmpty) 'walletId': walletId,
         if (q != null && q.isNotEmpty) 'q': q,
       },
     );
     return TransactionPage.fromJson(response.data!);
+  }
+
+  Future<TransactionItem> updateTransaction(
+    String id,
+    UpdateTransactionDto dto,
+  ) async {
+    final response = await _dio.patch<Map<String, dynamic>>(
+      'transactions/$id',
+      data: dto.toJson(),
+    );
+    return TransactionItem.fromJson(response.data!);
+  }
+
+  Future<void> deleteTransaction(String id) async {
+    await _dio.delete<void>('transactions/$id');
   }
 }

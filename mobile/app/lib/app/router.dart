@@ -11,9 +11,11 @@ import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/reset_password_screen.dart';
 import '../features/auth/presentation/update_required_screen.dart';
 import '../features/foundation/presentation/foundation_screen.dart';
+import '../features/history/presentation/history_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
 import '../features/transfers/presentation/transfer_screen.dart';
+import '../features/transactions/presentation/transaction_detail_screen.dart';
 import '../features/transactions/presentation/transaction_entry_screen.dart';
 import 'shell/app_shell.dart';
 
@@ -95,10 +97,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: <RouteBase>[
               GoRoute(
                 path: '/history',
-                builder: (context, state) => const FoundationScreen(
-                  title: 'Lịch sử',
-                  description: 'Giao dịch của bạn sẽ hiển thị tại đây.',
-                ),
+                builder: (context, state) => const HistoryScreen(),
               ),
             ],
           ),
@@ -134,6 +133,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               ? TransactionType.income
               : TransactionType.expense,
         ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/transactions/:id',
+        builder: (context, state) =>
+            TransactionDetailScreen(transactionId: state.pathParameters['id']!),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

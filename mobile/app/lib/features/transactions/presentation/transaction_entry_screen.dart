@@ -11,6 +11,7 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_icon_helper.dart';
 import '../../categories/application/categories_service.dart';
 import '../../categories/presentation/category_picker_sheet.dart';
+import '../../home/data/home_models.dart';
 import '../../wallets/application/wallets_service.dart';
 import '../../wallets/presentation/wallet_picker_sheet.dart';
 import '../application/transaction_entry_service.dart';
@@ -20,10 +21,12 @@ enum TransactionType { expense, income }
 class TransactionEntryScreen extends ConsumerStatefulWidget {
   const TransactionEntryScreen({
     this.initialType = TransactionType.expense,
+    this.initialTransaction,
     super.key,
   });
 
   final TransactionType initialType;
+  final TransactionItem? initialTransaction;
 
   @override
   ConsumerState<TransactionEntryScreen> createState() =>
@@ -40,9 +43,16 @@ class _TransactionEntryScreenState
     _noteController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        ref
-            .read(transactionEntryProvider.notifier)
-            .initType(widget.initialType);
+        if (widget.initialTransaction != null) {
+          final tx = widget.initialTransaction!;
+          _noteController.text =
+              tx.note ?? (tx.title != tx.category?.name ? tx.title : '');
+          ref.read(transactionEntryProvider.notifier).initFromTransaction(tx);
+        } else {
+          ref
+              .read(transactionEntryProvider.notifier)
+              .initType(widget.initialType);
+        }
       }
     });
   }
@@ -109,7 +119,9 @@ class _TransactionEntryScreenState
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(LucideIcons.x),
         ),
-        title: const Text('Ghi giao dịch'),
+        title: Text(
+          widget.initialTransaction != null ? 'Sửa giao dịch' : 'Ghi giao dịch',
+        ),
         actions: [
           IconButton(
             tooltip: 'Lưu làm mẫu',
@@ -381,9 +393,11 @@ class _TransactionEntryScreenState
                 16,
               ),
               child: AppButton(
-                label: state.type == TransactionType.expense
-                    ? 'Lưu khoản chi'
-                    : 'Lưu thu nhập',
+                label: widget.initialTransaction != null
+                    ? 'Lưu thay đổi'
+                    : (state.type == TransactionType.expense
+                          ? 'Lưu khoản chi'
+                          : 'Lưu thu nhập'),
                 loading: state.isSaving,
                 onPressed:
                     state.amount > 0 &&
@@ -391,19 +405,23 @@ class _TransactionEntryScreenState
                         state.selectedWallet != null &&
                         !state.isSaving
                     ? () async {
-                        final success = await notifier.submitTransaction();
+                        final success = await notifier.submitTransaction(
+                          updateTransactionId: widget.initialTransaction?.id,
+                        );
                         if (success && context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                state.type == TransactionType.expense
-                                    ? 'Đã ghi khoản chi thành công'
-                                    : 'Đã ghi thu nhập thành công',
+                                widget.initialTransaction != null
+                                    ? 'Đã cập nhật giao dịch'
+                                    : (state.type == TransactionType.expense
+                                          ? 'Đã ghi khoản chi thành công'
+                                          : 'Đã ghi thu nhập thành công'),
                               ),
                               duration: const Duration(seconds: 2),
                             ),
                           );
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(true);
                         }
                       }
                     : null,

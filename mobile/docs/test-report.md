@@ -60,6 +60,20 @@ Ghi chú môi trường: AVD cũ dùng Android 17 preview bị ADB offline. Tạ
 | Đọc danh sách ví `/wallets` cho giao dịch và chuyển tiền | Đạt (Freezed models, sheet chọn ví kèm số dư) |
 | Bàn phím số numeric keypad `05-ghi-giao-dich.png` | Đạt (nhập số tiền, đọc thành chữ tiếng Việt, tự động định dạng) |
 | Tạo giao dịch `/transactions` (chi/thu) | Đạt (validation, lưu khoản chi/thu nhập, refresh home) |
-| Màn hình chuyển tiền `/transfers` (`16-chuyen-tien.png`) | Đạt (đổi chiều ví, chip số tiền nhanh, kiểm tra số dư vượt mức, gọi API) |
 | Menu nút cộng nổi `05b-menu-nut-cong.png` | Đạt (Thu nhập, Chuyển tiền, Mẫu nhập nhanh, xoay `+` thành `×`) |
+
+## M5 — Lịch sử, Chi tiết giao dịch, Sửa / Xóa (17/10/2026)
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test` | Đạt |
+| `flutter analyze` | Đạt, 0 lỗi/cảnh báo |
+| `flutter test` | Đạt, 34 test (Bao gồm HistoryScreen, HistoryService, TransactionDetailScreen, TransactionEntryScreen, CategoryPickerSheet, TransferScreen, Home, Notifications, Auth, Formatter) |
+| Màn hình lịch sử `07-lich-su.png` | Đạt (điều hướng tháng `< Tháng 9 >`, tổng quan tháng chi/thu, ô tìm kiếm debounce, bộ lọc Tất cả / Khoản chi / Thu nhập) |
+| Sheet lọc nâng cao `HistoryFilterSheet` | Đạt (lọc theo ví và danh mục thực tế từ API, đặt lại, áp dụng) |
+| Nhóm giao dịch theo ngày | Đạt (nhóm calendar date VN, nhãn Hôm nay / Hôm qua / 2 ngày trước, tổng net ngày tự động định dạng và màu xanh khi dương) |
+| Trạng thái lịch sử trống `22-lich-su-trong.png` | Đạt (icon hoá đơn, tiêu đề "Chưa có giao dịch nào", nút "+ Ghi giao dịch đầu tiên") |
+| Chi tiết giao dịch `08-chi-tiet-giao-dich.png` | Đạt (icon tròn, số tiền lớn, nhãn định kỳ nếu có, loại, danh mục, ví, thời gian chuẩn VN, ghi chú) |
+| Xóa giao dịch `DELETE /transactions/:id` | Đạt (hộp thoại xác nhận, hoàn tác cập nhật số dư ví, tự động refresh lịch sử & trang chủ) |
+| Sửa giao dịch `PATCH /transactions/:id` | Đạt (tái sử dụng form ghi giao dịch với dữ liệu prefill, cập nhật và refresh) |
 

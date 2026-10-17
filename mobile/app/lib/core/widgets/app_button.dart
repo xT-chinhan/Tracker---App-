@@ -84,11 +84,14 @@ class AppButton extends StatelessWidget {
                       Icon(icon, size: 18, color: foreground),
                       const SizedBox(width: 8),
                     ],
-                    Text(
-                      label,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelLarge?.copyWith(color: foreground),
+                    Flexible(
+                      child: Text(
+                        label,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge?.copyWith(color: foreground),
+                      ),
                     ),
                   ],
                 ),
