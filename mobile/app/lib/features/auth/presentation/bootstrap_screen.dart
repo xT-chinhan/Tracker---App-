@@ -25,7 +25,8 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen> {
     if (mounted) setState(() => _error = null);
     try {
       await ref.read(bootstrapServiceProvider).start();
-    } catch (error) {
+    } catch (error, stackTrace) {
+      debugPrint('[Bootstrap] Error: $error\n$stackTrace');
       if (mounted) setState(() => _error = error);
     }
   }
