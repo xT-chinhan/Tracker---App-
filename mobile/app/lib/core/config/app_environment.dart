@@ -1,5 +1,8 @@
 abstract final class AppEnvironment {
-  static const apiUrl = String.fromEnvironment('API_URL');
+  static const apiUrl = String.fromEnvironment(
+    'API_URL',
+    defaultValue: 'http://localhost:3000/api',
+  );
 
   static Uri requireApiUri() {
     final value = apiUrl.trim().replaceFirst(RegExp(r'/+$'), '');

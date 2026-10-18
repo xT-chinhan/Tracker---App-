@@ -171,21 +171,23 @@ class HomeScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Expanded(
-                        flex: 145,
+                        flex: 12,
                         child: AppButton(
                           label: 'Ghi giao dịch',
                           icon: LucideIcons.plus,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
                           onPressed: () => context.push('/transactions/new'),
                         ),
                       ),
                       if (transfersEnabled) ...[
                         const SizedBox(width: 10),
                         Expanded(
-                          flex: 100,
+                          flex: 11,
                           child: AppButton(
                             label: 'Chuyển tiền',
                             icon: LucideIcons.arrow_left_right,
                             style: AppButtonStyle.secondary,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             onPressed: () => context.push('/transfers/new'),
                           ),
                         ),
@@ -446,23 +448,27 @@ class _BalanceCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text.rich(
-                TextSpan(
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  children: [
-                    const TextSpan(text: 'Ngân sách tháng đã dùng '),
-                    TextSpan(
-                      text: '${percent.round()}%',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                  ],
+                    children: [
+                      const TextSpan(text: 'Ngân sách tháng đã dùng '),
+                      TextSpan(
+                        text: '${percent.round()}%',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               Text(
                 totalLimit > 0
                     ? (remaining >= 0
@@ -725,21 +731,23 @@ class _HomeSkeleton extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              flex: 145,
+              flex: 12,
               child: AppButton(
                 label: 'Ghi giao dịch',
                 icon: LucideIcons.plus,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 onPressed: () => context.push('/transactions/new'),
               ),
             ),
             if (transfersEnabled) ...[
               const SizedBox(width: 10),
               Expanded(
-                flex: 100,
+                flex: 11,
                 child: AppButton(
                   label: 'Chuyển tiền',
                   icon: LucideIcons.arrow_left_right,
                   style: AppButtonStyle.secondary,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   onPressed: () => context.push('/transfers/new'),
                 ),
               ),

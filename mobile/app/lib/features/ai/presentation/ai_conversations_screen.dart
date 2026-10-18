@@ -148,11 +148,15 @@ class _AiConversationsScreenState extends ConsumerState<AiConversationsScreen> {
                         color: Color(0xFF787774),
                       ),
                       const SizedBox(width: 6),
-                      Text(
-                        'Riêng tư · chỉ đọc dữ liệu trong tài khoản của bạn',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: const Color(0xFF787774),
-                          fontSize: 13,
+                      Expanded(
+                        child: Text(
+                          'Riêng tư · chỉ đọc dữ liệu trong tài khoản của bạn',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFF787774),
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ],

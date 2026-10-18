@@ -13,6 +13,7 @@ class AppButton extends StatelessWidget {
     this.style = AppButtonStyle.primary,
     this.loading = false,
     this.expand = true,
+    this.padding,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class AppButton extends StatelessWidget {
   final AppButtonStyle style;
   final bool loading;
   final bool expand;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class AppButton extends StatelessWidget {
       semanticLabel: label,
       child: Container(
         height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(context.radius.pill),
