@@ -2,6 +2,7 @@
  * Pipeline trợ lý: tin user → router → skill (context theo principal + LLM) → nháp (chuẩn hóa) → lưu tin/nháp.
  * Xác nhận nháp → thực thi qua service nghiệp vụ → tín hiệu học.
  */
+import sharp from 'sharp';
 import { BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { AiConversation, AiDraft, AiMessage, Prisma } from '@prisma/client';
 import { SystemConfigService } from '../system-config/system-config.module';
@@ -55,6 +56,7 @@ function recording(llm: LlmClient, calls: { messages: ChatMsg[] }[]): LlmClient 
       return llm.chat(messages, opts);
     },
     embed: (texts: string[]) => llm.embed(texts),
+    ...(llm.vision ? { vision: (prompt: string, image: string, o?: ChatOptions) => llm.vision!(prompt, image, o) } : {}),
   };
 }
 
@@ -177,8 +179,40 @@ export class AiService {
     return { userMessage: messageView(userMessage), ...out };
   }
 
+  /**
+   * Ảnh hóa đơn / chuyển khoản → skill doc-hoa-don → nháp giao dịch. Ảnh chỉ nằm trong bộ nhớ của request (thu nhỏ rồi gửi model),
+   * KHÔNG lưu vào DB hay đĩa. Giới hạn riêng `ai.ocrDailyLimitPerUser` (ngoài hạn mức tin nhắn).
+   */
+  async postImage(p: Principal, conversationId: string, file: { buffer: Buffer; mimetype: string; size: number } | undefined, opts: { debug?: boolean } = {}) {
+    const cfg = await this.sys.ai();
+    if (!cfg.ocr.enabled) throw new ForbiddenException({ statusCode: 403, code: 'FEATURE_DISABLED', feature: 'ocr', message: 'Tính năng đọc ảnh đang tạm tắt' });
+    if (!file?.buffer?.length) throw new BadRequestException('Thiếu ảnh (trường "image")');
+    if (!/^image\/(jpeg|png|webp)$/.test(file.mimetype)) throw new BadRequestException('Chỉ nhận ảnh JPEG, PNG hoặc WebP');
+    const repo = this.store.for(p);
+    const used = await repo.countSkillRepliesSince('doc-hoa-don', vnMidnight());
+    if (used >= cfg.ocr.dailyLimitPerUser) {
+      const resetAt = new Date(vnMidnight().getTime() + 86400_000);
+      throw new HttpException({ statusCode: 429, code: 'AI_OCR_DAILY_LIMIT', message: `Bạn đã đọc hết ${cfg.ocr.dailyLimitPerUser} ảnh hôm nay, quay lại sau 0h hoặc ghi tay nhé`, limit: cfg.ocr.dailyLimitPerUser, resetAt, retryAfterSeconds: Math.ceil((resetAt.getTime() - Date.now()) / 1000) }, 429);
+    }
+    let image: string;
+    if (cfg.provider === 'fake') {
+      image = file.buffer.toString('base64');
+    } else {
+      try {
+        // Ảnh to làm model chậm (đo 19/10: ~2,5 s ở 768 px); xoay theo EXIF, bỏ metadata (vị trí GPS…)
+        const out = await sharp(file.buffer).rotate().resize({ width: cfg.ocr.maxSide, height: cfg.ocr.maxSide, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 85 }).toBuffer();
+        image = out.toString('base64');
+      } catch {
+        throw new BadRequestException('Không mở được ảnh, hãy chụp lại hoặc chọn ảnh khác');
+      }
+    }
+    const { conv, userMessage } = await this.accept(p, conversationId, '[Ảnh hóa đơn]');
+    const out = await this.answer(repo, conv, '[Ảnh hóa đơn]', { forced: 'doc-hoa-don', routeBy: 'image', image, debug: opts.debug });
+    return { userMessage: messageView(userMessage), ...out };
+  }
+
   /** Trả lời 1 câu (cũng dùng cho reroute với skill ép buộc). Lỗi skill/LLM không làm hỏng request: lưu tin trạng thái error. */
-  async answer(repo: AiRepo, conv: AiConversation, text: string, opts: { forced?: string; debug?: boolean; onEvent?: AiEvent } = {}) {
+  async answer(repo: AiRepo, conv: AiConversation, text: string, opts: { forced?: string; routeBy?: RouteResult['by']; image?: string; debug?: boolean; onEvent?: AiEvent } = {}) {
     const t0 = Date.now();
     const p = repo.principal;
     const cfg = await this.sys.ai();
@@ -193,7 +227,7 @@ export class AiService {
     const uctx = router.ctx.data.userContext as any;
     let route: RouteResult;
     try {
-      route = opts.forced ? { skill: opts.forced, by: 'reroute' } : await this.router.route(text, router.ctx, conv.scope, uctx, base.provider);
+      route = opts.forced ? { skill: opts.forced, by: opts.routeBy ?? 'reroute' } : await this.router.route(text, router.ctx, conv.scope, uctx, base.provider);
     } catch (e) {
       this.logger.warn(`router lỗi: ${(e as Error).message}`);
       route = { skill: 'hoi-lai', by: 'fallback' };
@@ -214,7 +248,7 @@ export class AiService {
         traced = [...traced, ...built.trace];
         try {
           result = await Promise.race([
-            this.skills.run(skill, { input: text, context: built.ctx, llm, now }),
+            this.skills.run(skill, { input: text, context: built.ctx, llm, now, image: opts.image }),
             new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`skill ${skill.name} quá thời gian`)), cfg.timeoutMs * 2 + 1000).unref()),
           ]);
         } finally {

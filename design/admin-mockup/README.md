@@ -1,6 +1,6 @@
 # Thu Chi Admin · Mockup
 
-Mở `index.html` trực tiếp (không cần server). Ảnh 1x trong `shots/`, toàn bộ gallery ở `shots/overview.png`. Mục **I · Trợ lý AI** (ảnh `shots/20-ai-*.png`) đang **chờ duyệt**, xem cuối file.
+Mở `index.html` trực tiếp (không cần server). Ảnh 1x trong `shots/`, toàn bộ gallery ở `shots/overview.png`. Mục **I · Trợ lý AI** (ảnh `shots/20-ai-*.png`) và mục **J · Đọc ảnh** (ảnh `shots/40-ocr-a*.png`) đang **chờ duyệt**, xem cuối file.
 
 ## Màn hình
 | # | File | Màn |
@@ -93,3 +93,19 @@ Mockup mobile tương ứng: `../mockup/` mục J, ảnh `../mockup/shots/30-ai-
 - Trung tâm học chỉ hiện số tổng hợp và mẫu câu đã bỏ tên/số tài khoản, có ≥ 5 người khác nhau xác nhận. Biểu đồ đường: 4 series `viz-1..4` theo thứ tự cố định, nét 2px, legend + nhãn giá trị cuối đường, có “Xem dạng bảng”. Ví dụ “cuối tuần → Giải trí” bị bộ đề chặn lấy đúng lỗi thật trong `ai/results/BENCHMARK-2026-10-08.md`.
 - Tạm dừng trợ lý (bảo trì) làm giống Bảo trì ở A9: có hiệu lực ngay sau hộp xác nhận, không đi qua thanh Lưu. Các trường còn lại đi qua thanh Lưu như mọi mục cấu hình.
 - Dữ liệu nhất quán: 1.284 / 1.247 / 37 người dùng; số người nhận thông báo 1.247; Nguyễn Minh Anh có 214 tin tháng 9, 96 nháp, 71 xác nhận không sửa (74%). Số trong A11 lấy theo đợt đo 08/10 (76% xác nhận không sửa, p50 ≈ 1,03 giây, router 9 skill, embedding bge-m3).
+
+## Đọc ảnh (OCR) · chờ duyệt
+Mockup mobile tương ứng: `../mockup/` mục K, ảnh `../mockup/shots/40-ocr-*.png`.
+
+| # | File | Màn |
+|---|---|---|
+| 40a | `shots/40-ocr-a1-trung-tam-hoc.png` | A11 Trung tâm học › tab **Đọc ảnh**: dòng riêng tư, 4 KPI (8.768 ảnh 7 ngày, 71% nháp lưu không sửa, trung vị 2,6 giây, 6,2% không đọc được), cột chồng theo ngày 15/09–21/09 (Đọc được / Không đọc được, có legend, “Xem dạng bảng”), lý do không đọc được tổng hợp dạng thanh ngang một màu |
+| 40b | `shots/40-ocr-a2-cau-hinh.png` | A12 Cấu hình › Trợ lý AI, card **Đọc ảnh**: Bật đọc ảnh, model qwen3.5:4b (chỉ đọc), 20 ảnh/người/ngày, ảnh tối đa 768px cạnh dài, chờ tối đa 30 giây, Lưu ảnh: không lưu (cố định) |
+
+### Quyết định
+- **Chỉ số liệu tổng hợp**: admin không xem được ảnh hay nội dung đọc được của người dùng, vì máy chủ không giữ ảnh. Lý do lỗi chỉ đếm theo loại, không có ảnh mẫu để mở. Ghi rõ ở dòng riêng tư đầu tab và ở hàng “Lưu ảnh” trong cấu hình.
+- Tab “Đọc ảnh” nằm cuối seg Trung tâm học, card “Đọc ảnh” nằm trong Cấu hình › Trợ lý AI, **sau card Mô hình** (khung 40b bỏ qua card Trạng thái và Mô hình, coi như đã cuộn tới, nên card nằm ngay dưới tiêu đề). Cả hai **chỉ vẽ ở khung mục J** (`learnHead()` nhận thêm tham số, mặc định giữ nguyên nên 20f/20g không đổi). Khi duyệt: thêm tab vào mọi khung Trung tâm học và card vào A12, rồi chụp lại.
+- Card dùng đúng hàng cấu hình A9/A12 (nhãn + mô tả trái, control 420px phải, ô số có đơn vị và khoảng hợp lệ). Model đọc ảnh và Lưu ảnh là ô khóa giống “Tiền tệ hiển thị” ở A9. Mọi trường đi qua thanh Lưu như các mục khác.
+- Biểu đồ: một cột chồng mỗi ngày, xám đậm = đọc được, xám nhạt = không đọc được (không dùng đỏ vì không phải lỗi hệ thống), một trục, tổng ghi trên cột.
+- Dữ liệu nhất quán: 7 cột cộng = 8.768; phần không đọc được cộng = 544 = 6,2%; 5 lý do cộng = 544; 8.224 nháp = 8.768 − 544, chia 71% / 21% / 8%. Trung vị 2,6 giây, model qwen3.5:4b, cạnh dài 768px lấy từ đợt đo spike (số tiền, ngày, thu/chi, nơi bán đúng 8/8).
+

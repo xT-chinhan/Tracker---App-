@@ -9,8 +9,11 @@ import { fold, l2 } from './ai.text';
 
 let chain: Promise<unknown> = Promise.resolve();
 
-/** Giữ model trong GPU bao lâu sau lần gọi cuối (Ollama keep_alive). Lâu hơn = ít bị nạp lại (lần đầu ~7–16 s); "-1" = giữ mãi. */
-export const KEEP_ALIVE = process.env.AI_KEEP_ALIVE || '12h';
+/**
+ * Giữ model trong GPU bao lâu sau lần gọi cuối (Ollama keep_alive). Lâu hơn = ít bị nạp lại (~7–16 s), nhưng tiến trình
+ * llama-server phình RAM dần khi chạy liên tục (đo 19/10: ~1,7 GB lúc mới nạp → ~7,5 GB sau vài trăm lượt) → mặc định 1h.
+ */
+export const KEEP_ALIVE = process.env.AI_KEEP_ALIVE || '1h';
 /** Chạy tuần tự mọi lời gọi Ollama của instance này (GPU 1 luồng: gọi song song chỉ làm tăng độ trễ và dễ timeout). */
 function serial<T>(fn: () => Promise<T>): Promise<T> {
   const next = chain.then(fn, fn);
@@ -36,7 +39,7 @@ export class OllamaClient implements LlmClient {
     private readonly retries = 2,
   ) {}
 
-  private async post(path: string, body: unknown): Promise<any> {
+  private async post(path: string, body: unknown, timeoutMs = this.timeoutMs): Promise<any> {
     let last: Error | null = null;
     for (let attempt = 0; attempt <= this.retries; attempt++) {
       try {
@@ -44,7 +47,7 @@ export class OllamaClient implements LlmClient {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(body),
-          signal: AbortSignal.timeout(this.timeoutMs),
+          signal: AbortSignal.timeout(timeoutMs),
         });
         if (r.status >= 500) throw new LlmError(`ollama ${path} ${r.status}: ${(await r.text()).slice(0, 200)}`, 'UNAVAILABLE');
         if (!r.ok) throw new LlmError(`ollama ${path} ${r.status}: ${(await r.text()).slice(0, 200)}`, 'BAD_RESPONSE');
@@ -52,7 +55,7 @@ export class OllamaClient implements LlmClient {
       } catch (e) {
         const err = e as Error;
         // Hết giờ: không thử lại (GPU đang bận, thử lại chỉ dồn hàng); 4xx: lỗi cấu hình, không thử lại
-        if (err.name === 'TimeoutError' || err.name === 'AbortError') throw new LlmError(`ollama ${path} quá ${this.timeoutMs}ms`, 'TIMEOUT');
+        if (err.name === 'TimeoutError' || err.name === 'AbortError') throw new LlmError(`ollama ${path} quá ${timeoutMs}ms`, 'TIMEOUT');
         if (err instanceof LlmError && err.code === 'BAD_RESPONSE') throw err;
         last = err instanceof LlmError ? err : new LlmError(`ollama ${path}: ${err.message}`, 'UNAVAILABLE');
         if (attempt < this.retries) await new Promise((res) => setTimeout(res, 300 * (attempt + 1)));
@@ -74,6 +77,22 @@ export class OllamaClient implements LlmClient {
         think: false,
         options: { temperature: opts.temperature ?? 0, seed: 7, num_ctx: 4096, num_predict: opts.numPredict ?? 256, stop: opts.stop ?? ['\n\n'] },
       });
+      return { content: String(j?.message?.content ?? ''), ms: performance.now() - t, promptTokens: j.prompt_eval_count ?? 0, evalTokens: j.eval_count ?? 0 };
+    });
+  }
+
+  vision(prompt: string, imageBase64: string, opts: ChatOptions = {}): Promise<ChatResult> {
+    return serial(async () => {
+      const t = performance.now();
+      // Có ảnh thì Ollama bỏ qua `format` với qwen3.5 → không gửi schema; JSON được gỡ khỏi khối ``` khi đọc
+      const j = await this.post('/api/chat', {
+        model: this.chatModel,
+        messages: [{ role: 'user', content: prompt, images: [imageBase64] }],
+        stream: false,
+        keep_alive: KEEP_ALIVE,
+        think: false,
+        options: { temperature: 0, seed: 7, num_ctx: 4096, num_predict: opts.numPredict ?? 220 },
+      }, this.timeoutMs * 2); // ảnh: ~4s lúc rảnh, 15s+ khi GPU bận → gấp đôi (vẫn dưới mốc skill timeoutMs*2+1s)
       return { content: String(j?.message?.content ?? ''), ms: performance.now() - t, promptTokens: j.prompt_eval_count ?? 0, evalTokens: j.eval_count ?? 0 };
     });
   }
@@ -175,6 +194,15 @@ export class FakeLlm implements LlmClient {
       default:
         return 'ok';
     }
+  }
+
+  /** Ảnh giả cho test: JSON đặt sau dấu FAKE_OCR trong chính file ảnh; không có → trả {} (không đọc được). */
+  async vision(_prompt: string, imageBase64: string): Promise<ChatResult> {
+    this.calls++;
+    const raw = Buffer.from(imageBase64, 'base64').toString('latin1');
+    const at = raw.indexOf('FAKE_OCR');
+    const content = at >= 0 ? Buffer.from(raw.slice(at + 8).trim(), 'latin1').toString('utf8') : '{}';
+    return { content: '```json\n' + content + '\n```', ms: 1, promptTokens: 100, evalTokens: 20 };
   }
 
   async embed(texts: string[]): Promise<number[][]> {

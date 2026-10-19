@@ -1,6 +1,6 @@
 # Thu Chi · Mockup mobile
 
-Mở `index.html` trực tiếp. Ảnh 2x trong `shots/`, toàn bộ gallery ở `shots/overview.png`. Token ở `../tokens.md`, nguyên tắc ở `../DESIGN.md`. Mục A–I (25 màn, `shots/01…23`) đã duyệt. Mục **J · Trợ lý AI** (`shots/30-ai-*.png`) đang **chờ duyệt**.
+Mở `index.html` trực tiếp. Ảnh 2x trong `shots/`, toàn bộ gallery ở `shots/overview.png`. Token ở `../tokens.md`, nguyên tắc ở `../DESIGN.md`. Mục A–I (25 màn, `shots/01…23`) đã duyệt. Mục **J · Trợ lý AI** (`shots/30-ai-*.png`) và mục **K · Đọc hóa đơn** (`shots/40-ocr-*.png`) đang **chờ duyệt**.
 
 ## J · Trợ lý AI (chờ duyệt)
 | # | File | Màn |
@@ -36,3 +36,29 @@ Mở `index.html` trực tiếp. Ảnh 2x trong `shots/`, toàn bộ gallery ở
 - Từ chối không dùng màu đỏ (không phải lỗi), luôn kèm việc trợ lý làm được.
 - Hết lượt / bảo trì: luôn chừa đường ghi thủ công. Xác nhận nháp và đọc lại không tính lượt.
 - Dữ liệu khớp các màn đã duyệt: tháng 9 chi 8.680.000đ / 14.000.000đ (62%), Ăn uống 3.120.000 (89%), Mua sắm 115%, MoMo 1.500.000đ, Tiền nhà 2.500.000đ định kỳ ngày 1 từ MB Bank, Đà Lạt 70%. Sau khi xác nhận nháp 180.000đ, Ăn uống thành 3.220.000đ (92%).
+
+## K · Đọc hóa đơn (OCR) (chờ duyệt)
+Admin tương ứng: `../admin-mockup/` mục J, ảnh `../admin-mockup/shots/40-ocr-a*.png`.
+
+| # | File | Màn |
+|---|---|---|
+| 40a | `shots/40-ocr-01-loi-vao.png` | Lối vào: nhấn giữ ＋, dòng “Quét hóa đơn” (`scan-line`, nhãn Mới) ngay dưới “Hỏi trợ lý” |
+| 40b | `shots/40-ocr-02-chon-anh.png` | Sheet chọn nguồn: Chụp ảnh / Chọn từ thư viện (kể cả ảnh chụp màn hình), gợi ý chụp rõ Tổng tiền, dòng riêng tư, còn 17/20 ảnh hôm nay |
+| 40c | `shots/40-ocr-03-dang-doc.png` | Đang đọc (~3 giây): ảnh thu nhỏ, dòng trạng thái “Đang đọc hóa đơn…” (shimmer chữ), skeleton đúng hình thẻ nháp, nút Hủy. Không spinner |
+| 40d | `shots/40-ocr-04-ket-qua-hoa-don.png` | Hóa đơn Highlands Coffee −113.000đ: thẻ nháp nét đứt, Khoản chi, nơi bán, Ăn uống, ví MoMo (đoán theo thói quen), ngày giờ, “3 món” thu gọn, ảnh nhỏ bấm xem lại, dòng nguồn “Đọc từ ảnh · 2,6 giây”; Hủy · Sửa · Lưu khoản chi |
+| 40e | `shots/40-ocr-05-ket-qua-chuyen-khoan.png` | Ảnh chuyển khoản VietinBank −16.900đ tới KHUONG BA SON: khoản chi vì bạn là người chuyển; VietinBank không có trong 4 ví nên chip vàng “Chọn ví”, danh mục chưa đoán được để trống “Chọn danh mục”, nút Lưu khóa tới khi chọn đủ |
+| 40e | `shots/40-ocr-05b-ket-qua-nhan-tien.png` | Biến thể: NGUYEN MINH ANH ở phía người nhận → khoản thu +250.000đ (xanh), ví MB Bank chọn theo ngân hàng nhận, Lưu khoản thu |
+| 40f | `shots/40-ocr-06-khong-doc-duoc.png` | Không đọc được (ảnh mờ / không phải hóa đơn): thông báo trung tính, phần đã đọc được, gợi ý chụp lại; Chụp lại · Nhập tay (mở Ghi giao dịch điền sẵn nơi bán, ngày) |
+| 40g | `shots/40-ocr-07-het-luot.png` | Hết 20 ảnh hôm nay: thẻ giờ mở lại (00:00, còn 4 giờ 9 phút) + Ghi giao dịch thủ công, hai nguồn ảnh mờ đi |
+
+### Quyết định
+- **Lối vào chỉ thêm một dòng vào menu nhấn giữ ＋**, đặt cạnh “Hỏi trợ lý” vì cùng là cách ghi nhanh có AI. Không đụng Trang chủ, tab bar hay màn Ghi giao dịch đã duyệt. Menu mọc lên từ đáy nên dài thêm 50px vẫn vừa. Quản trị tắt Đọc ảnh thì dòng này ẩn.
+- Màn kết quả là màn con “Quét hóa đơn” đẩy từ Trang chủ, **ẩn tab bar**, thanh trên dùng `.ai-bar` với dòng “Ảnh không lưu trên máy chủ”. Không nhét vào cuộc trò chuyện của trợ lý để không tốn lượt hỏi và không trộn lịch sử chat.
+- **Nháp giống mục J**: viền nét đứt + badge “Nháp · chưa lưu” = chưa ghi gì. Mỗi dòng chạm để sửa ngay trong nháp, “Sửa” mở Ghi giao dịch điền sẵn. Chỉ nút đen “Lưu khoản chi / Lưu khoản thu” mới ghi. Hủy thì bỏ nháp và ảnh trên máy.
+- **Thu hay chi**: tên người dùng ở phía người nhận → khoản thu (số xanh, `+`), còn lại là khoản chi (số mực, `−`). Thẻ luôn ghi lý do một dòng (“Bạn là người chuyển…”, “Người nhận là NGUYEN MINH ANH (bạn)…”) và tag Khoản chi / Khoản thu sửa được.
+- **Ví**: khớp ngân hàng trên ảnh với ví của người dùng; hóa đơn giấy thì đoán theo thói quen (luật “cà phê → Ăn uống · MoMo” ở M14). Không khớp thì chip vàng “Chọn ví”, không đoán bừa.
+- **Quyền riêng tư**: ảnh được thu nhỏ trên máy (768px), máy chủ đọc xong xóa ngay. Ảnh nhỏ trong thẻ là bản trên điện thoại, mất khi lưu hoặc hủy. Câu riêng tư xuất hiện ở sheet chọn ảnh và thanh trên mọi màn kết quả.
+- Loading không spinner: dòng trạng thái thật + skeleton đúng hình thẻ nháp. Không đọc được thì dùng thẻ trung tính, không đỏ (không phải lỗi của người dùng), luôn có đường Nhập tay.
+- Danh sách món chỉ hiện khi model đọc được (đo spike: món đọc được 0/N ở cấu hình nhanh), mặc định thu gọn thành một dòng “3 món”. 3 món cộng đúng 39.000 + 45.000 + 29.000 = 113.000đ.
+- Thêm CSS ở cuối `styles.css`: `.tag.warn`, `.ocr-thumb`, `.receipt`, `.bankshot` (ảnh vẽ bằng HTML, không dùng ảnh ngoài).
+

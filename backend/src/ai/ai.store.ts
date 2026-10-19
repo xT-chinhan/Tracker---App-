@@ -155,7 +155,12 @@ export class AiRepo {
     return rows.reverse().map((r) => ({ role: r.role === 'USER' ? ('user' as const) : ('assistant' as const), content: r.content }));
   }
 
-  countUserMessagesSince(since: Date) {
+/** Số câu trả lời của một skill từ mốc `since` (vd số ảnh đã đọc hôm nay). */
+  countSkillRepliesSince(skill: string, since: Date) {
+    return this.db.aiMessage.count({ where: { userId: this.uid, role: 'ASSISTANT', skill, createdAt: { gte: since } } });
+  }
+
+    countUserMessagesSince(since: Date) {
     return this.db.aiMessage.count({ where: { userId: this.uid, role: 'USER', createdAt: { gte: since } } });
   }
 

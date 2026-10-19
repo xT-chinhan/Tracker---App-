@@ -1992,7 +1992,7 @@ group('swagger');
 r = await fetch(BASE.replace(/\/api$/, '') + '/docs/openapi.json');
 {
   const doc = r.status === 200 ? await r.json() : { paths: {}, components: { schemas: {} } };
-  check('openapi.json 86 paths (+health, logout-all, admin run-due, 5 cấu hình, 27 trợ lý AI)', Object.keys(doc.paths).length === 86, Object.keys(doc.paths).length);
+  check('openapi.json 87 paths (+health, logout-all, admin run-due, 5 cấu hình, 28 trợ lý AI gồm đọc ảnh)', Object.keys(doc.paths).length === 87 && doc.paths['/api/ai/conversations/{id}/images']?.post, Object.keys(doc.paths).length);
   check('AI endpoints documented (SSE + confirm body)', doc.paths['/api/ai/conversations/{id}/messages/stream']?.post && 'payload' in (doc.components.schemas.ConfirmDraftDto?.properties ?? {}) && doc.paths['/api/admin/ai/stats']?.get, Object.keys(doc.paths).filter((p) => p.includes('/ai')));
   check('config PATCH body documented per section', ['general', 'access', 'smtp', 'password', 'business', 'mobile'].every((k) => k in (doc.paths['/api/admin/config']?.patch?.requestBody?.content?.['application/json']?.schema?.properties ?? {})), doc.paths['/api/admin/config']);
   check('DTO schemas populated', ['amount', 'categoryId', 'walletId', 'title'].every((k) => k in (doc.components.schemas.CreateTransactionDto?.properties ?? {})), doc.components.schemas.CreateTransactionDto);

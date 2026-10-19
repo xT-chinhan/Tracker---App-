@@ -2,8 +2,9 @@
  * Trợ lý AI (API). Người dùng và admin dùng chung `/ai/*` (phạm vi hội thoại theo role); admin có thêm `/admin/ai/*` (trung tâm học).
  * Thiết kế cô lập, vòng học, cấu hình: xem backend/README.md mục "Trợ lý AI".
  */
-import { Body, Controller, Delete, Get, HttpCode, HttpException, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiProduces, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsDateString, IsEnum, IsIn, IsInt, IsObject, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { AiKnowledgeStatus } from '@prisma/client';
@@ -155,6 +156,19 @@ export class AiController {
   @Delete('conversations/:id') @HttpCode(204)
   remove(@CurrentUser() u: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
     return this.ai.remove(u, id);
+  }
+
+  /**
+   * Ảnh hóa đơn / ảnh chụp màn hình chuyển khoản (multipart, trường `image`, JPEG/PNG/WebP ≤ 10 MB) → `{userMessage, message, draft}`
+   * như gửi tin; nháp giao dịch xác nhận qua `/ai/drafts/:id/confirm`. Ảnh không được lưu. Tắt (`ai.ocrEnabled`) → 403 FEATURE_DISABLED;
+   * quá `ai.ocrDailyLimitPerUser` → 429 AI_OCR_DAILY_LIMIT (+ Retry-After).
+   */
+  @Post('conversations/:id/images')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ schema: { type: 'object', properties: { image: { type: 'string', format: 'binary' } }, required: ['image'] } })
+  @UseInterceptors(FileInterceptor('image', { limits: { fileSize: 10 * 1024 * 1024, files: 1 } }))
+  async postImage(@CurrentUser() u: AuthUser, @Param('id', ParseUUIDPipe) id: string, @UploadedFile() file: Express.Multer.File | undefined, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return retryAfter(res, () => this.ai.postImage(u, id, file, { debug: debugOf(req) }));
   }
 
   /** Gửi tin → `{userMessage, message, draft}`. Quá hạn mức ngày => 429 AI_DAILY_LIMIT (+ Retry-After) */

@@ -143,6 +143,100 @@ const ghiGiaoDich: Skill = {
   },
 };
 
+/* ============================== doc-hoa-don (đọc ảnh hóa đơn / chuyển khoản) ============================== */
+
+// Không đưa tên người dùng vào prompt: model sẽ tự điền tên đó vào sai ô người chuyển / người nhận.
+const OCR_PROMPT =
+  'Đây là ảnh hóa đơn mua hàng hoặc ảnh chụp màn hình giao dịch ngân hàng / ví điện tử ở Việt Nam. ' +
+  'Trả JSON: {"kind": "receipt" nếu là hóa đơn cửa hàng, "transfer" nếu là chuyển khoản / thanh toán qua ngân hàng hoặc ví, ' +
+  '"amount": TỔNG số tiền, số nguyên đồng (16,900 hay 16.900 đều là 16900), "date": "YYYY-MM-DD", ' +
+  '"merchant": tên cửa hàng (hóa đơn), "recipient": tên người / đơn vị NHẬN tiền (trên màn hình chuyển tiền thành công là tên in đậm ngay dưới số tiền), ' +
+  '"sender": tên ở dòng "Từ tài khoản" / người chuyển (nếu có), "note": nguyên văn dòng "Nội dung", "bank": tên ngân hàng hoặc ví hiển thị trên ảnh}. Trường nào không thấy thì để chuỗi rỗng. Chỉ trả JSON.';
+
+/** Gỡ khối ```json, lấy object đầu tiên. */
+function ocrJson(content: string): Record<string, unknown> {
+  const a = content.indexOf('{'), b = content.lastIndexOf('}');
+  if (a < 0 || b < a) return {};
+  try {
+    const j = JSON.parse(content.slice(a, b + 1));
+    return j && typeof j === 'object' ? j : {};
+  } catch {
+    return {};
+  }
+}
+
+const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+/** So tên không dấu, không phân biệt hoa thường, bỏ khoảng trắng ("NGUYEN CHI NHAN" ≈ "Nguyễn Chí Nhân"). */
+const sameName = (a: string, b: string) => !!a && !!b && fold(a).replace(/[^a-z0-9]/g, '') === fold(b).replace(/[^a-z0-9]/g, '');
+/** Nội dung chuyển khoản dạng mã ("HIHIIDK0EK49P6CFC") không dùng làm tên khoản. */
+const looksLikeCode = (s: string) => !s || (!/\s/.test(s) && /\d/.test(s) && s.length > 8);
+/** Nội dung chuyển khoản không dùng làm tiêu đề được: mã giao dịch, nội dung mặc định của ngân hàng ("<tên> chuyen tien"). */
+const uselessNote = (s: string, names: string[]) =>
+  looksLikeCode(s) || /chuy[eể]n (tien|tiền)|chuyen khoan|chuyển khoản/i.test(fold(s)) || names.some((n) => n && fold(s).includes(fold(n)));
+
+const docHoaDon: Skill = {
+  name: 'doc-hoa-don',
+  scope: 'USER',
+  description: 'Đọc ảnh hóa đơn / ảnh chụp màn hình chuyển khoản thành nháp giao dịch để xác nhận',
+  context: ['userContext'],
+  async run(args) {
+    const { context, llm, now, image } = args;
+    if (!image) return { reply: 'Bạn gửi ảnh hóa đơn hoặc ảnh chụp màn hình chuyển khoản giúp mình nhé.', askBack: true };
+    if (!llm.vision) return { reply: 'Máy chủ chưa hỗ trợ đọc ảnh. Bạn ghi tay giúp mình nhé.', askBack: true, meta: { unavailable: true } };
+    const uctx = context.data.userContext as AiUserContext;
+    const user = context.principal.name;
+    const r = await llm.vision(OCR_PROMPT, image);
+    const j = ocrJson(r.content);
+    // model đôi khi trả chuỗi "50,000" / "16.900 VND": dấu phân cách hàng nghìn ở VN, bỏ hết ký tự không phải số
+    const amount = Math.abs(Math.round(typeof j.amount === 'string' ? Number(j.amount.replace(/\D/g, '')) : Number(j.amount) || 0));
+    const today = new Date(new Date(now).getTime() + 7 * 3600_000).toISOString().slice(0, 10);
+    const dateRaw = str(j.date).slice(0, 10);
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(dateRaw) && !Number.isNaN(Date.parse(dateRaw)) && dateRaw <= today ? dateRaw : today;
+    const ocr = { kind: str(j.kind), amount, date, merchant: str(j.merchant), sender: str(j.sender), recipient: str(j.recipient), note: str(j.note), bank: str(j.bank) };
+    const meta = { ocr, ms: Math.round(r.ms), promptTokens: r.promptTokens, evalTokens: r.evalTokens };
+    if (amount <= 0) {
+      return {
+        reply: 'Mình chưa đọc được số tiền trong ảnh. Bạn chụp lại rõ phần tổng tiền, hoặc ghi tay giúp mình.',
+        askBack: true, followUps: ['ghi tay'], meta: { ...meta, unreadable: true },
+      };
+    }
+    // Thu hay chi do CODE quyết: ảnh chuyển khoản mà người dùng là người nhận → THU; còn lại → CHI
+    const income = ocr.kind === 'transfer' && sameName(ocr.recipient, user) && !sameName(ocr.sender, user);
+    const counterpart = income ? ocr.sender : ocr.kind === 'transfer' ? ocr.recipient || ocr.merchant : ocr.merchant || ocr.recipient;
+    const title = (income ? `Nhận tiền ${counterpart || ''}` : ocr.kind === 'transfer' && !uselessNote(ocr.note, [user, ocr.sender, ocr.recipient]) ? ocr.note : counterpart || 'Giao dịch từ ảnh').trim().slice(0, 120);
+
+    // Danh mục: mượn ghi-giao-dich (luật đã học, kNN, model) trên câu dựng từ ảnh; tiền / ngày / loại lấy từ ảnh
+    let categoryName: string | undefined;
+    try {
+      const g = await ghiGiaoDich.run({ ...args, input: `${income ? 'nhận tiền ' : ''}${title} ${amount}` });
+      const it = (g.draft?.payload as any)?.items?.[0];
+      if (it?.categoryName) categoryName = it.categoryName;
+    } catch {
+      // không gợi ý được danh mục → dùng mặc định bên dưới
+    }
+    const typeOf = new Map(uctx.categories.map((c) => [c.name, c.type]));
+    const want = income ? 'INCOME' : 'EXPENSE';
+    if (!categoryName || typeOf.get(categoryName) !== want) {
+      const fb = income ? 'Thu khác' : 'Chi khác';
+      categoryName = typeOf.has(fb) ? fb : uctx.categories.find((c) => c.type === want)?.name;
+    }
+    // Ví: khớp tên ngân hàng / ví trên ảnh với ví của người dùng ("VietinBank" ↔ "Vietinbank", "MB Bank"); không khớp → ví mặc định
+    const bank = fold(ocr.bank).replace(/[^a-z0-9]/g, '');
+    const wallet = bank ? uctx.wallets.find((w) => { const n = fold(w.name).replace(/[^a-z0-9]/g, ''); return n.length > 1 && (bank.includes(n) || n.includes(bank)); }) : undefined;
+    const item = {
+      title, amount, categoryName, type: want, date, walletName: wallet?.name ?? null,
+      note: [ocr.kind === 'transfer' && ocr.note ? `ND: ${ocr.note}` : '', 'Đọc từ ảnh'].filter(Boolean).join(' · ').slice(0, 500),
+      source: '[ảnh]', clean: fold(title), ruleId: null,
+    };
+    const line = `• ${title} — ${fmtVnd(amount)} · ${categoryName} · ${vnDay(date)}${wallet ? ` · ${wallet.name}` : ''}`;
+    return {
+      reply: `Mình đọc được từ ảnh${ocr.bank ? ` (${ocr.bank})` : ''}:\n${line}\n${income ? 'Đây là khoản tiền bạn nhận. ' : ''}Bấm Xác nhận để lưu, hoặc sửa trước khi lưu.`,
+      draft: { kind: 'transactions', payload: { items: [item] } },
+      meta,
+    };
+  },
+};
+
 /* ============================== skill tra cứu (tất định) ============================== */
 
 const hoiSoDu: Skill = {
@@ -351,7 +445,7 @@ const adminLichSuCauHinh: Skill = {
 export const DEPRECATED_ALIASES = ['admin-tong-quan', 'admin-tim-user', 'admin-khoa-user', 'admin-gui-thong-bao', 'admin-bat-thuong', 'admin-lich-su-cau-hinh'];
 
 export const BUILTIN_SKILLS: Skill[] = [
-  ghiGiaoDich, hoiSoDu, tongKetThang, kiemTraNganSach, tienDoTietKiem, timGiaoDich, datNganSach, huongDan, ngoaiPhamVi, hoiLai,
+  ghiGiaoDich, docHoaDon, hoiSoDu, tongKetThang, kiemTraNganSach, tienDoTietKiem, timGiaoDich, datNganSach, huongDan, ngoaiPhamVi, hoiLai,
   adminTongQuan, adminTimUser, adminKhoaUser, adminGuiThongBao, adminBatThuong, adminLichSuCauHinh,
 ];
 

@@ -40,6 +40,8 @@ export interface LlmClient {
   chat(messages: ChatMsg[], opts?: ChatOptions): Promise<ChatResult>;
   /** Embedding đã chuẩn hóa L2 */
   embed(texts: string[]): Promise<number[][]>;
+  /** Đọc ảnh (model có vision, vd qwen3.5:4b). Ảnh JPEG/PNG dạng base64, đã thu nhỏ. */
+  vision?(prompt: string, imageBase64: string, opts?: ChatOptions): Promise<ChatResult>;
 }
 
 /** Tên các context provider (xem ai.context.ts). Skill khai báo `context: [...]` để được nạp sẵn vào `context.data`. */
@@ -107,6 +109,8 @@ export interface SkillRunArgs {
   context: SkillContext;
   llm: LlmClient;
   now: string;
+  /** Ảnh người dùng gửi (base64, đã thu nhỏ) — chỉ skill đọc ảnh dùng */
+  image?: string;
 }
 
 export interface Skill {
@@ -121,6 +125,6 @@ export interface Skill {
 
 export interface RouteResult {
   skill: string;
-  by: 'learned' | 'rule' | 'knn' | 'fallback' | 'reroute' | 'guard';
+  by: 'learned' | 'rule' | 'knn' | 'fallback' | 'reroute' | 'guard' | 'image';
   score?: number;
 }

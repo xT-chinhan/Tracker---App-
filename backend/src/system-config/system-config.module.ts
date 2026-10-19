@@ -145,6 +145,10 @@ const DEFS: Def[] = [
   { section: 'ai', field: 'timeoutSeconds', kind: 'int', min: 5, max: 600, def: () => 15 },
   { section: 'ai', field: 'dailyMessageLimitPerUser', kind: 'int', min: 1, max: 100000, def: () => 30 },
   { section: 'ai', field: 'maxConversationsPerUser', kind: 'int', min: 1, max: 10000, def: () => 50 },
+  // Đọc hóa đơn / ảnh chuyển khoản (skill doc-hoa-don, model trả lời phải đọc được ảnh)
+  { section: 'ai', field: 'ocrEnabled', kind: 'bool', def: () => true },
+  { section: 'ai', field: 'ocrDailyLimitPerUser', kind: 'int', min: 1, max: 1000, def: () => 20 },
+  { section: 'ai', field: 'ocrMaxSide', kind: 'int', min: 384, max: 2048, def: () => 768 },
   // Ngưỡng tự bật luật / ví dụ CHUNG do chu trình học ban đêm đề xuất (không đạt => chờ admin duyệt)
   { section: 'ai', field: 'autoApproveEnabled', kind: 'bool', def: () => true },
   { section: 'ai', field: 'autoApproveMinUsers', kind: 'int', min: 5, max: 100000, def: () => 50 },
@@ -376,6 +380,7 @@ export class SystemConfigService {
       timeoutMs: (v('timeoutSeconds') as number) * 1000,
       dailyMessageLimitPerUser: v('dailyMessageLimitPerUser') as number,
       maxConversationsPerUser: v('maxConversationsPerUser') as number,
+      ocr: { enabled: v('ocrEnabled') !== false, dailyLimitPerUser: v('ocrDailyLimitPerUser') as number, maxSide: v('ocrMaxSide') as number },
       autoApprove: {
         enabled: v('autoApproveEnabled') as boolean,
         minUsers: v('autoApproveMinUsers') as number,
