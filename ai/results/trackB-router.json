@@ -6,7 +6,7 @@
   "dev": 107,
   "test": 263,
   "blind": 161,
-  "bank": 199
+  "bank": 207
  },
  "luật (không khớp → hỏi lại)": {
   "test": {
@@ -121,7 +121,7 @@
   "blind": {
    "overall": {
     "n": 161,
-    "acc": 80.7
+    "acc": 80.1
    },
    "USER": {
     "n": 102,
@@ -129,7 +129,7 @@
    },
    "ADMIN": {
     "n": 59,
-    "acc": 76.3
+    "acc": 74.6
    },
    "adversarial": {
     "n": 26,
@@ -191,7 +191,7 @@
     },
     "ADMIN:tong-quan-he-thong": {
      "n": 7,
-     "acc": 71.4
+     "acc": 57.1
     },
     "ADMIN:tra-cuu-nguoi-dung": {
      "n": 7,
@@ -328,6 +328,10 @@
    ],
    [
     "U:huong-dan→hoi-lai",
+    1
+   ],
+   [
+    "A:tong-quan-he-thong→nguoi-dung-moi",
     1
    ],
    [
@@ -3448,7 +3452,7 @@
     "gold": "tong-quan-he-thong",
     "tag": "n",
     "rawTag": "normal",
-    "pred": "tong-quan-he-thong",
+    "pred": "nguoi-dung-moi",
     "by": "rule"
    },
    {
@@ -3977,7 +3981,7 @@
   "test": {
    "overall": {
     "n": 263,
-    "acc": 81.4
+    "acc": 81
    },
    "USER": {
     "n": 176,
@@ -3985,7 +3989,7 @@
    },
    "ADMIN": {
     "n": 87,
-    "acc": 88.5
+    "acc": 87.4
    },
    "adversarial": {
     "n": 25,
@@ -4047,7 +4051,7 @@
     },
     "ADMIN:tong-quan-he-thong": {
      "n": 10,
-     "acc": 100
+     "acc": 90
     },
     "ADMIN:tra-cuu-nguoi-dung": {
      "n": 10,
@@ -4086,7 +4090,7 @@
   "blind": {
    "overall": {
     "n": 161,
-    "acc": 80.7
+    "acc": 79.5
    },
    "USER": {
     "n": 102,
@@ -4094,7 +4098,7 @@
    },
    "ADMIN": {
     "n": 59,
-    "acc": 86.4
+    "acc": 83.1
    },
    "adversarial": {
     "n": 26,
@@ -4156,7 +4160,7 @@
     },
     "ADMIN:tong-quan-he-thong": {
      "n": 7,
-     "acc": 71.4
+     "acc": 57.1
     },
     "ADMIN:tra-cuu-nguoi-dung": {
      "n": 7,
@@ -4188,7 +4192,7 @@
     },
     "ADMIN:hoi-lai": {
      "n": 5,
-     "acc": 60
+     "acc": 40
     }
    }
   },
@@ -4294,6 +4298,10 @@
     1
    ],
    [
+    "A:tong-quan-he-thong→nguoi-dung-moi",
+    1
+   ],
+   [
     "A:tra-cuu-nguoi-dung→tong-quan-he-thong",
     1
    ],
@@ -4345,6 +4353,10 @@
    ],
    [
     "U:ngoai-pham-vi→hoi-so-du",
+    2
+   ],
+   [
+    "A:hoi-lai→nguoi-dung-moi",
     2
    ],
    [
@@ -4400,6 +4412,10 @@
     1
    ],
    [
+    "A:tong-quan-he-thong→nguoi-dung-moi",
+    1
+   ],
+   [
     "A:tong-quan-he-thong→tra-cuu-nguoi-dung",
     1
    ],
@@ -4421,10 +4437,6 @@
    ],
    [
     "A:huong-dan-quan-tri→tom-tat-cau-hinh",
-    1
-   ],
-   [
-    "A:hoi-lai→tong-quan-he-thong",
     1
    ],
    [
@@ -6031,9 +6043,9 @@
     "scope": "ADMIN",
     "gold": "tong-quan-he-thong",
     "tag": "n",
-    "pred": "tong-quan-he-thong",
+    "pred": "nguoi-dung-moi",
     "by": "knn",
-    "score": 0.74
+    "score": 0.756
    },
    {
     "text": "thống kê giao dịch toàn hệ thống",
@@ -7838,9 +7850,9 @@
     "gold": "tong-quan-he-thong",
     "tag": "n",
     "rawTag": "normal",
-    "pred": "tong-quan-he-thong",
+    "pred": "nguoi-dung-moi",
     "by": "knn",
-    "score": 0.859
+    "score": 0.867
    },
    {
     "text": "số lượng giao dịch toàn hệ thống tuần qua tăng hay giảm",
@@ -8368,9 +8380,9 @@
     "gold": "hoi-lai",
     "tag": "n",
     "rawTag": "normal",
-    "pred": "tong-quan-he-thong",
+    "pred": "nguoi-dung-moi",
     "by": "knn",
-    "score": 0.703
+    "score": 0.724
    },
    {
     "text": "thế còn tuần trước",
@@ -8378,9 +8390,9 @@
     "gold": "hoi-lai",
     "tag": "n",
     "rawTag": "normal",
-    "pred": "hoi-lai",
+    "pred": "nguoi-dung-moi",
     "by": "knn",
-    "score": 0.64
+    "score": 0.663
    },
    {
     "text": "ok",
@@ -8527,7 +8539,7 @@
   "blind": {
    "overall": {
     "n": 161,
-    "acc": 88.8
+    "acc": 87.6
    },
    "USER": {
     "n": 102,
@@ -8535,7 +8547,7 @@
    },
    "ADMIN": {
     "n": 59,
-    "acc": 88.1
+    "acc": 84.7
    },
    "adversarial": {
     "n": 26,
@@ -8597,7 +8609,7 @@
     },
     "ADMIN:tong-quan-he-thong": {
      "n": 7,
-     "acc": 85.7
+     "acc": 71.4
     },
     "ADMIN:tra-cuu-nguoi-dung": {
      "n": 7,
@@ -8629,7 +8641,7 @@
     },
     "ADMIN:hoi-lai": {
      "n": 5,
-     "acc": 60
+     "acc": 40
     }
    }
   },
@@ -8652,6 +8664,10 @@
    ]
   ],
   "confusionsBlind": [
+   [
+    "A:hoi-lai→nguoi-dung-moi",
+    2
+   ],
    [
     "U:ghi-giao-dich→tong-ket-thang",
     1
@@ -8697,6 +8713,10 @@
     1
    ],
    [
+    "A:tong-quan-he-thong→nguoi-dung-moi",
+    1
+   ],
+   [
     "A:tong-quan-he-thong→phat-hien-bat-thuong",
     1
    ],
@@ -8714,10 +8734,6 @@
    ],
    [
     "A:de-xuat-khoa→tra-cuu-nguoi-dung",
-    1
-   ],
-   [
-    "A:hoi-lai→tong-quan-he-thong",
     1
    ],
    [
@@ -11874,7 +11890,7 @@
     "gold": "tong-quan-he-thong",
     "tag": "n",
     "rawTag": "normal",
-    "pred": "tong-quan-he-thong",
+    "pred": "nguoi-dung-moi",
     "by": "rule"
    },
    {
@@ -12370,9 +12386,9 @@
     "gold": "hoi-lai",
     "tag": "n",
     "rawTag": "normal",
-    "pred": "tong-quan-he-thong",
+    "pred": "nguoi-dung-moi",
     "by": "knn",
-    "score": 0.703
+    "score": 0.724
    },
    {
     "text": "thế còn tuần trước",
@@ -12380,9 +12396,9 @@
     "gold": "hoi-lai",
     "tag": "n",
     "rawTag": "normal",
-    "pred": "hoi-lai",
+    "pred": "nguoi-dung-moi",
     "by": "knn",
-    "score": 0.64
+    "score": 0.663
    },
    {
     "text": "ok",
@@ -12418,8 +12434,8 @@
  },
  "latency": {
   "routeP50": 0,
-  "routeP95": 163,
-  "embedP50": 205,
-  "embedP95": 262
+  "routeP95": 293,
+  "embedP50": 277,
+  "embedP95": 350
  }
 }
