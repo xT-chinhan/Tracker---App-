@@ -8,6 +8,7 @@ import '../../auth/application/app_session.dart';
 import '../application/ai_service.dart';
 import '../data/ai_models.dart';
 import 'conversation_action_sheet.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class AiConversationsScreen extends ConsumerStatefulWidget {
   const AiConversationsScreen({super.key});
@@ -51,7 +52,7 @@ class _AiConversationsScreenState extends ConsumerState<AiConversationsScreen> {
 
   String _formatTime(DateTime date) {
     if (_isToday(date)) {
-      return DateFormat('HH:mm').format(date);
+      return DateFormat('HH:mm').format(VietnamTime.fromDateTime(date));
     }
     final diff = DateTime.now().difference(date).inDays;
     if (diff == 1) return 'Hôm qua';
@@ -68,7 +69,7 @@ class _AiConversationsScreenState extends ConsumerState<AiConversationsScreen> {
       ];
       return weekdays[date.weekday];
     }
-    return DateFormat('dd/MM').format(date);
+    return DateFormat('dd/MM').format(VietnamTime.fromDateTime(date));
   }
 
   @override
@@ -550,6 +551,9 @@ class _AiConversationsScreenState extends ConsumerState<AiConversationsScreen> {
                     fontSize: 14.5,
                   ),
                   border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  filled: false,
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(vertical: 12),
                 ),

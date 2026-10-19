@@ -274,6 +274,9 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                 onChanged: notifier.setNote,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  filled: false,
                                   hintText: 'Nạp ví MoMo',
                                   hintStyle: Theme.of(context)
                                       .textTheme

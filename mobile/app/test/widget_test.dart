@@ -47,7 +47,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Chào bạn trở lại'), findsOneWidget);
+    expect(find.text('Chào mừng trở lại'), findsOneWidget);
     expect(find.text('Đăng nhập'), findsWidgets);
     expect(find.text('Trang chủ'), findsNothing);
   });

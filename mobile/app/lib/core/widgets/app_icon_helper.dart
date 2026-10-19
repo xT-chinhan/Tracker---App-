@@ -33,6 +33,20 @@ abstract final class AppIconHelper {
       'circle-pause' || 'pause' => LucideIcons.circle_pause,
       'target' || 'budget' => LucideIcons.target,
       'piggy-bank' || 'saving' => LucideIcons.piggy_bank,
+      // Tên icon backend lưu (camelCase, xem backend/prisma/seed.ts), sau khi chữ thường
+      'mughot' => LucideIcons.utensils,
+      'basketshopping' => LucideIcons.shopping_basket,
+      'bolt' => LucideIcons.zap,
+      'chartline' => LucideIcons.chart_line,
+      'ellipsis' => LucideIcons.ellipsis,
+      'gamepad' => LucideIcons.gamepad_2,
+      'graduationcap' => LucideIcons.graduation_cap,
+      'handholdingheart' => LucideIcons.hand_heart,
+      'heartpulse' => LucideIcons.heart_pulse,
+      'building' => LucideIcons.landmark,
+      'mobile' => LucideIcons.smartphone,
+      'moneybill' => LucideIcons.banknote,
+      'piggybank' => LucideIcons.piggy_bank,
       _ => LucideIcons.receipt,
     };
   }

@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../core/network/paging.dart';
+
 part 'home_models.freezed.dart';
 part 'home_models.g.dart';
 
@@ -104,7 +106,7 @@ abstract class TransactionPage with _$TransactionPage {
   }) = _TransactionPage;
 
   factory TransactionPage.fromJson(Map<String, dynamic> json) =>
-      _$TransactionPageFromJson(json);
+      _$TransactionPageFromJson(withTotalPages(json));
 }
 
 @freezed

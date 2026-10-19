@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../core/network/paging.dart';
+
 part 'notification_models.freezed.dart';
 part 'notification_models.g.dart';
 
@@ -30,5 +32,5 @@ abstract class NotificationPage with _$NotificationPage {
   }) = _NotificationPage;
 
   factory NotificationPage.fromJson(Map<String, dynamic> json) =>
-      _$NotificationPageFromJson(json);
+      _$NotificationPageFromJson(withTotalPages(json));
 }

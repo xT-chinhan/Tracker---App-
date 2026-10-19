@@ -15,6 +15,7 @@ import '../../transfers/data/transfer_repository.dart';
 import '../application/wallets_service.dart';
 import '../data/wallet_models.dart';
 import 'wallet_form_sheet.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 final recentTransfersProvider = FutureProvider.autoDispose<List<TransferItem>>((
   ref,
@@ -521,9 +522,9 @@ class _WalletsScreenState extends ConsumerState<WalletsScreen> {
                                   ),
                                   itemBuilder: (context, index) {
                                     final tx = transfers[index];
-                                    final dateStr = DateFormat(
-                                      'dd/MM',
-                                    ).format(tx.occurredAt);
+                                    final dateStr = DateFormat('dd/MM').format(
+                                      VietnamTime.fromDateTime(tx.occurredAt),
+                                    );
                                     final noteStr = tx.note?.isNotEmpty == true
                                         ? ' · ${tx.note}'
                                         : '';

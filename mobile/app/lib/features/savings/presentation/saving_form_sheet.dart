@@ -7,6 +7,7 @@ import '../../../core/theme/app_tokens.dart';
 import '../../../core/widgets/app_button.dart';
 import '../application/savings_service.dart';
 import '../data/saving_models.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class SavingFormSheet extends ConsumerStatefulWidget {
   const SavingFormSheet({super.key, this.existingGoal});
@@ -44,7 +45,7 @@ class _SavingFormSheetState extends ConsumerState<SavingFormSheet> {
       final g = widget.existingGoal!;
       _nameController.text = g.name;
       _amountController.text = g.targetAmount.toString();
-      _targetDate = g.targetDate;
+      _targetDate = VietnamTime.fromDateTime(g.targetDate);
       if (g.icon != null) _selectedIcon = g.icon!;
     }
   }

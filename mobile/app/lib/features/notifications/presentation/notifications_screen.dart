@@ -317,7 +317,7 @@ class _NotificationRow extends StatelessWidget {
                           width: 8,
                           height: 8,
                           decoration: const BoxDecoration(
-                            color: Color(0xFF2A78D6),
+                            color: Color(0xFF111111),
                             shape: BoxShape.circle,
                           ),
                         ),

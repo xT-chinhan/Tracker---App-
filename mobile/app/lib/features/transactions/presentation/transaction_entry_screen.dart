@@ -338,6 +338,9 @@ class _TransactionEntryScreenState
                                 onChanged: notifier.setNote,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  filled: false,
                                   hintText:
                                       state.type == TransactionType.expense
                                       ? 'Cơm trưa văn phòng'

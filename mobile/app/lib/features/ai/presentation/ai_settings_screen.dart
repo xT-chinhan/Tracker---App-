@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../application/ai_service.dart';
 import '../data/ai_models.dart';
 import '../data/ai_repository.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class AiSettingsScreen extends ConsumerStatefulWidget {
   const AiSettingsScreen({super.key});
@@ -106,7 +107,9 @@ class _AiSettingsScreenState extends ConsumerState<AiSettingsScreen> {
                 final isQuotaReached = used >= limit;
                 final ratio = limit > 0 ? (used / limit).clamp(0.0, 1.0) : 0.0;
                 final resetTimeStr = usage.resetAt != null
-                    ? DateFormat('HH:mm').format(usage.resetAt!)
+                    ? DateFormat(
+                        'HH:mm',
+                      ).format(VietnamTime.fromDateTime(usage.resetAt!))
                     : '00:00';
 
                 return Container(

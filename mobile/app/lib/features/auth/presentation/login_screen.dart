@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,9 +22,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _email = TextEditingController(
     text: kDebugMode ? 'demo@thuchi.vn' : '',
   );
-  final _password = TextEditingController(
-    text: kDebugMode ? 'demo123' : '',
-  );
+  final _password = TextEditingController(text: kDebugMode ? 'demo123' : '');
   var _loading = false;
   String? _error;
 
@@ -55,8 +54,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final notice = ref.watch(appSessionProvider).notice;
     return AuthScaffold(
-      title: 'Chào bạn trở lại',
-      subtitle: 'Đăng nhập để tiếp tục quản lý thu chi.',
+      title: 'Chào mừng trở lại',
+      subtitle: 'Đăng nhập để tiếp tục ghi chép thu chi.',
+      bottom: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AppButton(label: 'Đăng nhập', onPressed: _submit, loading: _loading),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              const Expanded(child: Divider()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  'hoặc',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: const Color(0xFFA9A8A3),
+                  ),
+                ),
+              ),
+              const Expanded(child: Divider()),
+            ],
+          ),
+          const SizedBox(height: 16),
+          AppButton(
+            label: 'Tạo tài khoản mới',
+            style: AppButtonStyle.secondary,
+            onPressed: () => context.push('/register'),
+          ),
+        ],
+      ),
       child: AutofillGroup(
         child: Form(
           key: _formKey,
@@ -71,6 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 controller: _email,
                 label: 'Email',
                 hint: 'ban@email.com',
+                icon: LucideIcons.mail,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.email],
@@ -81,6 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 controller: _password,
                 label: 'Mật khẩu',
                 hint: 'Nhập mật khẩu',
+                icon: LucideIcons.lock,
                 obscureText: true,
                 textInputAction: TextInputAction.done,
                 autofillHints: const [AutofillHints.password],
@@ -99,25 +128,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 _Message(text: _error!, error: true),
                 const SizedBox(height: 16),
               ],
-              AppButton(
-                label: 'Đăng nhập',
-                onPressed: _submit,
-                loading: _loading,
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Chưa có tài khoản?',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  TextButton(
-                    onPressed: () => context.push('/register'),
-                    child: const Text('Đăng ký'),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../core/formatting/money_formatter.dart';
 import '../data/ai_models.dart';
 import 'draft_item_edit_sheet.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class TransactionDraftCard extends StatefulWidget {
   const TransactionDraftCard({
@@ -327,7 +328,7 @@ class _TransactionDraftCardState extends State<TransactionDraftCard> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'Ghi lúc ${DateFormat('HH:mm').format(widget.draft.resolvedAt ?? DateTime.now())}',
+                      'Ghi lúc ${DateFormat('HH:mm').format(VietnamTime.fromDateTime(widget.draft.resolvedAt ?? DateTime.now()))}',
                       style: const TextStyle(
                         fontSize: 12.5,
                         color: Color(0xFF787774),

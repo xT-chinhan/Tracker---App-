@@ -421,6 +421,9 @@ class _RecurringFormSheetState extends ConsumerState<RecurringFormSheet> {
                             decoration: const InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              filled: false,
                               suffixText: 'đ',
                             ),
                           ),
@@ -448,6 +451,9 @@ class _RecurringFormSheetState extends ConsumerState<RecurringFormSheet> {
                             decoration: const InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              filled: false,
                               hintText: 'Ví dụ: Đi chợ, Tiền nhà',
                             ),
                           ),

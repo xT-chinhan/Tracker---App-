@@ -505,9 +505,13 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   // 2. Chi theo danh mục Card
   Widget _buildCategoryCard(BuildContext context, ReportData report) {
     final colors = Theme.of(context).colorScheme;
-    final categories = report.expenseByCategory;
-    final topCategory = categories.isNotEmpty ? categories.first : null;
     final vizColors = context.appColors.viz;
+    // Mỗi nhóm một màu viz cố định: quá số màu thì gộp phần còn lại vào "Khác" (mockup 09)
+    final categories = groupCategories(
+      report.expenseByCategory,
+      vizColors.length,
+    );
+    final topCategory = categories.isNotEmpty ? categories.first : null;
 
     return AppCard(
       child: Column(
@@ -931,4 +935,27 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       ),
     );
   }
+}
+
+/// Giữ `maxGroups - 1` nhóm lớn nhất, gộp phần còn lại thành "Khác" để không lặp màu biểu đồ.
+List<CategoryReportItem> groupCategories(
+  List<CategoryReportItem> items,
+  int maxGroups,
+) {
+  if (maxGroups < 2 || items.length <= maxGroups) return items;
+  final head = items.take(maxGroups - 1).toList();
+  final rest = items.skip(maxGroups - 1);
+  return [
+    ...head,
+    CategoryReportItem(
+      category: const CategorySummaryItem(
+        id: 'other',
+        name: 'Khác',
+        icon: 'ellipsis',
+      ),
+      amount: rest.fold(0, (sum, e) => sum + e.amount),
+      count: rest.fold(0, (sum, e) => sum + e.count),
+      percentage: rest.fold(0.0, (sum, e) => sum + e.percentage),
+    ),
+  ];
 }

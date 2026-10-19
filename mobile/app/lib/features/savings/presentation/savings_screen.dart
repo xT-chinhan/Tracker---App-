@@ -15,6 +15,7 @@ import '../../../core/widgets/icon_bubble.dart';
 import '../application/savings_service.dart';
 import '../data/saving_models.dart';
 import 'saving_form_sheet.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class SavingsScreen extends ConsumerStatefulWidget {
   const SavingsScreen({super.key});
@@ -287,7 +288,9 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
 
   Widget _buildGoalCard(BuildContext context, SavingGoalItem goal) {
     final colors = Theme.of(context).colorScheme;
-    final dateStr = DateFormat('dd/MM/yyyy').format(goal.targetDate);
+    final dateStr = DateFormat(
+      'dd/MM/yyyy',
+    ).format(VietnamTime.fromDateTime(goal.targetDate));
 
     final subtitle = goal.daysLeft > 0
         ? 'Hạn $dateStr · còn ${goal.daysLeft} ngày'

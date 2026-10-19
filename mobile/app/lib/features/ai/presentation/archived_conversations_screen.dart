@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../application/ai_service.dart';
 import 'conversation_action_sheet.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class ArchivedConversationsScreen extends ConsumerWidget {
   const ArchivedConversationsScreen({super.key});
@@ -91,7 +92,7 @@ class ArchivedConversationsScreen extends ConsumerWidget {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     subtitle: Text(
-                      'Lưu trữ lúc ${DateFormat('dd/MM/yyyy').format(item.updatedAt)}',
+                      'Lưu trữ lúc ${DateFormat('dd/MM/yyyy').format(VietnamTime.fromDateTime(item.updatedAt))}',
                       style: const TextStyle(fontSize: 12),
                     ),
                     trailing: const Icon(LucideIcons.ellipsis, size: 18),

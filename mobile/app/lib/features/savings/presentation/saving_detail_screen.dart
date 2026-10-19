@@ -16,6 +16,7 @@ import '../application/savings_service.dart';
 import '../data/saving_models.dart';
 import 'deposit_sheet.dart';
 import 'saving_form_sheet.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class SavingDetailScreen extends ConsumerStatefulWidget {
   const SavingDetailScreen({super.key, required this.goalId});
@@ -194,7 +195,7 @@ class _SavingDetailScreenState extends ConsumerState<SavingDetailScreen> {
             final monthlyRequired = (goal.remaining / monthsLeft).round();
             final targetDateStr = DateFormat(
               'dd/MM/yyyy',
-            ).format(goal.targetDate);
+            ).format(VietnamTime.fromDateTime(goal.targetDate));
 
             return RefreshIndicator(
               onRefresh: () async {
@@ -434,9 +435,11 @@ class _SavingDetailScreenState extends ConsumerState<SavingDetailScreen> {
                                               ),
                                               const SizedBox(height: 2),
                                               Text(
-                                                DateFormat(
-                                                  'dd/MM/yyyy',
-                                                ).format(entry.date),
+                                                DateFormat('dd/MM/yyyy').format(
+                                                  VietnamTime.fromDateTime(
+                                                    entry.date,
+                                                  ),
+                                                ),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodySmall

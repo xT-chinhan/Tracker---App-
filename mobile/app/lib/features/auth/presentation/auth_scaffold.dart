@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 
 import '../../../core/theme/app_tokens.dart';
 
@@ -9,6 +10,7 @@ class AuthScaffold extends StatelessWidget {
     required this.subtitle,
     required this.child,
     this.showMark = true,
+    this.bottom,
     super.key,
   });
 
@@ -16,6 +18,9 @@ class AuthScaffold extends StatelessWidget {
   final String subtitle;
   final Widget child;
   final bool showMark;
+
+  /// Nút hành động neo ở đáy màn (mockup 01: Đăng nhập · hoặc · Tạo tài khoản mới)
+  final Widget? bottom;
 
   @override
   Widget build(BuildContext context) {
@@ -35,38 +40,51 @@ class AuthScaffold extends StatelessWidget {
                   MediaQuery.paddingOf(context).vertical -
                   64,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (showMark) ...[
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'đ',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
+            child: IntrinsicHeight(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (showMark) ...[
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(16),
                       ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'đ',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontWeight: FontWeight.w700,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary,
+                          decorationThickness: 2,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
+                  Text(title, style: Theme.of(context).textTheme.headlineLarge),
+                  const SizedBox(height: 8),
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 32),
+                  child,
+                  if (bottom != null) ...[
+                    const Spacer(),
+                    const SizedBox(height: 24),
+                    bottom!,
+                  ],
                 ],
-                Text(title, style: Theme.of(context).textTheme.headlineLarge),
-                const SizedBox(height: 8),
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                child,
-              ],
+              ),
             ),
           ),
         ),
@@ -75,7 +93,7 @@ class AuthScaffold extends StatelessWidget {
   }
 }
 
-class AuthField extends StatelessWidget {
+class AuthField extends StatefulWidget {
   const AuthField({
     required this.controller,
     required this.label,
@@ -88,6 +106,7 @@ class AuthField extends StatelessWidget {
     this.onFieldSubmitted,
     this.maxLength,
     this.inputFormatters,
+    this.icon,
     super.key,
   });
 
@@ -103,29 +122,57 @@ class AuthField extends StatelessWidget {
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
 
+  /// Icon trong ô (mockup 01: thư cho email, ổ khóa cho mật khẩu)
+  final IconData? icon;
+
+  @override
+  State<AuthField> createState() => _AuthFieldState();
+}
+
+class _AuthFieldState extends State<AuthField> {
+  late var _obscure = widget.obscureText;
+
   @override
   Widget build(BuildContext context) {
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
+          widget.label,
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(color: muted),
         ),
         const SizedBox(height: 8),
         TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          textInputAction: textInputAction,
-          obscureText: obscureText,
-          autofillHints: autofillHints,
-          validator: validator,
-          onFieldSubmitted: onFieldSubmitted,
-          maxLength: maxLength,
-          inputFormatters: inputFormatters,
-          decoration: InputDecoration(hintText: hint, counterText: ''),
+          controller: widget.controller,
+          keyboardType: widget.keyboardType,
+          textInputAction: widget.textInputAction,
+          obscureText: _obscure,
+          autofillHints: widget.autofillHints,
+          validator: widget.validator,
+          onFieldSubmitted: widget.onFieldSubmitted,
+          maxLength: widget.maxLength,
+          inputFormatters: widget.inputFormatters,
+          decoration: InputDecoration(
+            hintText: widget.hint,
+            counterText: '',
+            prefixIcon: widget.icon == null
+                ? null
+                : Icon(widget.icon, size: 20, color: muted),
+            suffixIcon: widget.obscureText
+                ? IconButton(
+                    tooltip: _obscure ? 'Hiện mật khẩu' : 'Ẩn mật khẩu',
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                    icon: Icon(
+                      _obscure ? LucideIcons.eye_off : LucideIcons.eye,
+                      size: 20,
+                      color: muted,
+                    ),
+                  )
+                : null,
+          ),
         ),
       ],
     );

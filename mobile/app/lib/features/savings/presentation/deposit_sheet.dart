@@ -196,6 +196,9 @@ class _DepositSheetState extends ConsumerState<DepositSheet> {
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
                     border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    filled: false,
                     suffixText: 'đ',
                     suffixStyle: Theme.of(context).textTheme.displaySmall
                         ?.copyWith(

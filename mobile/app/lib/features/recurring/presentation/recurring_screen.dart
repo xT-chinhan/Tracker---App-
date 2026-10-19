@@ -13,6 +13,7 @@ import '../../../core/widgets/icon_bubble.dart';
 import '../application/recurring_service.dart';
 import '../data/recurring_models.dart';
 import 'recurring_form_sheet.dart';
+import '../../../core/formatting/vietnam_time.dart';
 
 class RecurringScreen extends ConsumerStatefulWidget {
   const RecurringScreen({super.key});
@@ -58,8 +59,9 @@ class _RecurringScreenState extends ConsumerState<RecurringScreen> {
       'Thứ Bảy',
       'Chủ nhật',
     ];
-    final wd = weekdayNames[nextRunAt.weekday];
-    final dateStr = DateFormat('dd/MM').format(nextRunAt);
+    final vn = VietnamTime.fromDateTime(nextRunAt);
+    final wd = weekdayNames[vn.weekday];
+    final dateStr = DateFormat('dd/MM').format(vn);
     return 'Lần tới: $wd, $dateStr';
   }
 
