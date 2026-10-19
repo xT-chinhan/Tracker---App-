@@ -23,6 +23,8 @@ export interface ChatOptions {
   numPredict?: number;
   stop?: string[];
   temperature?: number;
+  /** Ghi đè thời gian chờ của client (đọc ảnh: ai.ocrTimeoutSeconds) */
+  timeoutMs?: number;
 }
 
 export interface ChatResult {
@@ -111,6 +113,8 @@ export interface SkillRunArgs {
   now: string;
   /** Ảnh người dùng gửi (base64, đã thu nhỏ) — chỉ skill đọc ảnh dùng */
   image?: string;
+  /** Thời gian chờ đọc ảnh (ms) */
+  imageTimeoutMs?: number;
 }
 
 export interface Skill {

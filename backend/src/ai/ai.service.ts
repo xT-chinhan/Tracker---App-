@@ -12,7 +12,7 @@ import { AiLearningService, diffPayload } from './ai.learning';
 import { FakeLlm, OllamaClient } from './ai.llm';
 import { AiRouter } from './ai.router';
 import { SkillRegistry } from './ai.skills';
-import { AiRepo, AiStore } from './ai.store';
+import { AiRepo, AiStore, OCR_USER_TEXT } from './ai.store';
 import type { ChatMsg, ChatOptions, LlmClient, Principal, RouteResult, SkillResult } from './ai.types';
 
 @Injectable()
@@ -145,8 +145,10 @@ export class AiService {
 
   async usage(p: Principal) {
     const c = await this.sys.ai();
-    const u = await this.store.for(p).myUsage(vnMidnight());
-    return { ...u, dailyMessageLimit: c.dailyMessageLimitPerUser, maxConversations: c.maxConversationsPerUser, resetAt: new Date(vnMidnight().getTime() + 86400_000) };
+    const repo = this.store.for(p);
+    const u = await repo.myUsage(vnMidnight());
+    const ocrToday = await repo.countSkillRepliesSince('doc-hoa-don', vnMidnight());
+    return { ...u, dailyMessageLimit: c.dailyMessageLimitPerUser, maxConversations: c.maxConversationsPerUser, ocrToday, ocrDailyLimit: c.ocr.dailyLimitPerUser, resetAt: new Date(vnMidnight().getTime() + 86400_000) };
   }
 
   private async assertDailyLimit(repo: AiRepo) {
@@ -163,11 +165,11 @@ export class AiService {
   /* ============================== tin nhắn ============================== */
 
   /** Kiểm tra trước (404 / 409 / 429) + lưu tin của user. Tách riêng để SSE trả lỗi HTTP chuẩn trước khi mở stream. */
-  async accept(p: Principal, conversationId: string, text: string) {
+  async accept(p: Principal, conversationId: string, text: string, opts: { skipDailyLimit?: boolean } = {}) {
     const repo = this.store.for(p);
     const conv = await repo.getConversation(conversationId);
     if (conv.archived) throw new ConflictException('Hội thoại đã lưu trữ, hãy khôi phục trước khi nhắn');
-    await this.assertDailyLimit(repo);
+    if (!opts.skipDailyLimit) await this.assertDailyLimit(repo);
     const userMessage = await repo.createMessage(conversationId, { role: 'USER', content: text });
     if (!conv.title) await repo.updateConversation(conversationId, { title: text.replace(/\s+/g, ' ').slice(0, 60) });
     return { repo, conv, userMessage };
@@ -206,8 +208,8 @@ export class AiService {
         throw new BadRequestException('Không mở được ảnh, hãy chụp lại hoặc chọn ảnh khác');
       }
     }
-    const { conv, userMessage } = await this.accept(p, conversationId, '[Ảnh hóa đơn]');
-    const out = await this.answer(repo, conv, '[Ảnh hóa đơn]', { forced: 'doc-hoa-don', routeBy: 'image', image, debug: opts.debug });
+    const { conv, userMessage } = await this.accept(p, conversationId, OCR_USER_TEXT, { skipDailyLimit: true });
+    const out = await this.answer(repo, conv, OCR_USER_TEXT, { forced: 'doc-hoa-don', routeBy: 'image', image, debug: opts.debug });
     return { userMessage: messageView(userMessage), ...out };
   }
 
@@ -248,8 +250,8 @@ export class AiService {
         traced = [...traced, ...built.trace];
         try {
           result = await Promise.race([
-            this.skills.run(skill, { input: text, context: built.ctx, llm, now, image: opts.image }),
-            new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`skill ${skill.name} quá thời gian`)), cfg.timeoutMs * 2 + 1000).unref()),
+            this.skills.run(skill, { input: text, context: built.ctx, llm, now, image: opts.image, imageTimeoutMs: cfg.ocr.timeoutMs }),
+            new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`skill ${skill.name} quá thời gian`)), (opts.image ? cfg.ocr.timeoutMs + cfg.timeoutMs : cfg.timeoutMs * 2) + 1000).unref()),
           ]);
         } finally {
           // provider gọi lười trong lúc skill chạy
@@ -292,6 +294,8 @@ export class AiService {
     return {
       message,
       draft: draftView(draft),
+      // đọc ảnh: trả phần đọc được (của chính user) để app hiện cả khi không đọc ra số tiền
+      ...(opts.image ? { ocr: { ...((sm.ocr as object) ?? {}), reason: sm.reason ?? (status === 'error' ? 'error' : null), ms: sm.ms ?? null } } : {}),
       ...(opts.debug ? { debug: { route, context: traced, llmCalls: calls } } : {}),
     };
   }

@@ -185,7 +185,7 @@ const docHoaDon: Skill = {
     if (!llm.vision) return { reply: 'Máy chủ chưa hỗ trợ đọc ảnh. Bạn ghi tay giúp mình nhé.', askBack: true, meta: { unavailable: true } };
     const uctx = context.data.userContext as AiUserContext;
     const user = context.principal.name;
-    const r = await llm.vision(OCR_PROMPT, image);
+    const r = await llm.vision(OCR_PROMPT, image, { timeoutMs: args.imageTimeoutMs });
     const j = ocrJson(r.content);
     // model đôi khi trả chuỗi "50,000" / "16.900 VND": dấu phân cách hàng nghìn ở VN, bỏ hết ký tự không phải số
     const amount = Math.abs(Math.round(typeof j.amount === 'string' ? Number(j.amount.replace(/\D/g, '')) : Number(j.amount) || 0));
@@ -197,7 +197,9 @@ const docHoaDon: Skill = {
     if (amount <= 0) {
       return {
         reply: 'Mình chưa đọc được số tiền trong ảnh. Bạn chụp lại rõ phần tổng tiền, hoặc ghi tay giúp mình.',
-        askBack: true, followUps: ['ghi tay'], meta: { ...meta, unreadable: true },
+        askBack: true, followUps: ['ghi tay'],
+        // lý do cho thống kê admin: model không nhận ra hóa đơn / chuyển khoản, hay nhận ra mà không thấy số tiền
+        meta: { ...meta, unreadable: true, reason: ocr.kind === 'receipt' || ocr.kind === 'transfer' ? 'no_amount' : 'not_document' },
       };
     }
     // Thu hay chi do CODE quyết: ảnh chuyển khoản mà người dùng là người nhận → THU; còn lại → CHI

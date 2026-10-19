@@ -270,6 +270,12 @@ export class AiAdminController {
     return this.admin.stats(q.days);
   }
 
+  /** Đọc ảnh: số ảnh, người dùng, người chạm hạn mức, tỉ lệ không đọc được + lý do, độ trễ, nháp lưu / sửa / hủy (không nội dung) */
+  @Get('ocr-stats')
+  ocrStats(@Query() q: StatsQuery) {
+    return this.admin.ocrStats(q.days);
+  }
+
   /** Luật CHUNG (đề xuất / đang bật / bị loại) kèm kết quả kiểm định */
   @Get('rules')
   rules(@Query() q: KnowledgeQuery) {

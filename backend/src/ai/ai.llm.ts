@@ -92,7 +92,7 @@ export class OllamaClient implements LlmClient {
         keep_alive: KEEP_ALIVE,
         think: false,
         options: { temperature: 0, seed: 7, num_ctx: 4096, num_predict: opts.numPredict ?? 220 },
-      }, this.timeoutMs * 2); // ảnh: ~4s lúc rảnh, 15s+ khi GPU bận → gấp đôi (vẫn dưới mốc skill timeoutMs*2+1s)
+      }, opts.timeoutMs ?? this.timeoutMs * 2); // ảnh: ~4s lúc rảnh, 15s+ khi GPU bận
       return { content: String(j?.message?.content ?? ''), ms: performance.now() - t, promptTokens: j.prompt_eval_count ?? 0, evalTokens: j.eval_count ?? 0 };
     });
   }

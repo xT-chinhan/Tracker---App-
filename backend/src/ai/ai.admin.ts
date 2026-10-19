@@ -89,6 +89,53 @@ export class AiAdminService {
     };
   }
 
+  /** Đọc ảnh (skill doc-hoa-don): chỉ số tổng hợp, không trả nội dung đọc được hay ảnh. */
+  async ocrStats(days: number) {
+    const dailyLimit = (await this.sys.ai()).ocr.dailyLimitPerUser;
+    const since = new Date(Date.now() - days * 86400_000);
+    const [sum] = await this.prisma.$queryRaw<{ total: number; users: number; unreadable: number; errors: number; p50: number | null; p95: number | null }[]>`
+      SELECT count(*)::int AS total, count(DISTINCT "userId")::int AS users,
+             (count(*) FILTER (WHERE "status" = 'ask'))::int AS unreadable,
+             (count(*) FILTER (WHERE "status" = 'error'))::int AS errors,
+             percentile_cont(0.5) WITHIN GROUP (ORDER BY "latencyMs") FILTER (WHERE "status" <> 'error')::float AS p50,
+             percentile_cont(0.95) WITHIN GROUP (ORDER BY "latencyMs") FILTER (WHERE "status" <> 'error')::float AS p95
+      FROM "AiMessage" WHERE "role" = 'ASSISTANT' AND "skill" = 'doc-hoa-don' AND "createdAt" >= ${since}`;
+    const [limit] = await this.prisma.$queryRaw<{ users: number }[]>`
+      SELECT count(DISTINCT "userId")::int AS users FROM (
+        SELECT "userId" FROM "AiMessage" WHERE "role" = 'ASSISTANT' AND "skill" = 'doc-hoa-don' AND "createdAt" >= ${since}
+        GROUP BY "userId", to_char("createdAt" + interval '7 hour', 'YYYY-MM-DD') HAVING count(*) >= ${dailyLimit}) t`;
+    const daily = await this.prisma.$queryRaw<{ day: string; read: number; unreadable: number }[]>`
+      SELECT to_char("createdAt" + interval '7 hour', 'YYYY-MM-DD') AS day,
+             (count(*) FILTER (WHERE "status" = 'ok'))::int AS read,
+             (count(*) FILTER (WHERE "status" <> 'ok'))::int AS unreadable
+      FROM "AiMessage" WHERE "role" = 'ASSISTANT' AND "skill" = 'doc-hoa-don' AND "createdAt" >= ${since} GROUP BY 1 ORDER BY 1`;
+    const reasons = await this.prisma.$queryRaw<{ reason: string; count: number }[]>`
+      SELECT CASE WHEN "status" = 'error' AND "meta"->>'error' ILIKE '%quá%' THEN 'timeout'
+                  WHEN "status" = 'error' THEN 'error'
+                  WHEN "meta"->'skillMeta'->>'unavailable' = 'true' THEN 'error'
+                  ELSE coalesce("meta"->'skillMeta'->>'reason', 'no_amount') END AS reason, count(*)::int AS count
+      FROM "AiMessage" WHERE "role" = 'ASSISTANT' AND "skill" = 'doc-hoa-don' AND "status" <> 'ok' AND "createdAt" >= ${since}
+      GROUP BY 1 ORDER BY 2 DESC`;
+    const drafts = await this.prisma.aiDraft.groupBy({ by: ['status'], where: { skill: 'doc-hoa-don', createdAt: { gte: since } }, _count: true });
+    const d = (st: string) => drafts.find((x) => x.status === st)?._count ?? 0;
+    const confirmed = d('CONFIRMED'), edited = d('EDITED'), cancelled = d('CANCELLED'), decided = confirmed + edited + cancelled;
+    return {
+      days, since, dailyLimit,
+      total: sum?.total ?? 0,
+      users: sum?.users ?? 0,
+      usersHitLimit: limit?.users ?? 0,
+      unreadable: (sum?.unreadable ?? 0) + (sum?.errors ?? 0),
+      unreadableRate: pct((sum?.unreadable ?? 0) + (sum?.errors ?? 0), sum?.total ?? 0),
+      latencyMs: { p50: sum?.p50 != null ? Math.round(sum.p50) : null, p95: sum?.p95 != null ? Math.round(sum.p95) : null },
+      drafts: { proposed: d('PROPOSED'), confirmed, edited, cancelled, decided },
+      acceptanceWithoutEditRate: pct(confirmed, decided),
+      editedRate: pct(edited, decided),
+      cancelledRate: pct(cancelled, decided),
+      daily,
+      reasons,
+    };
+  }
+
   async rules(q: { status?: AiKnowledgeStatus; skill?: string; q?: string; page: number; limit: number }) {
     const where: Prisma.AiRuleWhereInput = { scope: 'GLOBAL', status: q.status, skill: q.skill, pattern: q.q ? { contains: q.q } : undefined };
     const [items, total] = await this.prisma.$transaction([

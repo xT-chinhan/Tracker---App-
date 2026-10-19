@@ -98,6 +98,10 @@ const DEFS: Def[] = [
   D('ai', 'timeoutSeconds', 'Chờ tối đa mỗi câu trả lời', 'int', { min: 5, max: 600, unit: 'giây' }),
   D('ai', 'dailyMessageLimitPerUser', 'Tin nhắn mỗi người mỗi ngày', 'int', { min: 1, max: 100000, unit: 'tin' }),
   D('ai', 'maxConversationsPerUser', 'Cuộc trò chuyện tối đa mỗi người', 'int', { min: 1, max: 10000, unit: 'cuộc' }),
+  D('ai', 'ocrEnabled', 'Bật đọc ảnh', 'bool'),
+  D('ai', 'ocrDailyLimitPerUser', 'Ảnh mỗi người mỗi ngày', 'int', { min: 1, max: 100, unit: 'ảnh' }),
+  D('ai', 'ocrMaxSide', 'Kích thước ảnh tối đa gửi lên', 'int', { min: 384, max: 1536, unit: 'px' }),
+  D('ai', 'ocrTimeoutSeconds', 'Thời gian chờ đọc ảnh tối đa', 'int', { min: 10, max: 120, unit: 'giây' }),
   D('ai', 'autoApproveEnabled', 'Tự áp dụng luật chung', 'bool'),
   D('ai', 'autoApproveMinUsers', 'Tự áp dụng khi đủ số người', 'int', { min: 5, max: 100000, unit: 'người' }),
   D('ai', 'autoApproveMinSupport', 'Tự áp dụng khi đủ số lần', 'int', { min: 1, max: 100000, unit: 'lần' }),
@@ -1352,6 +1356,22 @@ function AiSection({ c }: { c: Ctx }) {
         <NumberRow c={c} k="ai.timeoutSeconds" desc="Quá thời gian thì app báo “Trợ lý đang bận, thử lại sau”." range="5–600 giây" />
       </SettingCard>
 
+      <SettingCard title="Đọc ảnh" aside={<span className="text-body-s font-medium text-muted-foreground">Quét hóa đơn và ảnh chuyển khoản trong app</span>}>
+        <SettingRow label="Bật đọc ảnh" desc="Tắt thì dòng “Quét hóa đơn” ẩn khỏi app. Trợ lý trò chuyện không bị ảnh hưởng." inline changed={c.isDirty('ai.ocrEnabled')} testId="row-ai.ocrEnabled">
+          <Switch checked={c.value('ai.ocrEnabled') === true} onCheckedChange={(v) => c.set('ai.ocrEnabled', v)} aria-label="Bật đọc ảnh" data-testid="in-ai.ocrEnabled" />
+          {c.isDirty('ai.ocrEnabled') && <Was>{display('ai.ocrEnabled', c.server('ai.ocrEnabled'))}</Was>}
+        </SettingRow>
+        <SettingRow label="Model đọc ảnh" desc="Chạy trên máy chủ của Thu Chi, ảnh không gửi ra ngoài. Dùng chung model trả lời." testId="row-ai.ocrModel">
+          <LockedValue testId="ocr-model">{String(c.server('ai.chatModel') ?? '')} · nội bộ</LockedValue>
+        </SettingRow>
+        <NumberRow c={c} k="ai.ocrDailyLimitPerUser" desc="Hết lượt thì app báo giờ mở lại, vẫn ghi tay được. Nháp đang chờ vẫn lưu được." range="1–100 ảnh" />
+        <NumberRow c={c} k="ai.ocrMaxSide" desc="Máy chủ thu nhỏ ảnh theo cạnh dài trước khi đọc. Lớn hơn thì chậm hơn." range="384–1.536 px" />
+        <NumberRow c={c} k="ai.ocrTimeoutSeconds" desc="Quá thời gian thì app báo không đọc được và mở nhập tay." range="10–120 giây" />
+        <SettingRow label="Lưu ảnh" desc="Cố định, không đổi được. Quản trị viên không xem được ảnh hay nội dung đọc được." testId="row-ai.ocrStore">
+          <LockedValue testId="ocr-store">Không lưu · xóa ngay sau khi đọc</LockedValue>
+        </SettingRow>
+      </SettingCard>
+
       <SettingCard title="Tự học" aside={<span className="text-body-s font-medium text-muted-foreground">Chạy lúc 02:30 mỗi đêm, tuần tự</span>}>
         <SettingRow label="Tự áp dụng luật chung" desc="Tắt thì mọi luật chung chờ duyệt ở Trung tâm học. Luật làm bộ đề tụt điểm luôn bị loại." inline changed={c.isDirty('ai.autoApproveEnabled')} testId="row-ai.autoApproveEnabled">
           <Switch checked={c.value('ai.autoApproveEnabled') === true} onCheckedChange={(v) => c.set('ai.autoApproveEnabled', v)} aria-label="Tự áp dụng luật chung" data-testid="in-ai.autoApproveEnabled" />
@@ -1385,5 +1405,14 @@ function AiSection({ c }: { c: Ctx }) {
         ))}
       </SettingCard>
     </>
+  )
+}
+
+function LockedValue({ children, testId }: { children: ReactNode; testId: string }) {
+  return (
+    <div className="flex h-10 items-center gap-2 rounded-md border bg-muted/60 px-3.5 text-sm text-muted-foreground" data-testid={testId}>
+      <Lock className="size-4 shrink-0 text-faint" aria-label="Cố định" />
+      {children}
+    </div>
   )
 }
