@@ -1,10 +1,10 @@
 /** Tiện ích dùng chung cho các skill (Track B). Thuần; chỉ `llmSentence`/`llmJson` gọi model qua `Llm` được truyền vào. */
-import { chat } from './ollama.js';
+import { chat, LLM } from './ollama.js';
 import type { ChatMsg, LlmClient, SkillContext, SkillResult } from './contracts.js';
 import { fold } from './text.js';
 
-/** Adapter Ollama cho `LlmClient` khi chạy eval ngoài backend (gemma2:2b, temperature 0, xem lib/ollama.ts). */
-export const ollamaLlm: LlmClient = { provider: 'ollama', chatModel: 'gemma2:2b', chat: (m, o = {}) => chat(m, o.format ?? {}, o.numPredict ?? 120, o.stop) };
+/** Adapter Ollama cho `LlmClient` khi chạy eval ngoài backend (model theo LLM_MODEL, temperature 0, xem lib/ollama.ts). */
+export const ollamaLlm: LlmClient = { provider: 'ollama', chatModel: LLM, chat: (m, o = {}) => chat(m, o.format ?? {}, o.numPredict ?? 120, o.stop) };
 
 type Principal = SkillContext['principal'];
 

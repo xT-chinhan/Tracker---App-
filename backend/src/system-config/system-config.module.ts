@@ -284,7 +284,7 @@ export class SystemConfigService {
       loginLimit: Number(config.get('THROTTLE_AUTH_LIMIT') ?? (test ? 200 : 10)),
       aiProvider: config.get<string>('AI_PROVIDER') === 'fake' || test ? 'fake' : 'ollama',
       ollamaUrl: config.get<string>('OLLAMA_URL') || 'http://localhost:11434',
-      aiChatModel: config.get<string>('AI_CHAT_MODEL') || 'gemma2:2b',
+      aiChatModel: config.get<string>('AI_CHAT_MODEL') || 'qwen3.5:4b',
       aiEmbedModel: config.get<string>('AI_EMBED_MODEL') || 'bge-m3',
     };
     this.key = secretKey(config);

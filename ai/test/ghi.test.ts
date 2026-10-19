@@ -214,3 +214,10 @@ test('"45.000đ" không làm câu không dấu thành câu có dấu', async () 
   assert.equal(hasDiacritics('đi chợ 45k'), true);
   assert.equal(incomeCategory(seg('shopee hoan tien 45.000đ'), ctx), 'Thu khác');
 });
+
+test('output model: chấp nhận object đơn / mảng trần (qwen3.5 bỏ lớp items khi có 1 khoản)', async () => {
+  const { asItems } = await import('../skills/ghi-giao-dich/pipeline.js');
+  assert.deepEqual(asItems({ title: 'Cà phê', categoryName: 'Ăn uống' }), { items: [{ title: 'Cà phê', categoryName: 'Ăn uống' }] });
+  assert.deepEqual(asItems([{ title: 'a', categoryName: 'b' }]), { items: [{ title: 'a', categoryName: 'b' }] });
+  assert.deepEqual(asItems({ items: [] }), { items: [] });
+});

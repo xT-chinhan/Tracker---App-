@@ -47,7 +47,7 @@ npm run dev                     # http://localhost:3000/api
 | `THROTTLE_FORGOT_LIMIT` | 3 (test: 20) | Như trên cho forgot-password |
 | `TRUST_PROXY` | — | Chạy sau reverse proxy: `1` (số hop), `true` hoặc danh sách IP, để rate limit đếm theo IP thật |
 | `AI_PROVIDER` | — | `ollama` \| `fake`: ghi đè `ai.provider` của Cấu hình hệ thống. Không đặt + `NODE_ENV=test` → `fake` |
-| `OLLAMA_URL` / `AI_CHAT_MODEL` / `AI_EMBED_MODEL` | `http://localhost:11434` / `gemma2:2b` / `bge-m3` | Mặc định cho mục `ai` của Cấu hình hệ thống |
+| `OLLAMA_URL` / `AI_CHAT_MODEL` / `AI_EMBED_MODEL` | `http://localhost:11434` / `qwen3.5:4b` / `bge-m3` | Mặc định cho mục `ai` của Cấu hình hệ thống |
 | `AI_DIR` | `<repo>/ai` | Thư mục `ai/` (parser, prompt, skill ngoài) nạp lúc chạy bằng `tsx` |
 | `AI_EXTERNAL_SKILLS` | 1 | `0` = không nạp skill từ `ai/skills/*` (chỉ built-in) |
 | `CONFIG_SECRET` | (dẫn xuất từ `JWT_SECRET`) | Khóa mã hóa AES-256-GCM cho giá trị bí mật trong Cấu hình hệ thống (mật khẩu SMTP). Đổi khóa thì mật khẩu SMTP đã lưu không giải mã được, phải nhập lại |

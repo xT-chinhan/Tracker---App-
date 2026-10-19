@@ -67,6 +67,8 @@ export class OllamaClient implements LlmClient {
         format: opts.format,
         stream: false,
         keep_alive: '30m',
+        // qwen3.5 mặc định "suy nghĩ" trước khi trả lời: chậm và có thể làm hỏng JSON → tắt (model không có chế độ này bỏ qua cờ)
+        think: false,
         options: { temperature: opts.temperature ?? 0, seed: 7, num_ctx: 4096, num_predict: opts.numPredict ?? 256, stop: opts.stop ?? ['\n\n'] },
       });
       return { content: String(j?.message?.content ?? ''), ms: performance.now() - t, promptTokens: j.prompt_eval_count ?? 0, evalTokens: j.eval_count ?? 0 };

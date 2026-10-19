@@ -50,4 +50,4 @@ Cập nhật: 2026-10-08. Ưu tiên hiện tại: **trợ lý AI** (`ai/`). Các
 - Broadcast hiện chỉ gửi tất cả user đang hoạt động; thêm lọc theo nhóm (vd. user mới, user bị cảnh báo ngân sách). Trợ lý AI admin cần biết khi có.
 
 ## 8. Trợ lý AI — nối cổng kiểm định chạy model vào chu trình đêm
-- Chu trình học ban đêm (backend `ai.learning.ts`) đang dùng cổng tất định trên bộ đề trong DB. `ai/eval/gate.ts` `evaluateRule(proposal, {ctx, cases, bank, rules})` chạy gemma2 trên các câu bị ảnh hưởng — cần adapter dựng `UserContext` (danh mục/ví hệ thống), `GhiCase` có nhãn đầy đủ từ câu user đã xác nhận, `ExampleBank`/`RuleBook` từ bảng `AiExample`/`AiRule`; chạy sau khóa GPU, chỉ khi provider = ollama.
+- Chu trình học ban đêm (backend `ai.learning.ts`) đang dùng cổng tất định trên bộ đề trong DB. `ai/eval/gate.ts` `evaluateRule(proposal, {ctx, cases, bank, rules})` chạy model trả lời trên các câu bị ảnh hưởng — cần adapter dựng `UserContext` (danh mục/ví hệ thống), `GhiCase` có nhãn đầy đủ từ câu user đã xác nhận, `ExampleBank`/`RuleBook` từ bảng `AiExample`/`AiRule`; chạy sau khóa GPU, chỉ khi provider = ollama.

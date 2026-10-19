@@ -110,7 +110,9 @@ const ghiGiaoDich: Skill = {
       { role: 'user', content: lib.userV1(input, segs.map((s) => s.text), segs.map((s) => (s.dir?.dir === 'INCOME' ? 'THU' : undefined))) },
     ];
     const canon = (name: unknown) => (typeof name === 'string' ? uctx.categories.find((c) => fold(c.name) === fold(name.trim()))?.name : undefined);
-    const r = await chatJson(llm, msgs, lib.schemaV1(uctx, segs.length, allowed), (j) => {
+    const r = await chatJson(llm, msgs, lib.schemaV1(uctx, segs.length, allowed), (raw) => {
+      // qwen3.5 hay bỏ lớp {items: [...]} khi chỉ có 1 khoản → chấp nhận object / mảng trần
+      const j = Array.isArray(raw) ? { items: raw } : raw && !Array.isArray(raw.items) && (raw.title !== undefined || raw.categoryName !== undefined) ? { items: [raw] } : raw;
       if (!Array.isArray(j.items) || j.items.length !== segs.length) throw new Error(`cần đúng ${segs.length} khoản`);
       const bad = j.items.findIndex((x: any, i: number) => !allowed[i].includes(canon(x.categoryName) ?? ''));
       if (bad >= 0) throw new Error(`categoryName "${j.items[bad].categoryName}" của khoản ${bad + 1} phải là một trong: ${allowed[bad].join(', ')}`);
@@ -128,7 +130,7 @@ const ghiGiaoDich: Skill = {
         categoryName = catType.has(want) ? want : allowed[i][0] ?? uctx.categories[0].name;
         fallback++;
       }
-      // gemma2:2b hay chép số tiền / ví / ngày vào tên ("Cà phê 45k", "Cơm trưa ví") → bỏ bằng bộ tìm của parser
+      // model nhỏ hay chép số tiền / ví / ngày vào tên ("Cà phê 45k", "Cơm trưa ví") → bỏ bằng bộ tìm của parser
       const title = lib.cleanTitle(llmOut?.[i]?.title || '', s, uctx).slice(0, 120) || cap(acc[i] || s.text);
       return { title, amount: s.amount, categoryName, type: catType.get(categoryName)!, date: s.date, walletName: s.walletName, source: s.text, clean: acc[i], ruleId: hits[i]?.id ?? null };
     });
