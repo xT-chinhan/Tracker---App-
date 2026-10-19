@@ -152,6 +152,8 @@ abstract class AiUsage with _$AiUsage {
     @JsonKey(fromJson: _toInt) @Default(30) int dailyMessageLimit,
     @JsonKey(fromJson: _toInt) @Default(0) int activeConversations,
     @JsonKey(fromJson: _toInt) @Default(50) int maxConversations,
+    @JsonKey(fromJson: _toInt) @Default(0) int ocrToday,
+    @JsonKey(fromJson: _toInt) @Default(20) int ocrDailyLimit,
     DateTime? resetAt,
   }) = _AiUsage;
 

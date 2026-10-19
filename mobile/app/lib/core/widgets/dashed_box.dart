@@ -22,7 +22,8 @@ class DashedBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _DashedRRectPainter(radius: radius, color: color),
+      // vẽ đè lên nền của child, nếu không nền trắng che mất viền
+      foregroundPainter: _DashedRRectPainter(radius: radius, color: color),
       child: Container(
         decoration: BoxDecoration(
           color: background,

@@ -89,6 +89,9 @@ _AiPublicConfig _$AiPublicConfigFromJson(Map<String, dynamic> json) =>
       dailyMessageLimitPerUser: (json['dailyMessageLimitPerUser'] as num)
           .toInt(),
       maxConversationsPerUser: (json['maxConversationsPerUser'] as num).toInt(),
+      ocr: json['ocr'] == null
+          ? const AiOcrPublicConfig()
+          : AiOcrPublicConfig.fromJson(json['ocr'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AiPublicConfigToJson(_AiPublicConfig instance) =>
@@ -96,6 +99,21 @@ Map<String, dynamic> _$AiPublicConfigToJson(_AiPublicConfig instance) =>
       'enabled': instance.enabled,
       'dailyMessageLimitPerUser': instance.dailyMessageLimitPerUser,
       'maxConversationsPerUser': instance.maxConversationsPerUser,
+      'ocr': instance.ocr,
+    };
+
+_AiOcrPublicConfig _$AiOcrPublicConfigFromJson(Map<String, dynamic> json) =>
+    _AiOcrPublicConfig(
+      enabled: json['enabled'] as bool? ?? false,
+      dailyLimitPerUser: (json['dailyLimitPerUser'] as num?)?.toInt() ?? 20,
+      maxSide: (json['maxSide'] as num?)?.toInt() ?? 768,
+    );
+
+Map<String, dynamic> _$AiOcrPublicConfigToJson(_AiOcrPublicConfig instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'dailyLimitPerUser': instance.dailyLimitPerUser,
+      'maxSide': instance.maxSide,
     };
 
 _BudgetThresholdConfig _$BudgetThresholdConfigFromJson(

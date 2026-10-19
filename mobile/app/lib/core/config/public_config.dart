@@ -60,10 +60,24 @@ abstract class AiPublicConfig with _$AiPublicConfig {
     required bool enabled,
     required int dailyMessageLimitPerUser,
     required int maxConversationsPerUser,
+    @Default(AiOcrPublicConfig()) AiOcrPublicConfig ocr,
   }) = _AiPublicConfig;
 
   factory AiPublicConfig.fromJson(Map<String, dynamic> json) =>
       _$AiPublicConfigFromJson(json);
+}
+
+/// Quét hóa đơn: ẩn lối vào khi tắt; app thu nhỏ ảnh theo [maxSide] trước khi gửi.
+@freezed
+abstract class AiOcrPublicConfig with _$AiOcrPublicConfig {
+  const factory AiOcrPublicConfig({
+    @Default(false) bool enabled,
+    @Default(20) int dailyLimitPerUser,
+    @Default(768) int maxSide,
+  }) = _AiOcrPublicConfig;
+
+  factory AiOcrPublicConfig.fromJson(Map<String, dynamic> json) =>
+      _$AiOcrPublicConfigFromJson(json);
 }
 
 @freezed

@@ -8,6 +8,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_icon_helper.dart';
 import '../../features/auth/application/app_session.dart';
 import '../../features/home/application/home_service.dart';
+import '../../features/ocr/ocr_scan.dart';
 
 class PlusActionMenuSheet extends ConsumerWidget {
   const PlusActionMenuSheet({super.key});
@@ -27,6 +28,7 @@ class PlusActionMenuSheet extends ConsumerWidget {
     final templates = homeState.quickTemplates;
     final colors = Theme.of(context).colorScheme;
     final aiEnabled = ref.watch(appSessionProvider).config?.ai.enabled ?? true;
+    final ocrEnabled = ref.watch(appSessionProvider).config?.ai.ocr.enabled ?? false;
 
     return SafeArea(
       child: Padding(
@@ -63,8 +65,21 @@ class PlusActionMenuSheet extends ConsumerWidget {
                         context.push('/ai');
                       },
                     ),
-                    const Divider(height: 12),
                   ],
+                  if (ocrEnabled)
+                    _ActionRow(
+                      icon: LucideIcons.scan_line,
+                      iconBg: const Color(0xFFF3F2EE),
+                      iconColor: const Color(0xFF111111),
+                      title: 'Quét hóa đơn',
+                      badge: 'Mới',
+                      onTap: () {
+                        final nav = Navigator.of(context);
+                        nav.pop();
+                        startOcrScan(nav.overlay!.context);
+                      },
+                    ),
+                  if (aiEnabled || ocrEnabled) const Divider(height: 12),
                   // Thu nhập
                   _ActionRow(
                     icon: LucideIcons.arrow_down_left,
@@ -198,6 +213,7 @@ class _ActionRow extends StatelessWidget {
     required this.iconColor,
     required this.title,
     required this.onTap,
+    this.badge,
   });
 
   final IconData icon;
@@ -205,6 +221,7 @@ class _ActionRow extends StatelessWidget {
   final Color iconColor;
   final String title;
   final VoidCallback onTap;
+  final String? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -223,12 +240,29 @@ class _ActionRow extends StatelessWidget {
               child: Icon(icon, size: 18, color: iconColor),
             ),
             const SizedBox(width: 14),
-            Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+              ),
             ),
+            if (badge != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEDECE8),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  badge!,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF55544F),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

@@ -9,11 +9,13 @@ import '../../../core/widgets/amount_keypad.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_icon_helper.dart';
+import '../../auth/application/app_session.dart';
 import '../../categories/application/categories_service.dart';
 import '../../categories/presentation/category_picker_sheet.dart';
 import '../../home/data/home_models.dart';
 import '../../wallets/application/wallets_service.dart';
 import '../../wallets/presentation/wallet_picker_sheet.dart';
+import '../../ocr/ocr_scan.dart';
 import '../application/transaction_entry_service.dart';
 
 enum TransactionType { expense, income }
@@ -22,11 +24,15 @@ class TransactionEntryScreen extends ConsumerStatefulWidget {
   const TransactionEntryScreen({
     this.initialType = TransactionType.expense,
     this.initialTransaction,
+    this.ocrDraft,
     super.key,
   });
 
   final TransactionType initialType;
   final TransactionItem? initialTransaction;
+
+  /// Mở từ nút "Sửa" của Quét hóa đơn: điền sẵn từ nháp, Lưu = xác nhận nháp (có sửa).
+  final OcrDraftEdit? ocrDraft;
 
   @override
   ConsumerState<TransactionEntryScreen> createState() =>
@@ -43,7 +49,11 @@ class _TransactionEntryScreenState
     _noteController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        if (widget.initialTransaction != null) {
+        if (widget.ocrDraft != null) {
+          final item = widget.ocrDraft!.item;
+          _noteController.text = (item['title'] as String?) ?? '';
+          ref.read(transactionEntryProvider.notifier).initFromOcr(item);
+        } else if (widget.initialTransaction != null) {
           final tx = widget.initialTransaction!;
           _noteController.text =
               tx.note ?? (tx.title != tx.category?.name ? tx.title : '');
@@ -123,6 +133,14 @@ class _TransactionEntryScreenState
           widget.initialTransaction != null ? 'Sửa giao dịch' : 'Ghi giao dịch',
         ),
         actions: [
+          if (widget.initialTransaction == null &&
+              widget.ocrDraft == null &&
+              (ref.watch(appSessionProvider).config?.ai.ocr.enabled ?? false))
+            IconButton(
+              tooltip: 'Quét hóa đơn',
+              icon: const Icon(LucideIcons.scan_line),
+              onPressed: () => startOcrScan(context, replace: true),
+            ),
           IconButton(
             tooltip: 'Lưu làm mẫu',
             icon: const Icon(LucideIcons.bookmark_plus),
@@ -408,9 +426,13 @@ class _TransactionEntryScreenState
                         state.selectedWallet != null &&
                         !state.isSaving
                     ? () async {
-                        final success = await notifier.submitTransaction(
-                          updateTransactionId: widget.initialTransaction?.id,
-                        );
+                        final success =
+                            widget.ocrDraft?.draftId.isNotEmpty ?? false
+                            ? await notifier.submitOcrDraft(widget.ocrDraft!)
+                            : await notifier.submitTransaction(
+                                updateTransactionId:
+                                    widget.initialTransaction?.id,
+                              );
                         if (success && context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

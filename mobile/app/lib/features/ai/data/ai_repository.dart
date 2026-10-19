@@ -188,6 +188,33 @@ class AiRepository {
     return ConfirmDraftResponse.fromJson(res.data!);
   }
 
+  /// Gửi ảnh hóa đơn / chuyển khoản (multipart `image`). Trả JSON thô: message, draft, ocr.
+  Future<Map<String, dynamic>> postImage(
+    String conversationId,
+    List<int> bytes,
+    String filename,
+  ) async {
+    final lower = filename.toLowerCase();
+    final subtype = lower.endsWith('.png')
+        ? 'png'
+        : lower.endsWith('.webp')
+        ? 'webp'
+        : 'jpeg';
+    final form = FormData.fromMap({
+      'image': MultipartFile.fromBytes(
+        bytes,
+        filename: filename,
+        contentType: DioMediaType('image', subtype),
+      ),
+    });
+    final res = await _dio.post<Map<String, dynamic>>(
+      'ai/conversations/$conversationId/images',
+      data: form,
+      options: Options(receiveTimeout: const Duration(seconds: 150)),
+    );
+    return res.data!;
+  }
+
   Future<void> cancelDraft(String draftId) async {
     await _dio.post<void>('ai/drafts/$draftId/cancel');
   }

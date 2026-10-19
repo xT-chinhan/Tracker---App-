@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Chụp hóa đơn để Thu Chi đọc số tiền và tạo nháp giao dịch.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Chọn ảnh hóa đơn hoặc ảnh chụp màn hình chuyển khoản để Thu Chi đọc.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

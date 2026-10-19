@@ -42,7 +42,7 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "description": "Ch\u1ec9 g\u1eedi c\u00e1c tr\u01b0\u1eddng \u0111\u1ed5i. L\u1ed7i => 400 `{message, errors: {\"section.field\": \"l\u00fd do\"}}`",
+                                "description": "Chỉ gửi các trường đổi. Lỗi => 400 `{message, errors: {\"section.field\": \"lý do\"}}`",
                                 "properties": {
                                     "general": {
                                         "type": "object",
@@ -132,7 +132,7 @@
                                             "password": {
                                                 "type": "string",
                                                 "maxLength": 500,
-                                                "description": "B\u00ed m\u1eadt: ch\u1ec9 ghi, kh\u00f4ng bao gi\u1edd tr\u1ea3 v\u1ec1. Chu\u1ed7i r\u1ed7ng = x\u00f3a"
+                                                "description": "Bí mật: chỉ ghi, không bao giờ trả về. Chuỗi rỗng = xóa"
                                             },
                                             "from": {
                                                 "type": "string",
@@ -199,6 +199,9 @@
                                                 "type": "boolean"
                                             },
                                             "featureAi": {
+                                                "type": "boolean"
+                                            },
+                                            "featureBankNotifications": {
                                                 "type": "boolean"
                                             }
                                         }
@@ -279,6 +282,24 @@
                                                 "minimum": 1,
                                                 "maximum": 10000
                                             },
+                                            "ocrEnabled": {
+                                                "type": "boolean"
+                                            },
+                                            "ocrDailyLimitPerUser": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 100
+                                            },
+                                            "ocrMaxSide": {
+                                                "type": "integer",
+                                                "minimum": 384,
+                                                "maximum": 1536
+                                            },
+                                            "ocrTimeoutSeconds": {
+                                                "type": "integer",
+                                                "minimum": 10,
+                                                "maximum": 120
+                                            },
                                             "autoApproveEnabled": {
                                                 "type": "boolean"
                                             },
@@ -344,7 +365,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -969,7 +990,7 @@
                         "name": "q",
                         "required": false,
                         "in": "query",
-                        "description": "T\u00ecm trong ti\u00eau \u0111\u1ec1 / ghi ch\u00fa",
+                        "description": "Tìm trong tiêu đề / ghi chú",
                         "schema": {
                             "maxLength": 100,
                             "type": "string"
@@ -979,7 +1000,7 @@
                         "name": "minAmount",
                         "required": false,
                         "in": "query",
-                        "description": "Kho\u1ea3ng s\u1ed1 ti\u1ec1n (VND, bao g\u1ed3m 2 \u0111\u1ea7u)",
+                        "description": "Khoảng số tiền (VND, bao gồm 2 đầu)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000000000000,
@@ -1000,7 +1021,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -1023,7 +1044,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "Th\u00e1ng d\u1ea1ng YYYY-MM (\u01b0u ti\u00ean h\u01a1n from/to)",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
                         "schema": {
                             "type": "string"
                         }
@@ -1608,7 +1629,7 @@
                         "name": "walletId",
                         "required": false,
                         "in": "query",
-                        "description": "Ch\u1ec9 t\u00ednh giao d\u1ecbch c\u1ee7a v\u00ed n\u00e0y",
+                        "description": "Chỉ tính giao dịch của ví này",
                         "schema": {
                             "format": "uuid",
                             "type": "string"
@@ -1618,7 +1639,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "Th\u00e1ng d\u1ea1ng YYYY-MM (\u01b0u ti\u00ean h\u01a1n from/to)",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
                         "schema": {
                             "type": "string"
                         }
@@ -1663,7 +1684,7 @@
                         "name": "walletId",
                         "required": false,
                         "in": "query",
-                        "description": "Ch\u1ec9 t\u00ednh giao d\u1ecbch c\u1ee7a v\u00ed n\u00e0y",
+                        "description": "Chỉ tính giao dịch của ví này",
                         "schema": {
                             "format": "uuid",
                             "type": "string"
@@ -1673,7 +1694,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "Th\u00e1ng d\u1ea1ng YYYY-MM (\u01b0u ti\u00ean h\u01a1n from/to)",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
                         "schema": {
                             "type": "string"
                         }
@@ -1731,7 +1752,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "YYYY-MM, m\u1eb7c \u0111\u1ecbnh th\u00e1ng hi\u1ec7n t\u1ea1i",
+                        "description": "YYYY-MM, mặc định tháng hiện tại",
                         "schema": {
                             "type": "string"
                         }
@@ -1740,7 +1761,7 @@
                         "name": "walletId",
                         "required": false,
                         "in": "query",
-                        "description": "Ch\u1ec9 t\u00ednh giao d\u1ecbch c\u1ee7a v\u00ed n\u00e0y",
+                        "description": "Chỉ tính giao dịch của ví này",
                         "schema": {
                             "format": "uuid",
                             "type": "string"
@@ -1770,7 +1791,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "YYYY-MM, m\u1eb7c \u0111\u1ecbnh th\u00e1ng hi\u1ec7n t\u1ea1i",
+                        "description": "YYYY-MM, mặc định tháng hiện tại",
                         "schema": {
                             "type": "string"
                         }
@@ -1779,7 +1800,7 @@
                         "name": "walletId",
                         "required": false,
                         "in": "query",
-                        "description": "Ch\u1ec9 t\u00ednh giao d\u1ecbch c\u1ee7a v\u00ed n\u00e0y",
+                        "description": "Chỉ tính giao dịch của ví này",
                         "schema": {
                             "format": "uuid",
                             "type": "string"
@@ -1789,7 +1810,7 @@
                         "name": "months",
                         "required": true,
                         "in": "query",
-                        "description": "S\u1ed1 th\u00e1ng l\u1ea5y v\u1ec1 (t\u00ednh l\u00f9i t\u1eeb month)",
+                        "description": "Số tháng lấy về (tính lùi từ month)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 36,
@@ -1821,7 +1842,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "YYYY-MM, m\u1eb7c \u0111\u1ecbnh th\u00e1ng hi\u1ec7n t\u1ea1i",
+                        "description": "YYYY-MM, mặc định tháng hiện tại",
                         "schema": {
                             "type": "string"
                         }
@@ -1830,7 +1851,7 @@
                         "name": "walletId",
                         "required": false,
                         "in": "query",
-                        "description": "Ch\u1ec9 t\u00ednh giao d\u1ecbch c\u1ee7a v\u00ed n\u00e0y",
+                        "description": "Chỉ tính giao dịch của ví này",
                         "schema": {
                             "format": "uuid",
                             "type": "string"
@@ -1840,7 +1861,7 @@
                         "name": "observationMonths",
                         "required": true,
                         "in": "query",
-                        "description": "S\u1ed1 th\u00e1ng quan s\u00e1t \u0111\u1ec3 d\u1ef1 b\u00e1o th\u00e1ng sau",
+                        "description": "Số tháng quan sát để dự báo tháng sau",
                         "schema": {
                             "minimum": 1,
                             "maximum": 24,
@@ -1872,7 +1893,7 @@
                         "name": "walletId",
                         "required": false,
                         "in": "query",
-                        "description": "L\u1ecdc chuy\u1ec3n ti\u1ec1n c\u00f3 li\u00ean quan t\u1edbi v\u00ed (v\u00e0o ho\u1eb7c ra)",
+                        "description": "Lọc chuyển tiền có liên quan tới ví (vào hoặc ra)",
                         "schema": {
                             "format": "uuid",
                             "type": "string"
@@ -1882,7 +1903,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -1905,7 +1926,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "Th\u00e1ng d\u1ea1ng YYYY-MM (\u01b0u ti\u00ean h\u01a1n from/to)",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
                         "schema": {
                             "type": "string"
                         }
@@ -2067,7 +2088,7 @@
                         "name": "unread",
                         "required": false,
                         "in": "query",
-                        "description": "true => ch\u1ec9 th\u00f4ng b\u00e1o ch\u01b0a \u0111\u1ecdc",
+                        "description": "true => chỉ thông báo chưa đọc",
                         "schema": {
                             "type": "boolean"
                         }
@@ -2076,7 +2097,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -2379,7 +2400,7 @@
                         "name": "now",
                         "required": false,
                         "in": "query",
-                        "description": "M\u1ed1c \"hi\u1ec7n t\u1ea1i\" gi\u1ea3 l\u1eadp (ch\u1ec9 m\u00f4i tr\u01b0\u1eddng dev/test)",
+                        "description": "Mốc \"hiện tại\" giả lập (chỉ môi trường dev/test)",
                         "schema": {
                             "type": "string"
                         }
@@ -2602,7 +2623,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "Th\u00e1ng d\u1ea1ng YYYY-MM (\u01b0u ti\u00ean h\u01a1n from/to)",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
                         "schema": {
                             "type": "string"
                         }
@@ -2666,7 +2687,7 @@
                         "name": "q",
                         "required": false,
                         "in": "query",
-                        "description": "T\u00ecm theo email / t\u00ean",
+                        "description": "Tìm theo email / tên",
                         "schema": {
                             "maxLength": 100,
                             "type": "string"
@@ -2700,7 +2721,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -2837,7 +2858,7 @@
                         "name": "q",
                         "required": false,
                         "in": "query",
-                        "description": "T\u00ecm trong ti\u00eau \u0111\u1ec1 / ghi ch\u00fa",
+                        "description": "Tìm trong tiêu đề / ghi chú",
                         "schema": {
                             "maxLength": 100,
                             "type": "string"
@@ -2847,7 +2868,7 @@
                         "name": "minAmount",
                         "required": false,
                         "in": "query",
-                        "description": "Kho\u1ea3ng s\u1ed1 ti\u1ec1n (VND, bao g\u1ed3m 2 \u0111\u1ea7u)",
+                        "description": "Khoảng số tiền (VND, bao gồm 2 đầu)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000000000000,
@@ -2868,7 +2889,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -2891,7 +2912,7 @@
                         "name": "month",
                         "required": false,
                         "in": "query",
-                        "description": "Th\u00e1ng d\u1ea1ng YYYY-MM (\u01b0u ti\u00ean h\u01a1n from/to)",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
                         "schema": {
                             "type": "string"
                         }
@@ -2972,7 +2993,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -3015,7 +3036,7 @@
                         "name": "now",
                         "required": false,
                         "in": "query",
-                        "description": "M\u1ed1c \"hi\u1ec7n t\u1ea1i\" gi\u1ea3 l\u1eadp (ch\u1ec9 m\u00f4i tr\u01b0\u1eddng dev/test)",
+                        "description": "Mốc \"hiện tại\" giả lập (chỉ môi trường dev/test)",
                         "schema": {
                             "type": "string"
                         }
@@ -3195,7 +3216,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -3218,7 +3239,7 @@
                         "name": "archived",
                         "required": false,
                         "in": "query",
-                        "description": "true = danh s\u00e1ch \u0111\u00e3 l\u01b0u tr\u1eef",
+                        "description": "true = danh sách đã lưu trữ",
                         "schema": {
                             "type": "boolean"
                         }
@@ -3343,6 +3364,53 @@
                 ],
                 "responses": {
                     "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/conversations/{id}/images": {
+            "post": {
+                "operationId": "AiController_postImage",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "required": [
+                                    "image"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
                         "description": ""
                     }
                 },
@@ -3736,6 +3804,37 @@
                 ]
             }
         },
+        "/api/admin/ai/ocr-stats": {
+            "get": {
+                "operationId": "AiAdminController_ocrStats",
+                "parameters": [
+                    {
+                        "name": "days",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 365,
+                            "default": 30,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
         "/api/admin/ai/rules": {
             "get": {
                 "operationId": "AiAdminController_rules",
@@ -3744,7 +3843,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -3770,8 +3869,8 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "ACTIVE",
                                 "PROPOSED",
+                                "ACTIVE",
                                 "REJECTED"
                             ]
                         }
@@ -3789,7 +3888,7 @@
                         "name": "q",
                         "required": false,
                         "in": "query",
-                        "description": "L\u1ecdc theo pattern (lu\u1eadt) / input (v\u00ed d\u1ee5)",
+                        "description": "Lọc theo pattern (luật) / input (ví dụ)",
                         "schema": {
                             "maxLength": 100,
                             "type": "string"
@@ -3875,7 +3974,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -3901,8 +4000,8 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "ACTIVE",
                                 "PROPOSED",
+                                "ACTIVE",
                                 "REJECTED"
                             ]
                         }
@@ -3920,7 +4019,7 @@
                         "name": "q",
                         "required": false,
                         "in": "query",
-                        "description": "L\u1ecdc theo pattern (lu\u1eadt) / input (v\u00ed d\u1ee5)",
+                        "description": "Lọc theo pattern (luật) / input (ví dụ)",
                         "schema": {
                             "maxLength": 100,
                             "type": "string"
@@ -4025,7 +4124,7 @@
                         "name": "now",
                         "required": false,
                         "in": "query",
-                        "description": "M\u1ed1c \"b\u00e2y gi\u1edd\" (dev/test)",
+                        "description": "Mốc \"bây giờ\" (dev/test)",
                         "schema": {
                             "type": "string"
                         }
@@ -4114,7 +4213,7 @@
                         "name": "page",
                         "required": true,
                         "in": "query",
-                        "description": "T\u1ed1i \u0111a 10000 trang (ch\u1eb7n offset kh\u1ed5ng l\u1ed3 => l\u1ed7i 500 / qu\u00e9t b\u1ea3ng)",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
                         "schema": {
                             "minimum": 1,
                             "maximum": 10000,
@@ -4137,7 +4236,7 @@
                         "name": "q",
                         "required": false,
                         "in": "query",
-                        "description": "L\u1ecdc theo email / t\u00ean",
+                        "description": "Lọc theo email / tên",
                         "schema": {
                             "maxLength": 100,
                             "type": "string"
@@ -4246,12 +4345,12 @@
                     },
                     "message": {
                         "type": "string",
-                        "description": "N\u1ed9i dung ng\u01b0\u1eddi d\u00f9ng th\u1ea5y (1\u2013200 k\u00fd t\u1ef1)"
+                        "description": "Nội dung người dùng thấy (1–200 ký tự)"
                     },
                     "endsAt": {
                         "type": "string",
                         "nullable": true,
-                        "description": "ISO, t\u01b0\u01a1ng lai; null = kh\u00f4ng h\u1eb9n gi\u1edd (ch\u1ec9 t\u1eaft tay). T\u1edbi gi\u1edd => t\u1ef1 t\u1eaft"
+                        "description": "ISO, tương lai; null = không hẹn giờ (chỉ tắt tay). Tới giờ => tự tắt"
                     }
                 },
                 "required": [
@@ -4319,7 +4418,7 @@
                     },
                     "otp": {
                         "type": "string",
-                        "description": "M\u00e3 6 s\u1ed1 g\u1eedi qua email",
+                        "description": "Mã 6 số gửi qua email",
                         "pattern": "^\\d{6}$"
                     },
                     "newPassword": {
@@ -4369,7 +4468,7 @@
                 "properties": {
                     "password": {
                         "type": "string",
-                        "description": "M\u1eadt kh\u1ea9u hi\u1ec7n t\u1ea1i \u0111\u1ec3 x\u00e1c nh\u1eadn"
+                        "description": "Mật khẩu hiện tại để xác nhận"
                     }
                 },
                 "required": [
@@ -4394,7 +4493,7 @@
                     },
                     "initialBalance": {
                         "type": "number",
-                        "description": "S\u1ed1 d\u01b0 ban \u0111\u1ea7u (>= 0), m\u1eb7c \u0111\u1ecbnh 0",
+                        "description": "Số dư ban đầu (>= 0), mặc định 0",
                         "minimum": 0,
                         "maximum": 10000000000000
                     },
@@ -4499,12 +4598,12 @@
                     },
                     "walletId": {
                         "type": "string",
-                        "description": "V\u00ed ph\u00e1t sinh (c\u1ee7a user, ch\u01b0a l\u01b0u tr\u1eef)",
+                        "description": "Ví phát sinh (của user, chưa lưu trữ)",
                         "format": "uuid"
                     },
                     "amount": {
                         "type": "number",
-                        "description": "S\u1ed1 ti\u1ec1n d\u01b0\u01a1ng (VND). Lo\u1ea1i thu/chi l\u1ea5y theo danh m\u1ee5c.",
+                        "description": "Số tiền dương (VND). Loại thu/chi lấy theo danh mục.",
                         "minimum": 1,
                         "maximum": 10000000000000
                     },
@@ -4519,7 +4618,7 @@
                     },
                     "occurredAt": {
                         "type": "string",
-                        "description": "ISO 8601, m\u1eb7c \u0111\u1ecbnh l\u00e0 th\u1eddi \u0111i\u1ec3m hi\u1ec7n t\u1ea1i"
+                        "description": "ISO 8601, mặc định là thời điểm hiện tại"
                     }
                 },
                 "required": [
@@ -4580,7 +4679,7 @@
                 "properties": {
                     "categoryId": {
                         "type": "string",
-                        "description": "Danh m\u1ee5c chi ti\u00eau; b\u1ecf tr\u1ed1ng => ng\u00e2n s\u00e1ch t\u1ed5ng c\u1ee7a th\u00e1ng",
+                        "description": "Danh mục chi tiêu; bỏ trống => ngân sách tổng của tháng",
                         "format": "uuid"
                     },
                     "month": {
@@ -4641,7 +4740,7 @@
                     },
                     "startDate": {
                         "type": "string",
-                        "description": "M\u1eb7c \u0111\u1ecbnh h\u00f4m nay"
+                        "description": "Mặc định hôm nay"
                     },
                     "targetDate": {
                         "type": "string"
@@ -4700,12 +4799,12 @@
                     },
                     "walletId": {
                         "type": "string",
-                        "description": "V\u00ed tr\u00edch ti\u1ec1n (ph\u1ea3i \u0111\u1ee7 s\u1ed1 d\u01b0)",
+                        "description": "Ví trích tiền (phải đủ số dư)",
                         "format": "uuid"
                     },
                     "date": {
                         "type": "string",
-                        "description": "Ng\u00e0y n\u1ea1p, m\u1eb7c \u0111\u1ecbnh h\u00f4m nay"
+                        "description": "Ngày nạp, mặc định hôm nay"
                     }
                 },
                 "required": [
@@ -4718,7 +4817,7 @@
                 "properties": {
                     "walletId": {
                         "type": "string",
-                        "description": "V\u00ed nh\u1eadn l\u1ea1i ti\u1ec1n",
+                        "description": "Ví nhận lại tiền",
                         "format": "uuid"
                     }
                 },
@@ -4744,7 +4843,7 @@
                     },
                     "occurredAt": {
                         "type": "string",
-                        "description": "ISO 8601, m\u1eb7c \u0111\u1ecbnh hi\u1ec7n t\u1ea1i"
+                        "description": "ISO 8601, mặc định hiện tại"
                     },
                     "note": {
                         "type": "string",
@@ -4787,7 +4886,7 @@
                 "properties": {
                     "label": {
                         "type": "string",
-                        "description": "Nh\u00e3n hi\u1ec3n th\u1ecb tr\u00ean n\u00fat, vd \"C\u00e0 ph\u00ea s\u00e1ng\"",
+                        "description": "Nhãn hiển thị trên nút, vd \"Cà phê sáng\"",
                         "minLength": 1,
                         "maxLength": 50
                     },
@@ -4859,11 +4958,11 @@
                 "properties": {
                     "occurredAt": {
                         "type": "string",
-                        "description": "M\u1eb7c \u0111\u1ecbnh hi\u1ec7n t\u1ea1i"
+                        "description": "Mặc định hiện tại"
                     },
                     "amount": {
                         "type": "number",
-                        "description": "Ghi \u0111\u00e8 s\u1ed1 ti\u1ec1n c\u1ee7a m\u1eabu",
+                        "description": "Ghi đè số tiền của mẫu",
                         "minimum": 1,
                         "maximum": 10000000000000
                     }
@@ -4905,17 +5004,17 @@
                     },
                     "interval": {
                         "type": "number",
-                        "description": "M\u1ed7i `interval` k\u1ef3 m\u1ed9t l\u1ea7n (vd WEEKLY + 2 = 2 tu\u1ea7n/l\u1ea7n)",
+                        "description": "Mỗi `interval` kỳ một lần (vd WEEKLY + 2 = 2 tuần/lần)",
                         "minimum": 1,
                         "maximum": 365
                     },
                     "startDate": {
                         "type": "string",
-                        "description": "K\u1ef3 \u0111\u1ea7u ti\u00ean (ISO). Ng\u00e0y + gi\u1edd theo gi\u1edd VN \u0111\u01b0\u1ee3c gi\u1eef cho m\u1ecdi k\u1ef3. \u1ede qu\u00e1 kh\u1ee9 => c\u00e1c k\u1ef3 \u0111\u00e3 qua \u0111\u01b0\u1ee3c sinh b\u00f9."
+                        "description": "Kỳ đầu tiên (ISO). Ngày + giờ theo giờ VN được giữ cho mọi kỳ. Ở quá khứ => các kỳ đã qua được sinh bù."
                     },
                     "endDate": {
                         "type": "string",
-                        "description": "Sinh t\u1edbi h\u1ebft ng\u00e0y n\u00e0y (gi\u1edd VN), b\u1ecf tr\u1ed1ng = kh\u00f4ng h\u1ea1n"
+                        "description": "Sinh tới hết ngày này (giờ VN), bỏ trống = không hạn"
                     }
                 },
                 "required": [
@@ -4972,7 +5071,7 @@
                     "endDate": {
                         "type": "string",
                         "nullable": true,
-                        "description": "null => b\u1ecf h\u1ea1n"
+                        "description": "null => bỏ hạn"
                     }
                 }
             },
@@ -5036,7 +5135,7 @@
                     },
                     "pinned": {
                         "type": "boolean",
-                        "description": "Ghim: kh\u00f4ng b\u1ecb t\u1ef1 l\u01b0u tr\u1eef khi \u0111\u1ea1t gi\u1edbi h\u1ea1n s\u1ed1 h\u1ed9i tho\u1ea1i"
+                        "description": "Ghim: không bị tự lưu trữ khi đạt giới hạn số hội thoại"
                     }
                 }
             },
@@ -5045,7 +5144,7 @@
                 "properties": {
                     "text": {
                         "type": "string",
-                        "description": "C\u00e2u c\u1ee7a ng\u01b0\u1eddi d\u00f9ng (1\u20132000 k\u00fd t\u1ef1)",
+                        "description": "Câu của người dùng (1–2000 ký tự)",
                         "minLength": 1,
                         "maxLength": 2000
                     }
@@ -5060,7 +5159,7 @@
                     "payload": {
                         "type": "object",
                         "additionalProperties": true,
-                        "description": "B\u1ea3n \u0111\u00e3 s\u1eeda (c\u00f9ng d\u1ea1ng `payload` c\u1ee7a nh\u00e1p). B\u1ecf tr\u1ed1ng = x\u00e1c nh\u1eadn nguy\u00ean nh\u00e1p"
+                        "description": "Bản đã sửa (cùng dạng `payload` của nháp). Bỏ trống = xác nhận nguyên nháp"
                     }
                 }
             },
@@ -5069,7 +5168,7 @@
                 "properties": {
                     "rating": {
                         "type": "number",
-                        "description": "1 = th\u00edch, -1 = kh\u00f4ng th\u00edch",
+                        "description": "1 = thích, -1 = không thích",
                         "enum": [
                             1,
                             -1
@@ -5089,7 +5188,7 @@
                 "properties": {
                     "skill": {
                         "type": "string",
-                        "description": "T\u00ean skill \u0111\u00fang \u00fd ng\u01b0\u1eddi d\u00f9ng (xem GET /ai/skills)",
+                        "description": "Tên skill đúng ý người dùng (xem GET /ai/skills)",
                         "minLength": 1,
                         "maxLength": 60
                     }
@@ -5103,7 +5202,7 @@
                 "properties": {
                     "shareExamples": {
                         "type": "boolean",
-                        "description": "\u0110\u1ed3ng \u00fd g\u00f3p v\u00ed d\u1ee5 \u0111\u00e3 \u1ea9n danh v\u00e0o kho chung (l\u01b0u th\u1eddi \u0111i\u1ec3m \u0111\u1ed3ng \u00fd; t\u1eaft b\u1ea5t c\u1ee9 l\u00fac n\u00e0o)"
+                        "description": "Đồng ý góp ví dụ đã ẩn danh vào kho chung (lưu thời điểm đồng ý; tắt bất cứ lúc nào)"
                     }
                 },
                 "required": [
@@ -5115,7 +5214,7 @@
                 "properties": {
                     "url": {
                         "type": "string",
-                        "description": "B\u1ecf tr\u1ed1ng = d\u00f9ng c\u1ea5u h\u00ecnh \u0111\u00e3 l\u01b0u (cho ph\u00e9p th\u1eed \u0111\u1ecba ch\u1ec9 / model \u0111ang s\u1eeda tr\u01b0\u1edbc khi l\u01b0u)",
+                        "description": "Bỏ trống = dùng cấu hình đã lưu (cho phép thử địa chỉ / model đang sửa trước khi lưu)",
                         "maxLength": 300
                     },
                     "chatModel": {

@@ -2,7 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/formatting/vietnam_time.dart';
 import '../../categories/data/category_models.dart';
+import '../../ai/data/ai_repository.dart';
+import '../../categories/application/categories_service.dart';
 import '../../home/application/home_service.dart';
+import '../../ocr/ocr_scan.dart';
+import '../../wallets/application/wallets_service.dart';
 import '../../home/data/home_models.dart';
 import '../../quick_templates/data/quick_template_models.dart';
 import '../../quick_templates/data/quick_template_repository.dart';
@@ -110,6 +114,66 @@ class TransactionEntryNotifier extends Notifier<TransactionEntryState> {
             )
           : null,
     );
+  }
+
+  /// Điền từ nháp Quét hóa đơn; danh mục / ví tìm theo id trong danh sách của user.
+  Future<void> initFromOcr(Map<String, dynamic> item) async {
+    final income = item['type'] == 'INCOME';
+    final date = DateTime.tryParse('${item['date'] ?? ''}');
+    state = TransactionEntryState(
+      type: income ? TransactionType.income : TransactionType.expense,
+      digits: '${(item['amount'] as num?)?.toInt() ?? 0}',
+      note: (item['title'] as String?) ?? '',
+      occurredAt: date != null
+          ? VietnamTime.fromDateTime(
+              DateTime(date.year, date.month, date.day, VietnamTime.now().hour, VietnamTime.now().minute),
+            )
+          : VietnamTime.now(),
+    );
+    final categories = await ref.read(
+      categoriesProvider(income ? 'INCOME' : 'EXPENSE').future,
+    );
+    final wallets = await ref.read(walletsProvider.future);
+    final cat = categories.where((c) => c.id == item['categoryId']).firstOrNull;
+    final wal = item['walletGuessed'] == true
+        ? null
+        : wallets.where((w) => w.id == item['walletId']).firstOrNull;
+    state = state.copyWith(selectedCategory: cat, selectedWallet: wal);
+  }
+
+  /// Lưu từ màn Ghi giao dịch mở bằng "Sửa": xác nhận nháp với nội dung đã sửa (admin thấy là "sửa rồi lưu").
+  Future<bool> submitOcrDraft(OcrDraftEdit draft) async {
+    if (state.amount <= 0 || state.selectedCategory == null || state.selectedWallet == null) {
+      state = state.copyWith(errorMessage: 'Vui lòng nhập số tiền, chọn danh mục và ví');
+      return false;
+    }
+    state = state.copyWith(isSaving: true, errorMessage: null);
+    try {
+      final note = state.note.trim();
+      final d = state.occurredAt;
+      final item = {
+        ...draft.item,
+        'title': note.isNotEmpty ? note : state.selectedCategory!.name,
+        'amount': state.amount,
+        'type': state.type == TransactionType.income ? 'INCOME' : 'EXPENSE',
+        'categoryId': state.selectedCategory!.id,
+        'categoryName': state.selectedCategory!.name,
+        'walletId': state.selectedWallet!.id,
+        'walletName': state.selectedWallet!.name,
+        'walletGuessed': false,
+        'date': '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}',
+      };
+      await ref.read(aiRepositoryProvider).confirmDraft(
+        draft.draftId,
+        payload: {'items': [item]},
+      );
+      ref.read(homeControllerProvider.notifier).load(refresh: true);
+      state = state.copyWith(isSaving: false);
+      return true;
+    } catch (_) {
+      state = state.copyWith(isSaving: false, errorMessage: 'Lưu giao dịch thất bại. Vui lòng thử lại.');
+      return false;
+    }
   }
 
   void appendDigit(String value) {

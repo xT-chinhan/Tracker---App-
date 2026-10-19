@@ -15,7 +15,7 @@ Nhánh này (`app-mobile`) là nơi dựng app di động cho người dùng cu�
 | Design token → Flutter | `design/tokens.md` | Màu, chữ, khoảng cách, bo góc, bóng, motion map 1:1 sang `ThemeData` + `ThemeExtension` |
 | Nguyên tắc thiết kế | `design/DESIGN.md` | |
 | Danh sách API + luật nghiệp vụ | `backend/README.md` (mục "Endpoint", "Nghiệp vụ v1", "Trợ lý AI", "Cấu hình hệ thống") | Luật nghiệp vụ nằm ở backend, app không tự tính lại |
-| Đặc tả OpenAPI (86 endpoint) | `mobile/openapi.json` | Dùng để sinh client Dart. Bản sống: `http://<máy-chạy-API>:3000/docs` (Swagger UI) và `/docs/openapi.json` |
+| Đặc tả OpenAPI (88 endpoint) | `mobile/openapi.json` | Dùng để sinh client Dart. Bản sống: `http://<máy-chạy-API>:3000/docs` (Swagger UI) và `/docs/openapi.json` |
 
 ---
 
@@ -128,6 +128,17 @@ Trường chính xác của từng body / response: xem Swagger (`/docs`) hoặc
 | Cài đặt › Trợ lý AI | `GET /ai/usage` (lượt hôm nay / hạn mức), `GET/DELETE /ai/memory[/:id]`, `GET/PUT /ai/settings` `{shareExamples}` (hỏi đồng ý **một lần**, tắt được) |
 
 Luật: trợ lý chỉ tạo nháp, **không bao giờ tự ghi**; mọi thao tác có hậu quả phải qua nút Xác nhận của người dùng.
+
+### Quét hóa đơn (ĐÃ LÀM, ảnh `40-ocr-*`, code `app/lib/features/ocr/ocr_scan.dart`)
+| Màn | API |
+|---|---|
+| Lối vào: menu nhấn giữ ＋ ("Quét hóa đơn · Mới"), nút quét ở Ghi giao dịch | ẩn khi `GET /config/public` → `ai.ocr.enabled = false` |
+| Sheet chọn ảnh / hết lượt | `GET /ai/usage` → `ocrToday`, `ocrDailyLimit`, `resetAt`. Ảnh thu nhỏ trên máy theo `ai.ocr.maxSide` (`image_picker`) |
+| Đọc ảnh | `POST /ai/conversations/:id/images` multipart `image` (jpeg/png/webp ≤10MB) → `{userMessage, message, draft, ocr}`. `draft` = nháp giao dịch như chat; `ocr` = phần đọc được (`kind, amount, date, merchant, sender, recipient, note, bank, reason, ms`) để hiện cả khi không đọc ra số tiền (`reason`: `no_amount` / `not_document` / `error`) |
+| Lưu / Sửa / Hủy | Lưu = `POST /ai/drafts/:id/confirm` (khóa nút khi `walletGuessed` hoặc chưa có danh mục); Sửa = mở Ghi giao dịch điền sẵn, lưu bằng confirm có `payload`; Hủy = `/cancel` |
+| Lỗi | 403 `FEATURE_DISABLED` (`feature: "ocr"`), 429 `AI_OCR_DAILY_LIMIT` (`Retry-After`), 400 ảnh lỗi / sai định dạng |
+
+Thu hay chi do máy chủ quyết: người nhận trùng tên tài khoản → khoản thu. Ảnh không lưu trên máy chủ; ảnh không tính vào hạn mức tin nhắn chat.
 
 ---
 

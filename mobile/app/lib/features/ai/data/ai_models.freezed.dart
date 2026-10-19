@@ -2703,7 +2703,7 @@ $AiDraftItemCopyWith<$Res>? get draft {
 /// @nodoc
 mixin _$AiUsage {
 
-@JsonKey(fromJson: _toInt) int get messagesToday;@JsonKey(fromJson: _toInt) int get dailyMessageLimit;@JsonKey(fromJson: _toInt) int get activeConversations;@JsonKey(fromJson: _toInt) int get maxConversations; DateTime? get resetAt;
+@JsonKey(fromJson: _toInt) int get messagesToday;@JsonKey(fromJson: _toInt) int get dailyMessageLimit;@JsonKey(fromJson: _toInt) int get activeConversations;@JsonKey(fromJson: _toInt) int get maxConversations;@JsonKey(fromJson: _toInt) int get ocrToday;@JsonKey(fromJson: _toInt) int get ocrDailyLimit; DateTime? get resetAt;
 /// Create a copy of AiUsage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2716,16 +2716,16 @@ $AiUsageCopyWith<AiUsage> get copyWith => _$AiUsageCopyWithImpl<AiUsage>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiUsage&&(identical(other.messagesToday, messagesToday) || other.messagesToday == messagesToday)&&(identical(other.dailyMessageLimit, dailyMessageLimit) || other.dailyMessageLimit == dailyMessageLimit)&&(identical(other.activeConversations, activeConversations) || other.activeConversations == activeConversations)&&(identical(other.maxConversations, maxConversations) || other.maxConversations == maxConversations)&&(identical(other.resetAt, resetAt) || other.resetAt == resetAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiUsage&&(identical(other.messagesToday, messagesToday) || other.messagesToday == messagesToday)&&(identical(other.dailyMessageLimit, dailyMessageLimit) || other.dailyMessageLimit == dailyMessageLimit)&&(identical(other.activeConversations, activeConversations) || other.activeConversations == activeConversations)&&(identical(other.maxConversations, maxConversations) || other.maxConversations == maxConversations)&&(identical(other.ocrToday, ocrToday) || other.ocrToday == ocrToday)&&(identical(other.ocrDailyLimit, ocrDailyLimit) || other.ocrDailyLimit == ocrDailyLimit)&&(identical(other.resetAt, resetAt) || other.resetAt == resetAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,messagesToday,dailyMessageLimit,activeConversations,maxConversations,resetAt);
+int get hashCode => Object.hash(runtimeType,messagesToday,dailyMessageLimit,activeConversations,maxConversations,ocrToday,ocrDailyLimit,resetAt);
 
 @override
 String toString() {
-  return 'AiUsage(messagesToday: $messagesToday, dailyMessageLimit: $dailyMessageLimit, activeConversations: $activeConversations, maxConversations: $maxConversations, resetAt: $resetAt)';
+  return 'AiUsage(messagesToday: $messagesToday, dailyMessageLimit: $dailyMessageLimit, activeConversations: $activeConversations, maxConversations: $maxConversations, ocrToday: $ocrToday, ocrDailyLimit: $ocrDailyLimit, resetAt: $resetAt)';
 }
 
 
@@ -2736,7 +2736,7 @@ abstract mixin class $AiUsageCopyWith<$Res>  {
   factory $AiUsageCopyWith(AiUsage value, $Res Function(AiUsage) _then) = _$AiUsageCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: _toInt) int messagesToday,@JsonKey(fromJson: _toInt) int dailyMessageLimit,@JsonKey(fromJson: _toInt) int activeConversations,@JsonKey(fromJson: _toInt) int maxConversations, DateTime? resetAt
+@JsonKey(fromJson: _toInt) int messagesToday,@JsonKey(fromJson: _toInt) int dailyMessageLimit,@JsonKey(fromJson: _toInt) int activeConversations,@JsonKey(fromJson: _toInt) int maxConversations,@JsonKey(fromJson: _toInt) int ocrToday,@JsonKey(fromJson: _toInt) int ocrDailyLimit, DateTime? resetAt
 });
 
 
@@ -2753,12 +2753,14 @@ class _$AiUsageCopyWithImpl<$Res>
 
 /// Create a copy of AiUsage
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? messagesToday = null,Object? dailyMessageLimit = null,Object? activeConversations = null,Object? maxConversations = null,Object? resetAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? messagesToday = null,Object? dailyMessageLimit = null,Object? activeConversations = null,Object? maxConversations = null,Object? ocrToday = null,Object? ocrDailyLimit = null,Object? resetAt = freezed,}) {
   return _then(_self.copyWith(
 messagesToday: null == messagesToday ? _self.messagesToday : messagesToday // ignore: cast_nullable_to_non_nullable
 as int,dailyMessageLimit: null == dailyMessageLimit ? _self.dailyMessageLimit : dailyMessageLimit // ignore: cast_nullable_to_non_nullable
 as int,activeConversations: null == activeConversations ? _self.activeConversations : activeConversations // ignore: cast_nullable_to_non_nullable
 as int,maxConversations: null == maxConversations ? _self.maxConversations : maxConversations // ignore: cast_nullable_to_non_nullable
+as int,ocrToday: null == ocrToday ? _self.ocrToday : ocrToday // ignore: cast_nullable_to_non_nullable
+as int,ocrDailyLimit: null == ocrDailyLimit ? _self.ocrDailyLimit : ocrDailyLimit // ignore: cast_nullable_to_non_nullable
 as int,resetAt: freezed == resetAt ? _self.resetAt : resetAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -2845,10 +2847,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _toInt)  int messagesToday, @JsonKey(fromJson: _toInt)  int dailyMessageLimit, @JsonKey(fromJson: _toInt)  int activeConversations, @JsonKey(fromJson: _toInt)  int maxConversations,  DateTime? resetAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _toInt)  int messagesToday, @JsonKey(fromJson: _toInt)  int dailyMessageLimit, @JsonKey(fromJson: _toInt)  int activeConversations, @JsonKey(fromJson: _toInt)  int maxConversations, @JsonKey(fromJson: _toInt)  int ocrToday, @JsonKey(fromJson: _toInt)  int ocrDailyLimit,  DateTime? resetAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AiUsage() when $default != null:
-return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversations,_that.maxConversations,_that.resetAt);case _:
+return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversations,_that.maxConversations,_that.ocrToday,_that.ocrDailyLimit,_that.resetAt);case _:
   return orElse();
 
 }
@@ -2866,10 +2868,10 @@ return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _toInt)  int messagesToday, @JsonKey(fromJson: _toInt)  int dailyMessageLimit, @JsonKey(fromJson: _toInt)  int activeConversations, @JsonKey(fromJson: _toInt)  int maxConversations,  DateTime? resetAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _toInt)  int messagesToday, @JsonKey(fromJson: _toInt)  int dailyMessageLimit, @JsonKey(fromJson: _toInt)  int activeConversations, @JsonKey(fromJson: _toInt)  int maxConversations, @JsonKey(fromJson: _toInt)  int ocrToday, @JsonKey(fromJson: _toInt)  int ocrDailyLimit,  DateTime? resetAt)  $default,) {final _that = this;
 switch (_that) {
 case _AiUsage():
-return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversations,_that.maxConversations,_that.resetAt);case _:
+return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversations,_that.maxConversations,_that.ocrToday,_that.ocrDailyLimit,_that.resetAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2886,10 +2888,10 @@ return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: _toInt)  int messagesToday, @JsonKey(fromJson: _toInt)  int dailyMessageLimit, @JsonKey(fromJson: _toInt)  int activeConversations, @JsonKey(fromJson: _toInt)  int maxConversations,  DateTime? resetAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: _toInt)  int messagesToday, @JsonKey(fromJson: _toInt)  int dailyMessageLimit, @JsonKey(fromJson: _toInt)  int activeConversations, @JsonKey(fromJson: _toInt)  int maxConversations, @JsonKey(fromJson: _toInt)  int ocrToday, @JsonKey(fromJson: _toInt)  int ocrDailyLimit,  DateTime? resetAt)?  $default,) {final _that = this;
 switch (_that) {
 case _AiUsage() when $default != null:
-return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversations,_that.maxConversations,_that.resetAt);case _:
+return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversations,_that.maxConversations,_that.ocrToday,_that.ocrDailyLimit,_that.resetAt);case _:
   return null;
 
 }
@@ -2901,13 +2903,15 @@ return $default(_that.messagesToday,_that.dailyMessageLimit,_that.activeConversa
 @JsonSerializable()
 
 class _AiUsage implements AiUsage {
-  const _AiUsage({@JsonKey(fromJson: _toInt) this.messagesToday = 0, @JsonKey(fromJson: _toInt) this.dailyMessageLimit = 30, @JsonKey(fromJson: _toInt) this.activeConversations = 0, @JsonKey(fromJson: _toInt) this.maxConversations = 50, this.resetAt});
+  const _AiUsage({@JsonKey(fromJson: _toInt) this.messagesToday = 0, @JsonKey(fromJson: _toInt) this.dailyMessageLimit = 30, @JsonKey(fromJson: _toInt) this.activeConversations = 0, @JsonKey(fromJson: _toInt) this.maxConversations = 50, @JsonKey(fromJson: _toInt) this.ocrToday = 0, @JsonKey(fromJson: _toInt) this.ocrDailyLimit = 20, this.resetAt});
   factory _AiUsage.fromJson(Map<String, dynamic> json) => _$AiUsageFromJson(json);
 
 @override@JsonKey(fromJson: _toInt) final  int messagesToday;
 @override@JsonKey(fromJson: _toInt) final  int dailyMessageLimit;
 @override@JsonKey(fromJson: _toInt) final  int activeConversations;
 @override@JsonKey(fromJson: _toInt) final  int maxConversations;
+@override@JsonKey(fromJson: _toInt) final  int ocrToday;
+@override@JsonKey(fromJson: _toInt) final  int ocrDailyLimit;
 @override final  DateTime? resetAt;
 
 /// Create a copy of AiUsage
@@ -2923,16 +2927,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiUsage&&(identical(other.messagesToday, messagesToday) || other.messagesToday == messagesToday)&&(identical(other.dailyMessageLimit, dailyMessageLimit) || other.dailyMessageLimit == dailyMessageLimit)&&(identical(other.activeConversations, activeConversations) || other.activeConversations == activeConversations)&&(identical(other.maxConversations, maxConversations) || other.maxConversations == maxConversations)&&(identical(other.resetAt, resetAt) || other.resetAt == resetAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiUsage&&(identical(other.messagesToday, messagesToday) || other.messagesToday == messagesToday)&&(identical(other.dailyMessageLimit, dailyMessageLimit) || other.dailyMessageLimit == dailyMessageLimit)&&(identical(other.activeConversations, activeConversations) || other.activeConversations == activeConversations)&&(identical(other.maxConversations, maxConversations) || other.maxConversations == maxConversations)&&(identical(other.ocrToday, ocrToday) || other.ocrToday == ocrToday)&&(identical(other.ocrDailyLimit, ocrDailyLimit) || other.ocrDailyLimit == ocrDailyLimit)&&(identical(other.resetAt, resetAt) || other.resetAt == resetAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,messagesToday,dailyMessageLimit,activeConversations,maxConversations,resetAt);
+int get hashCode => Object.hash(runtimeType,messagesToday,dailyMessageLimit,activeConversations,maxConversations,ocrToday,ocrDailyLimit,resetAt);
 
 @override
 String toString() {
-  return 'AiUsage(messagesToday: $messagesToday, dailyMessageLimit: $dailyMessageLimit, activeConversations: $activeConversations, maxConversations: $maxConversations, resetAt: $resetAt)';
+  return 'AiUsage(messagesToday: $messagesToday, dailyMessageLimit: $dailyMessageLimit, activeConversations: $activeConversations, maxConversations: $maxConversations, ocrToday: $ocrToday, ocrDailyLimit: $ocrDailyLimit, resetAt: $resetAt)';
 }
 
 
@@ -2943,7 +2947,7 @@ abstract mixin class _$AiUsageCopyWith<$Res> implements $AiUsageCopyWith<$Res> {
   factory _$AiUsageCopyWith(_AiUsage value, $Res Function(_AiUsage) _then) = __$AiUsageCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: _toInt) int messagesToday,@JsonKey(fromJson: _toInt) int dailyMessageLimit,@JsonKey(fromJson: _toInt) int activeConversations,@JsonKey(fromJson: _toInt) int maxConversations, DateTime? resetAt
+@JsonKey(fromJson: _toInt) int messagesToday,@JsonKey(fromJson: _toInt) int dailyMessageLimit,@JsonKey(fromJson: _toInt) int activeConversations,@JsonKey(fromJson: _toInt) int maxConversations,@JsonKey(fromJson: _toInt) int ocrToday,@JsonKey(fromJson: _toInt) int ocrDailyLimit, DateTime? resetAt
 });
 
 
@@ -2960,12 +2964,14 @@ class __$AiUsageCopyWithImpl<$Res>
 
 /// Create a copy of AiUsage
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? messagesToday = null,Object? dailyMessageLimit = null,Object? activeConversations = null,Object? maxConversations = null,Object? resetAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? messagesToday = null,Object? dailyMessageLimit = null,Object? activeConversations = null,Object? maxConversations = null,Object? ocrToday = null,Object? ocrDailyLimit = null,Object? resetAt = freezed,}) {
   return _then(_AiUsage(
 messagesToday: null == messagesToday ? _self.messagesToday : messagesToday // ignore: cast_nullable_to_non_nullable
 as int,dailyMessageLimit: null == dailyMessageLimit ? _self.dailyMessageLimit : dailyMessageLimit // ignore: cast_nullable_to_non_nullable
 as int,activeConversations: null == activeConversations ? _self.activeConversations : activeConversations // ignore: cast_nullable_to_non_nullable
 as int,maxConversations: null == maxConversations ? _self.maxConversations : maxConversations // ignore: cast_nullable_to_non_nullable
+as int,ocrToday: null == ocrToday ? _self.ocrToday : ocrToday // ignore: cast_nullable_to_non_nullable
+as int,ocrDailyLimit: null == ocrDailyLimit ? _self.ocrDailyLimit : ocrDailyLimit // ignore: cast_nullable_to_non_nullable
 as int,resetAt: freezed == resetAt ? _self.resetAt : resetAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

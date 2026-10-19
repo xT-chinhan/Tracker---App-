@@ -992,7 +992,7 @@ as bool,
 /// @nodoc
 mixin _$AiPublicConfig {
 
- bool get enabled; int get dailyMessageLimitPerUser; int get maxConversationsPerUser;
+ bool get enabled; int get dailyMessageLimitPerUser; int get maxConversationsPerUser; AiOcrPublicConfig get ocr;
 /// Create a copy of AiPublicConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1005,16 +1005,16 @@ $AiPublicConfigCopyWith<AiPublicConfig> get copyWith => _$AiPublicConfigCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.dailyMessageLimitPerUser, dailyMessageLimitPerUser) || other.dailyMessageLimitPerUser == dailyMessageLimitPerUser)&&(identical(other.maxConversationsPerUser, maxConversationsPerUser) || other.maxConversationsPerUser == maxConversationsPerUser));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.dailyMessageLimitPerUser, dailyMessageLimitPerUser) || other.dailyMessageLimitPerUser == dailyMessageLimitPerUser)&&(identical(other.maxConversationsPerUser, maxConversationsPerUser) || other.maxConversationsPerUser == maxConversationsPerUser)&&(identical(other.ocr, ocr) || other.ocr == ocr));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,enabled,dailyMessageLimitPerUser,maxConversationsPerUser);
+int get hashCode => Object.hash(runtimeType,enabled,dailyMessageLimitPerUser,maxConversationsPerUser,ocr);
 
 @override
 String toString() {
-  return 'AiPublicConfig(enabled: $enabled, dailyMessageLimitPerUser: $dailyMessageLimitPerUser, maxConversationsPerUser: $maxConversationsPerUser)';
+  return 'AiPublicConfig(enabled: $enabled, dailyMessageLimitPerUser: $dailyMessageLimitPerUser, maxConversationsPerUser: $maxConversationsPerUser, ocr: $ocr)';
 }
 
 
@@ -1025,11 +1025,11 @@ abstract mixin class $AiPublicConfigCopyWith<$Res>  {
   factory $AiPublicConfigCopyWith(AiPublicConfig value, $Res Function(AiPublicConfig) _then) = _$AiPublicConfigCopyWithImpl;
 @useResult
 $Res call({
- bool enabled, int dailyMessageLimitPerUser, int maxConversationsPerUser
+ bool enabled, int dailyMessageLimitPerUser, int maxConversationsPerUser, AiOcrPublicConfig ocr
 });
 
 
-
+$AiOcrPublicConfigCopyWith<$Res> get ocr;
 
 }
 /// @nodoc
@@ -1042,15 +1042,25 @@ class _$AiPublicConfigCopyWithImpl<$Res>
 
 /// Create a copy of AiPublicConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? dailyMessageLimitPerUser = null,Object? maxConversationsPerUser = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? dailyMessageLimitPerUser = null,Object? maxConversationsPerUser = null,Object? ocr = null,}) {
   return _then(_self.copyWith(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,dailyMessageLimitPerUser: null == dailyMessageLimitPerUser ? _self.dailyMessageLimitPerUser : dailyMessageLimitPerUser // ignore: cast_nullable_to_non_nullable
 as int,maxConversationsPerUser: null == maxConversationsPerUser ? _self.maxConversationsPerUser : maxConversationsPerUser // ignore: cast_nullable_to_non_nullable
-as int,
+as int,ocr: null == ocr ? _self.ocr : ocr // ignore: cast_nullable_to_non_nullable
+as AiOcrPublicConfig,
   ));
 }
-
+/// Create a copy of AiPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AiOcrPublicConfigCopyWith<$Res> get ocr {
+  
+  return $AiOcrPublicConfigCopyWith<$Res>(_self.ocr, (value) {
+    return _then(_self.copyWith(ocr: value));
+  });
+}
 }
 
 
@@ -1132,10 +1142,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  int dailyMessageLimitPerUser,  int maxConversationsPerUser)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  int dailyMessageLimitPerUser,  int maxConversationsPerUser,  AiOcrPublicConfig ocr)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AiPublicConfig() when $default != null:
-return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversationsPerUser);case _:
+return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversationsPerUser,_that.ocr);case _:
   return orElse();
 
 }
@@ -1153,10 +1163,10 @@ return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversati
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  int dailyMessageLimitPerUser,  int maxConversationsPerUser)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  int dailyMessageLimitPerUser,  int maxConversationsPerUser,  AiOcrPublicConfig ocr)  $default,) {final _that = this;
 switch (_that) {
 case _AiPublicConfig():
-return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversationsPerUser);case _:
+return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversationsPerUser,_that.ocr);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1173,10 +1183,10 @@ return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversati
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  int dailyMessageLimitPerUser,  int maxConversationsPerUser)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  int dailyMessageLimitPerUser,  int maxConversationsPerUser,  AiOcrPublicConfig ocr)?  $default,) {final _that = this;
 switch (_that) {
 case _AiPublicConfig() when $default != null:
-return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversationsPerUser);case _:
+return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversationsPerUser,_that.ocr);case _:
   return null;
 
 }
@@ -1188,12 +1198,13 @@ return $default(_that.enabled,_that.dailyMessageLimitPerUser,_that.maxConversati
 @JsonSerializable()
 
 class _AiPublicConfig implements AiPublicConfig {
-  const _AiPublicConfig({required this.enabled, required this.dailyMessageLimitPerUser, required this.maxConversationsPerUser});
+  const _AiPublicConfig({required this.enabled, required this.dailyMessageLimitPerUser, required this.maxConversationsPerUser, this.ocr = const AiOcrPublicConfig()});
   factory _AiPublicConfig.fromJson(Map<String, dynamic> json) => _$AiPublicConfigFromJson(json);
 
 @override final  bool enabled;
 @override final  int dailyMessageLimitPerUser;
 @override final  int maxConversationsPerUser;
+@override@JsonKey() final  AiOcrPublicConfig ocr;
 
 /// Create a copy of AiPublicConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -1208,16 +1219,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.dailyMessageLimitPerUser, dailyMessageLimitPerUser) || other.dailyMessageLimitPerUser == dailyMessageLimitPerUser)&&(identical(other.maxConversationsPerUser, maxConversationsPerUser) || other.maxConversationsPerUser == maxConversationsPerUser));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.dailyMessageLimitPerUser, dailyMessageLimitPerUser) || other.dailyMessageLimitPerUser == dailyMessageLimitPerUser)&&(identical(other.maxConversationsPerUser, maxConversationsPerUser) || other.maxConversationsPerUser == maxConversationsPerUser)&&(identical(other.ocr, ocr) || other.ocr == ocr));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,enabled,dailyMessageLimitPerUser,maxConversationsPerUser);
+int get hashCode => Object.hash(runtimeType,enabled,dailyMessageLimitPerUser,maxConversationsPerUser,ocr);
 
 @override
 String toString() {
-  return 'AiPublicConfig(enabled: $enabled, dailyMessageLimitPerUser: $dailyMessageLimitPerUser, maxConversationsPerUser: $maxConversationsPerUser)';
+  return 'AiPublicConfig(enabled: $enabled, dailyMessageLimitPerUser: $dailyMessageLimitPerUser, maxConversationsPerUser: $maxConversationsPerUser, ocr: $ocr)';
 }
 
 
@@ -1228,11 +1239,11 @@ abstract mixin class _$AiPublicConfigCopyWith<$Res> implements $AiPublicConfigCo
   factory _$AiPublicConfigCopyWith(_AiPublicConfig value, $Res Function(_AiPublicConfig) _then) = __$AiPublicConfigCopyWithImpl;
 @override @useResult
 $Res call({
- bool enabled, int dailyMessageLimitPerUser, int maxConversationsPerUser
+ bool enabled, int dailyMessageLimitPerUser, int maxConversationsPerUser, AiOcrPublicConfig ocr
 });
 
 
-
+@override $AiOcrPublicConfigCopyWith<$Res> get ocr;
 
 }
 /// @nodoc
@@ -1245,11 +1256,290 @@ class __$AiPublicConfigCopyWithImpl<$Res>
 
 /// Create a copy of AiPublicConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? dailyMessageLimitPerUser = null,Object? maxConversationsPerUser = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? dailyMessageLimitPerUser = null,Object? maxConversationsPerUser = null,Object? ocr = null,}) {
   return _then(_AiPublicConfig(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,dailyMessageLimitPerUser: null == dailyMessageLimitPerUser ? _self.dailyMessageLimitPerUser : dailyMessageLimitPerUser // ignore: cast_nullable_to_non_nullable
 as int,maxConversationsPerUser: null == maxConversationsPerUser ? _self.maxConversationsPerUser : maxConversationsPerUser // ignore: cast_nullable_to_non_nullable
+as int,ocr: null == ocr ? _self.ocr : ocr // ignore: cast_nullable_to_non_nullable
+as AiOcrPublicConfig,
+  ));
+}
+
+/// Create a copy of AiPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AiOcrPublicConfigCopyWith<$Res> get ocr {
+  
+  return $AiOcrPublicConfigCopyWith<$Res>(_self.ocr, (value) {
+    return _then(_self.copyWith(ocr: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$AiOcrPublicConfig {
+
+ bool get enabled; int get dailyLimitPerUser; int get maxSide;
+/// Create a copy of AiOcrPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AiOcrPublicConfigCopyWith<AiOcrPublicConfig> get copyWith => _$AiOcrPublicConfigCopyWithImpl<AiOcrPublicConfig>(this as AiOcrPublicConfig, _$identity);
+
+  /// Serializes this AiOcrPublicConfig to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiOcrPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.dailyLimitPerUser, dailyLimitPerUser) || other.dailyLimitPerUser == dailyLimitPerUser)&&(identical(other.maxSide, maxSide) || other.maxSide == maxSide));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enabled,dailyLimitPerUser,maxSide);
+
+@override
+String toString() {
+  return 'AiOcrPublicConfig(enabled: $enabled, dailyLimitPerUser: $dailyLimitPerUser, maxSide: $maxSide)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AiOcrPublicConfigCopyWith<$Res>  {
+  factory $AiOcrPublicConfigCopyWith(AiOcrPublicConfig value, $Res Function(AiOcrPublicConfig) _then) = _$AiOcrPublicConfigCopyWithImpl;
+@useResult
+$Res call({
+ bool enabled, int dailyLimitPerUser, int maxSide
+});
+
+
+
+
+}
+/// @nodoc
+class _$AiOcrPublicConfigCopyWithImpl<$Res>
+    implements $AiOcrPublicConfigCopyWith<$Res> {
+  _$AiOcrPublicConfigCopyWithImpl(this._self, this._then);
+
+  final AiOcrPublicConfig _self;
+  final $Res Function(AiOcrPublicConfig) _then;
+
+/// Create a copy of AiOcrPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? dailyLimitPerUser = null,Object? maxSide = null,}) {
+  return _then(_self.copyWith(
+enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,dailyLimitPerUser: null == dailyLimitPerUser ? _self.dailyLimitPerUser : dailyLimitPerUser // ignore: cast_nullable_to_non_nullable
+as int,maxSide: null == maxSide ? _self.maxSide : maxSide // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [AiOcrPublicConfig].
+extension AiOcrPublicConfigPatterns on AiOcrPublicConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AiOcrPublicConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AiOcrPublicConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AiOcrPublicConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _AiOcrPublicConfig():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AiOcrPublicConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AiOcrPublicConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  int dailyLimitPerUser,  int maxSide)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AiOcrPublicConfig() when $default != null:
+return $default(_that.enabled,_that.dailyLimitPerUser,_that.maxSide);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  int dailyLimitPerUser,  int maxSide)  $default,) {final _that = this;
+switch (_that) {
+case _AiOcrPublicConfig():
+return $default(_that.enabled,_that.dailyLimitPerUser,_that.maxSide);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  int dailyLimitPerUser,  int maxSide)?  $default,) {final _that = this;
+switch (_that) {
+case _AiOcrPublicConfig() when $default != null:
+return $default(_that.enabled,_that.dailyLimitPerUser,_that.maxSide);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _AiOcrPublicConfig implements AiOcrPublicConfig {
+  const _AiOcrPublicConfig({this.enabled = false, this.dailyLimitPerUser = 20, this.maxSide = 768});
+  factory _AiOcrPublicConfig.fromJson(Map<String, dynamic> json) => _$AiOcrPublicConfigFromJson(json);
+
+@override@JsonKey() final  bool enabled;
+@override@JsonKey() final  int dailyLimitPerUser;
+@override@JsonKey() final  int maxSide;
+
+/// Create a copy of AiOcrPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AiOcrPublicConfigCopyWith<_AiOcrPublicConfig> get copyWith => __$AiOcrPublicConfigCopyWithImpl<_AiOcrPublicConfig>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$AiOcrPublicConfigToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiOcrPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.dailyLimitPerUser, dailyLimitPerUser) || other.dailyLimitPerUser == dailyLimitPerUser)&&(identical(other.maxSide, maxSide) || other.maxSide == maxSide));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enabled,dailyLimitPerUser,maxSide);
+
+@override
+String toString() {
+  return 'AiOcrPublicConfig(enabled: $enabled, dailyLimitPerUser: $dailyLimitPerUser, maxSide: $maxSide)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AiOcrPublicConfigCopyWith<$Res> implements $AiOcrPublicConfigCopyWith<$Res> {
+  factory _$AiOcrPublicConfigCopyWith(_AiOcrPublicConfig value, $Res Function(_AiOcrPublicConfig) _then) = __$AiOcrPublicConfigCopyWithImpl;
+@override @useResult
+$Res call({
+ bool enabled, int dailyLimitPerUser, int maxSide
+});
+
+
+
+
+}
+/// @nodoc
+class __$AiOcrPublicConfigCopyWithImpl<$Res>
+    implements _$AiOcrPublicConfigCopyWith<$Res> {
+  __$AiOcrPublicConfigCopyWithImpl(this._self, this._then);
+
+  final _AiOcrPublicConfig _self;
+  final $Res Function(_AiOcrPublicConfig) _then;
+
+/// Create a copy of AiOcrPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? dailyLimitPerUser = null,Object? maxSide = null,}) {
+  return _then(_AiOcrPublicConfig(
+enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,dailyLimitPerUser: null == dailyLimitPerUser ? _self.dailyLimitPerUser : dailyLimitPerUser // ignore: cast_nullable_to_non_nullable
+as int,maxSide: null == maxSide ? _self.maxSide : maxSide // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

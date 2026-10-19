@@ -238,6 +238,10 @@ _AiUsage _$AiUsageFromJson(Map<String, dynamic> json) => _AiUsage(
   maxConversations: json['maxConversations'] == null
       ? 50
       : _toInt(json['maxConversations']),
+  ocrToday: json['ocrToday'] == null ? 0 : _toInt(json['ocrToday']),
+  ocrDailyLimit: json['ocrDailyLimit'] == null
+      ? 20
+      : _toInt(json['ocrDailyLimit']),
   resetAt: json['resetAt'] == null
       ? null
       : DateTime.parse(json['resetAt'] as String),
@@ -248,6 +252,8 @@ Map<String, dynamic> _$AiUsageToJson(_AiUsage instance) => <String, dynamic>{
   'dailyMessageLimit': instance.dailyMessageLimit,
   'activeConversations': instance.activeConversations,
   'maxConversations': instance.maxConversations,
+  'ocrToday': instance.ocrToday,
+  'ocrDailyLimit': instance.ocrDailyLimit,
   'resetAt': instance.resetAt?.toIso8601String(),
 };
 
