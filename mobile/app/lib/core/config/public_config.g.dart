@@ -70,6 +70,7 @@ _FeatureConfig _$FeatureConfigFromJson(Map<String, dynamic> json) =>
       transfers: json['transfers'] as bool? ?? true,
       csvExport: json['csvExport'] as bool? ?? true,
       quickTemplates: json['quickTemplates'] as bool? ?? true,
+      bankNotifications: json['bankNotifications'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$FeatureConfigToJson(_FeatureConfig instance) =>
@@ -79,6 +80,7 @@ Map<String, dynamic> _$FeatureConfigToJson(_FeatureConfig instance) =>
       'transfers': instance.transfers,
       'csvExport': instance.csvExport,
       'quickTemplates': instance.quickTemplates,
+      'bankNotifications': instance.bankNotifications,
     };
 
 _AiPublicConfig _$AiPublicConfigFromJson(Map<String, dynamic> json) =>

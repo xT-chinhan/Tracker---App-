@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/ai/presentation/ai_chat_screen.dart';
+import '../features/bank_notifications/presentation/bank_pending_screen.dart';
+import '../features/bank_notifications/presentation/bank_settings_screen.dart';
 import '../features/ai/presentation/ai_conversations_screen.dart';
 import '../features/ai/presentation/ai_settings_screen.dart';
 import '../features/ai/presentation/archived_conversations_screen.dart';
@@ -198,6 +200,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/ai',
         builder: (context, state) => const AiConversationsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/bank-notifications',
+        builder: (context, state) => const BankSettingsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/bank-notifications/pending',
+        builder: (context, state) => const BankPendingScreen(),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

@@ -46,6 +46,8 @@ abstract class FeatureConfig with _$FeatureConfig {
     @Default(true) bool transfers,
     @Default(true) bool csvExport,
     @Default(true) bool quickTemplates,
+    // Chỉ Android: ghi từ thông báo ngân hàng (admin › Cấu hình › Nghiệp vụ). Thiếu trường = tắt.
+    @Default(false) bool bankNotifications,
   }) = _FeatureConfig;
 
   factory FeatureConfig.fromJson(Map<String, dynamic> json) =>

@@ -712,7 +712,8 @@ as DateTime?,
 /// @nodoc
 mixin _$FeatureConfig {
 
- bool get savingGoals; bool get recurring; bool get transfers; bool get csvExport; bool get quickTemplates;
+ bool get savingGoals; bool get recurring; bool get transfers; bool get csvExport; bool get quickTemplates;// Chỉ Android: ghi từ thông báo ngân hàng (admin › Cấu hình › Nghiệp vụ). Thiếu trường = tắt.
+ bool get bankNotifications;
 /// Create a copy of FeatureConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -725,16 +726,16 @@ $FeatureConfigCopyWith<FeatureConfig> get copyWith => _$FeatureConfigCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeatureConfig&&(identical(other.savingGoals, savingGoals) || other.savingGoals == savingGoals)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.transfers, transfers) || other.transfers == transfers)&&(identical(other.csvExport, csvExport) || other.csvExport == csvExport)&&(identical(other.quickTemplates, quickTemplates) || other.quickTemplates == quickTemplates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeatureConfig&&(identical(other.savingGoals, savingGoals) || other.savingGoals == savingGoals)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.transfers, transfers) || other.transfers == transfers)&&(identical(other.csvExport, csvExport) || other.csvExport == csvExport)&&(identical(other.quickTemplates, quickTemplates) || other.quickTemplates == quickTemplates)&&(identical(other.bankNotifications, bankNotifications) || other.bankNotifications == bankNotifications));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,savingGoals,recurring,transfers,csvExport,quickTemplates);
+int get hashCode => Object.hash(runtimeType,savingGoals,recurring,transfers,csvExport,quickTemplates,bankNotifications);
 
 @override
 String toString() {
-  return 'FeatureConfig(savingGoals: $savingGoals, recurring: $recurring, transfers: $transfers, csvExport: $csvExport, quickTemplates: $quickTemplates)';
+  return 'FeatureConfig(savingGoals: $savingGoals, recurring: $recurring, transfers: $transfers, csvExport: $csvExport, quickTemplates: $quickTemplates, bankNotifications: $bankNotifications)';
 }
 
 
@@ -745,7 +746,7 @@ abstract mixin class $FeatureConfigCopyWith<$Res>  {
   factory $FeatureConfigCopyWith(FeatureConfig value, $Res Function(FeatureConfig) _then) = _$FeatureConfigCopyWithImpl;
 @useResult
 $Res call({
- bool savingGoals, bool recurring, bool transfers, bool csvExport, bool quickTemplates
+ bool savingGoals, bool recurring, bool transfers, bool csvExport, bool quickTemplates, bool bankNotifications
 });
 
 
@@ -762,13 +763,14 @@ class _$FeatureConfigCopyWithImpl<$Res>
 
 /// Create a copy of FeatureConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? savingGoals = null,Object? recurring = null,Object? transfers = null,Object? csvExport = null,Object? quickTemplates = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? savingGoals = null,Object? recurring = null,Object? transfers = null,Object? csvExport = null,Object? quickTemplates = null,Object? bankNotifications = null,}) {
   return _then(_self.copyWith(
 savingGoals: null == savingGoals ? _self.savingGoals : savingGoals // ignore: cast_nullable_to_non_nullable
 as bool,recurring: null == recurring ? _self.recurring : recurring // ignore: cast_nullable_to_non_nullable
 as bool,transfers: null == transfers ? _self.transfers : transfers // ignore: cast_nullable_to_non_nullable
 as bool,csvExport: null == csvExport ? _self.csvExport : csvExport // ignore: cast_nullable_to_non_nullable
 as bool,quickTemplates: null == quickTemplates ? _self.quickTemplates : quickTemplates // ignore: cast_nullable_to_non_nullable
+as bool,bankNotifications: null == bankNotifications ? _self.bankNotifications : bankNotifications // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -854,10 +856,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool savingGoals,  bool recurring,  bool transfers,  bool csvExport,  bool quickTemplates)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool savingGoals,  bool recurring,  bool transfers,  bool csvExport,  bool quickTemplates,  bool bankNotifications)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FeatureConfig() when $default != null:
-return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExport,_that.quickTemplates);case _:
+return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExport,_that.quickTemplates,_that.bankNotifications);case _:
   return orElse();
 
 }
@@ -875,10 +877,10 @@ return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExpor
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool savingGoals,  bool recurring,  bool transfers,  bool csvExport,  bool quickTemplates)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool savingGoals,  bool recurring,  bool transfers,  bool csvExport,  bool quickTemplates,  bool bankNotifications)  $default,) {final _that = this;
 switch (_that) {
 case _FeatureConfig():
-return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExport,_that.quickTemplates);case _:
+return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExport,_that.quickTemplates,_that.bankNotifications);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -895,10 +897,10 @@ return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExpor
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool savingGoals,  bool recurring,  bool transfers,  bool csvExport,  bool quickTemplates)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool savingGoals,  bool recurring,  bool transfers,  bool csvExport,  bool quickTemplates,  bool bankNotifications)?  $default,) {final _that = this;
 switch (_that) {
 case _FeatureConfig() when $default != null:
-return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExport,_that.quickTemplates);case _:
+return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExport,_that.quickTemplates,_that.bankNotifications);case _:
   return null;
 
 }
@@ -910,7 +912,7 @@ return $default(_that.savingGoals,_that.recurring,_that.transfers,_that.csvExpor
 @JsonSerializable()
 
 class _FeatureConfig implements FeatureConfig {
-  const _FeatureConfig({this.savingGoals = true, this.recurring = true, this.transfers = true, this.csvExport = true, this.quickTemplates = true});
+  const _FeatureConfig({this.savingGoals = true, this.recurring = true, this.transfers = true, this.csvExport = true, this.quickTemplates = true, this.bankNotifications = false});
   factory _FeatureConfig.fromJson(Map<String, dynamic> json) => _$FeatureConfigFromJson(json);
 
 @override@JsonKey() final  bool savingGoals;
@@ -918,6 +920,8 @@ class _FeatureConfig implements FeatureConfig {
 @override@JsonKey() final  bool transfers;
 @override@JsonKey() final  bool csvExport;
 @override@JsonKey() final  bool quickTemplates;
+// Chỉ Android: ghi từ thông báo ngân hàng (admin › Cấu hình › Nghiệp vụ). Thiếu trường = tắt.
+@override@JsonKey() final  bool bankNotifications;
 
 /// Create a copy of FeatureConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -932,16 +936,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeatureConfig&&(identical(other.savingGoals, savingGoals) || other.savingGoals == savingGoals)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.transfers, transfers) || other.transfers == transfers)&&(identical(other.csvExport, csvExport) || other.csvExport == csvExport)&&(identical(other.quickTemplates, quickTemplates) || other.quickTemplates == quickTemplates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeatureConfig&&(identical(other.savingGoals, savingGoals) || other.savingGoals == savingGoals)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.transfers, transfers) || other.transfers == transfers)&&(identical(other.csvExport, csvExport) || other.csvExport == csvExport)&&(identical(other.quickTemplates, quickTemplates) || other.quickTemplates == quickTemplates)&&(identical(other.bankNotifications, bankNotifications) || other.bankNotifications == bankNotifications));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,savingGoals,recurring,transfers,csvExport,quickTemplates);
+int get hashCode => Object.hash(runtimeType,savingGoals,recurring,transfers,csvExport,quickTemplates,bankNotifications);
 
 @override
 String toString() {
-  return 'FeatureConfig(savingGoals: $savingGoals, recurring: $recurring, transfers: $transfers, csvExport: $csvExport, quickTemplates: $quickTemplates)';
+  return 'FeatureConfig(savingGoals: $savingGoals, recurring: $recurring, transfers: $transfers, csvExport: $csvExport, quickTemplates: $quickTemplates, bankNotifications: $bankNotifications)';
 }
 
 
@@ -952,7 +956,7 @@ abstract mixin class _$FeatureConfigCopyWith<$Res> implements $FeatureConfigCopy
   factory _$FeatureConfigCopyWith(_FeatureConfig value, $Res Function(_FeatureConfig) _then) = __$FeatureConfigCopyWithImpl;
 @override @useResult
 $Res call({
- bool savingGoals, bool recurring, bool transfers, bool csvExport, bool quickTemplates
+ bool savingGoals, bool recurring, bool transfers, bool csvExport, bool quickTemplates, bool bankNotifications
 });
 
 
@@ -969,13 +973,14 @@ class __$FeatureConfigCopyWithImpl<$Res>
 
 /// Create a copy of FeatureConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? savingGoals = null,Object? recurring = null,Object? transfers = null,Object? csvExport = null,Object? quickTemplates = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? savingGoals = null,Object? recurring = null,Object? transfers = null,Object? csvExport = null,Object? quickTemplates = null,Object? bankNotifications = null,}) {
   return _then(_FeatureConfig(
 savingGoals: null == savingGoals ? _self.savingGoals : savingGoals // ignore: cast_nullable_to_non_nullable
 as bool,recurring: null == recurring ? _self.recurring : recurring // ignore: cast_nullable_to_non_nullable
 as bool,transfers: null == transfers ? _self.transfers : transfers // ignore: cast_nullable_to_non_nullable
 as bool,csvExport: null == csvExport ? _self.csvExport : csvExport // ignore: cast_nullable_to_non_nullable
 as bool,quickTemplates: null == quickTemplates ? _self.quickTemplates : quickTemplates // ignore: cast_nullable_to_non_nullable
+as bool,bankNotifications: null == bankNotifications ? _self.bankNotifications : bankNotifications // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

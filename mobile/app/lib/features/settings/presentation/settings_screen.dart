@@ -9,6 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/formatting/money_formatter.dart';
 import '../../../core/theme/app_tokens.dart';
 import '../../auth/application/app_session.dart';
+import '../../bank_notifications/application/bank_notifications_controller.dart';
+import '../../bank_notifications/data/bank_notification_bridge.dart';
 import '../../categories/application/categories_service.dart';
 import '../../categories/presentation/category_picker_sheet.dart';
 import '../../home/application/home_service.dart';
@@ -115,6 +117,9 @@ class SettingsScreen extends ConsumerWidget {
     final quickTemplatesAsync = ref.watch(quickTemplatesProvider);
     final unreadNotifsCount = ref.watch(unreadCountProvider).value ?? 0;
     final versionAsync = ref.watch(appVersionProvider);
+    final bank = ref.watch(bankNotificationsProvider);
+    final showBank =
+        bankNotificationsSupported && (features?.bankNotifications ?? false);
 
     final totalBalanceStr = walletsAsync.maybeWhen(
       data: (d) => MoneyFormatter.format(d.totalBalance),
@@ -316,6 +321,20 @@ class SettingsScreen extends ConsumerWidget {
                     icon: LucideIcons.download,
                     title: 'Xuất dữ liệu CSV',
                     onTap: () => _handleExportCsv(context, ref),
+                  ),
+                ],
+                if (showBank) ...[
+                  const _RowDivider(),
+                  _buildSettingRow(
+                    icon: LucideIcons.bell_ring,
+                    title: 'Ghi từ thông báo ngân hàng',
+                    trailingText: bank.active
+                        ? 'Đang bật'
+                        : bank.enabled
+                        ? 'Cần cấp quyền'
+                        : 'Tắt',
+                    badgeCount: bank.pending.length,
+                    onTap: () => context.push('/bank-notifications'),
                   ),
                 ],
                 if (config?.ai.enabled ?? true) ...[

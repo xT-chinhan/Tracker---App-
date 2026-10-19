@@ -18,6 +18,9 @@ import '../../auth/application/app_session.dart';
 import '../../notifications/application/notifications_service.dart';
 import '../application/home_service.dart';
 import '../data/home_models.dart';
+import '../../../core/widgets/dashed_box.dart';
+import '../../bank_notifications/application/bank_notifications_controller.dart';
+import '../../bank_notifications/data/bank_notification_bridge.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -225,6 +228,9 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                   ],
+
+                  // Giao dịch từ thông báo ngân hàng chờ xác nhận (chỉ Android, khi có)
+                  const _BankPendingBanner(),
 
                   // Recent Transactions Section
                   const SizedBox(height: 20),
@@ -844,6 +850,75 @@ class _HomeSkeleton extends StatelessWidget {
           borderRadius: BorderRadius.circular(7),
         ),
       ],
+    );
+  }
+}
+
+/// Lối vào "Chờ xác nhận" khi có giao dịch phát hiện từ thông báo ngân hàng (viền nét đứt = chưa lưu).
+class _BankPendingBanner extends ConsumerStatefulWidget {
+  const _BankPendingBanner();
+
+  @override
+  ConsumerState<_BankPendingBanner> createState() => _BankPendingBannerState();
+}
+
+class _BankPendingBannerState extends ConsumerState<_BankPendingBanner> {
+  @override
+  void initState() {
+    super.initState();
+    if (bankNotificationsSupported) {
+      Future.microtask(
+        () => ref.read(bankNotificationsProvider.notifier).sync(),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final count = ref.watch(
+      bankNotificationsProvider.select((s) => s.active ? s.pending.length : 0),
+    );
+    if (count == 0) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: GestureDetector(
+        onTap: () => context.push('/bank-notifications/pending'),
+        child: DashedBox(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              const IconBubble(icon: LucideIcons.bell_ring),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$count giao dịch chờ xác nhận',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Từ thông báo ngân hàng, ví · chưa lưu',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                LucideIcons.chevron_right,
+                size: 18,
+                color: Color(0xFFA9A8A3),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

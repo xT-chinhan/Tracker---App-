@@ -32,6 +32,18 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- "Ghi từ thông báo ngân hàng": chỉ chạy khi người dùng bật trong app và cấp quyền Truy cập thông báo.
+             Không cần quyền nào khác (không foreground service, không khởi động cùng máy, không miễn tối ưu pin). -->
+        <service
+            android:name=".banknotif.BankNotificationListener"
+            android:label="Thu Chi · ghi từ thông báo ngân hàng"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

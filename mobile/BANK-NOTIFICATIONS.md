@@ -1,5 +1,13 @@
 # Tích hợp "Ghi từ thông báo ngân hàng" vào app Thu Chi (Android)
 
+> **Trạng thái (19/10/2026): đã tích hợp vào `mobile/app`.** Phần dưới là thiết kế ban đầu; code thật nằm ở:
+> - Android: `android/app/src/main/kotlin/vn/thuchi/app/banknotif/` (`BankNotificationListener.kt`, `BankNotificationChannels.kt`), service khai báo trong `AndroidManifest.xml`.
+> - Dart: `lib/features/bank_notifications/` (data: parser + model chép từ module, bridge, lưu trên máy; application: ánh xạ + controller; presentation: Cài đặt, thông báo dữ liệu, Chờ xác nhận). Lối vào: Cài đặt › Ghi từ thông báo ngân hàng, và thẻ trên Trang chủ khi có khoản chờ.
+> - Test: `test/features/bank_notifications/` (ánh xạ, chống trùng, nhiều thông báo cùng lúc, admin tắt, đăng xuất, thông báo dữ liệu).
+> - Khác thiết kế ban đầu: **bỏ hẳn foreground service, BootReceiver và quyền xin miễn tối ưu pin** (lý do ở `mobile/GOOGLE-PLAY.md` mục 1); ánh xạ ví dùng tên ngân hàng; xác nhận hàng loạt chỉ ghi các khoản đã đủ ví.
+> - Đưa lên Google Play: `mobile/GOOGLE-PLAY.md`. Hướng dẫn người dùng cấp quyền: `mobile/docs/huong-dan-cap-quyen-thong-bao.md`.
+> - Thử trên web không cần Android: build với `--dart-define=BANK_DEMO=true`, trong Cài đặt có nút "Thử với thông báo mẫu".
+
 Việc mới **M11**, bổ sung cho bảng chia việc M1–M10 ở `mobile/README.md` mục 8. Làm **sau M1 (khung), M2 (config/public) và M4 (form ghi giao dịch)**. Nhánh: `mobile/M11-bank-notifications`, mở Pull Request vào `app-mobile`.
 
 App đọc thông báo biến động số dư của app ngân hàng / ví trên máy (Vietcombank, MB, Techcombank, VPBank, ACB, TPBank, BIDV, MoMo, ZaloPay…). Từ đó app tạo **giao dịch chờ xác nhận**; người dùng bấm Xác nhận thì app mới ghi qua API.

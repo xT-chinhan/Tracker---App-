@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/theme/app_theme.dart';
 import '../features/auth/application/app_session.dart';
 import '../features/auth/application/bootstrap_service.dart';
+import '../features/bank_notifications/application/bank_notifications_controller.dart';
 import 'router.dart';
 
 class ThuChiApp extends ConsumerStatefulWidget {
@@ -37,7 +38,13 @@ class _ThuChiAppState extends ConsumerState<ThuChiApp>
         session.status == AppSessionStatus.updateRequired) {
       service.start().ignore();
     } else {
-      service.refreshConfig().ignore();
+      // Đọc lại cấu hình (admin có thể vừa tắt tính năng), rồi lấy thông báo ngân hàng giữ lúc app đóng
+      service
+          .refreshConfig()
+          .whenComplete(
+            () => ref.read(bankNotificationsProvider.notifier).sync(),
+          )
+          .ignore();
     }
   }
 
