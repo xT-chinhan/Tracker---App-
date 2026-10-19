@@ -6,7 +6,7 @@
 import type { Scope } from '../lib/contracts.js';
 
 export const USER_SKILLS = ['ghi-giao-dich', 'hoi-so-du', 'tong-ket-thang', 'kiem-tra-ngan-sach', 'tim-giao-dich', 'tien-do-tiet-kiem', 'goi-y-ngan-sach', 'meo-tiet-kiem', 'huong-dan', 'ngoai-pham-vi', 'hoi-lai'] as const;
-export const ADMIN_SKILLS = ['tong-quan-he-thong', 'tra-cuu-nguoi-dung', 'phat-hien-bat-thuong', 'soan-thong-bao', 'de-xuat-khoa', 'tom-tat-cau-hinh', 'huong-dan-quan-tri', 'ngoai-pham-vi', 'hoi-lai'] as const;
+export const ADMIN_SKILLS = ['tong-quan-he-thong', 'nguoi-dung-moi', 'tra-cuu-nguoi-dung', 'phat-hien-bat-thuong', 'soan-thong-bao', 'de-xuat-khoa', 'tom-tat-cau-hinh', 'huong-dan-quan-tri', 'ngoai-pham-vi', 'hoi-lai'] as const;
 export const SKILLS_BY_SCOPE: Record<Scope, readonly string[]> = { USER: USER_SKILLS, ADMIN: ADMIN_SKILLS };
 
 export const BANK: Record<Scope, Record<string, string[]>> = {
@@ -45,6 +45,8 @@ export const BANK: Record<Scope, Record<string, string[]>> = {
     'tong-quan-he-thong': ['tổng quan hệ thống', 'hệ thống hiện có bao nhiêu người dùng', 'tháng này có bao nhiêu tài khoản mới', 'tổng số giao dịch toàn hệ thống',
       'tình hình hệ thống hôm nay thế nào', 'thống kê người dùng đang hoạt động', 'tổng thu chi của toàn bộ người dùng 6 tháng', 'system overview please',
       'tong quan he thong thang nay', 'có bao nhiêu mục tiêu tiết kiệm đang chạy'],
+    'nguoi-dung-moi': ['người mới đăng ký chưa ghi giao dịch nào', 'tuần này có ai mới đăng ký', 'danh sách người dùng mới', 'user mới chưa dùng app',
+      'ai đăng ký xong mà chưa nhập khoản nào', 'người dùng mới tháng này', 'new users who have not added any transaction', 'nguoi moi chua ghi gi'],
     'tra-cuu-nguoi-dung': ['tìm tài khoản tên Hoa', 'liệt kê các tài khoản bị khóa', 'tra cứu người dùng theo email', 'danh sách quản trị viên',
       'có user nào tên Linh không', 'find user by email', 'tim tai khoan dang hoat dong ten an', 'xem thông tin người dùng Nguyễn Văn A', 'những ai đang bị khóa'],
     'phat-hien-bat-thuong': ['tài khoản nào có biểu hiện lạ', 'kiểm tra giao dịch đáng ngờ', 'user nào chi tiêu tăng vọt tháng này', 'phát hiện gian lận',

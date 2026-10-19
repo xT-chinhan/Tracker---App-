@@ -1,0 +1,5 @@
+[
+  {"id": "01", "fixture": "admin", "input": "người mới đăng ký chưa ghi giao dịch nào", "expect": {"contains": ["trên", "người đăng ký trong 30 ngày qua chưa ghi giao dịch nào"]}},
+  {"id": "02", "fixture": "admin", "input": "danh sách người dùng mới đăng ký tuần này", "expect": {"contains": ["người đăng ký trong"]}},
+  {"id": "03", "fixture": "admin", "input": "user mới tháng 9 chưa dùng app", "expect": {"contains": ["tháng 9"]}}
+]

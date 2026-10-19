@@ -14,3 +14,11 @@ test('tiền gọn cho thẻ số liệu', () => {
   assert.equal(moneyShort(13679739000), '13,68 tỷ');
   assert.equal(moneyShort(45000), '45.000đ');
 });
+
+test('câu nhận xét: nhận cả khi model đổi tên khóa JSON (qwen3.5)', async () => {
+  const { llmSentence } = await import('../lib/skillkit.js');
+  const fake = { provider: 'fake', chatModel: 'x', chat: async () => ({ content: '{ "câu_hoàn_chỉnh": "Chi tiêu tháng này ổn định." }', ms: 1 }) } as any;
+  const s = await llmSentence(fake, 'việc', ['dữ kiện'], 'FALLBACK');
+  assert.equal(s.text, 'Chi tiêu tháng này ổn định.');
+  assert.equal(s.accepted, true);
+});

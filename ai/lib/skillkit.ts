@@ -140,7 +140,9 @@ export async function llmSentence(llm: LlmClient, task: string, facts: string[],
   try {
     const r = await llm.chat(msgs, { format: schema, numPredict: 90 });
     const j = parseJson(r.content);
-    const s = typeof j?.sentence === 'string' ? j.sentence.trim() : '';
+    // qwen3.5 hay đổi tên khóa ("câu_hoàn_chỉnh"…) dù có schema → lấy chuỗi đầu tiên
+    const v = typeof j?.sentence === 'string' ? j.sentence : Object.values(j ?? {}).find((x) => typeof x === 'string');
+    const s = typeof v === 'string' ? v.trim() : '';
     const bad = checkSentence(s);
     return bad ? { text: fallback, accepted: false, ms: r.ms, calls: 1, reason: bad, raw: s } : { text: s, accepted: true, ms: r.ms, calls: 1 };
   } catch (e) {
@@ -155,10 +157,21 @@ export async function llmJson<T = any>(llm: LlmClient, system: string, user: str
   msgs.push({ role: 'user', content: user });
   try {
     const r = await llm.chat(msgs, { format: schema, numPredict });
-    return { data: parseJson(r.content), ms: r.ms };
+    return { data: withSchemaKeys(parseJson(r.content), schema), ms: r.ms };
   } catch {
     return { data: null, ms: 0 };
   }
+}
+
+/**
+ * qwen3.5 không luôn theo tên khóa của schema. Schema 1 khóa chuỗi (vd {name}) mà model trả khóa khác
+ * → gán chuỗi đầu tiên vào đúng khóa schema.
+ */
+function withSchemaKeys(j: any, schema: any): any {
+  const keys = Object.keys(schema?.properties ?? {});
+  if (!j || typeof j !== 'object' || keys.length !== 1 || keys[0] in j) return j;
+  const v = Object.values(j).find((x) => typeof x === 'string');
+  return v === undefined ? j : { [keys[0]]: v };
 }
 
 export function parseJson(s: string): any {

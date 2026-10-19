@@ -2,7 +2,7 @@
  * Pipeline trợ lý: tin user → router → skill (context theo principal + LLM) → nháp (chuẩn hóa) → lưu tin/nháp.
  * Xác nhận nháp → thực thi qua service nghiệp vụ → tín hiệu học.
  */
-import { BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { AiConversation, AiDraft, AiMessage, Prisma } from '@prisma/client';
 import { SystemConfigService } from '../system-config/system-config.module';
 import { AiContextService } from './ai.context';
@@ -15,11 +15,25 @@ import { AiRepo, AiStore } from './ai.store';
 import type { ChatMsg, ChatOptions, LlmClient, Principal, RouteResult, SkillResult } from './ai.types';
 
 @Injectable()
-export class AiLlmFactory {
+export class AiLlmFactory implements OnApplicationBootstrap {
+  private readonly logger = new Logger('AiWarmup');
   private readonly fake = new FakeLlm();
   private cached?: { sig: string; client: LlmClient };
 
   constructor(private readonly sys: SystemConfigService) {}
+
+  /** Nạp sẵn model trả lời + embedding vào GPU khi khởi động để câu hỏi đầu tiên không phải chờ (chạy nền, lỗi chỉ ghi log). */
+  onApplicationBootstrap() {
+    if (process.env.NODE_ENV === 'test' || process.env.AI_WARMUP === '0') return;
+    void (async () => {
+      const llm = await this.get();
+      if (llm.provider !== 'ollama') return;
+      const t = Date.now();
+      await llm.embed(['khởi động']);
+      await llm.chat([{ role: 'user', content: 'ok' }], { numPredict: 1 });
+      this.logger.log(`Đã nạp ${llm.chatModel} + ${llm.embedModel} (${Date.now() - t} ms)`);
+    })().catch((e) => this.logger.warn(`Làm nóng model lỗi: ${(e as Error).message}`));
+  }
 
   async get(): Promise<LlmClient> {
     const c = await this.sys.ai();

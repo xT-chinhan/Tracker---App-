@@ -8,6 +8,9 @@ import { fold, l2 } from './ai.text';
 /* ============================== Hàng đợi GPU (trong tiến trình) ============================== */
 
 let chain: Promise<unknown> = Promise.resolve();
+
+/** Giữ model trong GPU bao lâu sau lần gọi cuối (Ollama keep_alive). Lâu hơn = ít bị nạp lại (lần đầu ~7–16 s); "-1" = giữ mãi. */
+export const KEEP_ALIVE = process.env.AI_KEEP_ALIVE || '12h';
 /** Chạy tuần tự mọi lời gọi Ollama của instance này (GPU 1 luồng: gọi song song chỉ làm tăng độ trễ và dễ timeout). */
 function serial<T>(fn: () => Promise<T>): Promise<T> {
   const next = chain.then(fn, fn);
@@ -66,7 +69,7 @@ export class OllamaClient implements LlmClient {
         messages,
         format: opts.format,
         stream: false,
-        keep_alive: '30m',
+        keep_alive: KEEP_ALIVE,
         // qwen3.5 mặc định "suy nghĩ" trước khi trả lời: chậm và có thể làm hỏng JSON → tắt (model không có chế độ này bỏ qua cờ)
         think: false,
         options: { temperature: opts.temperature ?? 0, seed: 7, num_ctx: 4096, num_predict: opts.numPredict ?? 256, stop: opts.stop ?? ['\n\n'] },
@@ -80,7 +83,7 @@ export class OllamaClient implements LlmClient {
     return serial(async () => {
       const out: number[][] = [];
       for (let i = 0; i < texts.length; i += 32) {
-        const j = await this.post('/api/embed', { model: this.embedModel, input: texts.slice(i, i + 32), keep_alive: '30m' });
+        const j = await this.post('/api/embed', { model: this.embedModel, input: texts.slice(i, i + 32), keep_alive: KEEP_ALIVE });
         if (!Array.isArray(j?.embeddings)) throw new LlmError('ollama embed: thiếu embeddings', 'BAD_RESPONSE');
         out.push(...j.embeddings.map((v: number[]) => l2(v)));
       }
