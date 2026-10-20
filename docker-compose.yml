@@ -43,7 +43,7 @@ services:
       SMTP_SECURE: ${SMTP_SECURE:-false}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
-      SMTP_FROM: ${SMTP_FROM:-Thu Chi <no-reply@thuchi.vn>}
+      SMTP_FROM: ${SMTP_FROM:-TrackerX <no-reply@trackerx.app>}
       # Sau nginx của service admin: 1 hop (nginx ghi đè X-Forwarded-For bằng IP thật)
       TRUST_PROXY: ${TRUST_PROXY:-1}
     ports:

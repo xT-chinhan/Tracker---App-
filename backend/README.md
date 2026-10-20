@@ -1,4 +1,4 @@
-# Backend API — Thu Chi
+# Backend API — TrackerX
 
 NestJS 11 + Prisma 6 + PostgreSQL 16. Mỗi module một file `src/<module>/<module>.module.ts` (DTO + service + controller). Dùng chung: `src/common/` (auth guard JWT, DTO, giờ VN, filter lỗi Prisma), `src/prisma/`. Tiền lưu `BigInt` (VND), trả ra JSON dạng number. Cron (`@nestjs/schedule`) sinh giao dịch định kỳ. Rate limit các route đăng nhập/đăng ký/OTP bằng `@nestjs/throttler`.
 
@@ -305,7 +305,7 @@ Lưu ở bảng `SystemSetting` (khóa `mục.trường` → JSON; chưa có dò
 
 | Mục | Trường | Mặc định | Có hiệu lực ở đâu |
 |---|---|---|---|
-| general | `appName`, `supportEmail`, `hotline`, `termsUrl`, `privacyUrl` | "Thu Chi", trống | `/config/public`; tên app vào tiêu đề email OTP / email thử. Link phải `https://` |
+| general | `appName`, `supportEmail`, `hotline`, `termsUrl`, `privacyUrl` | "TrackerX", trống | `/config/public`; tên app vào tiêu đề email OTP / email thử. Link phải `https://` |
 | access | `registrationEnabled` | true | Tắt → `POST /auth/register` 403 `{code:'REGISTRATION_DISABLED'}` |
 | | `sessionDays` (1–365) | theo `JWT_EXPIRES_IN` (30) | Hạn JWT khi đăng nhập / đăng ký / đổi mật khẩu. Chưa sửa thì dùng nguyên `JWT_EXPIRES_IN` |
 | | `loginMaxAttempts` / `loginWindowMinutes` | `THROTTLE_AUTH_LIMIT` (10, test 200) / 1 | Giới hạn đăng nhập **theo email** (thêm vào giới hạn theo IP), quá → 429 + `Retry-After` |

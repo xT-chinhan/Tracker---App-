@@ -56,7 +56,7 @@ export const skill: Skill = {
       return { reply: ask, askBack: true, meta: {} };
     }
     const cfg = await fetchP<PublicConfigData>(context, 'publicConfig');
-    const app = cfg?.appName ?? 'Thu Chi';
+    const app = cfg?.appName ?? 'TrackerX';
     const { draft, calls, ms, attempts } = await compose(llm, app, input, topic, cfg ? `${cfg.hotline} ${cfg.supportEmail}` : '');
     const recipients = (await fetchP<AdminOverviewData>(context, 'adminOverview'))?.users.active;
     const dup = ((await fetchP<BroadcastRow[]>(context, 'adminBroadcasts', { limit: 5 })) ?? []).find((b) => sim(b.title, draft.title) >= 0.6);

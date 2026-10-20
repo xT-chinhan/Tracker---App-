@@ -64,11 +64,11 @@ function PhonePreview({ mode, title, body, previous }: { mode: 'app' | 'push'; t
           <div className="flex h-9 items-center justify-between"><ChevronLeft className="size-[18px]" /><span className="text-[12.5px] font-semibold">Đọc hết</span></div>
           <p className="mt-1 text-2xl leading-[1.25] font-bold tracking-[-0.025em]">Thông báo</p>
           <p className="mx-1 mt-3.5 mb-2 text-xs font-semibold text-muted-foreground">Hôm nay</p>
-          <NoticeCard title={title} body={body} meta="Vừa xong · Từ đội ngũ Thu Chi" highlight />
+          <NoticeCard title={title} body={body} meta="Vừa xong · Từ đội ngũ TrackerX" highlight />
           {previous && (
             <>
               <p className="mx-1 mt-3.5 mb-2 text-xs font-semibold text-muted-foreground">Trước đó</p>
-              <NoticeCard title={previous.title} body={previous.body} meta={`${formatDayMonth(previous.createdAt)} · Từ đội ngũ Thu Chi`} dim />
+              <NoticeCard title={previous.title} body={previous.body} meta={`${formatDayMonth(previous.createdAt)} · Từ đội ngũ TrackerX`} dim />
             </>
           )}
         </div>

@@ -425,7 +425,7 @@ export default function SettingsPage() {
   const counts = Object.fromEntries(SECTIONS.map((s) => [s.slug, dirtyKeys.filter((k) => k.startsWith(`${s.api}.`)).length]))
   const errorKeys = Object.keys(errors)
   const lastSaved = cfg?.lastSaved
-  const appName = String(cfg?.values.general.appName ?? 'Thu Chi')
+  const appName = String(cfg?.values.general.appName ?? 'TrackerX')
 
   const tails: Record<string, ReactNode> = {}
   for (const s of SECTIONS) if (counts[s.slug]) tails[s.slug] = <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11.5px] font-semibold text-primary-foreground tabular-nums" data-testid="nav-count">{counts[s.slug]}</span>
@@ -1085,7 +1085,7 @@ function EmailSection({ c, smtpDirty }: { c: Ctx; smtpDirty: boolean }) {
             </>
           )}
         </SettingRow>
-        <TextRow c={c} k="smtp.from" desc="Người nhận thấy tên và địa chỉ này." placeholder="vd. Thu Chi <no-reply@thuchi.vn>" />
+        <TextRow c={c} k="smtp.from" desc="Người nhận thấy tên và địa chỉ này." placeholder="vd. TrackerX <no-reply@trackerx.app>" />
       </SettingCard>
       <EmailTemplatesCard />
     </>
@@ -1274,7 +1274,7 @@ function MobileSection({ c }: { c: Ctx }) {
   const notes = String(c.value('mobile.releaseNotes'))
   const latest = String(c.value('mobile.androidLatestVersion'))
   const min = String(c.value('mobile.androidMinVersion'))
-  const appName = String(c.server('general.appName') ?? 'Thu Chi')
+  const appName = String(c.server('general.appName') ?? 'TrackerX')
   const versionBox = (k: string, label: string) => (
     <div className="flex flex-col gap-2">
       <label className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground">{label}{c.isDirty(k) && <span className="size-1.5 rounded-full bg-primary" />}</label>
@@ -1499,7 +1499,7 @@ function AiSection({ c }: { c: Ctx }) {
         title="Mô hình"
         aside={<Button variant="secondary" size="sm" disabled={fake || ollama.isPending} onClick={() => ollama.mutate()} data-testid="ollama-test"><PlugZap /> Kiểm tra kết nối</Button>}
       >
-        <SettingRow label="Nhà cung cấp" desc={fake ? 'Trả lời tất định, không gọi model. Chỉ dùng khi kiểm thử.' : 'Model chạy trên máy chủ của Thu Chi. Dữ liệu không gửi ra ngoài.'} changed={c.isDirty('ai.provider')} testId="row-ai.provider">
+        <SettingRow label="Nhà cung cấp" desc={fake ? 'Trả lời tất định, không gọi model. Chỉ dùng khi kiểm thử.' : 'Model chạy trên máy chủ của TrackerX. Dữ liệu không gửi ra ngoài.'} changed={c.isDirty('ai.provider')} testId="row-ai.provider">
           <Tabs value={provider} onValueChange={(v) => c.set('ai.provider', v)}>
             <TabsList className="w-full">
               {Object.entries(PROVIDER_LABEL).map(([v, label]) => <TabsTrigger key={v} value={v} className="flex-1" data-testid={`provider-${v}`}>{label}</TabsTrigger>)}
@@ -1549,7 +1549,7 @@ function AiSection({ c }: { c: Ctx }) {
           <Switch checked={c.value('ai.ocrEnabled') === true} onCheckedChange={(v) => c.set('ai.ocrEnabled', v)} aria-label="Bật đọc ảnh" data-testid="in-ai.ocrEnabled" />
           {c.isDirty('ai.ocrEnabled') && <Was>{display('ai.ocrEnabled', c.server('ai.ocrEnabled'))}</Was>}
         </SettingRow>
-        <SettingRow label="Model đọc ảnh" desc="Chạy trên máy chủ của Thu Chi, ảnh không gửi ra ngoài. Dùng chung model trả lời." testId="row-ai.ocrModel">
+        <SettingRow label="Model đọc ảnh" desc="Chạy trên máy chủ của TrackerX, ảnh không gửi ra ngoài. Dùng chung model trả lời." testId="row-ai.ocrModel">
           <LockedValue testId="ocr-model">{String(c.server('ai.chatModel') ?? '')} · nội bộ</LockedValue>
         </SettingRow>
         <NumberRow c={c} k="ai.ocrDailyLimitPerUser" desc="Hết lượt thì app báo giờ mở lại, vẫn ghi tay được. Nháp đang chờ vẫn lưu được." range="1–100 ảnh" />

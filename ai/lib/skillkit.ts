@@ -79,7 +79,7 @@ export const isInjection = (text: string) => INJECT.some((re) => re.test(fold(te
 export function refusal(reason: 'other_user' | 'injection' | 'off_topic' | 'scope', scope: 'USER' | 'ADMIN' = 'USER'): SkillResult {
   const r = {
     other_user: 'Xin lỗi, mình chỉ xem được dữ liệu trong tài khoản của chính bạn, không thể cung cấp thông tin của người dùng khác.',
-    injection: 'Xin lỗi, mình không thể thay đổi cách hoạt động theo yêu cầu này. Mình chỉ hỗ trợ các việc trong ứng dụng Thu Chi.',
+    injection: 'Xin lỗi, mình không thể thay đổi cách hoạt động theo yêu cầu này. Mình chỉ hỗ trợ các việc trong ứng dụng TrackerX.',
     off_topic: scope === 'ADMIN'
       ? 'Xin lỗi, câu này nằm ngoài phạm vi trợ lý quản trị. Mình hỗ trợ tổng quan hệ thống, tra cứu người dùng, phát hiện bất thường, soạn thông báo và cấu hình.'
       : 'Xin lỗi, câu này nằm ngoài phạm vi của mình. Mình hỗ trợ ghi thu chi, xem số dư, báo cáo, ngân sách, tiết kiệm và cách dùng ứng dụng.',

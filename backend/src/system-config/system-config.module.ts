@@ -95,7 +95,7 @@ export const FEATURE_LABELS: Record<FeatureName, string> = {
 export const DEFAULT_MAINTENANCE_MESSAGE = 'Ứng dụng đang bảo trì để nâng cấp hệ thống. Dữ liệu của bạn vẫn an toàn, vui lòng quay lại sau ít phút.';
 
 const DEFS: Def[] = [
-  { section: 'general', field: 'appName', kind: 'string', required: true, maxLen: 50, def: () => 'Thu Chi' },
+  { section: 'general', field: 'appName', kind: 'string', required: true, maxLen: 50, def: () => 'TrackerX' },
   { section: 'general', field: 'supportEmail', kind: 'string', maxLen: 120, format: 'email', def: () => '' },
   { section: 'general', field: 'hotline', kind: 'string', maxLen: 20, format: 'phone', def: () => '' },
   { section: 'general', field: 'termsUrl', kind: 'string', maxLen: 300, format: 'https', def: () => '' },

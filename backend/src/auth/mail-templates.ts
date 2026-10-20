@@ -27,6 +27,19 @@ const C = {
 };
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
+const TAGLINE = 'Tiền rõ ràng, sống nhẹ nhàng';
+
+/** Logo TrackerX (lưới ô 3×3: 5 ô trắng thành chữ T, 2 ô góc xám) dựng bằng bảng — Gmail / Outlook không hiện SVG. */
+function logoGrid() {
+  const cell = (on: string | null) => `<td width="7" height="7" style="width:7px;height:7px;${on ? `background:${on};border-radius:2px;` : ''}font-size:0;line-height:0">&nbsp;</td>`;
+  const W = '#FFFFFF', G = '#5E5D59';
+  const rows = [[W, W, W], [null, W, null], [G, W, G]];
+  const gap = '<td width="2" style="width:2px;font-size:0;line-height:0">&nbsp;</td>';
+  const tr = (r: (string | null)[]) => `<tr>${r.map(cell).join(gap)}</tr>`;
+  const vgap = '<tr><td colspan="5" height="2" style="height:2px;font-size:0;line-height:0">&nbsp;</td></tr>';
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto">${rows.map(tr).join(vgap)}</table>`;
+}
+
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
 /** 0912345678 → 0912 ••• 678 */
@@ -55,8 +68,11 @@ function layout(b: Brand, o: { preheader: string; title: string; body: string })
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px">
     <tr><td style="padding:0 4px 20px">
       <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-        <td width="40" height="40" align="center" valign="middle" style="width:40px;height:40px;background:${C.ink};border-radius:11px;color:#fff;font:700 20px/40px ${FONT};text-decoration:underline">đ</td>
-        <td style="padding-left:12px;font:700 17px/1.2 ${FONT};color:${C.ink};letter-spacing:-0.2px">${esc(b.appName)}</td>
+        <td width="40" height="40" align="center" valign="middle" style="width:40px;height:40px;background:${C.ink};border-radius:9px">${logoGrid()}</td>
+        <td style="padding-left:12px">
+          <div style="font:700 17px/1.2 ${FONT};color:${C.ink};letter-spacing:-0.3px">${esc(b.appName)}</div>
+          <div style="font:400 12.5px/1.4 ${FONT};color:${C.muted}">${TAGLINE}</div>
+        </td>
       </tr></table>
     </td></tr>
     <tr><td style="background:${C.card};border:1px solid ${C.line};border-radius:20px;padding:36px 32px">
