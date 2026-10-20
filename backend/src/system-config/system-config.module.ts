@@ -528,11 +528,12 @@ export class SystemConfigService {
     values.smtp.hasPassword = hasPassword;
     const updated: Record<string, { at: Date; by: string | null }> = {};
     for (const r of s.rows.values()) if (!DEF_BY_KEY.get(r.key)?.internal) updated[r.key] = { at: r.updatedAt, by: r.updatedByName };
-    const [last, activeUsers, savingGoals, recurringRules] = await Promise.all([
+    const [last, activeUsers, savingGoals, recurringRules, gw] = await Promise.all([
       this.prisma.systemConfigChange.findFirst({ where: { actorId: { not: null } }, orderBy: { createdAt: 'desc' } }),
       this.prisma.user.count({ where: { status: 'ACTIVE', role: 'USER' } }),
       this.prisma.savingGoal.count(),
       this.prisma.recurringRule.count(),
+      this.prisma.phoneVerification.aggregate({ _max: { verifiedAt: true } }),
     ]);
     return {
       values,
@@ -546,7 +547,8 @@ export class SystemConfigService {
         source: [...s.rows.keys()].some((k) => k.startsWith('smtp.')) ? 'db' : this.env.smtpHost ? 'env' : 'none',
       },
       /** Khóa máy cổng SMS: chỉ cho biết đã đặt hay chưa, không bao giờ trả về */
-      smsGateway: { hasKey: !!s.values.get('access.smsGatewayKey') },
+      // lastVerifiedAt: lần gần nhất máy cổng chuyển về một tin khớp phiên → cho admin biết máy cổng còn chạy
+      smsGateway: { hasKey: !!s.values.get('access.smsGatewayKey'), lastVerifiedAt: gw._max.verifiedAt },
       updated,
       lastSaved: last ? { at: last.createdAt, by: last.actorName } : null,
       stats: { activeUsers, savingGoals, recurringRules },

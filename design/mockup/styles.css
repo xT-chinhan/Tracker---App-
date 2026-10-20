@@ -527,3 +527,21 @@ svg.lucide { width: 20px; height: 20px; stroke-width: 1.75; flex: none; }
 .bankshot .br { display: flex; justify-content: space-between; gap: 6px; padding: 4px 0; border-top: 1px solid #EFEEEA; }
 .bankshot .br span { color: #787774; white-space: nowrap; }
 .bankshot .br b { font-weight: 600; text-align: right; }
+
+/* ===================== L. Số điện thoại · chờ duyệt ===================== */
+/* Mã 6 số chỉ để xem (không phải ô nhập): nền xám, chữ to */
+.otp.show > div { background: var(--color-surface-container); border-color: transparent; font-size: 28px; font-weight: 700; }
+.otp.show.dead > div { color: var(--color-on-surface-faint); }
+.otp.sm > div { height: 42px; font-size: 20px; border-radius: 10px; }
+.input.error { border-color: var(--color-danger-bar); box-shadow: 0 0 0 3px rgba(217,72,59,.08); }
+.err-t { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: var(--color-danger); margin-top: 8px; }
+.err-t svg.lucide { width: 15px; height: 15px; flex: none; margin-top: 2px; }
+.ok-banner { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: var(--radius-md); background: var(--color-success-container); font-size: 14px; font-weight: 500; color: #2E5A36; }
+.ok-banner svg.lucide { width: 18px; height: 18px; color: var(--color-income); flex: none; }
+.kv { display: flex; align-items: center; gap: 12px; min-height: 48px; font-size: 14.5px; position: relative; }
+.kv + .kv::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--color-outline-variant); }
+.kv .k { color: var(--color-on-surface-variant); width: 72px; flex: none; }
+.kv .v { font-weight: 600; }
+.indet { height: 4px; border-radius: 2px; background: var(--color-surface-container); overflow: hidden; position: relative; }
+.indet i { position: absolute; top: 0; bottom: 0; left: 30%; width: 34%; border-radius: 2px; background: var(--color-on-surface-faint); }
+.opt { display: flex; align-items: center; gap: 14px; }

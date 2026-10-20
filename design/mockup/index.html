@@ -13,7 +13,7 @@
 <main class="gallery">
   <header class="gallery-head">
     <h1>Thu Chi · Mockup giao diện</h1>
-    <p>25 màn hình đã duyệt + 20 màn Trợ lý AI chờ duyệt (mục J) + 8 màn Đọc hóa đơn chờ duyệt (mục K), khung 390×844. Dữ liệu mẫu nhất quán: ngày Thứ Ba 22/09/2026, 4 ví tổng 26.022.000đ, chi tháng 9 là 8.680.000đ trên ngân sách 14.000.000đ (62%).
+    <p>25 màn hình đã duyệt + 20 màn Trợ lý AI chờ duyệt (mục J) + 8 màn Đọc hóa đơn chờ duyệt (mục K) + 10 màn Số điện thoại chờ duyệt (mục L), khung 390×844. Dữ liệu mẫu nhất quán: ngày Thứ Ba 22/09/2026, 4 ví tổng 26.022.000đ, chi tháng 9 là 8.680.000đ trên ngân sách 14.000.000đ (62%).
     Điều hướng (giống ảnh mẫu): <b>Trang chủ · Lịch sử · [＋ Ghi giao dịch] · Báo cáo · Cài đặt</b>. Cài đặt chứa Ví, Ngân sách, Tiết kiệm, Định kỳ, Danh mục, Mẫu nhập nhanh, Thông báo, CSV, mật khẩu. Các màn con giữ tab Cài đặt active và nút ‹ Cài đặt. Ví và Ngân sách còn mở được từ thẻ số dư ở Trang chủ; Thông báo mở từ chuông.<br>Nút ＋: <b>chạm 1 lần</b> mở màn Ghi giao dịch (mặc định Khoản chi, con trỏ ở ô số tiền); <b>nhấn giữ</b> mở menu nhanh (Thu nhập, Chuyển tiền, 3 mẫu nhập nhanh), nút ＋ chuyển thành ✕ để đóng.</p>
   </header>
 
@@ -1739,6 +1739,238 @@
           <div class="hstack body-s faint mt-4" style="--gap:8px"><i data-lucide="hourglass" style="width:14px;height:14px;flex:none"></i><span class="num">Đã dùng 20/20 ảnh hôm nay</span></div>
         </div>
       </div><div class="frame-cap"><span>40g</span>Hết lượt ảnh trong ngày: giờ mở lại + ghi thủ công</div></div>
+
+    </div>
+  </section>
+  <!-- ===================== L. SỐ ĐIỆN THOẠI (chờ duyệt) ===================== -->
+  <section class="section" id="so-dien-thoai">
+    <div class="section-label"><b>L</b> Số điện thoại · chờ duyệt</div>
+    <p class="body-m" style="color:#55544f;max-width:980px;margin:-8px 0 24px;line-height:1.6">Xác thực kiểu <b>tự nhắn</b>: người dùng nhập số, app hiện mã 6 số và nút <b>Gửi yêu cầu xác nhận</b>, mở ứng dụng Tin nhắn với yêu cầu soạn sẵn. Người dùng chỉ bấm Gửi. <b>App không bao giờ hiện số máy cổng</b>, số này chỉ dùng để điền sẵn người nhận. Máy cổng chuyển tin về máy chủ, máy chủ so <b>số gửi do nhà mạng gắn</b> với số đã nhập và so mã. <b>Thu Chi không gửi SMS, không gọi điện</b>, người dùng không phải gõ mã. App tự hỏi trạng thái và tự chuyển màn. Mã hết hạn sau 5 phút, tối đa 3 lần xin mã / 10 phút, mỗi tài khoản một số. Dùng cho: gắn số ở Cài đặt › Tài khoản (cần mật khẩu hiện tại) và Quên mật khẩu qua số điện thoại (song song với email). Gắn / đổi / gỡ số và đặt lại mật khẩu bằng số đều có email báo.</p>
+    <div class="row-phones">
+
+      <!-- 50-01 Cài đặt: chưa gắn số -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-01-cai-dat" data-tab="more">
+        <div class="screen">
+          <div class="pad">
+            <div style="height:56px;display:flex;align-items:center"><h1 class="headline">Cài đặt</h1></div>
+            <div class="card tight mt-2"><div class="hstack" style="--gap:12px"><span class="avatar">MA</span><div class="grow"><div class="title-m">Nguyễn Minh Anh</div><div class="body-s muted">minhanh.nguyen@gmail.com</div></div><span class="body-s muted">Sửa</span><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="group-h"><span>Tài khoản</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="lock-keyhole"></i></span><span class="grow">Đổi mật khẩu</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="smartphone"></i></span><span class="grow">Số điện thoại</span><span class="sv">Chưa gắn</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <p class="body-s muted mt-2" style="padding:0 4px">Dùng để lấy lại mật khẩu khi quên.</p>
+            <div class="group-h"><span>Quản lý tiền</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="wallet"></i></span><span class="grow">Ví</span><span class="sv num">26.022.000đ</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="target"></i></span><span class="grow">Ngân sách</span><span class="sv">Đã dùng 62%</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="piggy-bank"></i></span><span class="grow">Mục tiêu tiết kiệm</span><span class="sv">3 mục tiêu</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="repeat"></i></span><span class="grow">Giao dịch định kỳ</span><span class="sv">5</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="group-h"><span>Nhập liệu</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="shapes"></i></span><span class="grow">Danh mục</span><span class="sv">16</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="zap"></i></span><span class="grow">Mẫu nhập nhanh</span><span class="sv">4</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50a</span>Cài đặt: nhóm Tài khoản, Số điện thoại “Chưa gắn”</div></div>
+
+      <!-- 50-02 Nhập số -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-02-nhap-so">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gắn số điện thoại</h1>
+            <p class="body-m muted mt-2">Dùng để lấy lại mật khẩu khi quên. Mỗi tài khoản gắn một số.</p>
+            <div class="mt-8">
+              <label class="field-label">Số điện thoại</label>
+              <div class="input focus"><i data-lucide="smartphone"></i><span class="num">0912 345 678</span></div>
+            </div>
+            <div class="mt-4">
+              <label class="field-label">Mật khẩu hiện tại</label>
+              <div class="input"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span><i data-lucide="eye-off"></i></div>
+            </div>
+            <div class="note mt-5"><i data-lucide="message-square"></i><span>Bước sau, bạn <b style="color:var(--color-on-surface);font-weight:600">gửi yêu cầu xác nhận từ số của bạn</b> bằng 1 tin nhắn, phí như tin nhắn thường của nhà mạng. Thu Chi không bao giờ nhắn tin hay gọi cho bạn.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Tiếp tục</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50b</span>Nhập số + mật khẩu hiện tại, báo trước sẽ nhắn 1 tin</div></div>
+
+      <!-- 50-03 Gửi yêu cầu xác nhận -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-03-gui-tin">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Bấm nút bên dưới, ứng dụng Tin nhắn mở ra với yêu cầu đã soạn sẵn. Bạn chỉ cần bấm Gửi, không phải nhập mã.</p>
+            <div class="otp show mt-6 num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="center body-s muted mt-3 num">Mã hết hạn sau <b style="color:var(--color-on-surface);font-weight:600">4:32</b></div>
+            <div class="note mt-6" style="background:var(--color-warning-container);color:#6B4800"><i data-lucide="card-sim" style="color:var(--color-warning)"></i><span>Phải gửi từ SIM <b style="font-weight:600">0912 345 678</b>. Gửi từ số khác sẽ không được xác nhận. Máy 2 SIM thì chọn đúng SIM này.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="send"></i>Gửi yêu cầu xác nhận</button>
+            <button class="btn btn-secondary mt-2"><i data-lucide="copy"></i>Sao chép mã 6 số</button>
+            <div class="body-s faint center mt-3">Dán mã vào tin nhắn nếu chưa có sẵn.<br>Phí 1 tin nhắn thường theo nhà mạng.</div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50c</span>Mã 6 số, Gửi yêu cầu xác nhận (mở Tin nhắn soạn sẵn), không hiện số máy cổng</div></div>
+
+      <!-- 50-04 Đang chờ -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-04-dang-cho">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <div class="card mt-5" style="padding:22px 18px 18px">
+              <div class="ai-status"><i data-lucide="message-square-more"></i><span class="shimmer-t">Đang chờ xác nhận…</span></div>
+              <div class="indet mt-4"><i></i></div>
+              <p class="body-s muted mt-3" style="line-height:1.5">Thường mất vài giây sau khi bấm Gửi. Màn này tự chuyển khi xác nhận xong.</p>
+            </div>
+            <div class="card flush mt-4" style="padding:2px 16px">
+              <div class="kv"><span class="k">Mã</span><span class="v num grow">482910</span><span class="body-s muted num">còn 3:58</span></div>
+              <div class="kv"><span class="k">Gửi từ</span><span class="v num grow">0912 345 678</span></div>
+            </div>
+            <div class="note mt-4"><i data-lucide="lightbulb"></i><span>Chưa gửi được? Kiểm tra SIM còn tiền, có sóng và đang chọn đúng SIM 0912 345 678.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-secondary"><i data-lucide="send"></i>Gửi lại yêu cầu</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Đổi số khác</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50d</span>Quay lại từ Tin nhắn: đang chờ xác nhận, tự chuyển khi xong</div></div>
+
+      <!-- 50-05 Thành công -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-05-thanh-cong">
+        <div class="screen">
+          <div class="pad">
+            <div class="empty" style="padding-top:150px">
+              <span class="bubble xl ok"><i data-lucide="check"></i></span>
+              <div class="title-l mt-6 num">Đã gắn số 0912 ••• 678</div>
+              <p class="body-m muted mt-2" style="max-width:300px">Từ nay bạn lấy lại mật khẩu được bằng số này, ngoài cách qua email.</p>
+              <div class="note mt-6" style="text-align:left;max-width:340px"><i data-lucide="mail-check"></i><span>Chúng tôi đã gửi email xác nhận tới <b style="color:var(--color-on-surface);font-weight:600">minhanh.nguyen@gmail.com</b>.</span></div>
+            </div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Xong</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50e</span>Đã gắn số, báo đã gửi email xác nhận</div></div>
+
+      <!-- 50-06 Lỗi: mã hết hạn -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-06-loi">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Mã cũ không dùng được nữa. Yêu cầu đã gửi bằng mã này sẽ không được tính.</p>
+            <div class="otp show dead mt-6 num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="card mt-5" style="padding:16px">
+              <div class="hstack" style="--gap:12px;align-items:flex-start"><span class="bubble"><i data-lucide="timer-off"></i></span>
+                <div class="grow"><div class="title-m">Mã đã hết hạn</div><div class="body-s muted mt-1">Mỗi mã dùng được 5 phút. Lấy mã mới rồi gửi lại yêu cầu từ SIM 0912 345 678.</div></div></div>
+            </div>
+            <div class="hstack body-s faint mt-4" style="--gap:8px"><i data-lucide="hourglass" style="width:14px;height:14px;flex:none"></i><span class="num">Còn 2 lần lấy mã trong 10 phút</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="rotate-ccw"></i>Lấy mã mới</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Đổi số khác</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50f</span>Mã hết hạn: thẻ trung tính, Lấy mã mới</div></div>
+
+      <!-- 50-06b Lỗi: số đã dùng -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-06b-loi-so-da-dung">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gắn số điện thoại</h1>
+            <p class="body-m muted mt-2">Dùng để lấy lại mật khẩu khi quên. Mỗi tài khoản gắn một số.</p>
+            <div class="mt-8">
+              <label class="field-label">Số điện thoại</label>
+              <div class="input error"><i data-lucide="smartphone"></i><span class="num">0912 345 678</span></div>
+              <div class="err-t"><i data-lucide="circle-alert"></i><span>Số này đã được dùng cho tài khoản khác. Gỡ số ở tài khoản kia trước, hoặc dùng số khác.</span></div>
+            </div>
+            <div class="mt-4">
+              <label class="field-label">Mật khẩu hiện tại</label>
+              <div class="input"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span><i data-lucide="eye-off"></i></div>
+            </div>
+            <div class="note mt-5"><i data-lucide="message-square"></i><span>Bước sau, bạn <b style="color:var(--color-on-surface);font-weight:600">gửi yêu cầu xác nhận từ số của bạn</b> bằng 1 tin nhắn, phí như tin nhắn thường của nhà mạng. Thu Chi không bao giờ nhắn tin hay gọi cho bạn.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Tiếp tục</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50f</span>Biến thể: số đã gắn với tài khoản khác (lỗi dưới ô)</div></div>
+
+      <!-- 50-07 Quên mật khẩu: chọn cách -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-07-quen-mk-chon">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Đăng nhập</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Quên mật khẩu</h1>
+            <p class="body-m muted mt-2">Chọn cách xác nhận để đặt lại mật khẩu.</p>
+            <div class="card tight mt-8"><div class="opt"><span class="bubble"><i data-lucide="mail"></i></span><div class="grow"><div class="title-m">Qua email</div><div class="body-s muted" style="margin-top:2px">Nhận mã 6 số trong email</div></div><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="card tight mt-3"><div class="opt"><span class="bubble"><i data-lucide="smartphone"></i></span><div class="grow"><div class="title-m">Qua số điện thoại</div><div class="body-s muted" style="margin-top:2px">Gửi yêu cầu xác nhận từ số đã gắn</div></div><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="note mt-5"><i data-lucide="info"></i><span>Cách qua số điện thoại chỉ dùng được nếu bạn đã gắn số trong Cài đặt › Tài khoản. Thu Chi không gửi tin nhắn, bạn gửi yêu cầu xác nhận từ số của bạn.</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50g</span>Quên mật khẩu: chọn Qua email hoặc Qua số điện thoại</div></div>
+
+      <!-- 50-08 Quên mật khẩu qua SĐT: đặt mật khẩu mới -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-08-quen-mk-sdt">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Đăng nhập</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <div class="ok-banner"><i data-lucide="circle-check"></i><span class="num">Đã xác nhận số 0912 ••• 678</span></div>
+            <h1 class="headline mt-6">Đặt mật khẩu mới</h1>
+            <p class="body-m muted mt-2">Cho tài khoản <span style="color:var(--color-on-surface);font-weight:600">minh•••@gmail.com</span>.</p>
+            <div class="mt-6">
+              <label class="field-label">Mật khẩu mới</label>
+              <div class="input focus"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">•••••••••</span><i data-lucide="eye-off"></i></div>
+              <div class="body-s faint mt-2">Ít nhất 8 ký tự.</div>
+            </div>
+            <div class="mt-4">
+              <label class="field-label">Nhập lại mật khẩu mới</label>
+              <div class="input"><i data-lucide="lock-keyhole"></i><span class="grow ph">Nhập lại để chắc chắn</span></div>
+            </div>
+            <div class="note mt-5"><i data-lucide="mail"></i><span>Sau khi đặt lại, chúng tôi gửi email báo tới minh•••@gmail.com.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Đặt mật khẩu mới</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50h</span>Quên MK qua SĐT: nhập số → gửi yêu cầu xác nhận (như 50c) → đặt mật khẩu mới</div></div>
+
+      <!-- 50-09 Gỡ số -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-09-go-so" data-tab="more">
+        <div class="screen">
+          <div class="pad">
+            <div style="height:56px;display:flex;align-items:center"><h1 class="headline">Cài đặt</h1></div>
+            <div class="card tight mt-2"><div class="hstack" style="--gap:12px"><span class="avatar">MA</span><div class="grow"><div class="title-m">Nguyễn Minh Anh</div><div class="body-s muted">minhanh.nguyen@gmail.com</div></div><span class="body-s muted">Sửa</span><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="group-h"><span>Tài khoản</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="lock-keyhole"></i></span><span class="grow">Đổi mật khẩu</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow" style="min-height:62px"><span class="bubble sm"><i data-lucide="smartphone"></i></span><div class="grow"><div>Số điện thoại</div><div class="s num" style="margin-top:1px">0912 ••• 678 · <span class="income">Đã xác thực</span></div></div><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:8px">
+            <span class="bubble lg danger"><i data-lucide="phone-off"></i></span>
+            <div class="sheet-title mt-4 num" style="font-size:20px">Gỡ số điện thoại?</div>
+            <p class="body-m muted mt-2" style="max-width:320px">Bạn sẽ không lấy lại mật khẩu bằng số <span style="white-space:nowrap">0912 ••• 678</span> được nữa. Cách qua email vẫn dùng bình thường.</p>
+          </div>
+          <label class="field-label mt-5">Nhập mật khẩu để xác nhận</label>
+          <div class="input focus"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span></div>
+          <div class="body-s faint mt-2">Chúng tôi sẽ gửi email báo đã gỡ số.</div>
+          <button class="btn btn-danger-soft mt-5">Gỡ số</button>
+          <button class="btn mt-2" style="background:none">Hủy</button>
+        </div>
+      </div><div class="frame-cap"><span>50i</span>Đã gắn số · sheet Gỡ số cần mật khẩu</div></div>
 
     </div>
   </section>

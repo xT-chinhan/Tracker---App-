@@ -107,8 +107,8 @@ export class PhoneService {
       verificationId: v.id,
       phone,
       code,
-      gatewayNumber: c.gatewayNumber,
       expiresAt,
+      // app KHÔNG hiển thị số cổng; chỉ dùng link này để mở sẵn khung soạn tin (nút "Gửi yêu cầu xác nhận")
       // Android: sms:<số>?body=…  ·  iOS: sms:<số>&body=…
       smsLink: { android: `sms:${c.gatewayNumber}?body=${body}`, ios: `sms:${c.gatewayNumber}&body=${body}` },
     };

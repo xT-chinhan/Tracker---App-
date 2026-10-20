@@ -1532,7 +1532,7 @@ group('auth: xác thực số điện thoại (tự nhắn mã tới số cổng
   check('link: invalid phone 400', r.status === 400, r.data);
   r = await req('POST', '/me/phone/verifications', { token: U.token, body: { phone: `+84${P1.slice(1)}`, password: 'secret1' } });
   const s1 = r.data;
-  check('link: 201 {code 6 digits, gatewayNumber, smsLink}, +84 normalized', r.status === 201 && /^\d{6}$/.test(s1.code) && s1.phone === P1 && s1.gatewayNumber === GW && s1.smsLink.android === `sms:${GW}?body=${s1.code}` && s1.smsLink.ios === `sms:${GW}&body=${s1.code}`, s1);
+  check('link: 201 {code 6 digits, smsLink}, gateway number not exposed as a field, +84 normalized', r.status === 201 && /^\d{6}$/.test(s1.code) && s1.phone === P1 && !('gatewayNumber' in s1) && s1.smsLink.android === `sms:${GW}?body=${s1.code}` && s1.smsLink.ios === `sms:${GW}&body=${s1.code}`, s1);
   r = await req('GET', `/me/phone/verifications/${s1.verificationId}`, { token: U.token });
   check('status PENDING', r.data.status === 'PENDING', r.data);
   r = await req('GET', `/me/phone/verifications/${s1.verificationId}`, { token: V.token });
@@ -1550,6 +1550,8 @@ group('auth: xác thực số điện thoại (tự nhắn mã tới số cổng
   check('inbound from the SIM (+84, field aliases) => linked', r.data.matched === true && r.data.linked === true, r.data);
   r = await req('GET', `/me/phone/verifications/${s1.verificationId}`, { token: U.token });
   check('status VERIFIED', r.data.status === 'VERIFIED', r.data);
+  r = await req('GET', '/admin/config', { token: tAd });
+  check('admin: smsGateway.lastVerifiedAt set after a matched SMS', !!r.data.smsGateway?.lastVerifiedAt, r.data.smsGateway);
   r = await req('GET', '/me', { token: U.token });
   check('/me phone + phoneVerifiedAt', r.data.phone === P1 && !!r.data.phoneVerifiedAt, r.data);
   await sleep(300);

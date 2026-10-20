@@ -14,7 +14,7 @@
 <main class="gallery">
   <header class="gallery-head">
     <h1>Thu Chi Admin · Mockup giao diện</h1>
-    <p>21 khung desktop 1440×900 đã duyệt + 11 khung Trợ lý AI chờ duyệt (mục I) (hiển thị 50% trong trang này) và 2 khung tablet 1024×768. Dữ liệu mẫu khớp với mockup mobile: hôm nay Thứ Ba 22/09/2026, hệ thống có 1.284 người dùng và 186.420 giao dịch. Người dùng mẫu Nguyễn Minh Anh có 4 ví, tổng 26.022.000đ, 312 giao dịch.
+    <p>21 khung desktop 1440×900 đã duyệt + 11 khung Trợ lý AI chờ duyệt (mục I) + 2 khung Đọc ảnh (mục J) + 3 khung Xác thực số điện thoại (mục K) chờ duyệt (hiển thị 50% trong trang này) và 2 khung tablet 1024×768. Dữ liệu mẫu khớp với mockup mobile: hôm nay Thứ Ba 22/09/2026, hệ thống có 1.284 người dùng và 186.420 giao dịch. Người dùng mẫu Nguyễn Minh Anh có 4 ví, tổng 26.022.000đ, 312 giao dịch.
     Điều hướng: sidebar trái <b>Tổng quan · Người dùng · Giao dịch · Danh mục · Thông báo · Cấu hình</b>, cuối sidebar là <b>Tài khoản</b> và đăng xuất.</p>
   </header>
 
@@ -519,6 +519,39 @@
       </div>
     </div>
   </section>
+  <!-- ===================== K. XÁC THỰC SỐ ĐIỆN THOẠI (chờ duyệt) ===================== -->
+  <section class="section" id="so-dien-thoai">
+    <div class="section-label"><b>K</b> Xác thực số điện thoại · chờ duyệt</div>
+    <p class="body-m" style="color:#55544f;max-width:1100px;margin:-8px 0 24px;line-height:1.6">Mobile tương ứng: mục L “Số điện thoại”. Người dùng tự nhắn mã 6 số tới <b>máy cổng</b> (máy Android của công ty có SIM). App chuyển tiếp SMS trên máy cổng đẩy tin về webhook, máy chủ so số gửi (nhà mạng gắn, không giả được) và mã. Máy chủ <b>không gửi SMS</b>. Card mới nằm trong Cấu hình › Đăng ký &amp; truy cập, sau card Đăng nhập.</p>
+    <div class="row-frames">
+      <div class="fig"><div class="fig-cap"><span>50a</span>A9 Đăng ký &amp; truy cập › card Xác thực số điện thoại</div><div class="zoom">
+        <div class="frame" data-shot="50-sdt-a1-cau-hinh"><div class="app"><aside class="side" data-nav="cfg"></aside>
+          <div class="main" data-cfg="truy-cap-sdt"></div></div></div>
+      </div></div>
+      <div class="fig"><div class="fig-cap"><span>50b</span>Hướng dẫn cài máy cổng · đã nhận tin thử</div><div class="zoom">
+        <div class="frame" data-shot="50-sdt-a2-huong-dan"><div class="app"><aside class="side" data-nav="cfg"></aside>
+          <div class="main" data-cfg="truy-cap-sdt"></div></div>
+          <div class="scrim"><div class="dialog" style="width:600px;padding:28px 32px">
+            <div class="between"><span class="bubble lg"><i data-lucide="smartphone"></i></span><span class="icon-btn"><i data-lucide="x"></i></span></div>
+            <div class="title-l">Cài máy cổng</div>
+            <p class="body-m">Làm một lần trên máy Android của công ty. Máy cổng chỉ nhận tin của người dùng rồi chuyển về máy chủ, không gửi tin cho ai.</p>
+            <div class="gw-steps">
+              <div class="gw-step"><span class="n">1</span><div><div class="t">Cắm SIM 0901 234 567 vào máy Android</div><div class="d">Máy luôn bật nguồn, cắm sạc và có sóng. Tắt tối ưu pin cho app chuyển tiếp để không bị dừng ngầm.</div></div></div>
+              <div class="gw-step"><span class="n">2</span><div><div class="t">Cài app chuyển tiếp SMS</div><div class="d">Ví dụ “SMS Forwarder” (mã nguồn mở). Cấp quyền đọc tin nhắn khi app hỏi.</div></div></div>
+              <div class="gw-step"><span class="n">3</span><div><div class="t">Thêm quy tắc chuyển mọi tin tới webhook</div><div class="d">Địa chỉ <code>https://api.thuchi.vn/api/sms-gateway/inbound</code>, thêm header <code>x-gateway-key</code> = khóa máy cổng (chỉ hiện một lần lúc tạo khóa).</div></div></div>
+              <div class="gw-step"><span class="n">4</span><div><div class="t">Bấm “Gửi tin thử” trong app chuyển tiếp</div><div class="d">Kết quả hiện ngay dưới đây và ở dòng trạng thái của card.</div></div></div>
+            </div>
+            <div class="result mt-3"><i data-lucide="circle-check"></i><span>Đã nhận tin thử lúc <b>08:41</b> từ máy cổng · khóa đúng · mất 1,4 giây.</span></div>
+            <div class="acts"><button class="btn btn-secondary"><i data-lucide="copy"></i>Chép địa chỉ webhook</button><button class="btn btn-primary">Xong</button></div>
+          </div></div>
+        </div>
+      </div></div>
+      <div class="fig"><div class="fig-cap"><span>50c</span>A9 Email (SMTP) › Mẫu email: xem trước 2 mẫu thật</div><div class="zoom">
+        <div class="frame" data-shot="50-sdt-a3-email"><div class="app"><aside class="side" data-nav="cfg"></aside>
+          <div class="main" data-cfg="email-mau"></div></div></div>
+      </div></div>
+    </div>
+  </section>
 </main>
 
 <script src="vendor/lucide.min.js"></script>
@@ -1005,6 +1038,8 @@ function cfgPage(key) {
     'tro-ly': ['tro-ly', () => cfgAi(false)],
     'tro-ly-cuoi': ['tro-ly', () => cfgAi(true)],
     'tro-ly-doc-anh': ['tro-ly', cfgAiOcr],
+    'truy-cap-sdt': ['truy-cap', cfgPhone],
+    'email-mau': ['email', cfgMailTpl],
   };
   const [sec, body] = map[k];
   const tails = {};
@@ -1012,7 +1047,8 @@ function cfgPage(key) {
   if (k === 'email-none') tails['email'] = `<span class="dot warn" title="Chưa cấu hình"></span>`;
   if (k === 'chung-dirty') tails['chung'] = `<span class="cnt-pill">3</span>`;
   const late = k.startsWith('truy-cap');
-  const sub = late ? 'Áp dụng cho app Thu Chi trên mọi thiết bị · lưu gần nhất 22:41, 25/09 bởi Trần Quốc Bảo'
+  const sub = k === 'truy-cap-sdt' ? 'Áp dụng cho app Thu Chi trên mọi thiết bị · lưu gần nhất 08:40, 20/10 bởi Administrator'
+            : late ? 'Áp dụng cho app Thu Chi trên mọi thiết bị · lưu gần nhất 22:41, 25/09 bởi Trần Quốc Bảo'
                    : 'Áp dụng cho app Thu Chi trên mọi thiết bị · lưu gần nhất 09:38 hôm nay bởi Trần Quốc Bảo';
   return `<div class="page-h"><div><h1 class="headline">Cấu hình hệ thống</h1><div class="sub">${tablet ? 'Áp dụng cho app Thu Chi trên mọi thiết bị' : sub}</div></div></div>
     <div class="cfg">${snav(sec, tails, tablet, k === 'nghiep-vu-ai' || k.startsWith('tro-ly'))}<div class="cfg-body">${body()}</div></div>`;
@@ -1362,6 +1398,34 @@ function cfgAiOcr() {
     + srow('Kích thước ảnh tối đa gửi lên', 'App thu nhỏ ảnh trên điện thoại trước khi gửi. Tính theo cạnh dài.', `<div class="hstack" style="--gap:12px">${numu(768, 'px')}<span class="help">384–1536 px</span></div>`)
     + srow('Thời gian chờ tối đa', 'Quá thời gian thì app báo không đọc được và mở Nhập tay.', `<div class="hstack" style="--gap:12px">${numu(30, 'giây')}<span class="help">10–120 giây</span></div>`)
     + srow('Lưu ảnh', 'Cố định, không đổi được. Quản trị viên không xem được ảnh hay nội dung đọc được.', fld('Không lưu · xóa ngay sau khi đọc', { cls: 'disabled', icon: 'lock' })));
+}
+
+/* ---------- K · Xác thực số điện thoại (chờ duyệt) ---------- */
+function cfgPhone() {
+  const webhook = 'https://api.thuchi.vn/api/sms-gateway/inbound';
+  return cfgHead('Đăng ký & truy cập', 'Ai được vào app, và vào trong bao lâu.')
+  + scard('Xác thực số điện thoại', `<span class="label-s hstack" style="--gap:8px"><span class="dot"></span>Máy cổng nhận tin gần nhất 08:41 hôm nay</span>`,
+      srow('Bật xác thực số điện thoại', 'Tắt thì app ẩn mục Số điện thoại và lựa chọn quên mật khẩu qua SĐT. Số đã gắn vẫn được giữ.', sw(true), 'inline')
+    + srow('Số máy cổng', 'Số SIM trên máy Android nhận yêu cầu xác nhận. App không bao giờ hiện số này cho người dùng, chỉ dùng để điền sẵn người nhận trong tin yêu cầu.', fld('0901 234 567', { icon: 'smartphone', cls: 'mono' }))
+    + srow('Khóa máy cổng', 'Máy cổng gửi kèm khóa này để máy chủ biết tin đến từ đúng máy. Tạo khóa mới thì khóa cũ hết hiệu lực ngay.',
+        `<div class="hstack" style="--gap:10px"><div class="field disabled grow"><span class="secret grow">••••••••••••••••</span><span class="badge ok" style="height:22px">${ic('lock')}Đã lưu</span></div><button class="btn btn-secondary">${ic('key-round')}Tạo khóa mới</button></div><div class="help">Đã lưu · 20/10 08:40 bởi Administrator. Không hiển thị lại, khóa mới chỉ hiện một lần để chép sang máy cổng.</div>`)
+    + srow('Địa chỉ nhận tin (webhook)', 'Dán vào app chuyển tiếp SMS trên máy cổng, kèm header <code>x-gateway-key</code>.',
+        fld(webhook, { cls: 'disabled mono', trail: `<span class="icon-btn" style="width:28px;height:28px;margin-right:-6px;color:var(--color-on-surface)" title="Sao chép">${ic('copy', 'width:15px;height:15px')}</span>` }) + `<div class="help"><span class="link" style="font-size:12.5px">${ic('book-open')}Xem hướng dẫn cài máy cổng</span></div>`)
+    + srow('Mã hết hạn sau', 'Tính từ lúc app hiện mã. Hết hạn thì người dùng bấm Lấy mã mới.', `<div class="hstack" style="--gap:12px">${numu(5, 'phút')}<span class="help">1–30 phút</span></div>`)
+    + srow('Số lần xin mã', 'Quá giới hạn thì app báo thời gian chờ trước khi xin mã tiếp.', `<div class="hstack" style="--gap:10px">${numu(3, 'lần', '', 120)}<span class="muted">trong 10 phút</span><span class="help" style="margin-left:2px">1–20 lần</span></div>`));
+}
+
+function cfgMailTpl() {
+  const prev = (file, title, when) => `<div><div class="mp-h"><span class="fw6" style="font-size:14px">${title}</span><span class="t2">${when}</span></div><div class="mp-f"><iframe src="../email/${file}" title="${title}" scrolling="no" loading="eager"></iframe></div></div>`;
+  return cfgHead('Email (SMTP)', 'Máy chủ gửi mã OTP quên mật khẩu và các email hệ thống.', `<span class="badge ok">${ic('circle-check')}Đã cấu hình</span>`)
+  + `<div class="card scard">
+      <div class="card-h"><div><div class="title-m">Mẫu email</div><div class="label-s mt-1">Nội dung cố định, gửi bằng cấu hình SMTP ở trên. Xem trước đúng như người dùng nhận.</div></div><span class="badge">${ic('mail')}5 mẫu</span></div>
+      <div class="mail-prev">
+        ${prev('mail-otp.html', 'Mã đặt lại mật khẩu', 'Quên mật khẩu qua email')}
+        ${prev('mail-linked.html', 'Đã gắn số điện thoại', 'Sau khi gắn số thành công')}
+      </div>
+      <div class="srow" style="grid-template-columns:1fr;padding:14px 24px"><div class="t2" style="white-space:normal">Cùng kiểu: <b class="fw6" style="color:var(--color-on-surface)">Số điện thoại đã được đổi</b> · <b class="fw6" style="color:var(--color-on-surface)">Đã gỡ số điện thoại</b> · <b class="fw6" style="color:var(--color-on-surface)">Mật khẩu vừa được đặt lại</b>.</div></div>
+    </div>`;
 }
 
 document.querySelectorAll('[data-ai-page]').forEach(el => el.innerHTML = aiPage(el.dataset.aiPage));
