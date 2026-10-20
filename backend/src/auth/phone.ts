@@ -62,6 +62,12 @@ export function normalizePhone(raw: string): string | null {
   return /^0(3|5|7|8|9)\d{8}$/.test(d) ? d : null;
 }
 
+/** minhanh.nguyen@gmail.com → minh•••@gmail.com */
+export function maskEmail(email: string) {
+  const [local, domain] = email.split('@');
+  return `${local.slice(0, Math.min(4, Math.max(1, local.length - 1)))}•••@${domain}`;
+}
+
 const codeHash = (phone: string, code: string) => createHash('sha256').update(`${phone}:${code}`).digest('hex');
 const PHONE_INVALID = 'Số điện thoại không hợp lệ (số di động Việt Nam, 10 chữ số)';
 const SESSION_INVALID = 'Phiên xác thực không hợp lệ hoặc đã hết hạn';
@@ -161,10 +167,14 @@ export class PhoneService {
     return this.create(phone, user && user.status !== 'LOCKED' ? user.id : null, 'RESET');
   }
 
+  /** maskedEmail chỉ có khi đã VERIFIED (người gọi vừa chứng minh cầm SIM) — trước đó không lộ số nào gắn tài khoản nào. */
   async resetStatus(id: string) {
     const v = await this.prisma.phoneVerification.findFirst({ where: { id, purpose: 'RESET' } });
     if (!v) throw new NotFoundException('Không tìm thấy phiên xác thực');
-    return this.view(v);
+    const view = this.view(v);
+    if (view.status !== 'VERIFIED') return view;
+    const user = v.userId ? await this.prisma.user.findUnique({ where: { id: v.userId }, select: { email: true, phone: true } }) : null;
+    return { ...view, maskedEmail: user && user.phone === v.phone ? maskEmail(user.email) : null };
   }
 
   /** Phiên RESET đã VERIFIED, còn hạn, gắn đúng tài khoản → đặt mật khẩu mới, đăng xuất mọi thiết bị, báo qua email. */

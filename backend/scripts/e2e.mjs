@@ -1584,6 +1584,8 @@ group('auth: xác thực số điện thoại (tự nhắn mã tới số cổng
   const g = r.data;
   check('reset: unknown number still gets a session (no enumeration)', r.status === 201 && /^\d{6}$/.test(g.code), r.data);
   await inbound({ from: P4, text: g.code });
+  r = await req('GET', `/auth/forgot-password/phone/${g.verificationId}`);
+  check('unknown-number session VERIFIED => maskedEmail null', r.data.status === 'VERIFIED' && r.data.maskedEmail === null, r.data);
   r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: g.verificationId, newPassword: 'newpass9' } });
   check('reset with unknown-number session => 400 generic', r.status === 400 && r.data.message === 'Phiên xác thực không hợp lệ hoặc đã hết hạn', r.data);
   r = await req('POST', '/auth/forgot-password/phone', { body: { phone: P3 } });
@@ -1591,10 +1593,11 @@ group('auth: xác thực số điện thoại (tự nhắn mã tới số cổng
   r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: rs.verificationId, newPassword: 'newpass9' } });
   check('reset before SMS arrives => 400', r.status === 400, r.data);
   r = await req('GET', `/auth/forgot-password/phone/${rs.verificationId}`);
-  check('public status PENDING', r.data.status === 'PENDING', r.data);
+  check('public status PENDING, no maskedEmail before SMS', r.data.status === 'PENDING' && !('maskedEmail' in r.data), r.data);
   r = await inbound({ phoneNumber: P3, body: `${rs.code}` });
   r = await req('GET', `/auth/forgot-password/phone/${rs.verificationId}`);
-  check('public status VERIFIED after SMS', r.data.status === 'VERIFIED', r.data);
+  const ue = U.email.toLowerCase();
+  check('public status VERIFIED after SMS + maskedEmail of the account', r.data.status === 'VERIFIED' && r.data.maskedEmail === `${ue.slice(0, 4)}•••@${ue.split('@')[1]}` && !r.data.maskedEmail.includes(ue.split('@')[0]), r.data);
   r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: rs.verificationId, newPassword: 'x' } });
   check('reset weak password 400 (session kept)', r.status === 400, r.data);
   r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: rs.verificationId, newPassword: 'newpass9' } });
