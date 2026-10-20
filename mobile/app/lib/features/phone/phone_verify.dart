@@ -95,6 +95,10 @@ class PhoneRepository {
 
   Future<PhoneStatus> resetStatus(String id) => _status('auth/forgot-password/phone/$id');
 
+  /// Email che (minh•••@gmail.com) của tài khoản gắn số — máy chủ chỉ trả khi phiên đã VERIFIED.
+  Future<String?> resetMaskedEmail(String id) async =>
+      (await _request(() => _dio.get<Map<String, dynamic>>('auth/forgot-password/phone/$id'))).data?['maskedEmail'] as String?;
+
   Future<void> resetPassword({required String verificationId, required String newPassword}) =>
       _request(() => _dio.post<void>('auth/reset-password/phone', data: {'verificationId': verificationId, 'newPassword': newPassword}));
 
@@ -561,8 +565,13 @@ class _PhoneConfirmScreenState extends ConsumerState<PhoneConfirmScreen> with Wi
         ref.read(appSessionProvider).updateUser(user);
       } catch (_) {}
     } else {
+      String? maskedEmail;
+      try {
+        maskedEmail = await ref.read(phoneRepositoryProvider).resetMaskedEmail(_session.verificationId);
+      } catch (_) {}
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => PhoneResetPasswordScreen(verificationId: _session.verificationId)),
+        MaterialPageRoute<void>(builder: (_) => PhoneResetPasswordScreen(verificationId: _session.verificationId, maskedEmail: maskedEmail)),
       );
     }
   }
@@ -1238,8 +1247,9 @@ class _ChoiceCard extends StatelessWidget {
 /* ============================== 08 · Đặt mật khẩu mới (sau khi xác nhận số) ============================== */
 
 class PhoneResetPasswordScreen extends ConsumerStatefulWidget {
-  const PhoneResetPasswordScreen({required this.verificationId, super.key});
+  const PhoneResetPasswordScreen({required this.verificationId, this.maskedEmail, super.key});
   final String verificationId;
+  final String? maskedEmail;
 
   @override
   ConsumerState<PhoneResetPasswordScreen> createState() => _PhoneResetPasswordScreenState();
@@ -1297,7 +1307,7 @@ class _PhoneResetPasswordScreenState extends ConsumerState<PhoneResetPasswordScr
         ),
       ),
       title: 'Đặt mật khẩu mới',
-      subtitle: 'Cho tài khoản đã gắn số điện thoại này.',
+      subtitle: widget.maskedEmail != null ? 'Cho tài khoản ${widget.maskedEmail}.' : 'Cho tài khoản đã gắn số điện thoại này.',
       bottom: [AppButton(label: 'Đặt mật khẩu mới', onPressed: _submit, loading: _loading)],
       children: [
         Form(
@@ -1332,7 +1342,10 @@ class _PhoneResetPasswordScreenState extends ConsumerState<PhoneResetPasswordScr
         ),
         if (_error != null) _InlineError(_error!),
         const SizedBox(height: 24),
-        const _Note(icon: LucideIcons.mail, child: Text('Sau khi đặt lại, chúng tôi gửi email báo tới email của tài khoản.')),
+        _Note(
+          icon: LucideIcons.mail,
+          child: Text('Sau khi đặt lại, chúng tôi gửi email báo tới ${widget.maskedEmail ?? 'email của tài khoản'}.'),
+        ),
       ],
     );
   }
