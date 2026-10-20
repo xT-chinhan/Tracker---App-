@@ -4,11 +4,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/network/api_exception.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../phone/phone_verify.dart';
+import '../application/app_session.dart';
 import '../application/auth_flow_service.dart';
 import 'auth_scaffold.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
-  const ForgotPasswordScreen({super.key});
+  const ForgotPasswordScreen({this.emailOnly = false, super.key});
+
+  /// true = màn nhập email (đã chọn "Qua email" ở màn chọn cách).
+  final bool emailOnly;
 
   @override
   ConsumerState<ForgotPasswordScreen> createState() =>
@@ -49,6 +54,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Bật xác thực số điện thoại: luôn hiện cả hai cách (mockup 50-sdt-07)
+    final phoneOtp =
+        ref.watch(appSessionProvider).config?.phoneOtp.enabled ?? false;
+    if (phoneOtp && !widget.emailOnly) {
+      return const ForgotPasswordChoiceScreen();
+    }
     return AuthScaffold(
       title: 'Quên mật khẩu?',
       subtitle:

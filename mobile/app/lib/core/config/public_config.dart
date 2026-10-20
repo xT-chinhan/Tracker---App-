@@ -13,6 +13,7 @@ abstract class PublicConfig with _$PublicConfig {
     String? privacyUrl,
     required String currency,
     required bool registrationEnabled,
+    @Default(PhoneOtpPublicConfig()) PhoneOtpPublicConfig phoneOtp,
     required MaintenanceConfig maintenance,
     required FeatureConfig features,
     required AiPublicConfig ai,
@@ -24,6 +25,18 @@ abstract class PublicConfig with _$PublicConfig {
 
   factory PublicConfig.fromJson(Map<String, dynamic> json) =>
       _$PublicConfigFromJson(json);
+}
+
+/// Số điện thoại (gắn số, quên mật khẩu qua SĐT). Tắt = ẩn dòng Cài đặt › Số điện thoại và cách "Qua số điện thoại".
+@freezed
+abstract class PhoneOtpPublicConfig with _$PhoneOtpPublicConfig {
+  const factory PhoneOtpPublicConfig({
+    @Default(false) bool enabled,
+    @Default(5) int codeMinutes,
+  }) = _PhoneOtpPublicConfig;
+
+  factory PhoneOtpPublicConfig.fromJson(Map<String, dynamic> json) =>
+      _$PhoneOtpPublicConfigFromJson(json);
 }
 
 @freezed

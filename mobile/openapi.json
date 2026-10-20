@@ -102,6 +102,29 @@
                                                 "type": "string",
                                                 "format": "date-time",
                                                 "nullable": true
+                                            },
+                                            "phoneOtpEnabled": {
+                                                "type": "boolean"
+                                            },
+                                            "smsGatewayNumber": {
+                                                "type": "string",
+                                                "maxLength": 20,
+                                                "description": "phone"
+                                            },
+                                            "smsGatewayKey": {
+                                                "type": "string",
+                                                "maxLength": 200,
+                                                "description": "Bí mật: chỉ ghi, không bao giờ trả về. Chuỗi rỗng = xóa"
+                                            },
+                                            "phoneCodeMinutes": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 30
+                                            },
+                                            "phoneMaxRequests": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 20
                                             }
                                         }
                                     },
@@ -429,6 +452,25 @@
                 ]
             }
         },
+        "/api/admin/config/email-templates": {
+            "get": {
+                "operationId": "AdminConfigController_emailTemplates",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin config"
+                ]
+            }
+        },
         "/api/admin/config/smtp/test": {
             "post": {
                 "operationId": "AdminConfigController_testSmtp",
@@ -660,6 +702,196 @@
                         "bearer": []
                     }
                 ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me/phone/verifications": {
+            "post": {
+                "operationId": "PhoneController_startLink",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartLinkDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me/phone/verifications/{id}": {
+            "get": {
+                "operationId": "PhoneController_linkStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me/phone": {
+            "delete": {
+                "operationId": "PhoneController_remove",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RemovePhoneDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/forgot-password/phone": {
+            "post": {
+                "operationId": "PhoneController_startReset",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartResetDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/forgot-password/phone/{id}": {
+            "get": {
+                "operationId": "PhoneController_resetStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/reset-password/phone": {
+            "post": {
+                "operationId": "PhoneController_reset",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetByPhoneDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/sms-gateway/inbound": {
+            "post": {
+                "operationId": "PhoneController_inbound",
+                "parameters": [
+                    {
+                        "name": "x-gateway-key",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InboundSmsDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
                 "tags": [
                     "auth"
                 ]
@@ -3869,8 +4101,8 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "PROPOSED",
                                 "ACTIVE",
+                                "PROPOSED",
                                 "REJECTED"
                             ]
                         }
@@ -4000,8 +4232,8 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "PROPOSED",
                                 "ACTIVE",
+                                "PROPOSED",
                                 "REJECTED"
                             ]
                         }
@@ -4474,6 +4706,26 @@
                 "required": [
                     "password"
                 ]
+            },
+            "StartLinkDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "RemovePhoneDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "StartResetDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "ResetByPhoneDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "InboundSmsDto": {
+                "type": "object",
+                "properties": {}
             },
             "CreateWalletDto": {
                 "type": "object",

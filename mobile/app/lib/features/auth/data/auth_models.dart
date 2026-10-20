@@ -26,6 +26,8 @@ abstract class AppUser with _$AppUser {
     required UserRole role,
     required UserStatus status,
     DateTime? lastLoginAt,
+    String? phone,
+    DateTime? phoneVerifiedAt,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _AppUser;

@@ -1,5 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- "Số điện thoại": app phát hành bằng APK (không qua Google Play) nên tự gửi 1 tin chứa 6 số xác nhận.
+         READ_PHONE_STATE chỉ để liệt kê SIM (máy 2 SIM: hỏi gửi từ SIM nào). Từ chối → mở Tin nhắn soạn sẵn. -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
     <application
         android:label="Thu Chi"
         android:name="${applicationName}"
@@ -54,6 +59,15 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Mở ứng dụng Tin nhắn với yêu cầu xác nhận soạn sẵn (url_launcher, sms:) -->
+        <intent>
+            <action android:name="android.intent.action.SENDTO"/>
+            <data android:scheme="sms"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="sms"/>
         </intent>
     </queries>
 </manifest>

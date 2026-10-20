@@ -15,6 +15,7 @@ import '../../categories/application/categories_service.dart';
 import '../../categories/presentation/category_picker_sheet.dart';
 import '../../home/application/home_service.dart';
 import '../../notifications/application/notifications_service.dart';
+import '../../phone/phone_verify.dart';
 import '../../quick_templates/data/quick_template_repository.dart';
 import '../../recurring/application/recurring_service.dart';
 import '../../reports/data/report_repository.dart';
@@ -120,6 +121,7 @@ class SettingsScreen extends ConsumerWidget {
     final bank = ref.watch(bankNotificationsProvider);
     final showBank =
         bankNotificationsSupported && (features?.bankNotifications ?? false);
+    final showPhone = config?.phoneOtp.enabled ?? false;
 
     final totalBalanceStr = walletsAsync.maybeWhen(
       data: (d) => MoneyFormatter.format(d.totalBalance),
@@ -238,6 +240,69 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
 
+            // Section: Tài khoản (mockup 50-sdt-01 / 09)
+            _buildSectionHeader('Tài khoản'),
+            _buildGroupCard(
+              children: [
+                _buildSettingRow(
+                  icon: LucideIcons.lock_keyhole,
+                  title: 'Đổi mật khẩu',
+                  onTap: () => ChangePasswordSheet.show(context),
+                ),
+                if (showPhone) ...[
+                  const _RowDivider(),
+                  // màn Số điện thoại cập nhật phiên (gắn / gỡ số) → dòng này đổi ngay khi quay về
+                  ListenableBuilder(
+                    listenable: session,
+                    builder: (context, _) {
+                      final phone = session.user?.phone;
+                      return _buildSettingRow(
+                        icon: LucideIcons.smartphone,
+                        title: 'Số điện thoại',
+                        trailingText: phone == null ? 'Chưa gắn' : null,
+                        subtitle: phone == null
+                            ? null
+                            : Text.rich(
+                                TextSpan(
+                                  text: maskPhone(phone),
+                                  children: [
+                                    if (session.user?.phoneVerifiedAt !=
+                                        null) ...[
+                                      const TextSpan(text: ' · '),
+                                      TextSpan(
+                                        text: 'Đã xác thực',
+                                        style: TextStyle(
+                                          color:
+                                              colors?.income ??
+                                              const Color(0xFF1F8A4C),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 13.5,
+                                  color: Color(0xFF787774),
+                                ),
+                              ),
+                        onTap: () => phone == null
+                            ? PhoneNumberScreen.open(context)
+                            : RemovePhoneSheet.show(context),
+                      );
+                    },
+                  ),
+                ],
+              ],
+            ),
+            if (showPhone)
+              const Padding(
+                padding: EdgeInsets.only(top: 8, left: 4),
+                child: Text(
+                  'Dùng để lấy lại mật khẩu khi quên.',
+                  style: TextStyle(fontSize: 13.5, color: Color(0xFF787774)),
+                ),
+              ),
+
             // Section: Quản lý tiền
             _buildSectionHeader('Quản lý tiền'),
             _buildGroupCard(
@@ -345,12 +410,6 @@ class SettingsScreen extends ConsumerWidget {
                     onTap: () => context.push('/ai/settings'),
                   ),
                 ],
-                const _RowDivider(),
-                _buildSettingRow(
-                  icon: LucideIcons.lock,
-                  title: 'Đổi mật khẩu',
-                  onTap: () => ChangePasswordSheet.show(context),
-                ),
               ],
             ),
 
@@ -511,6 +570,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildSettingRow({
     required IconData icon,
     required String title,
+    Widget? subtitle,
     String? trailingText,
     int badgeCount = 0,
     required VoidCallback onTap,
@@ -535,13 +595,22 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(width: 14),
             // Title
             Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF111111),
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF111111),
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 1),
+                    subtitle,
+                  ],
+                ],
               ),
             ),
             // Trailing text if any

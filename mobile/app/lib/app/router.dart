@@ -45,6 +45,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         '/login',
         '/register',
         '/forgot-password',
+        '/forgot-password/email',
         '/reset-password',
       }.contains(location);
 
@@ -86,6 +87,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password/email',
+        builder: (context, state) =>
+            const ForgotPasswordScreen(emailOnly: true),
       ),
       GoRoute(
         path: '/reset-password',

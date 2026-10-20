@@ -140,6 +140,21 @@ Luật: trợ lý chỉ tạo nháp, **không bao giờ tự ghi**; mọi thao t
 
 Thu hay chi do máy chủ quyết: người nhận trùng tên tài khoản → khoản thu. Ảnh không lưu trên máy chủ; ảnh không tính vào hạn mức tin nhắn chat.
 
+### Số điện thoại (ĐÃ LÀM, ảnh `50-sdt-*`, code `app/lib/features/phone/phone_verify.dart`, Android `android/app/src/main/kotlin/vn/thuchi/app/sms/SmsChannel.kt`)
+| Màn | API |
+|---|---|
+| Lối vào: Cài đặt › nhóm **Tài khoản** (Đổi mật khẩu, Số điện thoại "Chưa gắn" / "0912 ••• 678 · Đã xác thực"); Quên mật khẩu › chọn Qua email / Qua số điện thoại | ẩn khi `GET /config/public` → `phoneOtp.enabled = false` (Quên mật khẩu giữ màn chỉ email). `GET /me` → `phone`, `phoneVerifiedAt` |
+| Gắn số (nhập số + mật khẩu hiện tại) | `POST /me/phone/verifications {phone, password}` → `{verificationId, phone, code, expiresAt, smsLink:{android, ios}}`. 400 sai mật khẩu / số không hợp lệ, 409 `PHONE_TAKEN` (lỗi đỏ dưới ô số) / `PHONE_ALREADY_LINKED`, 429 `PHONE_RATE_LIMIT`, 403 `FEATURE_DISABLED` |
+| Gửi yêu cầu xác nhận → Đang chờ → Đã xác thực / Mã đã hết hạn | `GET /me/phone/verifications/:id` mỗi 2 giây: `PENDING` · `VERIFIED` (tải lại `/me`) · `EXPIRED` (Lấy mã mới = xin phiên mới) · `FAILED` (số vừa bị tài khoản khác gắn → về ô số, lỗi đỏ). Quá 1 phút chưa xong: gợi ý kiểm tra SIM + Gửi lại yêu cầu |
+| Gỡ số (sheet cần mật khẩu) | `DELETE /me/phone {password}` → 204 |
+| Quên mật khẩu qua số điện thoại | `POST /auth/forgot-password/phone {phone}` (không cần đăng nhập, luôn trả phiên) → hỏi `GET /auth/forgot-password/phone/:id` → `VERIFIED` → `POST /auth/reset-password/phone {verificationId, newPassword}` → 204, về Đăng nhập kèm thông báo. 400 "Phiên xác thực không hợp lệ hoặc đã hết hạn" |
+
+Luồng xác nhận **không hiện số điện thoại nào** (không số máy cổng, không số của người dùng): số chỉ có trong ô nhập và dòng Cài đặt (đã che). Nội dung tin là 6 số `code` ("Nội dung xác nhận"); số người nhận lấy từ `smsLink`, API cố ý không trả thành trường riêng.
+
+- **App phát hành bằng APK, không lên Google Play** → Android được dùng quyền `SEND_SMS` và **tự gửi tin**: bấm Gửi yêu cầu xác nhận → (lần đầu) thẻ lý do của app + hộp quyền hệ thống `SEND_SMS` + `READ_PHONE_STATE` → máy 2 SIM thì sheet "Gửi từ SIM nào?" (khe + tên nhà mạng, không số) → `SmsManager` của SIM đã chọn (`createForSubscriptionId` từ API 31, `getSmsManagerForSubscriptionId` trước đó) → màn chờ "Đã gửi yêu cầu". Từ chối quyền → mở ứng dụng Tin nhắn soạn sẵn bằng `smsLink.android` (`url_launcher`) + link Cấp quyền trong Cài đặt. MethodChannel `vn.thuchi.app/sms/methods`: `hasPermission`, `requestPermission`, `listSims` → `[{subscriptionId, slot, carrierName}]`, `sendSms {subscriptionId|null, destination, body}` → bool (chờ báo "đã gửi" của nhà mạng tối đa 30 giây), `openAppSettings`.
+- **iOS**: mở khung soạn tin của hệ thống bằng `smsLink.ios`, người dùng tự bấm Gửi. Web / nền khác: `url_launcher` như iOS.
+- Thử khi chạy local: giả lập máy cổng nhận tin bằng `curl -X POST http://localhost:3000/api/sms-gateway/inbound -H 'content-type: application/json' -H 'x-gateway-key: dev-gw-key' -d '{"from":"<số>","text":"<mã>"}'`.
+
 ---
 
 ## 6. Yêu cầu chất lượng (Definition of Done cho mỗi màn)

@@ -16,6 +16,9 @@ _PublicConfig _$PublicConfigFromJson(
   privacyUrl: json['privacyUrl'] as String?,
   currency: json['currency'] as String,
   registrationEnabled: json['registrationEnabled'] as bool,
+  phoneOtp: json['phoneOtp'] == null
+      ? const PhoneOtpPublicConfig()
+      : PhoneOtpPublicConfig.fromJson(json['phoneOtp'] as Map<String, dynamic>),
   maintenance: MaintenanceConfig.fromJson(
     json['maintenance'] as Map<String, dynamic>,
   ),
@@ -38,6 +41,7 @@ Map<String, dynamic> _$PublicConfigToJson(_PublicConfig instance) =>
       'privacyUrl': instance.privacyUrl,
       'currency': instance.currency,
       'registrationEnabled': instance.registrationEnabled,
+      'phoneOtp': instance.phoneOtp,
       'maintenance': instance.maintenance,
       'features': instance.features,
       'ai': instance.ai,
@@ -46,6 +50,20 @@ Map<String, dynamic> _$PublicConfigToJson(_PublicConfig instance) =>
       'otp': instance.otp,
       'mobile': instance.mobile,
     };
+
+_PhoneOtpPublicConfig _$PhoneOtpPublicConfigFromJson(
+  Map<String, dynamic> json,
+) => _PhoneOtpPublicConfig(
+  enabled: json['enabled'] as bool? ?? false,
+  codeMinutes: (json['codeMinutes'] as num?)?.toInt() ?? 5,
+);
+
+Map<String, dynamic> _$PhoneOtpPublicConfigToJson(
+  _PhoneOtpPublicConfig instance,
+) => <String, dynamic>{
+  'enabled': instance.enabled,
+  'codeMinutes': instance.codeMinutes,
+};
 
 _MaintenanceConfig _$MaintenanceConfigFromJson(Map<String, dynamic> json) =>
     _MaintenanceConfig(

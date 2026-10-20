@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PublicConfig {
 
- String get appName; String? get supportEmail; String? get hotline; String? get termsUrl; String? get privacyUrl; String get currency; bool get registrationEnabled; MaintenanceConfig get maintenance; FeatureConfig get features; AiPublicConfig get ai; BudgetThresholdConfig get budget; PasswordConfig get password; OtpConfig get otp; MobileConfig get mobile;
+ String get appName; String? get supportEmail; String? get hotline; String? get termsUrl; String? get privacyUrl; String get currency; bool get registrationEnabled; PhoneOtpPublicConfig get phoneOtp; MaintenanceConfig get maintenance; FeatureConfig get features; AiPublicConfig get ai; BudgetThresholdConfig get budget; PasswordConfig get password; OtpConfig get otp; MobileConfig get mobile;
 /// Create a copy of PublicConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PublicConfigCopyWith<PublicConfig> get copyWith => _$PublicConfigCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PublicConfig&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.supportEmail, supportEmail) || other.supportEmail == supportEmail)&&(identical(other.hotline, hotline) || other.hotline == hotline)&&(identical(other.termsUrl, termsUrl) || other.termsUrl == termsUrl)&&(identical(other.privacyUrl, privacyUrl) || other.privacyUrl == privacyUrl)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.registrationEnabled, registrationEnabled) || other.registrationEnabled == registrationEnabled)&&(identical(other.maintenance, maintenance) || other.maintenance == maintenance)&&(identical(other.features, features) || other.features == features)&&(identical(other.ai, ai) || other.ai == ai)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.password, password) || other.password == password)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.mobile, mobile) || other.mobile == mobile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PublicConfig&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.supportEmail, supportEmail) || other.supportEmail == supportEmail)&&(identical(other.hotline, hotline) || other.hotline == hotline)&&(identical(other.termsUrl, termsUrl) || other.termsUrl == termsUrl)&&(identical(other.privacyUrl, privacyUrl) || other.privacyUrl == privacyUrl)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.registrationEnabled, registrationEnabled) || other.registrationEnabled == registrationEnabled)&&(identical(other.phoneOtp, phoneOtp) || other.phoneOtp == phoneOtp)&&(identical(other.maintenance, maintenance) || other.maintenance == maintenance)&&(identical(other.features, features) || other.features == features)&&(identical(other.ai, ai) || other.ai == ai)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.password, password) || other.password == password)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.mobile, mobile) || other.mobile == mobile));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,appName,supportEmail,hotline,termsUrl,privacyUrl,currency,registrationEnabled,maintenance,features,ai,budget,password,otp,mobile);
+int get hashCode => Object.hash(runtimeType,appName,supportEmail,hotline,termsUrl,privacyUrl,currency,registrationEnabled,phoneOtp,maintenance,features,ai,budget,password,otp,mobile);
 
 @override
 String toString() {
-  return 'PublicConfig(appName: $appName, supportEmail: $supportEmail, hotline: $hotline, termsUrl: $termsUrl, privacyUrl: $privacyUrl, currency: $currency, registrationEnabled: $registrationEnabled, maintenance: $maintenance, features: $features, ai: $ai, budget: $budget, password: $password, otp: $otp, mobile: $mobile)';
+  return 'PublicConfig(appName: $appName, supportEmail: $supportEmail, hotline: $hotline, termsUrl: $termsUrl, privacyUrl: $privacyUrl, currency: $currency, registrationEnabled: $registrationEnabled, phoneOtp: $phoneOtp, maintenance: $maintenance, features: $features, ai: $ai, budget: $budget, password: $password, otp: $otp, mobile: $mobile)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $PublicConfigCopyWith<$Res>  {
   factory $PublicConfigCopyWith(PublicConfig value, $Res Function(PublicConfig) _then) = _$PublicConfigCopyWithImpl;
 @useResult
 $Res call({
- String appName, String? supportEmail, String? hotline, String? termsUrl, String? privacyUrl, String currency, bool registrationEnabled, MaintenanceConfig maintenance, FeatureConfig features, AiPublicConfig ai, BudgetThresholdConfig budget, PasswordConfig password, OtpConfig otp, MobileConfig mobile
+ String appName, String? supportEmail, String? hotline, String? termsUrl, String? privacyUrl, String currency, bool registrationEnabled, PhoneOtpPublicConfig phoneOtp, MaintenanceConfig maintenance, FeatureConfig features, AiPublicConfig ai, BudgetThresholdConfig budget, PasswordConfig password, OtpConfig otp, MobileConfig mobile
 });
 
 
-$MaintenanceConfigCopyWith<$Res> get maintenance;$FeatureConfigCopyWith<$Res> get features;$AiPublicConfigCopyWith<$Res> get ai;$BudgetThresholdConfigCopyWith<$Res> get budget;$PasswordConfigCopyWith<$Res> get password;$OtpConfigCopyWith<$Res> get otp;$MobileConfigCopyWith<$Res> get mobile;
+$PhoneOtpPublicConfigCopyWith<$Res> get phoneOtp;$MaintenanceConfigCopyWith<$Res> get maintenance;$FeatureConfigCopyWith<$Res> get features;$AiPublicConfigCopyWith<$Res> get ai;$BudgetThresholdConfigCopyWith<$Res> get budget;$PasswordConfigCopyWith<$Res> get password;$OtpConfigCopyWith<$Res> get otp;$MobileConfigCopyWith<$Res> get mobile;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$PublicConfigCopyWithImpl<$Res>
 
 /// Create a copy of PublicConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? appName = null,Object? supportEmail = freezed,Object? hotline = freezed,Object? termsUrl = freezed,Object? privacyUrl = freezed,Object? currency = null,Object? registrationEnabled = null,Object? maintenance = null,Object? features = null,Object? ai = null,Object? budget = null,Object? password = null,Object? otp = null,Object? mobile = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? appName = null,Object? supportEmail = freezed,Object? hotline = freezed,Object? termsUrl = freezed,Object? privacyUrl = freezed,Object? currency = null,Object? registrationEnabled = null,Object? phoneOtp = null,Object? maintenance = null,Object? features = null,Object? ai = null,Object? budget = null,Object? password = null,Object? otp = null,Object? mobile = null,}) {
   return _then(_self.copyWith(
 appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
 as String,supportEmail: freezed == supportEmail ? _self.supportEmail : supportEmail // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as String?,termsUrl: freezed == termsUrl ? _self.termsUrl : termsUrl // ignore: 
 as String?,privacyUrl: freezed == privacyUrl ? _self.privacyUrl : privacyUrl // ignore: cast_nullable_to_non_nullable
 as String?,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String,registrationEnabled: null == registrationEnabled ? _self.registrationEnabled : registrationEnabled // ignore: cast_nullable_to_non_nullable
-as bool,maintenance: null == maintenance ? _self.maintenance : maintenance // ignore: cast_nullable_to_non_nullable
+as bool,phoneOtp: null == phoneOtp ? _self.phoneOtp : phoneOtp // ignore: cast_nullable_to_non_nullable
+as PhoneOtpPublicConfig,maintenance: null == maintenance ? _self.maintenance : maintenance // ignore: cast_nullable_to_non_nullable
 as MaintenanceConfig,features: null == features ? _self.features : features // ignore: cast_nullable_to_non_nullable
 as FeatureConfig,ai: null == ai ? _self.ai : ai // ignore: cast_nullable_to_non_nullable
 as AiPublicConfig,budget: null == budget ? _self.budget : budget // ignore: cast_nullable_to_non_nullable
@@ -85,6 +86,15 @@ as MobileConfig,
   ));
 }
 /// Create a copy of PublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PhoneOtpPublicConfigCopyWith<$Res> get phoneOtp {
+  
+  return $PhoneOtpPublicConfigCopyWith<$Res>(_self.phoneOtp, (value) {
+    return _then(_self.copyWith(phoneOtp: value));
+  });
+}/// Create a copy of PublicConfig
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -229,10 +239,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String appName,  String? supportEmail,  String? hotline,  String? termsUrl,  String? privacyUrl,  String currency,  bool registrationEnabled,  MaintenanceConfig maintenance,  FeatureConfig features,  AiPublicConfig ai,  BudgetThresholdConfig budget,  PasswordConfig password,  OtpConfig otp,  MobileConfig mobile)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String appName,  String? supportEmail,  String? hotline,  String? termsUrl,  String? privacyUrl,  String currency,  bool registrationEnabled,  PhoneOtpPublicConfig phoneOtp,  MaintenanceConfig maintenance,  FeatureConfig features,  AiPublicConfig ai,  BudgetThresholdConfig budget,  PasswordConfig password,  OtpConfig otp,  MobileConfig mobile)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PublicConfig() when $default != null:
-return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_that.privacyUrl,_that.currency,_that.registrationEnabled,_that.maintenance,_that.features,_that.ai,_that.budget,_that.password,_that.otp,_that.mobile);case _:
+return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_that.privacyUrl,_that.currency,_that.registrationEnabled,_that.phoneOtp,_that.maintenance,_that.features,_that.ai,_that.budget,_that.password,_that.otp,_that.mobile);case _:
   return orElse();
 
 }
@@ -250,10 +260,10 @@ return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String appName,  String? supportEmail,  String? hotline,  String? termsUrl,  String? privacyUrl,  String currency,  bool registrationEnabled,  MaintenanceConfig maintenance,  FeatureConfig features,  AiPublicConfig ai,  BudgetThresholdConfig budget,  PasswordConfig password,  OtpConfig otp,  MobileConfig mobile)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String appName,  String? supportEmail,  String? hotline,  String? termsUrl,  String? privacyUrl,  String currency,  bool registrationEnabled,  PhoneOtpPublicConfig phoneOtp,  MaintenanceConfig maintenance,  FeatureConfig features,  AiPublicConfig ai,  BudgetThresholdConfig budget,  PasswordConfig password,  OtpConfig otp,  MobileConfig mobile)  $default,) {final _that = this;
 switch (_that) {
 case _PublicConfig():
-return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_that.privacyUrl,_that.currency,_that.registrationEnabled,_that.maintenance,_that.features,_that.ai,_that.budget,_that.password,_that.otp,_that.mobile);case _:
+return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_that.privacyUrl,_that.currency,_that.registrationEnabled,_that.phoneOtp,_that.maintenance,_that.features,_that.ai,_that.budget,_that.password,_that.otp,_that.mobile);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -270,10 +280,10 @@ return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String appName,  String? supportEmail,  String? hotline,  String? termsUrl,  String? privacyUrl,  String currency,  bool registrationEnabled,  MaintenanceConfig maintenance,  FeatureConfig features,  AiPublicConfig ai,  BudgetThresholdConfig budget,  PasswordConfig password,  OtpConfig otp,  MobileConfig mobile)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String appName,  String? supportEmail,  String? hotline,  String? termsUrl,  String? privacyUrl,  String currency,  bool registrationEnabled,  PhoneOtpPublicConfig phoneOtp,  MaintenanceConfig maintenance,  FeatureConfig features,  AiPublicConfig ai,  BudgetThresholdConfig budget,  PasswordConfig password,  OtpConfig otp,  MobileConfig mobile)?  $default,) {final _that = this;
 switch (_that) {
 case _PublicConfig() when $default != null:
-return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_that.privacyUrl,_that.currency,_that.registrationEnabled,_that.maintenance,_that.features,_that.ai,_that.budget,_that.password,_that.otp,_that.mobile);case _:
+return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_that.privacyUrl,_that.currency,_that.registrationEnabled,_that.phoneOtp,_that.maintenance,_that.features,_that.ai,_that.budget,_that.password,_that.otp,_that.mobile);case _:
   return null;
 
 }
@@ -285,7 +295,7 @@ return $default(_that.appName,_that.supportEmail,_that.hotline,_that.termsUrl,_t
 @JsonSerializable()
 
 class _PublicConfig implements PublicConfig {
-  const _PublicConfig({required this.appName, this.supportEmail, this.hotline, this.termsUrl, this.privacyUrl, required this.currency, required this.registrationEnabled, required this.maintenance, required this.features, required this.ai, required this.budget, required this.password, required this.otp, required this.mobile});
+  const _PublicConfig({required this.appName, this.supportEmail, this.hotline, this.termsUrl, this.privacyUrl, required this.currency, required this.registrationEnabled, this.phoneOtp = const PhoneOtpPublicConfig(), required this.maintenance, required this.features, required this.ai, required this.budget, required this.password, required this.otp, required this.mobile});
   factory _PublicConfig.fromJson(Map<String, dynamic> json) => _$PublicConfigFromJson(json);
 
 @override final  String appName;
@@ -295,6 +305,7 @@ class _PublicConfig implements PublicConfig {
 @override final  String? privacyUrl;
 @override final  String currency;
 @override final  bool registrationEnabled;
+@override@JsonKey() final  PhoneOtpPublicConfig phoneOtp;
 @override final  MaintenanceConfig maintenance;
 @override final  FeatureConfig features;
 @override final  AiPublicConfig ai;
@@ -316,16 +327,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PublicConfig&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.supportEmail, supportEmail) || other.supportEmail == supportEmail)&&(identical(other.hotline, hotline) || other.hotline == hotline)&&(identical(other.termsUrl, termsUrl) || other.termsUrl == termsUrl)&&(identical(other.privacyUrl, privacyUrl) || other.privacyUrl == privacyUrl)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.registrationEnabled, registrationEnabled) || other.registrationEnabled == registrationEnabled)&&(identical(other.maintenance, maintenance) || other.maintenance == maintenance)&&(identical(other.features, features) || other.features == features)&&(identical(other.ai, ai) || other.ai == ai)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.password, password) || other.password == password)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.mobile, mobile) || other.mobile == mobile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PublicConfig&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.supportEmail, supportEmail) || other.supportEmail == supportEmail)&&(identical(other.hotline, hotline) || other.hotline == hotline)&&(identical(other.termsUrl, termsUrl) || other.termsUrl == termsUrl)&&(identical(other.privacyUrl, privacyUrl) || other.privacyUrl == privacyUrl)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.registrationEnabled, registrationEnabled) || other.registrationEnabled == registrationEnabled)&&(identical(other.phoneOtp, phoneOtp) || other.phoneOtp == phoneOtp)&&(identical(other.maintenance, maintenance) || other.maintenance == maintenance)&&(identical(other.features, features) || other.features == features)&&(identical(other.ai, ai) || other.ai == ai)&&(identical(other.budget, budget) || other.budget == budget)&&(identical(other.password, password) || other.password == password)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.mobile, mobile) || other.mobile == mobile));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,appName,supportEmail,hotline,termsUrl,privacyUrl,currency,registrationEnabled,maintenance,features,ai,budget,password,otp,mobile);
+int get hashCode => Object.hash(runtimeType,appName,supportEmail,hotline,termsUrl,privacyUrl,currency,registrationEnabled,phoneOtp,maintenance,features,ai,budget,password,otp,mobile);
 
 @override
 String toString() {
-  return 'PublicConfig(appName: $appName, supportEmail: $supportEmail, hotline: $hotline, termsUrl: $termsUrl, privacyUrl: $privacyUrl, currency: $currency, registrationEnabled: $registrationEnabled, maintenance: $maintenance, features: $features, ai: $ai, budget: $budget, password: $password, otp: $otp, mobile: $mobile)';
+  return 'PublicConfig(appName: $appName, supportEmail: $supportEmail, hotline: $hotline, termsUrl: $termsUrl, privacyUrl: $privacyUrl, currency: $currency, registrationEnabled: $registrationEnabled, phoneOtp: $phoneOtp, maintenance: $maintenance, features: $features, ai: $ai, budget: $budget, password: $password, otp: $otp, mobile: $mobile)';
 }
 
 
@@ -336,11 +347,11 @@ abstract mixin class _$PublicConfigCopyWith<$Res> implements $PublicConfigCopyWi
   factory _$PublicConfigCopyWith(_PublicConfig value, $Res Function(_PublicConfig) _then) = __$PublicConfigCopyWithImpl;
 @override @useResult
 $Res call({
- String appName, String? supportEmail, String? hotline, String? termsUrl, String? privacyUrl, String currency, bool registrationEnabled, MaintenanceConfig maintenance, FeatureConfig features, AiPublicConfig ai, BudgetThresholdConfig budget, PasswordConfig password, OtpConfig otp, MobileConfig mobile
+ String appName, String? supportEmail, String? hotline, String? termsUrl, String? privacyUrl, String currency, bool registrationEnabled, PhoneOtpPublicConfig phoneOtp, MaintenanceConfig maintenance, FeatureConfig features, AiPublicConfig ai, BudgetThresholdConfig budget, PasswordConfig password, OtpConfig otp, MobileConfig mobile
 });
 
 
-@override $MaintenanceConfigCopyWith<$Res> get maintenance;@override $FeatureConfigCopyWith<$Res> get features;@override $AiPublicConfigCopyWith<$Res> get ai;@override $BudgetThresholdConfigCopyWith<$Res> get budget;@override $PasswordConfigCopyWith<$Res> get password;@override $OtpConfigCopyWith<$Res> get otp;@override $MobileConfigCopyWith<$Res> get mobile;
+@override $PhoneOtpPublicConfigCopyWith<$Res> get phoneOtp;@override $MaintenanceConfigCopyWith<$Res> get maintenance;@override $FeatureConfigCopyWith<$Res> get features;@override $AiPublicConfigCopyWith<$Res> get ai;@override $BudgetThresholdConfigCopyWith<$Res> get budget;@override $PasswordConfigCopyWith<$Res> get password;@override $OtpConfigCopyWith<$Res> get otp;@override $MobileConfigCopyWith<$Res> get mobile;
 
 }
 /// @nodoc
@@ -353,7 +364,7 @@ class __$PublicConfigCopyWithImpl<$Res>
 
 /// Create a copy of PublicConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? appName = null,Object? supportEmail = freezed,Object? hotline = freezed,Object? termsUrl = freezed,Object? privacyUrl = freezed,Object? currency = null,Object? registrationEnabled = null,Object? maintenance = null,Object? features = null,Object? ai = null,Object? budget = null,Object? password = null,Object? otp = null,Object? mobile = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? appName = null,Object? supportEmail = freezed,Object? hotline = freezed,Object? termsUrl = freezed,Object? privacyUrl = freezed,Object? currency = null,Object? registrationEnabled = null,Object? phoneOtp = null,Object? maintenance = null,Object? features = null,Object? ai = null,Object? budget = null,Object? password = null,Object? otp = null,Object? mobile = null,}) {
   return _then(_PublicConfig(
 appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
 as String,supportEmail: freezed == supportEmail ? _self.supportEmail : supportEmail // ignore: cast_nullable_to_non_nullable
@@ -362,7 +373,8 @@ as String?,termsUrl: freezed == termsUrl ? _self.termsUrl : termsUrl // ignore: 
 as String?,privacyUrl: freezed == privacyUrl ? _self.privacyUrl : privacyUrl // ignore: cast_nullable_to_non_nullable
 as String?,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String,registrationEnabled: null == registrationEnabled ? _self.registrationEnabled : registrationEnabled // ignore: cast_nullable_to_non_nullable
-as bool,maintenance: null == maintenance ? _self.maintenance : maintenance // ignore: cast_nullable_to_non_nullable
+as bool,phoneOtp: null == phoneOtp ? _self.phoneOtp : phoneOtp // ignore: cast_nullable_to_non_nullable
+as PhoneOtpPublicConfig,maintenance: null == maintenance ? _self.maintenance : maintenance // ignore: cast_nullable_to_non_nullable
 as MaintenanceConfig,features: null == features ? _self.features : features // ignore: cast_nullable_to_non_nullable
 as FeatureConfig,ai: null == ai ? _self.ai : ai // ignore: cast_nullable_to_non_nullable
 as AiPublicConfig,budget: null == budget ? _self.budget : budget // ignore: cast_nullable_to_non_nullable
@@ -374,6 +386,15 @@ as MobileConfig,
 }
 
 /// Create a copy of PublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PhoneOtpPublicConfigCopyWith<$Res> get phoneOtp {
+  
+  return $PhoneOtpPublicConfigCopyWith<$Res>(_self.phoneOtp, (value) {
+    return _then(_self.copyWith(phoneOtp: value));
+  });
+}/// Create a copy of PublicConfig
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -437,6 +458,272 @@ $MobileConfigCopyWith<$Res> get mobile {
     return _then(_self.copyWith(mobile: value));
   });
 }
+}
+
+
+/// @nodoc
+mixin _$PhoneOtpPublicConfig {
+
+ bool get enabled; int get codeMinutes;
+/// Create a copy of PhoneOtpPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PhoneOtpPublicConfigCopyWith<PhoneOtpPublicConfig> get copyWith => _$PhoneOtpPublicConfigCopyWithImpl<PhoneOtpPublicConfig>(this as PhoneOtpPublicConfig, _$identity);
+
+  /// Serializes this PhoneOtpPublicConfig to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PhoneOtpPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.codeMinutes, codeMinutes) || other.codeMinutes == codeMinutes));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enabled,codeMinutes);
+
+@override
+String toString() {
+  return 'PhoneOtpPublicConfig(enabled: $enabled, codeMinutes: $codeMinutes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PhoneOtpPublicConfigCopyWith<$Res>  {
+  factory $PhoneOtpPublicConfigCopyWith(PhoneOtpPublicConfig value, $Res Function(PhoneOtpPublicConfig) _then) = _$PhoneOtpPublicConfigCopyWithImpl;
+@useResult
+$Res call({
+ bool enabled, int codeMinutes
+});
+
+
+
+
+}
+/// @nodoc
+class _$PhoneOtpPublicConfigCopyWithImpl<$Res>
+    implements $PhoneOtpPublicConfigCopyWith<$Res> {
+  _$PhoneOtpPublicConfigCopyWithImpl(this._self, this._then);
+
+  final PhoneOtpPublicConfig _self;
+  final $Res Function(PhoneOtpPublicConfig) _then;
+
+/// Create a copy of PhoneOtpPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? codeMinutes = null,}) {
+  return _then(_self.copyWith(
+enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,codeMinutes: null == codeMinutes ? _self.codeMinutes : codeMinutes // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [PhoneOtpPublicConfig].
+extension PhoneOtpPublicConfigPatterns on PhoneOtpPublicConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PhoneOtpPublicConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PhoneOtpPublicConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PhoneOtpPublicConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _PhoneOtpPublicConfig():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PhoneOtpPublicConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PhoneOtpPublicConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  int codeMinutes)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PhoneOtpPublicConfig() when $default != null:
+return $default(_that.enabled,_that.codeMinutes);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  int codeMinutes)  $default,) {final _that = this;
+switch (_that) {
+case _PhoneOtpPublicConfig():
+return $default(_that.enabled,_that.codeMinutes);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  int codeMinutes)?  $default,) {final _that = this;
+switch (_that) {
+case _PhoneOtpPublicConfig() when $default != null:
+return $default(_that.enabled,_that.codeMinutes);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _PhoneOtpPublicConfig implements PhoneOtpPublicConfig {
+  const _PhoneOtpPublicConfig({this.enabled = false, this.codeMinutes = 5});
+  factory _PhoneOtpPublicConfig.fromJson(Map<String, dynamic> json) => _$PhoneOtpPublicConfigFromJson(json);
+
+@override@JsonKey() final  bool enabled;
+@override@JsonKey() final  int codeMinutes;
+
+/// Create a copy of PhoneOtpPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PhoneOtpPublicConfigCopyWith<_PhoneOtpPublicConfig> get copyWith => __$PhoneOtpPublicConfigCopyWithImpl<_PhoneOtpPublicConfig>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$PhoneOtpPublicConfigToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PhoneOtpPublicConfig&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.codeMinutes, codeMinutes) || other.codeMinutes == codeMinutes));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,enabled,codeMinutes);
+
+@override
+String toString() {
+  return 'PhoneOtpPublicConfig(enabled: $enabled, codeMinutes: $codeMinutes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PhoneOtpPublicConfigCopyWith<$Res> implements $PhoneOtpPublicConfigCopyWith<$Res> {
+  factory _$PhoneOtpPublicConfigCopyWith(_PhoneOtpPublicConfig value, $Res Function(_PhoneOtpPublicConfig) _then) = __$PhoneOtpPublicConfigCopyWithImpl;
+@override @useResult
+$Res call({
+ bool enabled, int codeMinutes
+});
+
+
+
+
+}
+/// @nodoc
+class __$PhoneOtpPublicConfigCopyWithImpl<$Res>
+    implements _$PhoneOtpPublicConfigCopyWith<$Res> {
+  __$PhoneOtpPublicConfigCopyWithImpl(this._self, this._then);
+
+  final _PhoneOtpPublicConfig _self;
+  final $Res Function(_PhoneOtpPublicConfig) _then;
+
+/// Create a copy of PhoneOtpPublicConfig
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? codeMinutes = null,}) {
+  return _then(_PhoneOtpPublicConfig(
+enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,codeMinutes: null == codeMinutes ? _self.codeMinutes : codeMinutes // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
 }
 
 

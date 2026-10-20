@@ -15,6 +15,10 @@ _AppUser _$AppUserFromJson(Map<String, dynamic> json) => _AppUser(
   lastLoginAt: json['lastLoginAt'] == null
       ? null
       : DateTime.parse(json['lastLoginAt'] as String),
+  phone: json['phone'] as String?,
+  phoneVerifiedAt: json['phoneVerifiedAt'] == null
+      ? null
+      : DateTime.parse(json['phoneVerifiedAt'] as String),
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: DateTime.parse(json['updatedAt'] as String),
 );
@@ -26,6 +30,8 @@ Map<String, dynamic> _$AppUserToJson(_AppUser instance) => <String, dynamic>{
   'role': _$UserRoleEnumMap[instance.role]!,
   'status': _$UserStatusEnumMap[instance.status]!,
   'lastLoginAt': instance.lastLoginAt?.toIso8601String(),
+  'phone': instance.phone,
+  'phoneVerifiedAt': instance.phoneVerifiedAt?.toIso8601String(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
 };
