@@ -145,9 +145,19 @@ export interface SystemConfig {
   values: ConfigValues
   maintenance: Maintenance
   smtp: { configured: boolean; hasPassword: boolean; passwordSavedAt: string | null; passwordSavedBy: string | null; source: 'db' | 'env' | 'none' }
+  /** Máy cổng SMS (xác thực số điện thoại): khóa chỉ cho biết đã đặt; lastInboundAt = tin đúng khóa gần nhất (kể cả tin thử) */
+  smsGateway: { hasKey: boolean; lastInboundAt: string | null; lastVerifiedAt: string | null }
   updated: Record<string, { at: string; by: string | null }>
   lastSaved: { at: string; by: string | null } | null
   stats: { activeUsers: number; savingGoals: number; recurringRules: number }
+}
+
+export interface EmailTemplatePreview {
+  key: string
+  label: string
+  when: string
+  subject: string
+  html: string
 }
 
 export interface ConfigChange {
@@ -452,6 +462,7 @@ export const api = {
   aiCancelDraft: (id: string) => request<{ draft: AiDraft; idempotent: boolean }>('POST', `/ai/drafts/${id}/cancel`),
   aiFeedback: (id: string, rating: 1 | -1) => request<unknown>('POST', `/ai/messages/${id}/feedback`, { body: { rating } }),
 
+  emailTemplates: () => request<EmailTemplatePreview[]>('GET', '/admin/config/email-templates'),
   aiStats: (days: number) => request<AiStats>('GET', '/admin/ai/stats', { query: { days } }),
   aiOcrStats: (days: number) => request<AiOcrStats>('GET', '/admin/ai/ocr-stats', { query: { days } }),
   aiRules: (q: { status?: AiKnowledgeStatus; limit?: number }) => request<Paged<AiRule>>('GET', '/admin/ai/rules', { query: q }),

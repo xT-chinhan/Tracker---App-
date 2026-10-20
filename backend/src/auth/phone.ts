@@ -189,6 +189,9 @@ export class PhoneService {
     const c = await this.sys.phoneOtp();
     const a = Buffer.from(key ?? ''), b = Buffer.from(c.gatewayKey);
     if (!c.gatewayKey || a.length !== b.length || !timingSafeEqual(a, b)) throw new UnauthorizedException('Sai khóa máy cổng');
+    // mọi tin đúng khóa (kể cả "Gửi tin thử" của app chuyển tiếp) → admin thấy máy cổng còn sống
+    const at = { value: new Date().toISOString() };
+    await this.prisma.systemSetting.upsert({ where: { key: 'access.smsGatewayLastInboundAt' }, create: { key: 'access.smsGatewayLastInboundAt', ...at }, update: at }).catch(() => undefined);
     const phone = normalizePhone(dto.from ?? dto.sender ?? dto.phoneNumber ?? dto.phone ?? '');
     const code = (dto.text ?? dto.message ?? dto.body ?? dto.content ?? '').match(/(?<!\d)\d{6}(?!\d)/)?.[0];
     if (!phone || !code) return { matched: false, reason: 'not_otp' };

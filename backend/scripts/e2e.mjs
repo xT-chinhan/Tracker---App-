@@ -1551,7 +1551,11 @@ group('auth: xác thực số điện thoại (tự nhắn mã tới số cổng
   r = await req('GET', `/me/phone/verifications/${s1.verificationId}`, { token: U.token });
   check('status VERIFIED', r.data.status === 'VERIFIED', r.data);
   r = await req('GET', '/admin/config', { token: tAd });
-  check('admin: smsGateway.lastVerifiedAt set after a matched SMS', !!r.data.smsGateway?.lastVerifiedAt, r.data.smsGateway);
+  check('admin: smsGateway.lastVerifiedAt + lastInboundAt set after SMS', !!r.data.smsGateway?.lastVerifiedAt && !!r.data.smsGateway.lastInboundAt, r.data.smsGateway);
+  r = await req('GET', '/admin/config/email-templates', { token: tAd });
+  check('admin email templates preview: 5 html templates, OTP boxes', r.status === 200 && r.data.length === 5 && r.data.every((m) => m.subject && m.html.startsWith('<!doctype html>')) && r.data[0].html.includes('482910'.split('')[0]), r.data?.map?.((m) => m.key));
+  r = await req('GET', '/admin/config/email-templates', { token: U.token });
+  check('email templates: user 403', r.status === 403, r.status);
   r = await req('GET', '/me', { token: U.token });
   check('/me phone + phoneVerifiedAt', r.data.phone === P1 && !!r.data.phoneVerifiedAt, r.data);
   await sleep(300);
@@ -2113,7 +2117,7 @@ group('swagger');
 r = await fetch(BASE.replace(/\/api$/, '') + '/docs/openapi.json');
 {
   const doc = r.status === 200 ? await r.json() : { paths: {}, components: { schemas: {} } };
-  check('openapi.json 95 paths (+health, logout-all, admin run-due, 5 cấu hình, 29 trợ lý AI gồm đọc ảnh, 7 số điện thoại)', Object.keys(doc.paths).length === 95 && doc.paths['/api/ai/conversations/{id}/images']?.post, Object.keys(doc.paths).length);
+  check('openapi.json 96 paths (+health, logout-all, admin run-due, 6 cấu hình, 29 trợ lý AI gồm đọc ảnh, 7 số điện thoại)', Object.keys(doc.paths).length === 96 && doc.paths['/api/ai/conversations/{id}/images']?.post, Object.keys(doc.paths).length);
   check('AI endpoints documented (SSE + confirm body)', doc.paths['/api/ai/conversations/{id}/messages/stream']?.post && 'payload' in (doc.components.schemas.ConfirmDraftDto?.properties ?? {}) && doc.paths['/api/admin/ai/stats']?.get, Object.keys(doc.paths).filter((p) => p.includes('/ai')));
   check('config PATCH body documented per section', ['general', 'access', 'smtp', 'password', 'business', 'mobile'].every((k) => k in (doc.paths['/api/admin/config']?.patch?.requestBody?.content?.['application/json']?.schema?.properties ?? {})), doc.paths['/api/admin/config']);
   check('DTO schemas populated', ['amount', 'categoryId', 'walletId', 'title'].every((k) => k in (doc.components.schemas.CreateTransactionDto?.properties ?? {})), doc.components.schemas.CreateTransactionDto);

@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   AppWindow, ArrowLeftRight, BellRing, ArrowRight, Banknote, CalendarClock, CircleAlert, CircleCheck, Construction, Download, ExternalLink, History,
   KeyRound, Lock, LogIn, Mail, MailCheck, MailWarning, PencilLine, Phone, PiggyBank, Repeat, RotateCcw, Send, ShieldX, Signal,
-  Smartphone, Sparkles, Timer, WalletCards, Wifi, X, Zap, Server, PlugZap, Cpu, Database,
+  Smartphone, Sparkles, Timer, WalletCards, Wifi, X, Zap, Server, PlugZap, Cpu, Database, Copy, BookOpen,
 } from 'lucide-react'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle,
@@ -21,7 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Bubble } from '@/components/CategoryIcon'
 import { ConfirmDialog, type ConfirmOptions } from '@/components/ConfirmDialog'
 import { Chip, ErrorState, PageHeader, Pagination, TableSkeleton, UserBubble } from '@/components/common'
-import { api, ApiError, auth, type ConfigSection, type ConfigValue, type OllamaTestResult, type SmtpTestResult, type SystemConfig } from '@/lib/api'
+import { api, API_URL, ApiError, auth, type ConfigSection, type ConfigValue, type OllamaTestResult, type SmtpTestResult, type SystemConfig } from '@/lib/api'
 import { formatDate, formatDayMonth, formatNumber, formatTime, isToday } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
@@ -69,6 +69,11 @@ const DEFS: Def[] = [
   D('access', 'sessionDays', 'Thời hạn phiên đăng nhập', 'int', { min: 1, max: 365, unit: 'ngày' }),
   D('access', 'loginMaxAttempts', 'Số lần đăng nhập sai', 'int', { min: 1, max: 1000, unit: 'lần' }),
   D('access', 'loginWindowMinutes', 'Khung thời gian đăng nhập sai', 'int', { min: 1, max: 60, unit: 'phút' }),
+  D('access', 'phoneOtpEnabled', 'Bật xác thực số điện thoại', 'bool'),
+  D('access', 'smsGatewayNumber', 'Số máy cổng', 'text', { format: 'phone', maxLen: 20 }),
+  D('access', 'smsGatewayKey', 'Khóa máy cổng', 'secret', { maxLen: 200 }),
+  D('access', 'phoneCodeMinutes', 'Mã hết hạn sau', 'int', { min: 1, max: 30, unit: 'phút' }),
+  D('access', 'phoneMaxRequests', 'Số lần xin mã', 'int', { min: 1, max: 20, unit: 'lần' }),
   D('smtp', 'host', 'Máy chủ', 'text', { maxLen: 200 }),
   D('smtp', 'port', 'Cổng', 'int', { min: 1, max: 65535 }),
   D('smtp', 'security', 'Bảo mật', 'enum'),
@@ -779,7 +784,142 @@ function AccessSection({ c, onMaintenance, busy }: { c: Ctx; onMaintenance: (on:
           <FieldError>{c.error('access.loginMaxAttempts') ?? c.error('access.loginWindowMinutes')}</FieldError>
         </SettingRow>
       </SettingCard>
+      <PhoneOtpCard c={c} />
     </>
+  )
+}
+
+const WEBHOOK_URL = `${API_URL}/sms-gateway/inbound`
+const DAY_MS = 86400_000
+
+/** Khóa ngẫu nhiên 32 ký tự (base64url) cho app chuyển tiếp SMS trên máy cổng */
+function newGatewayKey() {
+  const b = crypto.getRandomValues(new Uint8Array(24))
+  return btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+}
+
+function copyText(text: string, what: string) {
+  navigator.clipboard.writeText(text).then(() => notify.success(`Đã chép ${what}`, { icon: <Copy /> }), () => notify.error('Không chép được', 'Trình duyệt chặn quyền clipboard'))
+}
+
+function gatewayWhen(iso: string) {
+  return `${formatTime(iso)} ${isToday(iso) ? 'hôm nay' : formatDayMonth(iso)}`
+}
+
+/** Xác thực số điện thoại kiểu tự nhắn: người dùng gửi yêu cầu (mã 6 số) từ SIM của họ tới máy cổng; app không bao giờ hiện số máy cổng. */
+function PhoneOtpCard({ c }: { c: Ctx }) {
+  const gw = c.cfg.smsGateway
+  const [guide, setGuide] = useState(false)
+  const draftKey = String(c.value('access.smsGatewayKey'))
+  const keySaved = c.cfg.updated['access.smsGatewayKey']
+  const alive = gw.lastInboundAt && Date.now() - new Date(gw.lastInboundAt).getTime() < DAY_MS
+  return (
+    <SettingCard
+      testId="phone-otp-card"
+      title="Xác thực số điện thoại"
+      aside={
+        <span className="flex items-center gap-2 text-body-s font-medium text-muted-foreground" data-testid="gateway-status">
+          <i className={cn('size-2 rounded-full', alive ? 'bg-income' : 'bg-faint')} />
+          {gw.lastInboundAt ? `Máy cổng nhận tin gần nhất ${gatewayWhen(gw.lastInboundAt)}` : 'Máy cổng chưa nhận tin nào'}
+        </span>
+      }
+    >
+      <SettingRow label="Bật xác thực số điện thoại" desc="Tắt thì app ẩn mục Số điện thoại và lựa chọn quên mật khẩu qua SĐT. Số đã gắn vẫn được giữ." inline changed={c.isDirty('access.phoneOtpEnabled')} testId="row-access.phoneOtpEnabled">
+        <Switch checked={c.value('access.phoneOtpEnabled') === true} onCheckedChange={(v) => c.set('access.phoneOtpEnabled', v)} aria-label="Bật xác thực số điện thoại" data-testid="in-access.phoneOtpEnabled" />
+        {c.isDirty('access.phoneOtpEnabled') && <Was>{display('access.phoneOtpEnabled', c.server('access.phoneOtpEnabled'))}</Was>}
+      </SettingRow>
+      {c.value('access.phoneOtpEnabled') === true && (!gw.hasKey && !draftKey || !String(c.value('access.smsGatewayNumber'))) && (
+        <div className="mx-6 mb-1 flex items-start gap-2.5 rounded-md bg-warning-soft px-3.5 py-3 text-[13px] text-warning" data-testid="phone-otp-incomplete">
+          <CircleAlert className="mt-px size-4 shrink-0" />Cần nhập số máy cổng và tạo khóa máy cổng, nếu không app vẫn coi như đang tắt.
+        </div>
+      )}
+      <TextRow c={c} k="access.smsGatewayNumber" icon={<Smartphone />} placeholder="vd. 0901 234 567"
+        desc="Số SIM trên máy Android nhận tin của người dùng. App không bao giờ hiện số này cho người dùng, chỉ dùng để điền sẵn người nhận trong tin yêu cầu." />
+      <SettingRow label="Khóa máy cổng" desc="Máy cổng gửi kèm khóa này để máy chủ biết tin đến từ đúng máy. Tạo khóa mới thì khóa cũ hết hiệu lực ngay sau khi lưu." changed={c.isDirty('access.smsGatewayKey')} testId="row-access.smsGatewayKey">
+        {draftKey ? (
+          <>
+            <div className="flex gap-2.5">
+              <Input value={draftKey} readOnly className="font-mono text-[13px]" aria-label="Khóa máy cổng mới" data-testid="gateway-key-new" />
+              <Button variant="secondary" onClick={() => copyText(draftKey, 'khóa máy cổng')} data-testid="gateway-key-copy"><Copy />Chép</Button>
+              <Button variant="ghost" onClick={() => c.reset('access.smsGatewayKey')}>Hủy</Button>
+            </div>
+            <Help>Chép sang app chuyển tiếp trên máy cổng rồi bấm Lưu. Sau khi lưu khóa không hiển thị lại.</Help>
+          </>
+        ) : (
+          <>
+            <div className="flex gap-2.5">
+              <div className="flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-sm border border-input bg-background px-3.5" data-testid="gateway-key-saved">
+                <span className="flex-1 tracking-[2px] text-muted-foreground">{gw.hasKey ? '••••••••••••' : 'Chưa có khóa'}</span>
+                {gw.hasKey && <Badge variant="success" className="h-[22px]"><Lock />Đã lưu</Badge>}
+              </div>
+              <Button variant="secondary" onClick={() => c.set('access.smsGatewayKey', newGatewayKey())} data-testid="gateway-key-generate"><KeyRound />Tạo khóa mới</Button>
+            </div>
+            {gw.hasKey && keySaved && <Help>Đã lưu · {formatTime(keySaved.at)} {formatDayMonth(keySaved.at)}{keySaved.by ? ` bởi ${keySaved.by}` : ''}. Không hiển thị lại, khóa mới chỉ hiện một lần để chép sang máy cổng.</Help>}
+          </>
+        )}
+      </SettingRow>
+      <SettingRow label="Địa chỉ nhận tin (webhook)" desc={<>Dán vào app chuyển tiếp SMS trên máy cổng, kèm header <code className="rounded-[4px] bg-muted px-1 font-mono text-[12px] font-semibold text-foreground">x-gateway-key</code>.</>} testId="row-access.webhook">
+        <Input value={WEBHOOK_URL} readOnly className="text-muted-foreground" aria-label="Địa chỉ nhận tin" data-testid="gateway-webhook"
+          end={<button type="button" aria-label="Chép địa chỉ" className="flex cursor-pointer text-muted-foreground hover:text-foreground" onClick={() => copyText(WEBHOOK_URL, 'địa chỉ webhook')}><Copy className="size-4" /></button>} />
+        <Button variant="link" className="h-auto self-start p-0" onClick={() => setGuide(true)} data-testid="gateway-guide-open"><BookOpen />Xem hướng dẫn cài máy cổng</Button>
+      </SettingRow>
+      <NumberRow c={c} k="access.phoneCodeMinutes" desc="Tính từ lúc app hiện mã. Hết hạn thì người dùng bấm Lấy mã mới." range="1–30 phút" />
+      <SettingRow label="Số lần xin mã" desc="Quá giới hạn thì app báo thời gian chờ trước khi xin mã tiếp." changed={c.isDirty('access.phoneMaxRequests')} testId="row-access.phoneMaxRequests">
+        <div className="flex items-center gap-2.5">
+          <NumberBox c={c} k="access.phoneMaxRequests" width={120} />
+          <span className="text-muted-foreground">trong 10 phút</span>
+          <span className="text-body-s text-faint">1–20 lần</span>
+        </div>
+        {c.isDirty('access.phoneMaxRequests') && <Was>{display('access.phoneMaxRequests', c.server('access.phoneMaxRequests'))}</Was>}
+        <FieldError>{c.error('access.phoneMaxRequests')}</FieldError>
+      </SettingRow>
+      <GatewayGuideDialog open={guide} onClose={() => setGuide(false)} number={String(c.server('access.smsGatewayNumber') || '')} />
+    </SettingCard>
+  )
+}
+
+function GatewayGuideDialog({ open, onClose, number }: { open: boolean; onClose: () => void; number: string }) {
+  const [since] = useState(() => Date.now())
+  // khi hộp thoại mở: hỏi lại cấu hình mỗi 3 giây để thấy ngay tin thử từ máy cổng
+  const live = useQuery({ queryKey: ['config'], queryFn: api.config, enabled: open, refetchInterval: open ? 3000 : false })
+  const last = live.data?.smsGateway.lastInboundAt
+  const gotTest = last && new Date(last).getTime() >= since
+  const steps: [string, ReactNode][] = [
+    [`Cắm SIM${number ? ` ${number}` : ''} vào máy Android`, 'Máy luôn bật nguồn, cắm sạc và có sóng. Tắt tối ưu pin cho app chuyển tiếp để không bị dừng ngầm.'],
+    ['Cài app chuyển tiếp SMS', 'Ví dụ “SMS Forwarder” (mã nguồn mở). Cấp quyền đọc tin nhắn khi app hỏi.'],
+    ['Thêm quy tắc chuyển mọi tin tới webhook', <>Địa chỉ <code className="rounded-[4px] bg-muted px-1 font-mono text-[12px] font-semibold text-foreground">{WEBHOOK_URL}</code>, thêm header <code className="rounded-[4px] bg-muted px-1 font-mono text-[12px] font-semibold text-foreground">x-gateway-key</code> = khóa máy cổng (chỉ hiện một lần lúc tạo khóa). Nội dung JSON gồm số gửi (<code className="font-mono text-[12px]">from</code>) và nội dung tin (<code className="font-mono text-[12px]">text</code>).</>],
+    ['Bấm “Gửi tin thử” trong app chuyển tiếp', 'Kết quả hiện ngay dưới đây và ở dòng trạng thái của thẻ.'],
+  ]
+  return (
+    <AlertDialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <AlertDialogContent className="w-[600px]" data-testid="gateway-guide">
+        <div className="flex items-start justify-between">
+          <span className="flex size-14 items-center justify-center rounded-full bg-muted [&_svg]:size-6"><Smartphone /></span>
+          <button type="button" aria-label="Đóng" className="cursor-pointer text-muted-foreground hover:text-foreground" onClick={onClose}><X className="size-5" /></button>
+        </div>
+        <AlertDialogTitle className="mt-[18px]">Cài máy cổng</AlertDialogTitle>
+        <AlertDialogDescription>Làm một lần trên máy Android của công ty. Máy cổng chỉ nhận tin của người dùng rồi chuyển về máy chủ, không gửi tin cho ai.</AlertDialogDescription>
+        <ol className="mt-4">
+          {steps.map(([title, desc], i) => (
+            <li key={i} className="flex gap-3.5 border-border py-3.5 not-first:border-t">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border text-[13px] font-semibold tabular-nums">{i + 1}</span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold">{title}</p>
+                <p className="mt-0.5 text-body-s break-words text-muted-foreground">{desc}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className={cn('mt-1 flex items-center gap-2.5 rounded-md px-3.5 py-3 text-[13px]', gotTest ? 'bg-success-soft text-[#2E5A36]' : 'bg-background text-muted-foreground')} data-testid="gateway-test-result">
+          {gotTest ? <CircleCheck className="size-4 shrink-0 text-income" /> : <Signal className="size-4 shrink-0" />}
+          {gotTest ? <span>Đã nhận tin thử lúc <b className="font-semibold">{formatTime(last!)}</b> từ máy cổng · khóa đúng.</span> : 'Đang chờ tin thử từ máy cổng…'}
+        </div>
+        <div className="mt-6 flex gap-2.5">
+          <Button variant="secondary" size="dialog" className="flex-1" onClick={() => copyText(WEBHOOK_URL, 'địa chỉ webhook')}><Copy />Chép địa chỉ webhook</Button>
+          <Button size="dialog" className="flex-1" onClick={onClose}>Xong</Button>
+        </div>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 
@@ -947,7 +1087,55 @@ function EmailSection({ c, smtpDirty }: { c: Ctx; smtpDirty: boolean }) {
         </SettingRow>
         <TextRow c={c} k="smtp.from" desc="Người nhận thấy tên và địa chỉ này." placeholder="vd. Thu Chi <no-reply@thuchi.vn>" />
       </SettingCard>
+      <EmailTemplatesCard />
     </>
+  )
+}
+
+/** Xem trước mẫu email (nội dung cố định trong code, render bằng tên app + email hỗ trợ đang cấu hình) */
+function EmailTemplatesCard() {
+  const q = useQuery({ queryKey: ['email-templates'], queryFn: api.emailTemplates })
+  const [right, setRight] = useState('phone-linked')
+  const list = q.data ?? []
+  const left = list.find((m) => m.key === 'reset-otp')
+  const other = list.find((m) => m.key === right)
+  const Preview = ({ m }: { m?: (typeof list)[number] }) => (
+    <div className="min-w-0">
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <p className="truncate text-sm font-semibold">{m?.label ?? '…'}</p>
+        <p className="shrink-0 text-body-s text-muted-foreground">{m?.when}</p>
+      </div>
+      {m ? (
+        <iframe title={m.label} srcDoc={m.html} sandbox="" className="h-[470px] w-full rounded-md border border-border bg-[#F7F6F3]" data-testid={`email-preview-${m.key}`} />
+      ) : <Skeleton className="h-[470px] w-full" />}
+      {m && <p className="mt-1.5 truncate text-body-s text-faint" title={m.subject}>Tiêu đề: {m.subject}</p>}
+    </div>
+  )
+  return (
+    <Card className="p-0" data-testid="email-templates-card">
+      <div className="flex items-start justify-between gap-4 px-6 pt-5">
+        <div>
+          <p className="text-base font-semibold">Mẫu email</p>
+          <p className="text-body-s text-muted-foreground">Nội dung cố định, gửi bằng cấu hình SMTP ở trên. Xem trước đúng như người dùng nhận.</p>
+        </div>
+        <Badge><Mail />{list.length || 5} mẫu</Badge>
+      </div>
+      {q.error ? <ErrorState error={q.error} onRetry={q.refetch} /> : (
+        <div className="grid grid-cols-1 gap-5 px-6 pt-4 pb-5 xl:grid-cols-2">
+          <Preview m={left} />
+          <Preview m={other} />
+        </div>
+      )}
+      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 border-t border-border px-6 py-3.5 text-body-s text-muted-foreground">
+        Xem mẫu khác:
+        {list.filter((m) => m.key !== 'reset-otp').map((m) => (
+          <button key={m.key} type="button" onClick={() => setRight(m.key)} data-testid={`email-tpl-${m.key}`}
+            className={cn('cursor-pointer rounded-sm px-1.5 py-0.5 font-medium', m.key === right ? 'bg-muted text-foreground' : 'text-foreground/80 hover:text-foreground')}>
+            {m.label}
+          </button>
+        ))}
+      </div>
+    </Card>
   )
 }
 

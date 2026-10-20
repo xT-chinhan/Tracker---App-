@@ -5,7 +5,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { expect, test, type Page } from '@playwright/test'
-import { ADMIN_EMAIL, adminToken, apiCall, apiOk, fakeSmtp, loginAsAdmin, num, settled, shot } from './helpers'
+import { ADMIN_EMAIL, adminToken, API_URL as API, apiCall, apiOk, fakeSmtp, loginAsAdmin, num, settled, shot } from './helpers'
 
 type Values = Record<string, Record<string, string | number | boolean | null>>
 interface Cfg { values: Values; maintenance: { enabled: boolean; message: string; endsAt: string | null }; smtp: { configured: boolean; hasPassword: boolean }; stats: { activeUsers: number } }
@@ -42,7 +42,39 @@ test.afterAll(async () => {
   const body = JSON.parse(JSON.stringify(initial)) as Values
   delete body.smtp.hasPassword
   body.smtp.password = ''
+  body.access.smsGatewayKey = ''
   await apiOk('PATCH', '/admin/config', admin, body)
+})
+
+test('xác thực số điện thoại: bật + số máy cổng + tạo khóa (chỉ hiện 1 lần) → tin thử từ máy cổng hiện ngay; mẫu email xem trước', async ({ page }) => {
+  await loginAsAdmin(page)
+  await page.goto('/settings/truy-cap')
+  const card = page.getByTestId('phone-otp-card')
+  await expect(card).toBeVisible()
+  await expect(page.getByTestId('gateway-webhook')).toHaveValue(/\/sms-gateway\/inbound$/)
+  await input(page, 'access.phoneOtpEnabled').click()
+  await expect(page.getByTestId('phone-otp-incomplete')).toBeVisible()
+  await input(page, 'access.smsGatewayNumber').fill('0901234567')
+  await page.getByTestId('gateway-key-generate').click()
+  const key = await page.getByTestId('gateway-key-new').inputValue()
+  expect(key).toMatch(/^[A-Za-z0-9_-]{32}$/)
+  await saveAndWait(page)
+  await expect(page.getByTestId('gateway-key-saved')).toContainText('Đã lưu')
+  await expect(page.getByTestId('gateway-key-new')).toHaveCount(0)
+  const cfg = await apiOk<{ smsGateway: { hasKey: boolean }; values: Values }>('GET', '/admin/config', admin)
+  expect(cfg.smsGateway.hasKey).toBe(true)
+  expect(JSON.stringify(cfg)).not.toContain(key)
+  await page.getByTestId('gateway-guide-open').click()
+  await expect(page.getByTestId('gateway-test-result')).toContainText('Đang chờ tin thử')
+  const r = await fetch(`${API}/sms-gateway/inbound`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-gateway-key': key }, body: JSON.stringify({ from: '0900000002', text: 'Tin thử' }) })
+  expect(r.status).toBe(200)
+  await expect(page.getByTestId('gateway-test-result')).toContainText('Đã nhận tin thử', { timeout: 10_000 })
+  await page.getByRole('button', { name: 'Xong' }).click()
+  await page.goto('/settings/email')
+  await expect(page.getByTestId('email-preview-reset-otp')).toBeVisible()
+  await expect(page.getByTestId('email-preview-phone-linked')).toBeVisible()
+  await page.getByTestId('email-tpl-reset-by-phone').click()
+  await expect(page.getByTestId('email-preview-reset-by-phone')).toBeVisible()
 })
 
 test('chung: sửa có đánh dấu "Trước", lỗi chặn lưu, Hủy khôi phục, Lưu áp dụng ngay cho app', async ({ page }) => {

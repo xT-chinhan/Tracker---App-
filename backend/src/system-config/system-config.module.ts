@@ -23,6 +23,7 @@ import { IsBoolean, IsIn, IsOptional, IsString } from 'class-validator';
 import { Prisma, Role } from '@prisma/client';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 import * as nodemailer from 'nodemailer';
+import { passwordResetByPhoneMail, phoneLinkedMail, phoneRemovedMail, resetOtpMail } from '../auth/mail-templates';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser, FeatureName, Public, Roles, SYSTEM_CONFIG } from '../common/auth';
 import { PageQuery, paged } from '../common/dto';
@@ -112,6 +113,7 @@ const DEFS: Def[] = [
   { section: 'access', field: 'smsGatewayKey', kind: 'string', maxLen: 200, secret: true, def: () => '' },
   { section: 'access', field: 'phoneCodeMinutes', kind: 'int', min: 1, max: 30, def: () => 5 },
   { section: 'access', field: 'phoneMaxRequests', kind: 'int', min: 1, max: 20, def: () => 3 },
+  { section: 'access', field: 'smsGatewayLastInboundAt', kind: 'datetime', internal: true, def: () => null },
   { section: 'access', field: 'maintenanceEnabled', kind: 'bool', internal: true, def: () => false },
   { section: 'access', field: 'maintenanceStartedAt', kind: 'datetime', internal: true, def: () => null },
 
@@ -528,12 +530,14 @@ export class SystemConfigService {
     values.smtp.hasPassword = hasPassword;
     const updated: Record<string, { at: Date; by: string | null }> = {};
     for (const r of s.rows.values()) if (!DEF_BY_KEY.get(r.key)?.internal) updated[r.key] = { at: r.updatedAt, by: r.updatedByName };
-    const [last, activeUsers, savingGoals, recurringRules, gw] = await Promise.all([
+    const [last, activeUsers, savingGoals, recurringRules, gw, inboundRow] = await Promise.all([
       this.prisma.systemConfigChange.findFirst({ where: { actorId: { not: null } }, orderBy: { createdAt: 'desc' } }),
       this.prisma.user.count({ where: { status: 'ACTIVE', role: 'USER' } }),
       this.prisma.savingGoal.count(),
       this.prisma.recurringRule.count(),
       this.prisma.phoneVerification.aggregate({ _max: { verifiedAt: true } }),
+      // đọc thẳng DB (không qua cache 15s) để admin bấm "Gửi tin thử" thấy ngay
+      this.prisma.systemSetting.findUnique({ where: { key: 'access.smsGatewayLastInboundAt' } }),
     ]);
     return {
       values,
@@ -548,7 +552,7 @@ export class SystemConfigService {
       },
       /** Khóa máy cổng SMS: chỉ cho biết đã đặt hay chưa, không bao giờ trả về */
       // lastVerifiedAt: lần gần nhất máy cổng chuyển về một tin khớp phiên → cho admin biết máy cổng còn chạy
-      smsGateway: { hasKey: !!s.values.get('access.smsGatewayKey'), lastVerifiedAt: gw._max.verifiedAt },
+      smsGateway: { hasKey: !!s.values.get('access.smsGatewayKey'), lastInboundAt: (inboundRow?.value as string | null) ?? null, lastVerifiedAt: gw._max.verifiedAt },
       updated,
       lastSaved: last ? { at: last.createdAt, by: last.actorName } : null,
       stats: { activeUsers, savingGoals, recurringRules },
@@ -838,6 +842,20 @@ export class AdminConfigController {
   @Post('maintenance') @HttpCode(200)
   maintenance(@CurrentUser() u: AuthUser, @Body() dto: MaintenanceDto) {
     return this.sys.setMaintenance(actorOf(u), dto);
+  }
+
+  /** Xem trước các mẫu email hệ thống (dữ liệu mẫu, tên app + email hỗ trợ theo cấu hình) → [{key, label, when, subject, html}] */
+  @Get('email-templates')
+  async emailTemplates() {
+    const b = { appName: await this.sys.get<string>('general.appName'), supportEmail: (await this.sys.get<string>('general.supportEmail')) || null };
+    const at = new Date(), name = 'Nguyễn Minh Anh', phone = '0912345678';
+    return [
+      { key: 'reset-otp', label: 'Mã đặt lại mật khẩu', when: 'Quên mật khẩu qua email', ...resetOtpMail(b, { otp: '482910', minutes: (await this.sys.otp()).expiryMinutes, name }) },
+      { key: 'phone-linked', label: 'Đã gắn số điện thoại', when: 'Sau khi gắn số thành công', ...phoneLinkedMail(b, { name, phone, at }) },
+      { key: 'phone-changed', label: 'Số điện thoại đã được đổi', when: 'Sau khi đổi sang số mới', ...phoneLinkedMail(b, { name, phone: '0987654321', at, replaced: phone }) },
+      { key: 'phone-removed', label: 'Đã gỡ số điện thoại', when: 'Sau khi gỡ số', ...phoneRemovedMail(b, { name, phone, at }) },
+      { key: 'reset-by-phone', label: 'Mật khẩu vừa được đặt lại', when: 'Sau khi đặt lại mật khẩu bằng SĐT', ...passwordResetByPhoneMail(b, { name, phone, at }) },
+    ].map(({ text, ...m }) => m);
   }
 
   /** Gửi email thử tới email của admin đang đăng nhập bằng cấu hình đã lưu → `{ok, response | error, durationMs}`. Giới hạn 5 lần/phút */
