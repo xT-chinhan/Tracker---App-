@@ -545,3 +545,12 @@ svg.lucide { width: 20px; height: 20px; stroke-width: 1.75; flex: none; }
 .indet { height: 4px; border-radius: 2px; background: var(--color-surface-container); overflow: hidden; position: relative; }
 .indet i { position: absolute; top: 0; bottom: 0; left: 30%; width: 34%; border-radius: 2px; background: var(--color-on-surface-faint); }
 .opt { display: flex; align-items: center; gap: 14px; }
+/* Android: hộp quyền hệ thống (Material 3) + giải thích của app */
+.adlg { position: absolute; left: 28px; right: 28px; top: 50%; transform: translateY(-38%); z-index: 60; background: #F3EFF4; border-radius: 28px; padding: 24px 24px 16px; text-align: center; font-family: Roboto, "Be Vietnam Pro", sans-serif; }
+.adlg .ai { width: 24px; height: 24px; margin: 0 auto; color: #3F4A5C; }
+.adlg .at { font-size: 20px; line-height: 1.35; font-weight: 500; color: #1C1B1F; margin-top: 16px; }
+.adlg .at b { font-weight: 700; }
+.adlg .ab { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+.adlg .ab span { height: 44px; border-radius: 22px; background: #DCE3F5; color: #1B2B4B; font-size: 14.5px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+.why { position: absolute; left: 28px; right: 28px; top: 196px; z-index: 60; background: var(--color-surface); border-radius: 18px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; line-height: 1.5; color: #3A3935; box-shadow: var(--shadow-sheet); }
+.why svg.lucide { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--color-on-surface-variant); }

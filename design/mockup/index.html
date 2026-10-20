@@ -13,7 +13,7 @@
 <main class="gallery">
   <header class="gallery-head">
     <h1>Thu Chi · Mockup giao diện</h1>
-    <p>25 màn hình đã duyệt + 20 màn Trợ lý AI chờ duyệt (mục J) + 8 màn Đọc hóa đơn chờ duyệt (mục K) + 10 màn Số điện thoại chờ duyệt (mục L), khung 390×844. Dữ liệu mẫu nhất quán: ngày Thứ Ba 22/09/2026, 4 ví tổng 26.022.000đ, chi tháng 9 là 8.680.000đ trên ngân sách 14.000.000đ (62%).
+    <p>25 màn hình đã duyệt + 20 màn Trợ lý AI chờ duyệt (mục J) + 8 màn Đọc hóa đơn chờ duyệt (mục K) + 14 màn Số điện thoại chờ duyệt (mục L), khung 390×844. Dữ liệu mẫu nhất quán: ngày Thứ Ba 22/09/2026, 4 ví tổng 26.022.000đ, chi tháng 9 là 8.680.000đ trên ngân sách 14.000.000đ (62%).
     Điều hướng (giống ảnh mẫu): <b>Trang chủ · Lịch sử · [＋ Ghi giao dịch] · Báo cáo · Cài đặt</b>. Cài đặt chứa Ví, Ngân sách, Tiết kiệm, Định kỳ, Danh mục, Mẫu nhập nhanh, Thông báo, CSV, mật khẩu. Các màn con giữ tab Cài đặt active và nút ‹ Cài đặt. Ví và Ngân sách còn mở được từ thẻ số dư ở Trang chủ; Thông báo mở từ chuông.<br>Nút ＋: <b>chạm 1 lần</b> mở màn Ghi giao dịch (mặc định Khoản chi, con trỏ ở ô số tiền); <b>nhấn giữ</b> mở menu nhanh (Thu nhập, Chuyển tiền, 3 mẫu nhập nhanh), nút ＋ chuyển thành ✕ để đóng.</p>
   </header>
 
@@ -1815,7 +1815,7 @@
             <div class="body-s faint center mt-3">Phí 1 tin nhắn thường theo nhà mạng.</div>
           </div>
         </div>
-      </div><div class="frame-cap"><span>50c</span>Nội dung xác nhận 6 số + Gửi yêu cầu xác nhận, không hiện số điện thoại nào</div></div>
+      </div><div class="frame-cap"><span>50c</span>iOS: hiện khung soạn tin trong app, bấm Gửi</div></div>
 
       <!-- 50-04 Đang chờ -->
       <div class="frame"><div class="phone" data-shot="50-sdt-04-dang-cho">
@@ -1969,6 +1969,102 @@
           <button class="btn mt-2" style="background:none">Hủy</button>
         </div>
       </div><div class="frame-cap"><span>50i</span>Đã gắn số · sheet Gỡ số cần mật khẩu</div></div>
+
+      <!-- 50-10 Android: hộp quyền gửi SMS -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-10-android-quyen">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Thu Chi gửi yêu cầu bằng 1 tin nhắn từ máy này. Bạn không cần mở ứng dụng Tin nhắn.</p>
+            <div class="field-label mt-8">Nội dung xác nhận</div>
+            <div class="otp show num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="center body-s muted mt-3 num">Mã hết hạn sau <b style="color:var(--color-on-surface);font-weight:600">4:32</b></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="send"></i>Gửi yêu cầu xác nhận</button>
+            <div class="body-s faint center mt-3">Phí 1 tin nhắn thường theo nhà mạng.</div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="why"><i data-lucide="shield-check"></i><span>Thu Chi chỉ gửi <b style="font-weight:600;color:var(--color-on-surface)">1 tin chứa 6 số xác nhận</b>, một lần, khi bạn bấm Gửi. Phí như tin nhắn thường của nhà mạng.</span></div>
+        <div class="adlg">
+          <i data-lucide="message-square" class="ai"></i>
+          <div class="at">Cho phép <b>Thu Chi</b> gửi và xem tin nhắn SMS?</div>
+          <div class="ab"><span>Cho phép</span><span>Không cho phép</span></div>
+        </div>
+      </div><div class="frame-cap"><span>50j</span>Android lần đầu: hộp quyền gửi SMS của hệ thống + lý do của app</div></div>
+
+      <!-- 50-11 Android: chọn SIM -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-11-android-chon-sim">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Thu Chi gửi yêu cầu bằng 1 tin nhắn từ máy này. Bạn không cần mở ứng dụng Tin nhắn.</p>
+            <div class="field-label mt-8">Nội dung xác nhận</div>
+            <div class="otp show num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="between"><span class="sheet-title">Gửi từ SIM nào?</span><span class="icon-btn" style="margin-right:-10px"><i data-lucide="x"></i></span></div>
+          <p class="body-s muted mt-1">Chọn SIM của số điện thoại bạn vừa nhập.</p>
+          <div class="card flush set mt-4">
+            <div class="srow"><span class="bubble sm"><i data-lucide="card-sim"></i></span><span class="grow">SIM 1 · Viettel</span><span class="radio on"></span></div>
+            <div class="srow"><span class="bubble sm"><i data-lucide="card-sim"></i></span><span class="grow">SIM 2 · Vinaphone</span><span class="radio"></span></div>
+          </div>
+          <div class="hstack body-s faint mt-3" style="--gap:8px"><i data-lucide="info" style="width:14px;height:14px;flex:none"></i><span>Gửi từ SIM khác sẽ không được xác nhận.</span></div>
+          <button class="btn btn-primary mt-5"><i data-lucide="send"></i>Gửi yêu cầu xác nhận</button>
+          <div class="body-s faint center mt-3">Phí 1 tin nhắn thường theo nhà mạng.</div>
+        </div>
+      </div><div class="frame-cap"><span>50k</span>Android máy 2 SIM: chọn SIM (tên nhà mạng + khe, không hiện số)</div></div>
+
+      <!-- 50-12 Android: đã tự gửi, đang chờ -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-12-android-dang-gui">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <div class="card mt-5" style="padding:18px">
+              <div class="ai-status" style="color:var(--color-income)"><i data-lucide="circle-check" style="color:var(--color-income)"></i><span>Đã gửi yêu cầu</span><span class="body-s faint num" style="margin-left:auto;font-weight:400">19:51</span></div>
+              <div class="body-s muted mt-1" style="padding-left:24px;line-height:1.5">Thu Chi tự gửi từ SIM 1 · Viettel, không mở ứng dụng Tin nhắn.</div>
+              <div class="divider"></div>
+              <div class="ai-status"><i data-lucide="message-square-more"></i><span class="shimmer-t">Đang chờ xác nhận…</span></div>
+              <div class="indet mt-4"><i></i></div>
+              <p class="body-s muted mt-3" style="line-height:1.5">Thường mất vài giây. Màn này tự chuyển khi xác nhận xong.</p>
+            </div>
+            <div class="card flush mt-4" style="padding:2px 16px">
+              <div class="kv"><span class="k">Mã</span><span class="v num grow">482910</span><span class="body-s muted num">còn 4:20</span></div>
+            </div>
+            <div class="note mt-4"><i data-lucide="lightbulb"></i><span>Quá 1 phút chưa xong? Kiểm tra SIM còn tiền, có sóng, rồi bấm Gửi lại yêu cầu.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-secondary"><i data-lucide="send"></i>Gửi lại yêu cầu</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Đổi số khác</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50l</span>Android: app đã tự gửi, đang chờ xác nhận (không mở Tin nhắn)</div></div>
+
+      <!-- 50-13 Android: từ chối quyền -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-13-android-tu-choi">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Ứng dụng Tin nhắn sẽ mở với yêu cầu soạn sẵn. Bạn chỉ cần bấm Gửi từ chính số điện thoại vừa nhập.</p>
+            <div class="field-label mt-8">Nội dung xác nhận</div>
+            <div class="otp show num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="center body-s muted mt-3 num">Mã hết hạn sau <b style="color:var(--color-on-surface);font-weight:600">4:05</b></div>
+            <div class="note mt-6"><i data-lucide="message-square-off"></i><span>Không có quyền gửi SMS. Mở ứng dụng Tin nhắn để gửi, yêu cầu đã soạn sẵn.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="message-square"></i>Mở Tin nhắn để gửi</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Cấp quyền trong Cài đặt</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50m</span>Android từ chối quyền: mở Tin nhắn để gửi, hoặc cấp quyền</div></div>
 
     </div>
   </section>
