@@ -12,6 +12,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser, Public } from '../common/auth';
 import { SystemConfigService } from '../system-config/system-config.module';
 import { Trim } from '../common/dto';
+import { MailService } from './mail.service';
+import { PhoneController, PhoneService } from './phone';
+
+export { MailService };
 
 class RegisterDto {
   @IsEmail() email: string;
@@ -56,29 +60,6 @@ const DUMMY_HASH = bcrypt.hashSync('dummy-password', 10);
 export function publicUser<T extends { passwordHash: string; tokenVersion: number }>(u: T): Omit<T, 'passwordHash' | 'tokenVersion'> {
   const { passwordHash, tokenVersion, ...rest } = u;
   return rest;
-}
-
-/** Gửi mail theo SMTP trong Cấu hình hệ thống (fallback SMTP_* env); chưa cấu hình máy chủ => in OTP ra log (dev / e2e). */
-@Injectable()
-export class MailService {
-  private readonly logger = new Logger('Mail');
-
-  constructor(private readonly sys: SystemConfigService) {}
-
-  async sendOtp(email: string, otp: string, minutes: number) {
-    const m = await this.sys.mailer();
-    if (!m) {
-      this.logger.warn(`[DEV] OTP đặt lại mật khẩu cho ${email}: ${otp} (hạn ${minutes} phút)`);
-      return;
-    }
-    const appName = await this.sys.get<string>('general.appName');
-    await m.transport.sendMail({
-      from: m.from,
-      to: email,
-      subject: `Mã đặt lại mật khẩu ${appName}`,
-      text: `Mã OTP của bạn là ${otp}. Mã có hiệu lực trong ${minutes} phút. Nếu không phải bạn yêu cầu, hãy bỏ qua email này.`,
-    });
-  }
 }
 
 @Injectable()
@@ -138,6 +119,7 @@ export class AuthService {
   @Cron('10 3 * * *', { timeZone: 'Asia/Ho_Chi_Minh' })
   async pruneLoginFailures() {
     await this.prisma.loginFailure.deleteMany({ where: { createdAt: { lt: new Date(Date.now() - 30 * 86400_000) } } }).catch(() => undefined);
+    await this.prisma.phoneVerification.deleteMany({ where: { createdAt: { lt: new Date(Date.now() - 86400_000) } } }).catch(() => undefined);
   }
 
   async me(userId: string) {
@@ -180,7 +162,7 @@ export class AuthService {
     const otp = String(randomInt(0, 1_000_000)).padStart(6, '0');
     const data = { codeHash: await bcrypt.hash(otp, 10), expiresAt: new Date(Date.now() + cfg.expiryMinutes * 60_000), attempts: 0, createdAt: new Date() };
     await this.prisma.passwordReset.upsert({ where: { userId: user.id }, create: { userId: user.id, ...data }, update: data });
-    await this.mail.sendOtp(user.email, otp, cfg.expiryMinutes);
+    await this.mail.sendOtp(user.email, otp, cfg.expiryMinutes, user.name);
   }
 
   /** Sai quá số lần cho phép (password.otpMaxAttempts) => OTP bị hủy, phải xin mã mới. */
@@ -284,5 +266,5 @@ export class AuthController {
   }
 }
 
-@Module({ controllers: [AuthController], providers: [AuthService, MailService] })
+@Module({ controllers: [AuthController, PhoneController], providers: [AuthService, MailService, PhoneService] })
 export class AuthModule {}

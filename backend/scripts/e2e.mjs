@@ -1505,6 +1505,125 @@ group('auth: xóa tài khoản');
   check('non-last admin can delete self', r.status === 204, r);
 }
 
+// ================= SỐ ĐIỆN THOẠI (tự nhắn tới số cổng) =================
+group('auth: xác thực số điện thoại (tự nhắn mã tới số cổng)');
+{
+  const GW = '0900000001', KEY = `gw-${S}`;
+  const ph = (n) => `09${String(S).slice(-7)}${n}`.slice(0, 10);
+  const P1 = ph(1), P2 = ph(2), P3 = ph(3), P4 = ph(4);
+  const inbound = (body, key = KEY) => fetch(`${BASE}/sms-gateway/inbound`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-gateway-key': key }, body: JSON.stringify(body) }).then(async (x) => ({ status: x.status, data: await x.json().catch(() => null) }));
+  const mailLog = (email, subject) => { try { return readFileSync(API_LOG, 'utf8').includes(`[DEV] Mail tới ${email.toLowerCase()}: ${subject} · `); } catch { return false; } };
+  r = await req('GET', '/config/public');
+  check('public phoneOtp disabled by default', r.data.phoneOtp?.enabled === false, r.data.phoneOtp);
+  r = await req('POST', '/auth/forgot-password/phone', { body: { phone: P1 } });
+  check('disabled => 403 FEATURE_DISABLED phoneOtp', r.status === 403 && r.data.feature === 'phoneOtp', r.data);
+  r = await req('PATCH', '/admin/config', { token: tAd, body: { access: { phoneOtpEnabled: true, smsGatewayNumber: GW } } });
+  r = await req('GET', '/config/public');
+  check('enabled but no gateway key => still disabled', r.data.phoneOtp.enabled === false, r.data.phoneOtp);
+  r = await req('PATCH', '/admin/config', { token: tAd, body: { access: { smsGatewayKey: KEY, phoneMaxRequests: 3, phoneCodeMinutes: 5 } } });
+  check('admin view: hasSmsGatewayKey, key never returned', r.status === 200 && r.data.smsGateway?.hasKey === true && !JSON.stringify(r.data).includes(KEY), r.data.values?.access);
+  r = await req('GET', '/config/public');
+  check('public phoneOtp {enabled, codeMinutes}, no gateway secrets', r.data.phoneOtp.enabled === true && r.data.phoneOtp.codeMinutes === 5 && !JSON.stringify(r.data).includes(KEY), r.data.phoneOtp);
+
+  const U = await newUser('phU'), V = await newUser('phV');
+  r = await req('POST', '/me/phone/verifications', { token: U.token, body: { phone: P1, password: 'wrong' } });
+  check('link: wrong password 400', r.status === 400, r.data);
+  r = await req('POST', '/me/phone/verifications', { token: U.token, body: { phone: '12345', password: 'secret1' } });
+  check('link: invalid phone 400', r.status === 400, r.data);
+  r = await req('POST', '/me/phone/verifications', { token: U.token, body: { phone: `+84${P1.slice(1)}`, password: 'secret1' } });
+  const s1 = r.data;
+  check('link: 201 {code 6 digits, gatewayNumber, smsLink}, +84 normalized', r.status === 201 && /^\d{6}$/.test(s1.code) && s1.phone === P1 && s1.gatewayNumber === GW && s1.smsLink.android === `sms:${GW}?body=${s1.code}` && s1.smsLink.ios === `sms:${GW}&body=${s1.code}`, s1);
+  r = await req('GET', `/me/phone/verifications/${s1.verificationId}`, { token: U.token });
+  check('status PENDING', r.data.status === 'PENDING', r.data);
+  r = await req('GET', `/me/phone/verifications/${s1.verificationId}`, { token: V.token });
+  check("other user can't read session (404)", r.status === 404, r.status);
+  r = await inbound({ from: P1, text: s1.code }, 'wrong-key');
+  check('inbound wrong key 401', r.status === 401, r);
+  const other = s1.code === '000000' ? '111111' : '000000';
+  r = await inbound({ from: P1, text: other });
+  check('inbound wrong code => matched false', r.status === 200 && r.data.matched === false, r.data);
+  r = await inbound({ from: P2, text: s1.code });
+  check('inbound right code from ANOTHER SIM => matched false (knowing the number is not enough)', r.data.matched === false, r.data);
+  r = await req('GET', '/me', { token: U.token });
+  check('still not linked', r.data.phone === null, r.data);
+  r = await inbound({ sender: `+84${P1.slice(1)}`, message: `Ma ${s1.code}` });
+  check('inbound from the SIM (+84, field aliases) => linked', r.data.matched === true && r.data.linked === true, r.data);
+  r = await req('GET', `/me/phone/verifications/${s1.verificationId}`, { token: U.token });
+  check('status VERIFIED', r.data.status === 'VERIFIED', r.data);
+  r = await req('GET', '/me', { token: U.token });
+  check('/me phone + phoneVerifiedAt', r.data.phone === P1 && !!r.data.phoneVerifiedAt, r.data);
+  await sleep(300);
+  check('email notice: phone linked', mailLog(U.email, 'Đã gắn số điện thoại'));
+  r = await inbound({ from: P1, text: s1.code });
+  check('same SMS again => no session (single use)', r.data.matched === false, r.data);
+  r = await req('POST', '/me/phone/verifications', { token: V.token, body: { phone: P1, password: 'secret1' } });
+  check('one phone per account: 409 PHONE_TAKEN', r.status === 409 && r.data.code === 'PHONE_TAKEN', r.data);
+  r = await req('POST', '/me/phone/verifications', { token: U.token, body: { phone: P1, password: 'secret1' } });
+  check('same phone again => 409 PHONE_ALREADY_LINKED', r.status === 409 && r.data.code === 'PHONE_ALREADY_LINKED', r.data);
+
+  // V gắn P3 nhưng U giành P3 trước khi V nhắn → phiên V FAILED
+  const sv = (await req('POST', '/me/phone/verifications', { token: V.token, body: { phone: P3, password: 'secret1' } })).data;
+  const su = (await req('POST', '/me/phone/verifications', { token: U.token, body: { phone: P3, password: 'secret1' } })).data;
+  await inbound({ from: P3, text: su.code });
+  r = await req('GET', '/me', { token: U.token });
+  check('change number: U now has P3', r.data.phone === P3, r.data);
+  await sleep(300);
+  check('email notice: phone changed', mailLog(U.email, 'Số điện thoại đã được đổi'));
+  r = await inbound({ from: P3, text: sv.code });
+  r = await req('GET', `/me/phone/verifications/${sv.verificationId}`, { token: V.token });
+  check('race: number taken meanwhile => FAILED, V not linked', r.data.status === 'FAILED', r.data);
+
+  // Quên mật khẩu bằng SĐT
+  r = await req('POST', '/auth/forgot-password/phone', { body: { phone: P4 } });
+  const g = r.data;
+  check('reset: unknown number still gets a session (no enumeration)', r.status === 201 && /^\d{6}$/.test(g.code), r.data);
+  await inbound({ from: P4, text: g.code });
+  r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: g.verificationId, newPassword: 'newpass9' } });
+  check('reset with unknown-number session => 400 generic', r.status === 400 && r.data.message === 'Phiên xác thực không hợp lệ hoặc đã hết hạn', r.data);
+  r = await req('POST', '/auth/forgot-password/phone', { body: { phone: P3 } });
+  const rs = r.data;
+  r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: rs.verificationId, newPassword: 'newpass9' } });
+  check('reset before SMS arrives => 400', r.status === 400, r.data);
+  r = await req('GET', `/auth/forgot-password/phone/${rs.verificationId}`);
+  check('public status PENDING', r.data.status === 'PENDING', r.data);
+  r = await inbound({ phoneNumber: P3, body: `${rs.code}` });
+  r = await req('GET', `/auth/forgot-password/phone/${rs.verificationId}`);
+  check('public status VERIFIED after SMS', r.data.status === 'VERIFIED', r.data);
+  r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: rs.verificationId, newPassword: 'x' } });
+  check('reset weak password 400 (session kept)', r.status === 400, r.data);
+  r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: rs.verificationId, newPassword: 'newpass9' } });
+  check('reset by phone => 204', r.status === 204, r.data);
+  r = await req('GET', '/me', { token: U.token });
+  check('reset by phone logs out all devices (401)', r.status === 401, r.status);
+  r = await req('POST', '/auth/login', { body: { email: U.email, password: 'newpass9' } });
+  check('login with new password', r.status === 200, r.status);
+  U.token = r.data.accessToken;
+  r = await req('POST', '/auth/reset-password/phone', { body: { verificationId: rs.verificationId, newPassword: 'newpass8' } });
+  check('session single use (USED) => 400', r.status === 400, r.data);
+  await sleep(300);
+  check('email notice: password reset by phone', mailLog(U.email, 'Mật khẩu vừa được đặt lại'));
+
+  // Giới hạn 3 lần / 10 phút / số
+  for (let i = 0; i < 2; i++) r = await req('POST', '/auth/forgot-password/phone', { body: { phone: P2 } });
+  r = await req('POST', '/auth/forgot-password/phone', { body: { phone: P2 } });
+  check('3rd request in 10 min ok', r.status === 201, r.status);
+  r = await req('POST', '/auth/forgot-password/phone', { body: { phone: P2 } });
+  check('4th request => 429 PHONE_RATE_LIMIT', r.status === 429 && r.data.code === 'PHONE_RATE_LIMIT', r.data);
+
+  // Gỡ số
+  r = await req('DELETE', '/me/phone', { token: U.token, body: { password: 'wrong' } });
+  check('remove phone wrong password 400', r.status === 400, r.status);
+  r = await req('DELETE', '/me/phone', { token: U.token, body: { password: 'newpass9' } });
+  check('remove phone 204', r.status === 204, r.status);
+  r = await req('GET', '/me', { token: U.token });
+  check('/me phone null after remove', r.data.phone === null && r.data.phoneVerifiedAt === null, r.data);
+  await sleep(300);
+  check('email notice: phone removed', mailLog(U.email, 'Đã gỡ số điện thoại'));
+  await req('PATCH', '/admin/config', { token: tAd, body: { access: { phoneOtpEnabled: false, smsGatewayNumber: '', smsGatewayKey: '' } } });
+  r = await req('GET', '/config/public');
+  check('config restored (phoneOtp off)', r.data.phoneOtp.enabled === false, r.data.phoneOtp);
+}
+
 // ================= FORGOT / RESET PASSWORD =================
 group('auth: quên mật khẩu OTP');
 {
@@ -1992,7 +2111,7 @@ group('swagger');
 r = await fetch(BASE.replace(/\/api$/, '') + '/docs/openapi.json');
 {
   const doc = r.status === 200 ? await r.json() : { paths: {}, components: { schemas: {} } };
-  check('openapi.json 88 paths (+health, logout-all, admin run-due, 5 cấu hình, 29 trợ lý AI gồm đọc ảnh)', Object.keys(doc.paths).length === 88 && doc.paths['/api/ai/conversations/{id}/images']?.post, Object.keys(doc.paths).length);
+  check('openapi.json 95 paths (+health, logout-all, admin run-due, 5 cấu hình, 29 trợ lý AI gồm đọc ảnh, 7 số điện thoại)', Object.keys(doc.paths).length === 95 && doc.paths['/api/ai/conversations/{id}/images']?.post, Object.keys(doc.paths).length);
   check('AI endpoints documented (SSE + confirm body)', doc.paths['/api/ai/conversations/{id}/messages/stream']?.post && 'payload' in (doc.components.schemas.ConfirmDraftDto?.properties ?? {}) && doc.paths['/api/admin/ai/stats']?.get, Object.keys(doc.paths).filter((p) => p.includes('/ai')));
   check('config PATCH body documented per section', ['general', 'access', 'smtp', 'password', 'business', 'mobile'].every((k) => k in (doc.paths['/api/admin/config']?.patch?.requestBody?.content?.['application/json']?.schema?.properties ?? {})), doc.paths['/api/admin/config']);
   check('DTO schemas populated', ['amount', 'categoryId', 'walletId', 'title'].every((k) => k in (doc.components.schemas.CreateTransactionDto?.properties ?? {})), doc.components.schemas.CreateTransactionDto);

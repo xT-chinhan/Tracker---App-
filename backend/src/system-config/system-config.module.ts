@@ -106,6 +106,12 @@ const DEFS: Def[] = [
   { section: 'access', field: 'loginWindowMinutes', kind: 'int', min: 1, max: 60, def: () => 1 },
   { section: 'access', field: 'maintenanceMessage', kind: 'string', required: true, maxLen: 200, def: () => DEFAULT_MAINTENANCE_MESSAGE },
   { section: 'access', field: 'maintenanceEndsAt', kind: 'datetime', def: () => null },
+  // Xác thực số điện thoại kiểu tự nhắn (cách A): người dùng nhắn mã 6 số tới số cổng; máy cổng báo về /sms-gateway/inbound
+  { section: 'access', field: 'phoneOtpEnabled', kind: 'bool', def: () => false },
+  { section: 'access', field: 'smsGatewayNumber', kind: 'string', maxLen: 20, format: 'phone', def: () => '' },
+  { section: 'access', field: 'smsGatewayKey', kind: 'string', maxLen: 200, secret: true, def: () => '' },
+  { section: 'access', field: 'phoneCodeMinutes', kind: 'int', min: 1, max: 30, def: () => 5 },
+  { section: 'access', field: 'phoneMaxRequests', kind: 'int', min: 1, max: 20, def: () => 3 },
   { section: 'access', field: 'maintenanceEnabled', kind: 'bool', internal: true, def: () => false },
   { section: 'access', field: 'maintenanceStartedAt', kind: 'datetime', internal: true, def: () => null },
 
@@ -411,6 +417,21 @@ export class SystemConfigService {
     };
   }
 
+  /** Xác thực số điện thoại: bật khi công tắc bật VÀ đã có số cổng + khóa máy cổng. */
+  async phoneOtp() {
+    const s = await this.snapshot();
+    const v = (f: string) => s.values.get(`access.${f}`);
+    const gatewayNumber = (v('smsGatewayNumber') as string) ?? '';
+    const gatewayKey = (v('smsGatewayKey') as string) ?? '';
+    return {
+      enabled: v('phoneOtpEnabled') === true && !!gatewayNumber && !!gatewayKey,
+      gatewayNumber,
+      gatewayKey,
+      codeMinutes: v('phoneCodeMinutes') as number,
+      maxRequests: v('phoneMaxRequests') as number,
+    };
+  }
+
   /** Admin đã đặt => "<n>d"; chưa đặt => giữ JWT_EXPIRES_IN của env (hành vi cũ). */
   async jwtExpiresIn(): Promise<string> {
     const s = await this.snapshot();
@@ -466,6 +487,8 @@ export class SystemConfigService {
       privacyUrl: v('general.privacyUrl') || null,
       currency: 'VND',
       registrationEnabled: v('access.registrationEnabled'),
+      // xác thực số điện thoại + quên mật khẩu bằng SĐT (song song email); số cổng app lấy khi bắt đầu phiên
+      phoneOtp: { enabled: v('access.phoneOtpEnabled') === true && !!v('access.smsGatewayNumber') && !!v('access.smsGatewayKey'), codeMinutes: v('access.phoneCodeMinutes') },
       maintenance: { enabled: m.enabled, message: m.enabled ? m.message : null, endsAt: m.enabled ? m.endsAt : null },
       // Trợ lý AI có khối riêng `ai` bên dưới (bật = ai.enabled && business.featureAi)
       features: Object.fromEntries((Object.keys(FEATURE_FIELDS) as FeatureName[]).filter((f) => f !== 'ai').map((f) => [f, v(`business.${FEATURE_FIELDS[f]}`) !== false])),
@@ -522,6 +545,8 @@ export class SystemConfigService {
         /** db: đã lưu trong cấu hình; env: lấy từ SMTP_* của máy chủ; none: chưa cấu hình */
         source: [...s.rows.keys()].some((k) => k.startsWith('smtp.')) ? 'db' : this.env.smtpHost ? 'env' : 'none',
       },
+      /** Khóa máy cổng SMS: chỉ cho biết đã đặt hay chưa, không bao giờ trả về */
+      smsGateway: { hasKey: !!s.values.get('access.smsGatewayKey') },
       updated,
       lastSaved: last ? { at: last.createdAt, by: last.actorName } : null,
       stats: { activeUsers, savingGoals, recurringRules },
