@@ -69,21 +69,21 @@ Admin tương ứng: `../admin-mockup/` mục K, ảnh `../admin-mockup/shots/50
 |---|---|---|
 | 50a | `shots/50-sdt-01-cai-dat.png` | Cài đặt: nhóm mới **Tài khoản** (Đổi mật khẩu, Số điện thoại “Chưa gắn”), dòng gợi ý “Dùng để lấy lại mật khẩu khi quên” |
 | 50b | `shots/50-sdt-02-nhap-so.png` | Gắn số điện thoại: ô số + mật khẩu hiện tại, báo trước bước sau sẽ gửi yêu cầu xác nhận từ số của bạn (1 tin, phí tin thường), Thu Chi không nhắn/gọi; Tiếp tục |
-| 50c | `shots/50-sdt-03-gui-tin.png` | Gửi yêu cầu xác nhận: mã 6 ô 4 8 2 9 1 0, hết hạn sau 4:32, cảnh báo vàng phải gửi từ SIM 0912 345 678; nút **Gửi yêu cầu xác nhận** (mở Tin nhắn soạn sẵn) · Sao chép mã 6 số (dự phòng), phí 1 tin thường. Không hiện số máy cổng |
-| 50d | `shots/50-sdt-04-dang-cho.png` | Quay lại từ Tin nhắn: “Đang chờ xác nhận…” (shimmer chữ + thanh chạy mảnh), tóm tắt mã / gửi từ, gợi ý khi chưa gửi được; Gửi lại yêu cầu · Đổi số khác |
-| 50e | `shots/50-sdt-05-thanh-cong.png` | Đã gắn số 0912 ••• 678, đã gửi email xác nhận; Xong |
-| 50f | `shots/50-sdt-06-loi.png` | Mã đã hết hạn: mã mờ, thẻ trung tính (không đỏ), còn 2 lần lấy mã trong 10 phút; Lấy mã mới · Đổi số khác |
+| 50c | `shots/50-sdt-03-gui-tin.png` | Gửi yêu cầu xác nhận: một dòng giải thích (Tin nhắn mở với yêu cầu soạn sẵn, bấm Gửi từ chính số vừa nhập), **Nội dung xác nhận** 6 ô 4 8 2 9 1 0, hết hạn sau 4:32, nút Gửi yêu cầu xác nhận, phí 1 tin thường. Không hiện số điện thoại nào |
+| 50d | `shots/50-sdt-04-dang-cho.png` | Quay lại từ Tin nhắn: “Đang chờ xác nhận…” (shimmer chữ + thanh chạy mảnh), mã + thời gian còn lại, gợi ý khi chưa gửi được (không kèm số); Gửi lại yêu cầu · Đổi số khác |
+| 50e | `shots/50-sdt-05-thanh-cong.png` | Đã xác thực số điện thoại (không hiện số), đã gửi email xác nhận; Xong |
+| 50f | `shots/50-sdt-06-loi.png` | Mã đã hết hạn: mã mờ, thẻ trung tính (không đỏ, không kèm số), còn 2 lần lấy mã trong 10 phút; Lấy mã mới · Đổi số khác |
 | 50f | `shots/50-sdt-06b-loi-so-da-dung.png` | Biến thể: số đã gắn với tài khoản khác, lỗi đỏ ngay dưới ô số |
 | 50g | `shots/50-sdt-07-quen-mk-chon.png` | Quên mật khẩu: hai thẻ Qua email (mã 6 số trong email) / Qua số điện thoại (gửi yêu cầu xác nhận từ số đã gắn) |
-| 50h | `shots/50-sdt-08-quen-mk-sdt.png` | Quên mật khẩu qua SĐT, bước cuối: banner xanh nhạt “Đã xác nhận số 0912 ••• 678”, hai ô mật khẩu mới, báo sẽ có email |
-| 50i | `shots/50-sdt-09-go-so.png` | Cài đặt đã gắn “0912 ••• 678 · Đã xác thực” + sheet Gỡ số điện thoại? cần mật khẩu, nút Gỡ số (đỏ nhạt) giống sheet Xóa tài khoản |
+| 50h | `shots/50-sdt-08-quen-mk-sdt.png` | Quên mật khẩu qua SĐT, bước cuối: banner xanh nhạt “Đã xác nhận số điện thoại”, hai ô mật khẩu mới, báo sẽ có email |
+| 50i | `shots/50-sdt-09-go-so.png` | Cài đặt đã gắn “0912 ••• 678 · Đã xác thực” + sheet Gỡ số điện thoại? (nói “số này”, không lặp số) cần mật khẩu, nút Gỡ số (đỏ nhạt) giống sheet Xóa tài khoản |
 
 ### Quyết định
-- **Người dùng gửi yêu cầu, Thu Chi không nhắn**: khái niệm trong app là “Gửi yêu cầu xác nhận”, không nói “nhắn tới Thu Chi”. Màn 50c chỉ có một việc là bấm nút này (mở Tin nhắn soạn sẵn người nhận + 6 số). Không có ô nhập mã. **App không bao giờ hiện số máy cổng**, số này chỉ dùng để điền sẵn người nhận. “Sao chép mã 6 số” là dự phòng khi tin chưa có sẵn mã. Câu “phí 1 tin nhắn thường” và “Thu Chi không nhắn/gọi” xuất hiện ở 50b và 50c.
-- **Số gửi phải khớp**: cảnh báo vàng ở 50c (không phải lỗi, là điều kiện) nhắc cả trường hợp máy 2 SIM. 50d nhắc lại “Gửi từ 0912 345 678”.
+- **Người dùng gửi yêu cầu, Thu Chi không nhắn**: khái niệm trong app là “Gửi yêu cầu xác nhận”, không nói “nhắn tới Thu Chi”. Màn 50c chỉ có một việc là bấm nút này (mở Tin nhắn soạn sẵn người nhận + 6 số). Không có ô nhập mã. **App không bao giờ hiện số máy cổng**, số này chỉ dùng để điền sẵn người nhận. Câu “phí 1 tin nhắn thường” và “Thu Chi không nhắn/gọi” xuất hiện ở 50b và 50c.
+- **Không hiện số điện thoại nào trong luồng xác nhận** (50c–50h), kể cả số của chính người dùng: chỉ nhắc “gửi từ chính số điện thoại bạn vừa nhập”. Số (đã che) chỉ hiện ở dòng Cài đặt (50a/50i) và trong ô nhập ở 50b/50f-b. Bỏ cảnh báo SIM và nút Sao chép mã để màn 50c chỉ còn một việc.
 - **Chờ không spinner**: dòng trạng thái shimmer (tắt khi reduce-motion) + thanh chạy mảnh, app tự hỏi trạng thái và tự sang 50e.
 - **Lỗi**: hết hạn dùng thẻ trung tính như OCR 40f (không phải lỗi của người dùng); số đã dùng là lỗi nhập nên hiện đỏ ngay dưới ô, giống lỗi inline ở admin. Hai biến thể tách thành 2 ảnh (50f, 50f-b) thay vì ghép một màn, cho đúng ngữ cảnh mỗi lỗi.
 - **Cài đặt thêm nhóm “Tài khoản”** ngay dưới thẻ hồ sơ, chuyển “Đổi mật khẩu” từ nhóm Ứng dụng vào đây. Quản trị tắt tính năng thì dòng Số điện thoại và thẻ “Qua số điện thoại” ở 50g ẩn.
 - **Quên mật khẩu** giữ đúng bố cục màn 02: app không biết người dùng đã gắn số hay chưa (không lộ thông tin tài khoản), nên luôn hiện cả hai cách kèm ghi chú. Bước nhập số và gửi yêu cầu xác nhận dùng lại màn 50b/50c (không có ô mật khẩu).
-- Dữ liệu: số người dùng 0912 345 678 (hiện che 0912 ••• 678), mã 482910 (số máy cổng 0901 234 567 chỉ có ở admin), email minhanh.nguyen@gmail.com / minh•••@gmail.com như các màn đã duyệt.
+- Dữ liệu: số người dùng 0912 345 678 (chỉ trong ô nhập; Cài đặt hiện che 0912 ••• 678), mã 482910 (số máy cổng 0901 234 567 chỉ có ở admin), email minhanh.nguyen@gmail.com / minh•••@gmail.com như các màn đã duyệt.
 - Thêm CSS ở cuối `styles.css`: `.otp.show`, `.input.error`, `.err-t`, `.ok-banner`, `.kv`, `.indet`, `.opt`. Ảnh chụp bằng `../shoot.mjs` (`cd admin && node ../design/shoot.mjs mockup 50-sdt`).
