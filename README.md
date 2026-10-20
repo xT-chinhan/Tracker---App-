@@ -1,4 +1,4 @@
-# Thu Chi — Quản lý thu chi cá nhân
+# TrackerX — Quản lý thu chi cá nhân
 
 Nền tảng giúp người Việt ghi chép thu chi hằng ngày: nhiều ví (tiền mặt, ngân hàng, ví điện tử), chuyển tiền giữa ví, ngân sách tháng có cảnh báo 80% / 100%, mục tiêu tiết kiệm, giao dịch định kỳ, mẫu nhập nhanh, báo cáo và dự báo. Người dùng dùng app di động; quản trị viên dùng trang admin web.
 

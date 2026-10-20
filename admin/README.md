@@ -1,4 +1,4 @@
-# Thu Chi Admin
+# TrackerX Admin
 
 Trang quản trị cho nền tảng thu/chi: Vite + React + TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, React Router, Recharts.
 

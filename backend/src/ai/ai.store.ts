@@ -12,6 +12,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import type { Principal } from './ai.types';
 import { fromBytes, toBytes } from './ai.text';
 
+/** Nội dung tin USER đại diện cho 1 ảnh gửi lên (ảnh không được lưu). */
+export const OCR_USER_TEXT = '[Ảnh hóa đơn]';
+
 export const GLOBAL = 'global';
 /** Luật của user tự bật khi đủ bằng chứng (giống ai/learn/store.ts: support ≥ 3, precision ≥ 0.85) */
 export const USER_RULE_MIN_SUPPORT = 3;
@@ -155,8 +158,14 @@ export class AiRepo {
     return rows.reverse().map((r) => ({ role: r.role === 'USER' ? ('user' as const) : ('assistant' as const), content: r.content }));
   }
 
-  countUserMessagesSince(since: Date) {
-    return this.db.aiMessage.count({ where: { userId: this.uid, role: 'USER', createdAt: { gte: since } } });
+/** Số câu trả lời của một skill từ mốc `since` (vd số ảnh đã đọc hôm nay). */
+  countSkillRepliesSince(skill: string, since: Date) {
+    return this.db.aiMessage.count({ where: { userId: this.uid, role: 'ASSISTANT', skill, createdAt: { gte: since } } });
+  }
+
+    countUserMessagesSince(since: Date) {
+    // ảnh hóa đơn có hạn mức riêng (ai.ocrDailyLimitPerUser), không tính vào số tin chat
+    return this.db.aiMessage.count({ where: { userId: this.uid, role: 'USER', createdAt: { gte: since }, NOT: { content: OCR_USER_TEXT } } });
   }
 
   /* ---------- nháp ---------- */

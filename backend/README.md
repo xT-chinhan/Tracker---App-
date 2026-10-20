@@ -1,4 +1,4 @@
-# Backend API — Thu Chi
+# Backend API — TrackerX
 
 NestJS 11 + Prisma 6 + PostgreSQL 16. Mỗi module một file `src/<module>/<module>.module.ts` (DTO + service + controller). Dùng chung: `src/common/` (auth guard JWT, DTO, giờ VN, filter lỗi Prisma), `src/prisma/`. Tiền lưu `BigInt` (VND), trả ra JSON dạng number. Cron (`@nestjs/schedule`) sinh giao dịch định kỳ. Rate limit các route đăng nhập/đăng ký/OTP bằng `@nestjs/throttler`.
 
@@ -47,7 +47,7 @@ npm run dev                     # http://localhost:3000/api
 | `THROTTLE_FORGOT_LIMIT` | 3 (test: 20) | Như trên cho forgot-password |
 | `TRUST_PROXY` | — | Chạy sau reverse proxy: `1` (số hop), `true` hoặc danh sách IP, để rate limit đếm theo IP thật |
 | `AI_PROVIDER` | — | `ollama` \| `fake`: ghi đè `ai.provider` của Cấu hình hệ thống. Không đặt + `NODE_ENV=test` → `fake` |
-| `OLLAMA_URL` / `AI_CHAT_MODEL` / `AI_EMBED_MODEL` | `http://localhost:11434` / `gemma2:2b` / `bge-m3` | Mặc định cho mục `ai` của Cấu hình hệ thống |
+| `OLLAMA_URL` / `AI_CHAT_MODEL` / `AI_EMBED_MODEL` | `http://localhost:11434` / `qwen3.5:4b` / `bge-m3` | Mặc định cho mục `ai` của Cấu hình hệ thống |
 | `AI_DIR` | `<repo>/ai` | Thư mục `ai/` (parser, prompt, skill ngoài) nạp lúc chạy bằng `tsx` |
 | `AI_EXTERNAL_SKILLS` | 1 | `0` = không nạp skill từ `ai/skills/*` (chỉ built-in) |
 | `CONFIG_SECRET` | (dẫn xuất từ `JWT_SECRET`) | Khóa mã hóa AES-256-GCM cho giá trị bí mật trong Cấu hình hệ thống (mật khẩu SMTP). Đổi khóa thì mật khẩu SMTP đã lưu không giải mã được, phải nhập lại |
@@ -305,7 +305,7 @@ Lưu ở bảng `SystemSetting` (khóa `mục.trường` → JSON; chưa có dò
 
 | Mục | Trường | Mặc định | Có hiệu lực ở đâu |
 |---|---|---|---|
-| general | `appName`, `supportEmail`, `hotline`, `termsUrl`, `privacyUrl` | "Thu Chi", trống | `/config/public`; tên app vào tiêu đề email OTP / email thử. Link phải `https://` |
+| general | `appName`, `supportEmail`, `hotline`, `termsUrl`, `privacyUrl` | "TrackerX", trống | `/config/public`; tên app vào tiêu đề email OTP / email thử. Link phải `https://` |
 | access | `registrationEnabled` | true | Tắt → `POST /auth/register` 403 `{code:'REGISTRATION_DISABLED'}` |
 | | `sessionDays` (1–365) | theo `JWT_EXPIRES_IN` (30) | Hạn JWT khi đăng nhập / đăng ký / đổi mật khẩu. Chưa sửa thì dùng nguyên `JWT_EXPIRES_IN` |
 | | `loginMaxAttempts` / `loginWindowMinutes` | `THROTTLE_AUTH_LIMIT` (10, test 200) / 1 | Giới hạn đăng nhập **theo email** (thêm vào giới hạn theo IP), quá → 429 + `Retry-After` |

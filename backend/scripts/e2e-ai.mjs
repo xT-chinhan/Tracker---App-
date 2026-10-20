@@ -447,6 +447,68 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
       check('stream unknown conversation => JSON 404 (before stream)', r2.status === 404 && r2.data.statusCode === 404, r2.data);
     }
 
+    // ---------------------------------------------------------------- đọc ảnh (OCR)
+    group('ai: đọc ảnh hóa đơn / chuyển khoản');
+    {
+      const O = await register('Nguyễn Văn Ảnh', 'aiOcr');
+      const cO = await conv(O.token);
+      // ảnh giả: provider FAKE đọc JSON sau dấu FAKE_OCR trong chính file
+      const img = (json, type = 'image/jpeg') => new Blob([Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.from(json === null ? 'noise' : 'FAKE_OCR' + JSON.stringify(json), 'utf8')])], { type });
+      const upload = async (t, cid, blob, name = 'a.jpg') => {
+        const fd = new FormData(); if (blob) fd.append('image', blob, name);
+        const res = await fetch(`${BASE}/ai/conversations/${cid}/images`, { method: 'POST', headers: { authorization: `Bearer ${t}` }, body: fd });
+        const text = await res.text(); let data; try { data = JSON.parse(text); } catch { data = text; }
+        return { status: res.status, data };
+      };
+      r = await upload(O.token, cO.id, img({ kind: 'transfer', amount: 152000, date: vnYesterday(), sender: 'NGUYEN VAN ANH', recipient: 'LE HUU MANH', note: 'NGUYEN VAN ANH chuyen tien', bank: 'BIDV' }));
+      let it = r.data.draft?.payload.items[0];
+      check('transfer out => EXPENSE draft, title = recipient (generic note skipped), date kept', r.status === 201 && r.data.message.skill === 'doc-hoa-don' && r.data.message.routeBy === 'image' && it?.type === 'EXPENSE' && it.amount === 152000 && it.title === 'LE HUU MANH' && it.date === vnYesterday() && /Đọc từ ảnh/.test(it.note), r.data);
+      check('response carries ocr fields (own data) for the app', r.data.ocr?.recipient === 'LE HUU MANH' && r.data.ocr.amount === 152000 && r.data.ocr.reason === null, r.data.ocr);
+      check('user message stored as "[Ảnh hóa đơn]" (image not kept)', r.data.userMessage?.content === '[Ảnh hóa đơn]', r.data.userMessage);
+      await req('POST', `/ai/drafts/${r.data.draft.id}/cancel`, { token: O.token });
+      r = await upload(O.token, cO.id, img({ kind: 'transfer', amount: '50,000', date: vnToday(), sender: 'Vo Thanh Nhan', recipient: 'NGUYỄN VĂN ẢNH', note: 'Vo Thanh Nhan chuyen tien QR', bank: 'TPBank' }));
+      it = r.data.draft?.payload.items[0];
+      check('recipient == user name (accents/case folded) => INCOME "Nhận tiền <sender>"', it?.type === 'INCOME' && it.amount === 50000 && it.title === 'Nhận tiền Vo Thanh Nhan', it);
+      const before = (await balances(O.token))['Tiền mặt'];
+      r = await confirm(O.token, r.data.draft.id);
+      check('confirm OCR draft => income tx created', r.status === 200 && r.data.result.created === 1 && (await balances(O.token))['Tiền mặt'] === before + 50000, r.data);
+      r = await upload(O.token, cO.id, img({ kind: 'receipt', amount: 85000, date: '2099-01-01', merchant: 'Highlands Coffee' }));
+      it = r.data.draft?.payload.items[0];
+      check('receipt => EXPENSE, merchant title, future date clamped to today', it?.type === 'EXPENSE' && it.title === 'Highlands Coffee' && it.date === vnToday(), it);
+      await req('POST', `/ai/drafts/${r.data.draft.id}/cancel`, { token: O.token });
+      r = await upload(O.token, cO.id, img(null));
+      check('unreadable image => ask back, no draft, ocr.reason not_document', r.status === 201 && r.data.message.status === 'ask' && !r.data.draft && r.data.ocr?.reason === 'not_document', r.data);
+      r = await upload(O.token, cO.id, img({ kind: 'receipt', merchant: 'Highlands Coffee', date: vnToday() }));
+      check('receipt without amount => ask, ocr keeps merchant, reason no_amount', r.data.message.status === 'ask' && r.data.ocr?.merchant === 'Highlands Coffee' && r.data.ocr.reason === 'no_amount', r.data);
+      r = await req('GET', '/ai/usage', { token: O.token });
+      check('usage: ocrToday counts images read today + ocrDailyLimit; images not counted as chat messages', r.data.ocrToday === 5 && r.data.messagesToday === 0 && r.data.ocrDailyLimit === initial.ai.ocrDailyLimitPerUser, r.data);
+      r = await upload(O.token, cO.id, img({ amount: 1 }, 'application/pdf'), 'a.pdf');
+      check('non-image mime => 400', r.status === 400, r.data);
+      r = await upload(O.token, cO.id, null);
+      check('missing file => 400', r.status === 400, r.data);
+      r = await upload(A.token, cO.id, img({ amount: 1000 }));
+      check("other user's conversation => 404", r.status === 404, r.status);
+      await patchCfg({ ai: { ocrDailyLimitPerUser: 5 } });
+      r = await upload(O.token, cO.id, img({ kind: 'receipt', amount: 1000, merchant: 'X' }));
+      check('daily OCR limit reached (5 read today) => 429 AI_OCR_DAILY_LIMIT + Retry-After', r.status === 429 && r.data.code === 'AI_OCR_DAILY_LIMIT' && r.data.limit === 5, r.data);
+      r = await req('GET', '/admin/ai/ocr-stats?days=7', { token: tAd });
+      check('admin ocr-stats: totals, reasons, drafts, user hit limit (no content)', r.status === 200 && r.data.total >= 4 && r.data.users >= 1 && r.data.usersHitLimit >= 1 && r.data.dailyLimit === 5 && r.data.reasons.some((x) => x.reason === 'not_document') && r.data.drafts.confirmed >= 1 && r.data.drafts.cancelled >= 2 && r.data.daily.length >= 1 && !JSON.stringify(r.data).includes('LE HUU MANH'), r.data);
+      r = await req('GET', '/admin/ai/ocr-stats', { token: O.token });
+      check('ocr-stats: user => 403', r.status === 403, r.status);
+      await patchCfg({ ai: { ocrDailyLimitPerUser: initial.ai.ocrDailyLimitPerUser, ocrEnabled: false } });
+      r = await upload(O.token, cO.id, img({ kind: 'receipt', amount: 1000, merchant: 'X' }));
+      check('ai.ocrEnabled=false => 403 FEATURE_DISABLED feature=ocr', r.status === 403 && r.data.code === 'FEATURE_DISABLED' && r.data.feature === 'ocr', r.data);
+      r = await req('GET', '/config/public');
+      check('public config: ai.ocr.enabled false when ocr off (chat still on)', r.data.ai.ocr?.enabled === false && r.data.ai.enabled === true, r.data.ai);
+      r = await say(O.token, cO.id, 'cà phê 20k');
+      check('ocr off does not disable text chat', r.status === 201, r.status);
+      await patchCfg({ ai: { ocrEnabled: true } });
+      r = await req('GET', '/config/public');
+      check('public config: ai.ocr {enabled, dailyLimitPerUser, maxSide}', r.data.ai.ocr?.enabled === true && r.data.ai.ocr.dailyLimitPerUser === initial.ai.ocrDailyLimitPerUser && r.data.ai.ocr.maxSide === initial.ai.ocrMaxSide, r.data.ai);
+      r = await patchCfg({ ai: { ocrMaxSide: 100 } });
+      check('ai.ocrMaxSide < 384 => 400', r.status === 400 && 'ai.ocrMaxSide' in r.data.errors, r.data);
+    }
+
     // ---------------------------------------------------------------- hạn mức / tính năng / bảo trì
     group('ai: hạn mức, tắt tính năng, bảo trì, cấu hình');
     r = await req('GET', '/config/public');

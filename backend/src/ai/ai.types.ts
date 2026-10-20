@@ -23,6 +23,8 @@ export interface ChatOptions {
   numPredict?: number;
   stop?: string[];
   temperature?: number;
+  /** Ghi đè thời gian chờ của client (đọc ảnh: ai.ocrTimeoutSeconds) */
+  timeoutMs?: number;
 }
 
 export interface ChatResult {
@@ -40,6 +42,8 @@ export interface LlmClient {
   chat(messages: ChatMsg[], opts?: ChatOptions): Promise<ChatResult>;
   /** Embedding đã chuẩn hóa L2 */
   embed(texts: string[]): Promise<number[][]>;
+  /** Đọc ảnh (model có vision, vd qwen3.5:4b). Ảnh JPEG/PNG dạng base64, đã thu nhỏ. */
+  vision?(prompt: string, imageBase64: string, opts?: ChatOptions): Promise<ChatResult>;
 }
 
 /** Tên các context provider (xem ai.context.ts). Skill khai báo `context: [...]` để được nạp sẵn vào `context.data`. */
@@ -79,8 +83,21 @@ export interface DraftProposal {
   payload: unknown;
 }
 
+/**
+ * Khối hiển thị kèm câu trả lời (giao diện vẽ thành thẻ số liệu / danh sách / bảng). `reply` vẫn là bản chữ đầy đủ
+ * (cho client không vẽ khối, nút Chép, lịch sử hội thoại). Chữ trong khối hỗ trợ **đậm**. Số liệu phải lấy từ dữ liệu provider.
+ */
+export type ReplyBlock =
+  | { type: 'text'; text: string }
+  | { type: 'stats'; items: { label: string; value: string; sub?: string }[] }
+  | { type: 'list'; items: string[] }
+  | { type: 'table'; columns: string[]; rows: string[][]; align?: ('left' | 'right')[]; /** đường dẫn admin cho từng dòng, vd /users/<id> */ links?: (string | null)[]; more?: string }
+  | { type: 'source'; text: string };
+
 export interface SkillResult {
   reply: string;
+  /** Khối hiển thị (tùy chọn), xem ReplyBlock */
+  blocks?: ReplyBlock[];
   draft?: DraftProposal;
   followUps?: string[];
   /** true = cần hỏi lại người dùng (không có nháp) */
@@ -94,6 +111,10 @@ export interface SkillRunArgs {
   context: SkillContext;
   llm: LlmClient;
   now: string;
+  /** Ảnh người dùng gửi (base64, đã thu nhỏ) — chỉ skill đọc ảnh dùng */
+  image?: string;
+  /** Thời gian chờ đọc ảnh (ms) */
+  imageTimeoutMs?: number;
 }
 
 export interface Skill {
@@ -108,6 +129,6 @@ export interface Skill {
 
 export interface RouteResult {
   skill: string;
-  by: 'learned' | 'rule' | 'knn' | 'fallback' | 'reroute' | 'guard';
+  by: 'learned' | 'rule' | 'knn' | 'fallback' | 'reroute' | 'guard' | 'image';
   score?: number;
 }

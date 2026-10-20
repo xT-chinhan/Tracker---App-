@@ -180,6 +180,19 @@ test('trung tâm học: KPI, biểu đồ / bảng, đề xuất, lượt chạy
   await expect(page.getByTestId('run-detail')).toContainText('Luật chung')
 })
 
+test('trung tâm học: tab Đọc ảnh chỉ có số tổng hợp; cấu hình có thẻ Đọc ảnh', async ({ page }) => {
+  await loginAsAdmin(page)
+  await page.goto('/learning')
+  await page.getByTestId('tab-ocr').click()
+  await expect(page).toHaveURL(/\/learning\/doc-anh$/)
+  await expect(page.getByTestId('privacy-note')).toContainText('Ảnh bị xóa ngay sau khi đọc')
+  for (const k of ['ocr-kpi-total', 'ocr-kpi-accept', 'ocr-kpi-latency', 'ocr-kpi-unreadable', 'ocr-daily-card', 'ocr-reasons-card']) await expect(page.getByTestId(k)).toBeVisible()
+  await page.goto('/settings/tro-ly')
+  await expect(page.getByTestId('row-ai.ocrEnabled')).toBeVisible()
+  await expect(page.getByTestId('ocr-store')).toContainText('Không lưu')
+  await expect(page.getByTestId('row-ai.ocrDailyLimitPerUser').locator('input')).toHaveValue('20')
+})
+
 test('chi tiết người dùng: thẻ Trợ lý AI chỉ có số đếm', async ({ page }) => {
   const token = await adminToken()
   const me = await apiOk<{ id: string }>('GET', '/me', token)

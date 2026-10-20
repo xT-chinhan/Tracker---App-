@@ -19,18 +19,17 @@ const MANAGE = [
   { to: '/settings', label: 'Cấu hình', icon: Settings2 },
 ]
 
-/** Logo chữ "đ" gạch chân trên nền đen. */
+/** Logo TrackerX (hướng C · lưới ô): 5 ô trắng ghép chữ T, 2 ô góc xám gợi chữ x, trên nền đen bo 22%. */
+export const LOGO_CELLS: [number, number, string][] = [
+  [23, 23, '#FFFFFF'], [49, 23, '#FFFFFF'], [75, 23, '#FFFFFF'], [49, 49, '#FFFFFF'], [49, 75, '#FFFFFF'], [23, 75, '#5E5D59'], [75, 75, '#5E5D59'],
+]
+
 export function Logo({ size = 'md' }: { size?: 'md' | 'lg' }) {
   return (
-    <div
-      className={cn(
-        'flex shrink-0 items-center justify-center bg-primary font-bold text-primary-foreground underline decoration-2 underline-offset-3',
-        size === 'lg' ? 'size-14 rounded-[16px] text-[26px]' : 'size-9 rounded-[11px] text-lg',
-      )}
-      aria-hidden="true"
-    >
-      đ
-    </div>
+    <svg viewBox="0 0 120 120" className={cn('shrink-0', size === 'lg' ? 'size-14' : 'size-9')} aria-hidden="true">
+      <rect width="120" height="120" rx="26.4" fill="#111111" />
+      {LOGO_CELLS.map(([x, y, fill]) => <rect key={`${x}-${y}`} x={x} y={y} width="22" height="22" rx="5" fill={fill} />)}
+    </svg>
   )
 }
 
@@ -92,7 +91,7 @@ export function Layout() {
         <div className="flex items-center gap-3 pb-6 xl:px-2 xl:pb-7">
           <Logo />
           <div className="hidden xl:block">
-            <p className="text-base leading-[1.3] font-bold tracking-[-0.01em]">Thu Chi</p>
+            <p className="text-base leading-[1.3] font-bold tracking-[-0.02em]">TrackerX</p>
             <p className="text-xs leading-[1.3] text-muted-foreground">Bảng quản trị</p>
           </div>
         </div>

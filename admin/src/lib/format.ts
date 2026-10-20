@@ -64,6 +64,7 @@ export const GOAL_STATUS_LABEL = {
 /** Tên skill trợ lý AI hiển thị cho admin */
 export const AI_SKILL_LABEL: Record<string, string> = {
   'ghi-giao-dich': 'Ghi giao dịch',
+  'doc-hoa-don': 'Đọc ảnh',
   'hoi-so-du': 'Hỏi số dư',
   'tong-ket-thang': 'Tổng kết tháng',
   'kiem-tra-ngan-sach': 'Ngân sách',

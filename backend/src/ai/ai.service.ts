@@ -2,7 +2,8 @@
  * Pipeline trợ lý: tin user → router → skill (context theo principal + LLM) → nháp (chuẩn hóa) → lưu tin/nháp.
  * Xác nhận nháp → thực thi qua service nghiệp vụ → tín hiệu học.
  */
-import { BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, Logger } from '@nestjs/common';
+import sharp from 'sharp';
+import { BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { AiConversation, AiDraft, AiMessage, Prisma } from '@prisma/client';
 import { SystemConfigService } from '../system-config/system-config.module';
 import { AiContextService } from './ai.context';
@@ -11,15 +12,29 @@ import { AiLearningService, diffPayload } from './ai.learning';
 import { FakeLlm, OllamaClient } from './ai.llm';
 import { AiRouter } from './ai.router';
 import { SkillRegistry } from './ai.skills';
-import { AiRepo, AiStore } from './ai.store';
+import { AiRepo, AiStore, OCR_USER_TEXT } from './ai.store';
 import type { ChatMsg, ChatOptions, LlmClient, Principal, RouteResult, SkillResult } from './ai.types';
 
 @Injectable()
-export class AiLlmFactory {
+export class AiLlmFactory implements OnApplicationBootstrap {
+  private readonly logger = new Logger('AiWarmup');
   private readonly fake = new FakeLlm();
   private cached?: { sig: string; client: LlmClient };
 
   constructor(private readonly sys: SystemConfigService) {}
+
+  /** Nạp sẵn model trả lời + embedding vào GPU khi khởi động để câu hỏi đầu tiên không phải chờ (chạy nền, lỗi chỉ ghi log). */
+  onApplicationBootstrap() {
+    if (process.env.NODE_ENV === 'test' || process.env.AI_WARMUP === '0') return;
+    void (async () => {
+      const llm = await this.get();
+      if (llm.provider !== 'ollama') return;
+      const t = Date.now();
+      await llm.embed(['khởi động']);
+      await llm.chat([{ role: 'user', content: 'ok' }], { numPredict: 1 });
+      this.logger.log(`Đã nạp ${llm.chatModel} + ${llm.embedModel} (${Date.now() - t} ms)`);
+    })().catch((e) => this.logger.warn(`Làm nóng model lỗi: ${(e as Error).message}`));
+  }
 
   async get(): Promise<LlmClient> {
     const c = await this.sys.ai();
@@ -41,6 +56,7 @@ function recording(llm: LlmClient, calls: { messages: ChatMsg[] }[]): LlmClient 
       return llm.chat(messages, opts);
     },
     embed: (texts: string[]) => llm.embed(texts),
+    ...(llm.vision ? { vision: (prompt: string, image: string, o?: ChatOptions) => llm.vision!(prompt, image, o) } : {}),
   };
 }
 
@@ -68,6 +84,7 @@ export function messageView(m: AiMessage & { draft?: AiDraft | null }) {
     latencyMs: m.latencyMs,
     tokens: m.promptTokens != null || m.evalTokens != null ? { prompt: m.promptTokens, eval: m.evalTokens } : null,
     followUps: (meta.followUps as string[] | undefined) ?? [],
+    blocks: (meta.blocks as unknown[] | undefined) ?? [],
     createdAt: m.createdAt,
     draft: draftView(m.draft),
   };
@@ -128,8 +145,10 @@ export class AiService {
 
   async usage(p: Principal) {
     const c = await this.sys.ai();
-    const u = await this.store.for(p).myUsage(vnMidnight());
-    return { ...u, dailyMessageLimit: c.dailyMessageLimitPerUser, maxConversations: c.maxConversationsPerUser, resetAt: new Date(vnMidnight().getTime() + 86400_000) };
+    const repo = this.store.for(p);
+    const u = await repo.myUsage(vnMidnight());
+    const ocrToday = await repo.countSkillRepliesSince('doc-hoa-don', vnMidnight());
+    return { ...u, dailyMessageLimit: c.dailyMessageLimitPerUser, maxConversations: c.maxConversationsPerUser, ocrToday, ocrDailyLimit: c.ocr.dailyLimitPerUser, resetAt: new Date(vnMidnight().getTime() + 86400_000) };
   }
 
   private async assertDailyLimit(repo: AiRepo) {
@@ -146,11 +165,11 @@ export class AiService {
   /* ============================== tin nhắn ============================== */
 
   /** Kiểm tra trước (404 / 409 / 429) + lưu tin của user. Tách riêng để SSE trả lỗi HTTP chuẩn trước khi mở stream. */
-  async accept(p: Principal, conversationId: string, text: string) {
+  async accept(p: Principal, conversationId: string, text: string, opts: { skipDailyLimit?: boolean } = {}) {
     const repo = this.store.for(p);
     const conv = await repo.getConversation(conversationId);
     if (conv.archived) throw new ConflictException('Hội thoại đã lưu trữ, hãy khôi phục trước khi nhắn');
-    await this.assertDailyLimit(repo);
+    if (!opts.skipDailyLimit) await this.assertDailyLimit(repo);
     const userMessage = await repo.createMessage(conversationId, { role: 'USER', content: text });
     if (!conv.title) await repo.updateConversation(conversationId, { title: text.replace(/\s+/g, ' ').slice(0, 60) });
     return { repo, conv, userMessage };
@@ -162,8 +181,40 @@ export class AiService {
     return { userMessage: messageView(userMessage), ...out };
   }
 
+  /**
+   * Ảnh hóa đơn / chuyển khoản → skill doc-hoa-don → nháp giao dịch. Ảnh chỉ nằm trong bộ nhớ của request (thu nhỏ rồi gửi model),
+   * KHÔNG lưu vào DB hay đĩa. Giới hạn riêng `ai.ocrDailyLimitPerUser` (ngoài hạn mức tin nhắn).
+   */
+  async postImage(p: Principal, conversationId: string, file: { buffer: Buffer; mimetype: string; size: number } | undefined, opts: { debug?: boolean } = {}) {
+    const cfg = await this.sys.ai();
+    if (!cfg.ocr.enabled) throw new ForbiddenException({ statusCode: 403, code: 'FEATURE_DISABLED', feature: 'ocr', message: 'Tính năng đọc ảnh đang tạm tắt' });
+    if (!file?.buffer?.length) throw new BadRequestException('Thiếu ảnh (trường "image")');
+    if (!/^image\/(jpeg|png|webp)$/.test(file.mimetype)) throw new BadRequestException('Chỉ nhận ảnh JPEG, PNG hoặc WebP');
+    const repo = this.store.for(p);
+    const used = await repo.countSkillRepliesSince('doc-hoa-don', vnMidnight());
+    if (used >= cfg.ocr.dailyLimitPerUser) {
+      const resetAt = new Date(vnMidnight().getTime() + 86400_000);
+      throw new HttpException({ statusCode: 429, code: 'AI_OCR_DAILY_LIMIT', message: `Bạn đã đọc hết ${cfg.ocr.dailyLimitPerUser} ảnh hôm nay, quay lại sau 0h hoặc ghi tay nhé`, limit: cfg.ocr.dailyLimitPerUser, resetAt, retryAfterSeconds: Math.ceil((resetAt.getTime() - Date.now()) / 1000) }, 429);
+    }
+    let image: string;
+    if (cfg.provider === 'fake') {
+      image = file.buffer.toString('base64');
+    } else {
+      try {
+        // Ảnh to làm model chậm (đo 19/10: ~2,5 s ở 768 px); xoay theo EXIF, bỏ metadata (vị trí GPS…)
+        const out = await sharp(file.buffer).rotate().resize({ width: cfg.ocr.maxSide, height: cfg.ocr.maxSide, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 85 }).toBuffer();
+        image = out.toString('base64');
+      } catch {
+        throw new BadRequestException('Không mở được ảnh, hãy chụp lại hoặc chọn ảnh khác');
+      }
+    }
+    const { conv, userMessage } = await this.accept(p, conversationId, OCR_USER_TEXT, { skipDailyLimit: true });
+    const out = await this.answer(repo, conv, OCR_USER_TEXT, { forced: 'doc-hoa-don', routeBy: 'image', image, debug: opts.debug });
+    return { userMessage: messageView(userMessage), ...out };
+  }
+
   /** Trả lời 1 câu (cũng dùng cho reroute với skill ép buộc). Lỗi skill/LLM không làm hỏng request: lưu tin trạng thái error. */
-  async answer(repo: AiRepo, conv: AiConversation, text: string, opts: { forced?: string; debug?: boolean; onEvent?: AiEvent } = {}) {
+  async answer(repo: AiRepo, conv: AiConversation, text: string, opts: { forced?: string; routeBy?: RouteResult['by']; image?: string; debug?: boolean; onEvent?: AiEvent } = {}) {
     const t0 = Date.now();
     const p = repo.principal;
     const cfg = await this.sys.ai();
@@ -178,7 +229,7 @@ export class AiService {
     const uctx = router.ctx.data.userContext as any;
     let route: RouteResult;
     try {
-      route = opts.forced ? { skill: opts.forced, by: 'reroute' } : await this.router.route(text, router.ctx, conv.scope, uctx, base.provider);
+      route = opts.forced ? { skill: opts.forced, by: opts.routeBy ?? 'reroute' } : await this.router.route(text, router.ctx, conv.scope, uctx, base.provider);
     } catch (e) {
       this.logger.warn(`router lỗi: ${(e as Error).message}`);
       route = { skill: 'hoi-lai', by: 'fallback' };
@@ -199,8 +250,8 @@ export class AiService {
         traced = [...traced, ...built.trace];
         try {
           result = await Promise.race([
-            this.skills.run(skill, { input: text, context: built.ctx, llm, now }),
-            new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`skill ${skill.name} quá thời gian`)), cfg.timeoutMs * 2 + 1000).unref()),
+            this.skills.run(skill, { input: text, context: built.ctx, llm, now, image: opts.image, imageTimeoutMs: cfg.ocr.timeoutMs }),
+            new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`skill ${skill.name} quá thời gian`)), (opts.image ? cfg.ocr.timeoutMs + cfg.timeoutMs : cfg.timeoutMs * 2) + 1000).unref()),
           ]);
         } finally {
           // provider gọi lười trong lúc skill chạy
@@ -236,13 +287,15 @@ export class AiService {
       latencyMs: Date.now() - t0,
       promptTokens: typeof sm.promptTokens === 'number' ? sm.promptTokens : null,
       evalTokens: typeof sm.evalTokens === 'number' ? sm.evalTokens : null,
-      meta: JSON.parse(JSON.stringify({ ...meta, skillMeta: sm, followUps: result.followUps ?? [], context: traced.map((t) => t.name), llm: `${llm.provider}:${llm.chatModel}` })) as Prisma.InputJsonValue,
+      meta: JSON.parse(JSON.stringify({ ...meta, skillMeta: sm, followUps: result.followUps ?? [], blocks: result.blocks ?? [], context: traced.map((t) => t.name), llm: `${llm.provider}:${llm.chatModel}` })) as Prisma.InputJsonValue,
     });
     const draft = draftPayload ? await repo.createDraft(msg.id, route.skill, result.draft!.kind, draftPayload as Prisma.InputJsonValue) : null;
     const message = messageView({ ...msg, draft });
     return {
       message,
       draft: draftView(draft),
+      // đọc ảnh: trả phần đọc được (của chính user) để app hiện cả khi không đọc ra số tiền
+      ...(opts.image ? { ocr: { ...((sm.ocr as object) ?? {}), reason: sm.reason ?? (status === 'error' ? 'error' : null), ms: sm.ms ?? null } } : {}),
       ...(opts.debug ? { debug: { route, context: traced, llmCalls: calls } } : {}),
     };
   }

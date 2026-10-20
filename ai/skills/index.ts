@@ -25,10 +25,11 @@ import { skill as soanThongBao } from './soan-thong-bao/index.js';
 import { skill as deXuatKhoa } from './de-xuat-khoa/index.js';
 import { skill as tomTatCauHinh } from './tom-tat-cau-hinh/index.js';
 import { skill as huongDanQuanTri } from './huong-dan-quan-tri/index.js';
+import { skill as nguoiDungMoi } from './nguoi-dung-moi/index.js';
 
 export const TRACK_B_SKILLS: Skill[] = [
   hoiSoDu, tongKetThang, kiemTraNganSach, timGiaoDich, tienDoTietKiem, goiYNganSach, meoTietKiem, huongDan, ngoaiPhamVi, hoiLai,
-  tongQuan, traCuu, batThuong, soanThongBao, deXuatKhoa, tomTatCauHinh, huongDanQuanTri,
+  tongQuan, traCuu, batThuong, soanThongBao, deXuatKhoa, tomTatCauHinh, huongDanQuanTri, nguoiDungMoi,
 ];
 
 /** tên built-in backend → skill Track B */

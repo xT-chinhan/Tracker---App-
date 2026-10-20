@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, ChevronUp, CircleAlert, CircleCheck, Lock, ShieldX, Table2, X } from 'lucide-react'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, LabelList, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ErrorState, PageHeader, TableSkeleton } from '@/components/common'
-import { api, type AiEvalReport, type AiExample, type AiLearningRun, type AiRule, type AiStats } from '@/lib/api'
+import { api, type AiEvalReport, type AiExample, type AiLearningRun, type AiOcrStats, type AiRule, type AiStats } from '@/lib/api'
 import { aiSkillLabel, formatDate, formatDayMonth, formatNumber, formatPercent, formatTime } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
@@ -44,15 +44,18 @@ export default function LearningPage() {
             <TabsList>
               <TabsTrigger value="tong-quan" data-testid="tab-overview">Tổng quan</TabsTrigger>
               <TabsTrigger value="luot-chay" data-testid="tab-runs">Lượt chạy đêm</TabsTrigger>
+              <TabsTrigger value="doc-anh" data-testid="tab-ocr">Đọc ảnh</TabsTrigger>
             </TabsList>
           </Tabs>
         }
       />
       <div className="flex items-center gap-3 rounded-lg bg-muted/70 px-4 py-3 text-[13.5px] text-muted-foreground" data-testid="privacy-note">
         <Lock className="size-4 shrink-0" />
-        Không hiển thị nội dung tin nhắn của người dùng. Ở đây chỉ có số tổng hợp và mẫu câu đã bỏ tên, số tài khoản, được ít nhất 5 người khác nhau xác nhận.
+        {tab === 'doc-anh'
+          ? 'Chỉ có số liệu tổng hợp. Ảnh bị xóa ngay sau khi đọc, không lưu trên máy chủ. Quản trị viên không xem được ảnh hay nội dung đọc được của người dùng.'
+          : 'Không hiển thị nội dung tin nhắn của người dùng. Ở đây chỉ có số tổng hợp và mẫu câu đã bỏ tên, số tài khoản, được ít nhất 5 người khác nhau xác nhận.'}
       </div>
-      {tab === 'luot-chay' ? <RunsTab runs={runs} /> : <OverviewTab />}
+      {tab === 'luot-chay' ? <RunsTab runs={runs} /> : tab === 'doc-anh' ? <OcrTab /> : <OverviewTab />}
     </>
   )
 }
@@ -207,6 +210,154 @@ function AcceptanceChart({ stats, loading }: { stats?: AiStats; loading: boolean
           </Button>
         </div>
       )}
+    </Card>
+  )
+}
+
+/* ============================== Đọc ảnh ============================== */
+
+const OCR_REASON: Record<AiOcrStats['reasons'][number]['reason'], [string, string]> = {
+  not_document: ['Không phải hóa đơn hay chuyển khoản', 'Ảnh mờ, chụp người, màn hình khác…'],
+  no_amount: ['Không thấy số tiền', 'Nhận ra hóa đơn nhưng không đọc được dòng tổng tiền'],
+  timeout: ['Quá thời gian chờ', 'Thường là lúc máy chủ bận hoặc ảnh đầu sau khi nạp model'],
+  error: ['Lỗi máy chủ', 'Model không trả lời được'],
+}
+
+function OcrTab() {
+  const q = useQuery({ queryKey: ['ai-ocr-stats', 7], queryFn: () => api.aiOcrStats(7) })
+  const s = q.data
+  const loading = q.isPending
+  return (
+    <>
+      <div className="grid grid-cols-2 gap-5 xl:grid-cols-4">
+        <Kpi testId="ocr-kpi-total" loading={loading} label="Ảnh đã đọc 7 ngày" value={formatNumber(s?.total ?? 0)}
+          sub={s ? `${formatNumber(s.users)} người dùng · ${formatNumber(s.usersHitLimit)} người chạm ${s.dailyLimit} ảnh/ngày` : undefined} />
+        <Kpi testId="ocr-kpi-accept" loading={loading} label="Nháp lưu không sửa" value={formatPercent(s?.acceptanceWithoutEditRate)}
+          sub={s ? `${formatPercent(s.editedRate)} sửa rồi lưu · ${formatPercent(s.cancelledRate)} hủy · trên ${formatNumber(s.drafts.decided)} nháp` : undefined} />
+        <Kpi testId="ocr-kpi-latency" loading={loading} label="Thời gian đọc trung vị" value={seconds(s?.latencyMs.p50 ?? null)}
+          sub={s ? `p95 ${seconds(s.latencyMs.p95)}` : undefined} />
+        <Kpi testId="ocr-kpi-unreadable" loading={loading} label="Không đọc được" value={formatPercent(s?.unreadableRate, 1)}
+          sub={s ? `${formatNumber(s.unreadable)} ảnh` : undefined} />
+      </div>
+      {q.error && <Card flush><ErrorState error={q.error} onRetry={q.refetch} /></Card>}
+      <div className="grid flex-1 grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        <OcrDailyChart stats={s} loading={loading} />
+        <OcrReasons stats={s} loading={loading} />
+      </div>
+    </>
+  )
+}
+
+function OcrDailyChart({ stats, loading }: { stats?: AiOcrStats; loading: boolean }) {
+  const [asTable, setAsTable] = useState(false)
+  const days = useMemo(() => {
+    const by = new Map((stats?.daily ?? []).map((d) => [d.day, d]))
+    return Array.from({ length: 7 }, (_, i) => {
+      const day = vnDay(Date.now() - (6 - i) * DAY)
+      const d = by.get(day)
+      return { day, label: `${Number(day.slice(8))}/${Number(day.slice(5, 7))}`, read: d?.read ?? 0, unreadable: d?.unreadable ?? 0, total: (d?.read ?? 0) + (d?.unreadable ?? 0) }
+    })
+  }, [stats])
+  const empty = !loading && days.every((d) => d.total === 0)
+  return (
+    <Card className="flex flex-col" data-testid="ocr-daily-card">
+      <CardHeader title="Ảnh đọc mỗi ngày" sub={`${days[0].label} – ${days[6].label} · 7 ngày`} />
+      {loading ? (
+        <Skeleton className="mt-5 h-[300px] w-full" />
+      ) : empty ? (
+        <p className="mt-5 rounded-md bg-background px-4 py-10 text-center text-body-s text-muted-foreground" data-testid="ocr-daily-empty">Chưa có ảnh nào trong 7 ngày qua.</p>
+      ) : asTable ? (
+        <Table className="mt-4" data-testid="ocr-daily-table">
+          <TableHeader>
+            <TableRow><TableHead>Ngày</TableHead><TableHead className="text-right">Đọc được</TableHead><TableHead className="text-right">Không đọc được</TableHead><TableHead className="text-right">Tổng</TableHead></TableRow>
+          </TableHeader>
+          <TableBody>
+            {days.map((d) => (
+              <TableRow key={d.day}>
+                <TableCell className="tabular-nums">{d.label}</TableCell>
+                <TableCell className="text-right tabular-nums">{formatNumber(d.read)}</TableCell>
+                <TableCell className="text-right tabular-nums">{formatNumber(d.unreadable)}</TableCell>
+                <TableCell className="text-right font-semibold tabular-nums">{formatNumber(d.total)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <>
+          <div className="mt-4 flex gap-[18px] text-[13px] text-muted-foreground">
+            <span className="flex items-center gap-[7px]"><i className="size-2.5 rounded-[3px] bg-foreground/85" />Đọc được</span>
+            <span className="flex items-center gap-[7px]"><i className="size-2.5 rounded-[3px] bg-[#d6d5d0]" />Không đọc được</span>
+          </div>
+          <div className="mt-3 h-[280px]" data-testid="ocr-daily-chart">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={days} margin={{ top: 22, right: 8, left: 0, bottom: 0 }} barCategoryGap="28%">
+                <CartesianGrid vertical={false} stroke="var(--color-line)" />
+                <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: '#E3E2DD' }} tickMargin={10} tick={{ fontSize: 11.5, fill: '#787774' }} />
+                <YAxis width={44} tickLine={false} axisLine={false} allowDecimals={false} tick={{ fontSize: 11.5, fill: '#A9A8A3' }} tickFormatter={(v: number) => formatNumber(v)} />
+                <Tooltip
+                  isAnimationActive={false}
+                  cursor={{ fill: 'rgba(0,0,0,0.03)' }}
+                  content={({ active, payload, label }) =>
+                    active && payload?.length ? (
+                      <div className="min-w-[160px] rounded-sm border border-border bg-card px-3 py-2.5 text-body-s shadow-pop tabular-nums">
+                        <p className="mb-1 text-[13px] font-semibold">{label}</p>
+                        <div className="flex justify-between gap-4 leading-[1.7]"><span className="text-muted-foreground">Đọc được</span><b className="font-semibold">{formatNumber(Number(payload[0].payload.read))}</b></div>
+                        <div className="flex justify-between gap-4 leading-[1.7]"><span className="text-muted-foreground">Không đọc được</span><b className="font-semibold">{formatNumber(Number(payload[0].payload.unreadable))}</b></div>
+                      </div>
+                    ) : null
+                  }
+                />
+                <Bar dataKey="read" stackId="a" fill="#2b2b29" isAnimationActive={false} />
+                <Bar dataKey="unreadable" stackId="a" fill="#d6d5d0" radius={[3, 3, 0, 0]} isAnimationActive={false}>
+                  <LabelList dataKey="total" position="top" fontSize={12} fill="#555" formatter={(v: unknown) => (Number(v) ? formatNumber(Number(v)) : '')} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </>
+      )}
+      {!empty && !loading && (
+        <div className="mt-4 flex items-end justify-between gap-4">
+          <p className="text-body-s text-muted-foreground">Số trên cột là tổng ảnh gửi lên trong ngày.</p>
+          <Button variant="link" onClick={() => setAsTable((v) => !v)} data-testid="ocr-daily-toggle">
+            {asTable ? <><ChevronUp /> Xem biểu đồ</> : <><Table2 /> Xem dạng bảng</>}
+          </Button>
+        </div>
+      )}
+    </Card>
+  )
+}
+
+function OcrReasons({ stats, loading }: { stats?: AiOcrStats; loading: boolean }) {
+  const total = stats?.reasons.reduce((a, r) => a + r.count, 0) ?? 0
+  return (
+    <Card className="flex flex-col" data-testid="ocr-reasons-card">
+      <CardHeader title="Lý do không đọc được" sub={`${formatNumber(total)} ảnh trong 7 ngày · chỉ đếm theo loại lỗi`} />
+      {loading ? (
+        <Skeleton className="mt-5 h-[220px] w-full" />
+      ) : total === 0 ? (
+        <p className="mt-5 rounded-md bg-background px-4 py-10 text-center text-body-s text-muted-foreground" data-testid="ocr-reasons-empty">Chưa có ảnh nào không đọc được.</p>
+      ) : (
+        <ul className="mt-2 flex flex-col">
+          {stats!.reasons.map((r) => {
+            const [label, hint] = OCR_REASON[r.reason] ?? [r.reason, '']
+            const p = (r.count / total) * 100
+            return (
+              <li key={r.reason} className="border-b border-line py-3.5 last:border-0" data-testid={`ocr-reason-${r.reason}`}>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold">{label}</p>
+                    <p className="text-body-s text-muted-foreground">{hint}</p>
+                  </div>
+                  <p className="text-sm font-semibold tabular-nums">{formatNumber(r.count)} <span className="font-normal text-faint">{formatPercent(p)}</span></p>
+                </div>
+                <div className="mt-2.5 h-1.5 rounded-full bg-muted"><div className={cn('h-1.5 rounded-full bg-foreground/85')} style={{ width: `${Math.max(p, 2)}%` }} /></div>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+      <p className="mt-4 text-body-s text-muted-foreground">Không giữ ảnh lỗi để xem lại. Muốn cải thiện thì đo bằng bộ ảnh mẫu nội bộ.</p>
     </Card>
   )
 }

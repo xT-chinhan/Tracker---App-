@@ -120,6 +120,29 @@ test('từ điển: thực phẩm có "mua"/"chợ" → Ăn uống, đồ khác 
   assert.equal(cat('bán rau ngoài chợ được 400k'), null, 'khoản thu không qua từ điển chi');
 });
 
+test('từ điển: món ăn / đồ uống làm sẵn → Ăn uống (kể cả teencode, không dấu), có từ khác thì để model', () => {
+  const cat = (t: string, i = 0) => lexiconCategory(seg(t, i), ctx)?.categoryName ?? null;
+  assert.equal(cat('cf 45k với cơm trưa 55k ví momo'), 'Ăn uống');
+  assert.equal(cat('cf 45k với cơm trưa 55k ví momo', 1), 'Ăn uống');
+  assert.equal(cat('an sang 30k'), 'Ăn uống');
+  assert.equal(cat('cà phê sáng 25k'), 'Ăn uống');
+  assert.equal(cat('trà sữa 35k hôm qua'), 'Ăn uống');
+  assert.equal(cat('phở bò 50k'), 'Ăn uống');
+  assert.equal(cat('nồi cơm điện 900k'), null);
+  assert.equal(cat('mua cà phê hạt 200k'), null);
+  assert.equal(cat('cafe với khách 150k'), null);
+  assert.equal(cat('lau nhà 100k'), null);
+});
+
+test('ví: từ nối ("ck", "tra"…) phải đứng riêng, không cắt giữa chữ ("cashba|ck momo")', () => {
+  const s = seg('cashback momo 15k');
+  assert.equal(s.walletName, 'MoMo');
+  assert.equal(s.clean, 'cashback');
+  assert.equal(s.dir?.dir, 'INCOME');
+  assert.equal(incomeCategory(s, ctx), 'Thu khác');
+  assert.equal(seg('grab 38k ck mb').walletName, 'MB Bank');
+});
+
 test('"2 ký" là số lượng, không phải tiền', () => {
   const a = analyze('mua 2 ký cam 90k', ctx);
   assert.equal(a.segs.length, 1);
@@ -190,4 +213,11 @@ test('"45.000đ" không làm câu không dấu thành câu có dấu', async () 
   assert.equal(hasDiacritics('an trua 45000 đồng'), false);
   assert.equal(hasDiacritics('đi chợ 45k'), true);
   assert.equal(incomeCategory(seg('shopee hoan tien 45.000đ'), ctx), 'Thu khác');
+});
+
+test('output model: chấp nhận object đơn / mảng trần (qwen3.5 bỏ lớp items khi có 1 khoản)', async () => {
+  const { asItems } = await import('../skills/ghi-giao-dich/pipeline.js');
+  assert.deepEqual(asItems({ title: 'Cà phê', categoryName: 'Ăn uống' }), { items: [{ title: 'Cà phê', categoryName: 'Ăn uống' }] });
+  assert.deepEqual(asItems([{ title: 'a', categoryName: 'b' }]), { items: [{ title: 'a', categoryName: 'b' }] });
+  assert.deepEqual(asItems({ items: [] }), { items: [] });
 });

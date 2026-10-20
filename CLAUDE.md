@@ -1,4 +1,4 @@
-# App Tracker (Thu Chi) — ghi chú cho Claude
+# App Tracker (TrackerX, trước đây "Thu Chi") — ghi chú cho Claude
 
 Dự án độc lập. Bản Flutter + Firestore cũ (App_Quan_ly_chi_tieu_ca_nhan) chỉ dùng làm bối cảnh lúc đầu, **không tham khảo lại**. Luật nghiệp vụ nằm trong `backend/` (code + `backend/README.md`) và được e2e bảo vệ.
 
@@ -9,6 +9,10 @@ Dự án độc lập. Bản Flutter + Firestore cũ (App_Quan_ly_chi_tieu_ca_nh
 - Tiếp theo: app mobile Flutter (máy chưa cài Flutter SDK). Thiết kế đã duyệt ở `design/mockup/` (25 màn), token ở `design/tokens.md`, `design/DESIGN.md`. App đọc cấu hình qua `GET /api/config/public`.
 - Tab bar mobile: Trang chủ · Lịch sử · [＋] · Báo cáo · Cài đặt. Chạm ＋ = Ghi giao dịch; nhấn giữ = menu Thu nhập / Chuyển tiền / mẫu nhập nhanh.
 - **Ưu tiên hiện tại: trợ lý AI** (`ai/`, đề xuất ở `ai/research/DE-XUAT.md`). Việc hoãn lại ghi ở `docs/BACKLOG.md` (mobile, QR thanh toán, FCM, vay/nợ, vận hành).
+
+## Thương hiệu (chốt 2026-10-20)
+- Tên app **TrackerX**, logo hướng C "Lưới ô" (`design/brand/trackerx/c-grid/`), tagline email "Tiền rõ ràng, sống nhẹ nhàng". Id gói / bundle `vn.thuchi.app` giữ nguyên để không vỡ bản đã cài.
+- App phát hành bằng APK, không lên Google Play → Android được tự gửi SMS (xác thực số điện thoại).
 
 ## Quy tắc làm việc
 - **Giao diện phải có mockup và được duyệt trước khi dựng** (web, mobile, admin). Backend/API thì làm thẳng. Mockup đặt trong `design/`, cùng style ảnh mẫu `design/reference.png` (tối giản, nền trắng ngà, gần đơn sắc).

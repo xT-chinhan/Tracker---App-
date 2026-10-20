@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 export const OLLAMA = process.env.OLLAMA_URL ?? 'http://localhost:11434';
-export const LLM = process.env.LLM_MODEL ?? 'gemma2:2b';
+export const LLM = process.env.LLM_MODEL ?? 'qwen3.5:4b';
 
 export interface ChatMsg { role: 'system' | 'user' | 'assistant'; content: string }
 export interface ChatResult { content: string; ms: number; promptTokens: number; evalTokens: number }
@@ -26,6 +26,8 @@ export async function chat(messages: ChatMsg[], format: object, numPredict = 256
     method: 'POST',
     body: JSON.stringify({
       model: LLM, messages, format: stripUnsupported(format), stream: false, keep_alive: '30m',
+      // qwen3.5 mặc định "suy nghĩ" trước khi trả lời: chậm và có thể làm hỏng JSON → tắt (model không có chế độ này bỏ qua cờ)
+      think: false,
       options: { temperature: 0, seed: 7, num_ctx: 4096, num_predict: numPredict, stop },
     }),
   });

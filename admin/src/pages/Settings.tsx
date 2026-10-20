@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link, useBlocker, useParams } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  AppWindow, ArrowLeftRight, ArrowRight, Banknote, CalendarClock, CircleAlert, CircleCheck, Construction, Download, ExternalLink, History,
+  AppWindow, ArrowLeftRight, BellRing, ArrowRight, Banknote, CalendarClock, CircleAlert, CircleCheck, Construction, Download, ExternalLink, History,
   KeyRound, Lock, LogIn, Mail, MailCheck, MailWarning, PencilLine, Phone, PiggyBank, Repeat, RotateCcw, Send, ShieldX, Signal,
-  Smartphone, Sparkles, Timer, WalletCards, Wifi, X, Zap, Server, PlugZap, Cpu, Database,
+  Smartphone, Sparkles, Timer, WalletCards, Wifi, X, Zap, Server, PlugZap, Cpu, Database, Copy, BookOpen,
 } from 'lucide-react'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle,
@@ -21,7 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Bubble } from '@/components/CategoryIcon'
 import { ConfirmDialog, type ConfirmOptions } from '@/components/ConfirmDialog'
 import { Chip, ErrorState, PageHeader, Pagination, TableSkeleton, UserBubble } from '@/components/common'
-import { api, ApiError, auth, type ConfigSection, type ConfigValue, type OllamaTestResult, type SmtpTestResult, type SystemConfig } from '@/lib/api'
+import { api, API_URL, ApiError, auth, type ConfigSection, type ConfigValue, type OllamaTestResult, type SmtpTestResult, type SystemConfig } from '@/lib/api'
 import { formatDate, formatDayMonth, formatNumber, formatTime, isToday } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
@@ -50,6 +50,7 @@ const FEATURES = [
   { field: 'featureCsvExport', label: 'Xuất CSV', desc: 'Xuất giao dịch theo tháng ở màn Báo cáo.', icon: Download },
   { field: 'featureQuickTemplates', label: 'Mẫu nhập nhanh', desc: 'Lưu sẵn giao dịch hay dùng để ghi một chạm.', icon: Zap },
   { field: 'featureAi', label: 'Trợ lý AI', desc: 'Hỏi chi tiêu, ghi nhanh bằng một câu. Cùng công tắc với Cấu hình › Trợ lý AI.', icon: Sparkles },
+  { field: 'featureBankNotifications', label: 'Ghi từ thông báo ngân hàng', desc: 'Chỉ Android. Đọc thông báo biến động số dư của ngân hàng, ví để gợi ý giao dịch; người dùng tự bật, cấp quyền và xác nhận từng khoản.', icon: BellRing },
 ] as const
 /** `business.featureAi` và `ai.enabled` là cùng một công tắc (backend ghi cả hai) → cả hai nơi đều sửa `ai.enabled` */
 const featureKey = (field: string) => (field === 'featureAi' ? 'ai.enabled' : `business.${field}`)
@@ -68,6 +69,11 @@ const DEFS: Def[] = [
   D('access', 'sessionDays', 'Thời hạn phiên đăng nhập', 'int', { min: 1, max: 365, unit: 'ngày' }),
   D('access', 'loginMaxAttempts', 'Số lần đăng nhập sai', 'int', { min: 1, max: 1000, unit: 'lần' }),
   D('access', 'loginWindowMinutes', 'Khung thời gian đăng nhập sai', 'int', { min: 1, max: 60, unit: 'phút' }),
+  D('access', 'phoneOtpEnabled', 'Bật xác thực số điện thoại', 'bool'),
+  D('access', 'smsGatewayNumber', 'Số máy cổng', 'text', { format: 'phone', maxLen: 20 }),
+  D('access', 'smsGatewayKey', 'Khóa máy cổng', 'secret', { maxLen: 200 }),
+  D('access', 'phoneCodeMinutes', 'Mã hết hạn sau', 'int', { min: 1, max: 30, unit: 'phút' }),
+  D('access', 'phoneMaxRequests', 'Số lần xin mã', 'int', { min: 1, max: 20, unit: 'lần' }),
   D('smtp', 'host', 'Máy chủ', 'text', { maxLen: 200 }),
   D('smtp', 'port', 'Cổng', 'int', { min: 1, max: 65535 }),
   D('smtp', 'security', 'Bảo mật', 'enum'),
@@ -97,6 +103,10 @@ const DEFS: Def[] = [
   D('ai', 'timeoutSeconds', 'Chờ tối đa mỗi câu trả lời', 'int', { min: 5, max: 600, unit: 'giây' }),
   D('ai', 'dailyMessageLimitPerUser', 'Tin nhắn mỗi người mỗi ngày', 'int', { min: 1, max: 100000, unit: 'tin' }),
   D('ai', 'maxConversationsPerUser', 'Cuộc trò chuyện tối đa mỗi người', 'int', { min: 1, max: 10000, unit: 'cuộc' }),
+  D('ai', 'ocrEnabled', 'Bật đọc ảnh', 'bool'),
+  D('ai', 'ocrDailyLimitPerUser', 'Ảnh mỗi người mỗi ngày', 'int', { min: 1, max: 100, unit: 'ảnh' }),
+  D('ai', 'ocrMaxSide', 'Kích thước ảnh tối đa gửi lên', 'int', { min: 384, max: 1536, unit: 'px' }),
+  D('ai', 'ocrTimeoutSeconds', 'Thời gian chờ đọc ảnh tối đa', 'int', { min: 10, max: 120, unit: 'giây' }),
   D('ai', 'autoApproveEnabled', 'Tự áp dụng luật chung', 'bool'),
   D('ai', 'autoApproveMinUsers', 'Tự áp dụng khi đủ số người', 'int', { min: 5, max: 100000, unit: 'người' }),
   D('ai', 'autoApproveMinSupport', 'Tự áp dụng khi đủ số lần', 'int', { min: 1, max: 100000, unit: 'lần' }),
@@ -114,7 +124,9 @@ const SECTIONS = [
   { slug: 'tro-ly', api: 'ai', label: 'Trợ lý AI', short: 'Trợ lý AI', icon: Sparkles },
 ] as const
 const SECTION_SHORT = Object.fromEntries(SECTIONS.map((s) => [s.api, s.short])) as Record<ConfigSection, string>
-const SECURITY_LABEL: Record<string, string> = { starttls: 'STARTTLS', ssl: 'SSL/TLS', none: 'Không mã hóa', ...PROVIDER_LABEL }
+const SECURITY_LABEL: Record<string, string> = { starttls: 'STARTTLS', ssl: 'SSL/TLS', none: 'Không mã hóa' }
+/** Nhãn hiển thị mọi trường enum (Trước: …, lịch sử) */
+const ENUM_LABEL: Record<string, string> = { ...SECURITY_LABEL, ...PROVIDER_LABEL }
 
 /* ============================== Giá trị nháp ============================== */
 
@@ -182,7 +194,7 @@ function display(key: string, v: ConfigValue, secret = false): string {
   if (v === null || v === undefined || v === '') return def?.kind === 'datetime' ? 'Không hẹn giờ' : '(trống)'
   if (typeof v === 'boolean') return v ? 'Bật' : 'Tắt'
   if (def?.kind === 'datetime') return `${formatTime(String(v))} · ${formatDate(String(v))}`
-  if (def?.kind === 'enum') return SECURITY_LABEL[String(v)] ?? String(v)
+  if (def?.kind === 'enum') return ENUM_LABEL[String(v)] ?? String(v)
   if (typeof v === 'number') return def?.unit === '%' ? `${v}%` : def?.unit ? `${formatNumber(v)} ${def.unit}` : String(v)
   return String(v).replace(/^https:\/\//, '')
 }
@@ -413,7 +425,7 @@ export default function SettingsPage() {
   const counts = Object.fromEntries(SECTIONS.map((s) => [s.slug, dirtyKeys.filter((k) => k.startsWith(`${s.api}.`)).length]))
   const errorKeys = Object.keys(errors)
   const lastSaved = cfg?.lastSaved
-  const appName = String(cfg?.values.general.appName ?? 'Thu Chi')
+  const appName = String(cfg?.values.general.appName ?? 'TrackerX')
 
   const tails: Record<string, ReactNode> = {}
   for (const s of SECTIONS) if (counts[s.slug]) tails[s.slug] = <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11.5px] font-semibold text-primary-foreground tabular-nums" data-testid="nav-count">{counts[s.slug]}</span>
@@ -772,7 +784,142 @@ function AccessSection({ c, onMaintenance, busy }: { c: Ctx; onMaintenance: (on:
           <FieldError>{c.error('access.loginMaxAttempts') ?? c.error('access.loginWindowMinutes')}</FieldError>
         </SettingRow>
       </SettingCard>
+      <PhoneOtpCard c={c} />
     </>
+  )
+}
+
+const WEBHOOK_URL = `${API_URL}/sms-gateway/inbound`
+const DAY_MS = 86400_000
+
+/** Khóa ngẫu nhiên 32 ký tự (base64url) cho app chuyển tiếp SMS trên máy cổng */
+function newGatewayKey() {
+  const b = crypto.getRandomValues(new Uint8Array(24))
+  return btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+}
+
+function copyText(text: string, what: string) {
+  navigator.clipboard.writeText(text).then(() => notify.success(`Đã chép ${what}`, { icon: <Copy /> }), () => notify.error('Không chép được', 'Trình duyệt chặn quyền clipboard'))
+}
+
+function gatewayWhen(iso: string) {
+  return `${formatTime(iso)} ${isToday(iso) ? 'hôm nay' : formatDayMonth(iso)}`
+}
+
+/** Xác thực số điện thoại kiểu tự nhắn: người dùng gửi yêu cầu (mã 6 số) từ SIM của họ tới máy cổng; app không bao giờ hiện số máy cổng. */
+function PhoneOtpCard({ c }: { c: Ctx }) {
+  const gw = c.cfg.smsGateway
+  const [guide, setGuide] = useState(false)
+  const draftKey = String(c.value('access.smsGatewayKey'))
+  const keySaved = c.cfg.updated['access.smsGatewayKey']
+  const alive = gw.lastInboundAt && Date.now() - new Date(gw.lastInboundAt).getTime() < DAY_MS
+  return (
+    <SettingCard
+      testId="phone-otp-card"
+      title="Xác thực số điện thoại"
+      aside={
+        <span className="flex items-center gap-2 text-body-s font-medium text-muted-foreground" data-testid="gateway-status">
+          <i className={cn('size-2 rounded-full', alive ? 'bg-income' : 'bg-faint')} />
+          {gw.lastInboundAt ? `Máy cổng nhận tin gần nhất ${gatewayWhen(gw.lastInboundAt)}` : 'Máy cổng chưa nhận tin nào'}
+        </span>
+      }
+    >
+      <SettingRow label="Bật xác thực số điện thoại" desc="Tắt thì app ẩn mục Số điện thoại và lựa chọn quên mật khẩu qua SĐT. Số đã gắn vẫn được giữ." inline changed={c.isDirty('access.phoneOtpEnabled')} testId="row-access.phoneOtpEnabled">
+        <Switch checked={c.value('access.phoneOtpEnabled') === true} onCheckedChange={(v) => c.set('access.phoneOtpEnabled', v)} aria-label="Bật xác thực số điện thoại" data-testid="in-access.phoneOtpEnabled" />
+        {c.isDirty('access.phoneOtpEnabled') && <Was>{display('access.phoneOtpEnabled', c.server('access.phoneOtpEnabled'))}</Was>}
+      </SettingRow>
+      {c.value('access.phoneOtpEnabled') === true && (!gw.hasKey && !draftKey || !String(c.value('access.smsGatewayNumber'))) && (
+        <div className="mx-6 mb-1 flex items-start gap-2.5 rounded-md bg-warning-soft px-3.5 py-3 text-[13px] text-warning" data-testid="phone-otp-incomplete">
+          <CircleAlert className="mt-px size-4 shrink-0" />Cần nhập số máy cổng và tạo khóa máy cổng, nếu không app vẫn coi như đang tắt.
+        </div>
+      )}
+      <TextRow c={c} k="access.smsGatewayNumber" icon={<Smartphone />} placeholder="vd. 0901 234 567"
+        desc="Số SIM trên máy Android nhận tin của người dùng. App không bao giờ hiện số này cho người dùng, chỉ dùng để điền sẵn người nhận trong tin yêu cầu." />
+      <SettingRow label="Khóa máy cổng" desc="Máy cổng gửi kèm khóa này để máy chủ biết tin đến từ đúng máy. Tạo khóa mới thì khóa cũ hết hiệu lực ngay sau khi lưu." changed={c.isDirty('access.smsGatewayKey')} testId="row-access.smsGatewayKey">
+        {draftKey ? (
+          <>
+            <div className="flex gap-2.5">
+              <Input value={draftKey} readOnly className="font-mono text-[13px]" aria-label="Khóa máy cổng mới" data-testid="gateway-key-new" />
+              <Button variant="secondary" onClick={() => copyText(draftKey, 'khóa máy cổng')} data-testid="gateway-key-copy"><Copy />Chép</Button>
+              <Button variant="ghost" onClick={() => c.reset('access.smsGatewayKey')}>Hủy</Button>
+            </div>
+            <Help>Chép sang app chuyển tiếp trên máy cổng rồi bấm Lưu. Sau khi lưu khóa không hiển thị lại.</Help>
+          </>
+        ) : (
+          <>
+            <div className="flex gap-2.5">
+              <div className="flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-sm border border-input bg-background px-3.5" data-testid="gateway-key-saved">
+                <span className="flex-1 tracking-[2px] text-muted-foreground">{gw.hasKey ? '••••••••••••' : 'Chưa có khóa'}</span>
+                {gw.hasKey && <Badge variant="success" className="h-[22px]"><Lock />Đã lưu</Badge>}
+              </div>
+              <Button variant="secondary" onClick={() => c.set('access.smsGatewayKey', newGatewayKey())} data-testid="gateway-key-generate"><KeyRound />Tạo khóa mới</Button>
+            </div>
+            {gw.hasKey && keySaved && <Help>Đã lưu · {formatTime(keySaved.at)} {formatDayMonth(keySaved.at)}{keySaved.by ? ` bởi ${keySaved.by}` : ''}. Không hiển thị lại, khóa mới chỉ hiện một lần để chép sang máy cổng.</Help>}
+          </>
+        )}
+      </SettingRow>
+      <SettingRow label="Địa chỉ nhận tin (webhook)" desc={<>Dán vào app chuyển tiếp SMS trên máy cổng, kèm header <code className="rounded-[4px] bg-muted px-1 font-mono text-[12px] font-semibold text-foreground">x-gateway-key</code>.</>} testId="row-access.webhook">
+        <Input value={WEBHOOK_URL} readOnly className="text-muted-foreground" aria-label="Địa chỉ nhận tin" data-testid="gateway-webhook"
+          end={<button type="button" aria-label="Chép địa chỉ" className="flex cursor-pointer text-muted-foreground hover:text-foreground" onClick={() => copyText(WEBHOOK_URL, 'địa chỉ webhook')}><Copy className="size-4" /></button>} />
+        <Button variant="link" className="h-auto self-start p-0" onClick={() => setGuide(true)} data-testid="gateway-guide-open"><BookOpen />Xem hướng dẫn cài máy cổng</Button>
+      </SettingRow>
+      <NumberRow c={c} k="access.phoneCodeMinutes" desc="Tính từ lúc app hiện mã. Hết hạn thì người dùng bấm Lấy mã mới." range="1–30 phút" />
+      <SettingRow label="Số lần xin mã" desc="Quá giới hạn thì app báo thời gian chờ trước khi xin mã tiếp." changed={c.isDirty('access.phoneMaxRequests')} testId="row-access.phoneMaxRequests">
+        <div className="flex items-center gap-2.5">
+          <NumberBox c={c} k="access.phoneMaxRequests" width={120} />
+          <span className="text-muted-foreground">trong 10 phút</span>
+          <span className="text-body-s text-faint">1–20 lần</span>
+        </div>
+        {c.isDirty('access.phoneMaxRequests') && <Was>{display('access.phoneMaxRequests', c.server('access.phoneMaxRequests'))}</Was>}
+        <FieldError>{c.error('access.phoneMaxRequests')}</FieldError>
+      </SettingRow>
+      <GatewayGuideDialog open={guide} onClose={() => setGuide(false)} number={String(c.server('access.smsGatewayNumber') || '')} />
+    </SettingCard>
+  )
+}
+
+function GatewayGuideDialog({ open, onClose, number }: { open: boolean; onClose: () => void; number: string }) {
+  const [since] = useState(() => Date.now())
+  // khi hộp thoại mở: hỏi lại cấu hình mỗi 3 giây để thấy ngay tin thử từ máy cổng
+  const live = useQuery({ queryKey: ['config'], queryFn: api.config, enabled: open, refetchInterval: open ? 3000 : false })
+  const last = live.data?.smsGateway.lastInboundAt
+  const gotTest = last && new Date(last).getTime() >= since
+  const steps: [string, ReactNode][] = [
+    [`Cắm SIM${number ? ` ${number}` : ''} vào máy Android`, 'Máy luôn bật nguồn, cắm sạc và có sóng. Tắt tối ưu pin cho app chuyển tiếp để không bị dừng ngầm.'],
+    ['Cài app chuyển tiếp SMS', 'Ví dụ “SMS Forwarder” (mã nguồn mở). Cấp quyền đọc tin nhắn khi app hỏi.'],
+    ['Thêm quy tắc chuyển mọi tin tới webhook', <>Địa chỉ <code className="rounded-[4px] bg-muted px-1 font-mono text-[12px] font-semibold text-foreground">{WEBHOOK_URL}</code>, thêm header <code className="rounded-[4px] bg-muted px-1 font-mono text-[12px] font-semibold text-foreground">x-gateway-key</code> = khóa máy cổng (chỉ hiện một lần lúc tạo khóa). Nội dung JSON gồm số gửi (<code className="font-mono text-[12px]">from</code>) và nội dung tin (<code className="font-mono text-[12px]">text</code>).</>],
+    ['Bấm “Gửi tin thử” trong app chuyển tiếp', 'Kết quả hiện ngay dưới đây và ở dòng trạng thái của thẻ.'],
+  ]
+  return (
+    <AlertDialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <AlertDialogContent className="w-[600px]" data-testid="gateway-guide">
+        <div className="flex items-start justify-between">
+          <span className="flex size-14 items-center justify-center rounded-full bg-muted [&_svg]:size-6"><Smartphone /></span>
+          <button type="button" aria-label="Đóng" className="cursor-pointer text-muted-foreground hover:text-foreground" onClick={onClose}><X className="size-5" /></button>
+        </div>
+        <AlertDialogTitle className="mt-[18px]">Cài máy cổng</AlertDialogTitle>
+        <AlertDialogDescription>Làm một lần trên máy Android của công ty. Máy cổng chỉ nhận tin của người dùng rồi chuyển về máy chủ, không gửi tin cho ai.</AlertDialogDescription>
+        <ol className="mt-4">
+          {steps.map(([title, desc], i) => (
+            <li key={i} className="flex gap-3.5 border-border py-3.5 not-first:border-t">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border text-[13px] font-semibold tabular-nums">{i + 1}</span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold">{title}</p>
+                <p className="mt-0.5 text-body-s break-words text-muted-foreground">{desc}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className={cn('mt-1 flex items-center gap-2.5 rounded-md px-3.5 py-3 text-[13px]', gotTest ? 'bg-success-soft text-[#2E5A36]' : 'bg-background text-muted-foreground')} data-testid="gateway-test-result">
+          {gotTest ? <CircleCheck className="size-4 shrink-0 text-income" /> : <Signal className="size-4 shrink-0" />}
+          {gotTest ? <span>Đã nhận tin thử lúc <b className="font-semibold">{formatTime(last!)}</b> từ máy cổng · khóa đúng.</span> : 'Đang chờ tin thử từ máy cổng…'}
+        </div>
+        <div className="mt-6 flex gap-2.5">
+          <Button variant="secondary" size="dialog" className="flex-1" onClick={() => copyText(WEBHOOK_URL, 'địa chỉ webhook')}><Copy />Chép địa chỉ webhook</Button>
+          <Button size="dialog" className="flex-1" onClick={onClose}>Xong</Button>
+        </div>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 
@@ -938,9 +1085,57 @@ function EmailSection({ c, smtpDirty }: { c: Ctx; smtpDirty: boolean }) {
             </>
           )}
         </SettingRow>
-        <TextRow c={c} k="smtp.from" desc="Người nhận thấy tên và địa chỉ này." placeholder="vd. Thu Chi <no-reply@thuchi.vn>" />
+        <TextRow c={c} k="smtp.from" desc="Người nhận thấy tên và địa chỉ này." placeholder="vd. TrackerX <no-reply@trackerx.app>" />
       </SettingCard>
+      <EmailTemplatesCard />
     </>
+  )
+}
+
+/** Xem trước mẫu email (nội dung cố định trong code, render bằng tên app + email hỗ trợ đang cấu hình) */
+function EmailTemplatesCard() {
+  const q = useQuery({ queryKey: ['email-templates'], queryFn: api.emailTemplates })
+  const [right, setRight] = useState('phone-linked')
+  const list = q.data ?? []
+  const left = list.find((m) => m.key === 'reset-otp')
+  const other = list.find((m) => m.key === right)
+  const Preview = ({ m }: { m?: (typeof list)[number] }) => (
+    <div className="min-w-0">
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <p className="truncate text-sm font-semibold">{m?.label ?? '…'}</p>
+        <p className="shrink-0 text-body-s text-muted-foreground">{m?.when}</p>
+      </div>
+      {m ? (
+        <iframe title={m.label} srcDoc={m.html} sandbox="" className="h-[470px] w-full rounded-md border border-border bg-[#F7F6F3]" data-testid={`email-preview-${m.key}`} />
+      ) : <Skeleton className="h-[470px] w-full" />}
+      {m && <p className="mt-1.5 truncate text-body-s text-faint" title={m.subject}>Tiêu đề: {m.subject}</p>}
+    </div>
+  )
+  return (
+    <Card className="p-0" data-testid="email-templates-card">
+      <div className="flex items-start justify-between gap-4 px-6 pt-5">
+        <div>
+          <p className="text-base font-semibold">Mẫu email</p>
+          <p className="text-body-s text-muted-foreground">Nội dung cố định, gửi bằng cấu hình SMTP ở trên. Xem trước đúng như người dùng nhận.</p>
+        </div>
+        <Badge><Mail />{list.length || 5} mẫu</Badge>
+      </div>
+      {q.error ? <ErrorState error={q.error} onRetry={q.refetch} /> : (
+        <div className="grid grid-cols-1 gap-5 px-6 pt-4 pb-5 xl:grid-cols-2">
+          <Preview m={left} />
+          <Preview m={other} />
+        </div>
+      )}
+      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 border-t border-border px-6 py-3.5 text-body-s text-muted-foreground">
+        Xem mẫu khác:
+        {list.filter((m) => m.key !== 'reset-otp').map((m) => (
+          <button key={m.key} type="button" onClick={() => setRight(m.key)} data-testid={`email-tpl-${m.key}`}
+            className={cn('cursor-pointer rounded-sm px-1.5 py-0.5 font-medium', m.key === right ? 'bg-muted text-foreground' : 'text-foreground/80 hover:text-foreground')}>
+            {m.label}
+          </button>
+        ))}
+      </div>
+    </Card>
   )
 }
 
@@ -1079,7 +1274,7 @@ function MobileSection({ c }: { c: Ctx }) {
   const notes = String(c.value('mobile.releaseNotes'))
   const latest = String(c.value('mobile.androidLatestVersion'))
   const min = String(c.value('mobile.androidMinVersion'))
-  const appName = String(c.server('general.appName') ?? 'Thu Chi')
+  const appName = String(c.server('general.appName') ?? 'TrackerX')
   const versionBox = (k: string, label: string) => (
     <div className="flex flex-col gap-2">
       <label className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground">{label}{c.isDirty(k) && <span className="size-1.5 rounded-full bg-primary" />}</label>
@@ -1304,7 +1499,7 @@ function AiSection({ c }: { c: Ctx }) {
         title="Mô hình"
         aside={<Button variant="secondary" size="sm" disabled={fake || ollama.isPending} onClick={() => ollama.mutate()} data-testid="ollama-test"><PlugZap /> Kiểm tra kết nối</Button>}
       >
-        <SettingRow label="Nhà cung cấp" desc={fake ? 'Trả lời tất định, không gọi model. Chỉ dùng khi kiểm thử.' : 'Model chạy trên máy chủ của Thu Chi. Dữ liệu không gửi ra ngoài.'} changed={c.isDirty('ai.provider')} testId="row-ai.provider">
+        <SettingRow label="Nhà cung cấp" desc={fake ? 'Trả lời tất định, không gọi model. Chỉ dùng khi kiểm thử.' : 'Model chạy trên máy chủ của TrackerX. Dữ liệu không gửi ra ngoài.'} changed={c.isDirty('ai.provider')} testId="row-ai.provider">
           <Tabs value={provider} onValueChange={(v) => c.set('ai.provider', v)}>
             <TabsList className="w-full">
               {Object.entries(PROVIDER_LABEL).map(([v, label]) => <TabsTrigger key={v} value={v} className="flex-1" data-testid={`provider-${v}`}>{label}</TabsTrigger>)}
@@ -1349,6 +1544,22 @@ function AiSection({ c }: { c: Ctx }) {
         <NumberRow c={c} k="ai.timeoutSeconds" desc="Quá thời gian thì app báo “Trợ lý đang bận, thử lại sau”." range="5–600 giây" />
       </SettingCard>
 
+      <SettingCard title="Đọc ảnh" aside={<span className="text-body-s font-medium text-muted-foreground">Quét hóa đơn và ảnh chuyển khoản trong app</span>}>
+        <SettingRow label="Bật đọc ảnh" desc="Tắt thì dòng “Quét hóa đơn” ẩn khỏi app. Trợ lý trò chuyện không bị ảnh hưởng." inline changed={c.isDirty('ai.ocrEnabled')} testId="row-ai.ocrEnabled">
+          <Switch checked={c.value('ai.ocrEnabled') === true} onCheckedChange={(v) => c.set('ai.ocrEnabled', v)} aria-label="Bật đọc ảnh" data-testid="in-ai.ocrEnabled" />
+          {c.isDirty('ai.ocrEnabled') && <Was>{display('ai.ocrEnabled', c.server('ai.ocrEnabled'))}</Was>}
+        </SettingRow>
+        <SettingRow label="Model đọc ảnh" desc="Chạy trên máy chủ của TrackerX, ảnh không gửi ra ngoài. Dùng chung model trả lời." testId="row-ai.ocrModel">
+          <LockedValue testId="ocr-model">{String(c.server('ai.chatModel') ?? '')} · nội bộ</LockedValue>
+        </SettingRow>
+        <NumberRow c={c} k="ai.ocrDailyLimitPerUser" desc="Hết lượt thì app báo giờ mở lại, vẫn ghi tay được. Nháp đang chờ vẫn lưu được." range="1–100 ảnh" />
+        <NumberRow c={c} k="ai.ocrMaxSide" desc="Máy chủ thu nhỏ ảnh theo cạnh dài trước khi đọc. Lớn hơn thì chậm hơn." range="384–1.536 px" />
+        <NumberRow c={c} k="ai.ocrTimeoutSeconds" desc="Quá thời gian thì app báo không đọc được và mở nhập tay." range="10–120 giây" />
+        <SettingRow label="Lưu ảnh" desc="Cố định, không đổi được. Quản trị viên không xem được ảnh hay nội dung đọc được." testId="row-ai.ocrStore">
+          <LockedValue testId="ocr-store">Không lưu · xóa ngay sau khi đọc</LockedValue>
+        </SettingRow>
+      </SettingCard>
+
       <SettingCard title="Tự học" aside={<span className="text-body-s font-medium text-muted-foreground">Chạy lúc 02:30 mỗi đêm, tuần tự</span>}>
         <SettingRow label="Tự áp dụng luật chung" desc="Tắt thì mọi luật chung chờ duyệt ở Trung tâm học. Luật làm bộ đề tụt điểm luôn bị loại." inline changed={c.isDirty('ai.autoApproveEnabled')} testId="row-ai.autoApproveEnabled">
           <Switch checked={c.value('ai.autoApproveEnabled') === true} onCheckedChange={(v) => c.set('ai.autoApproveEnabled', v)} aria-label="Tự áp dụng luật chung" data-testid="in-ai.autoApproveEnabled" />
@@ -1382,5 +1593,14 @@ function AiSection({ c }: { c: Ctx }) {
         ))}
       </SettingCard>
     </>
+  )
+}
+
+function LockedValue({ children, testId }: { children: ReactNode; testId: string }) {
+  return (
+    <div className="flex h-10 items-center gap-2 rounded-md border bg-muted/60 px-3.5 text-sm text-muted-foreground" data-testid={testId}>
+      <Lock className="size-4 shrink-0 text-faint" aria-label="Cố định" />
+      {children}
+    </div>
   )
 }

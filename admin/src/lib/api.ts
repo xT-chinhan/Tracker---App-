@@ -145,9 +145,19 @@ export interface SystemConfig {
   values: ConfigValues
   maintenance: Maintenance
   smtp: { configured: boolean; hasPassword: boolean; passwordSavedAt: string | null; passwordSavedBy: string | null; source: 'db' | 'env' | 'none' }
+  /** Máy cổng SMS (xác thực số điện thoại): khóa chỉ cho biết đã đặt; lastInboundAt = tin đúng khóa gần nhất (kể cả tin thử) */
+  smsGateway: { hasKey: boolean; lastInboundAt: string | null; lastVerifiedAt: string | null }
   updated: Record<string, { at: string; by: string | null }>
   lastSaved: { at: string; by: string | null } | null
   stats: { activeUsers: number; savingGoals: number; recurringRules: number }
+}
+
+export interface EmailTemplatePreview {
+  key: string
+  label: string
+  when: string
+  subject: string
+  html: string
 }
 
 export interface ConfigChange {
@@ -187,6 +197,14 @@ export interface AiDraft {
   createdAt: string
 }
 
+/** Khối hiển thị kèm câu trả lời (ai/lib/contracts.ts ReplyBlock). Chữ hỗ trợ **đậm**, ô bảng xuống dòng bằng \n. */
+export type AiReplyBlock =
+  | { type: 'text'; text: string }
+  | { type: 'stats'; items: { label: string; value: string; sub?: string }[] }
+  | { type: 'list'; items: string[] }
+  | { type: 'table'; columns: string[]; rows: string[][]; align?: ('left' | 'right')[]; links?: (string | null)[]; more?: string }
+  | { type: 'source'; text: string }
+
 export interface AiMessage {
   id: string
   conversationId: string
@@ -197,6 +215,7 @@ export interface AiMessage {
   status: string | null
   latencyMs: number | null
   followUps: string[] | null
+  blocks?: AiReplyBlock[]
   createdAt: string
   draft: AiDraft | null
 }
@@ -232,6 +251,24 @@ export interface AiStats {
   skills: AiSkillStat[]
   daily: { day: string; skill: string; confirmed: number; edited: number; cancelled: number; proposed: number; acceptanceWithoutEditRate: number | null }[]
   volume: { day: string; messages: number; users: number }[]
+}
+
+export interface AiOcrStats {
+  days: number
+  since: string
+  dailyLimit: number
+  total: number
+  users: number
+  usersHitLimit: number
+  unreadable: number
+  unreadableRate: number | null
+  latencyMs: { p50: number | null; p95: number | null }
+  drafts: { proposed: number; confirmed: number; edited: number; cancelled: number; decided: number }
+  acceptanceWithoutEditRate: number | null
+  editedRate: number | null
+  cancelledRate: number | null
+  daily: { day: string; read: number; unreadable: number }[]
+  reasons: { reason: 'not_document' | 'no_amount' | 'timeout' | 'error'; count: number }[]
 }
 
 export interface AiEvalReport { verdict: 'pass' | 'fail' | 'no-coverage'; matched: number; correct: number; source: string }
@@ -425,7 +462,9 @@ export const api = {
   aiCancelDraft: (id: string) => request<{ draft: AiDraft; idempotent: boolean }>('POST', `/ai/drafts/${id}/cancel`),
   aiFeedback: (id: string, rating: 1 | -1) => request<unknown>('POST', `/ai/messages/${id}/feedback`, { body: { rating } }),
 
+  emailTemplates: () => request<EmailTemplatePreview[]>('GET', '/admin/config/email-templates'),
   aiStats: (days: number) => request<AiStats>('GET', '/admin/ai/stats', { query: { days } }),
+  aiOcrStats: (days: number) => request<AiOcrStats>('GET', '/admin/ai/ocr-stats', { query: { days } }),
   aiRules: (q: { status?: AiKnowledgeStatus; limit?: number }) => request<Paged<AiRule>>('GET', '/admin/ai/rules', { query: q }),
   aiExamples: (q: { status?: AiKnowledgeStatus; limit?: number }) => request<Paged<AiExample>>('GET', '/admin/ai/examples', { query: q }),
   aiDecideRule: (id: string, approve: boolean) => request<AiRule>('POST', `/admin/ai/rules/${id}/${approve ? 'approve' : 'reject'}`),

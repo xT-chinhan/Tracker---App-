@@ -22,6 +22,16 @@ export function repairJson(s: string): any {
   return JSON.parse(s.slice(a, b + 1).replace(/,\s*([}\]])/g, '$1'));
 }
 
+/**
+ * Đưa output về dạng `{items: [...]}`. Có model (qwen3.5) bỏ qua lớp ngoài của schema khi chỉ có 1 khoản
+ * và trả thẳng `{title, categoryName}`, hoặc trả mảng trần.
+ */
+export function asItems(j: any): any {
+  if (Array.isArray(j)) return { items: j };
+  if (j && !Array.isArray(j.items) && (j.title !== undefined || j.categoryName !== undefined)) return { items: [j] };
+  return j;
+}
+
 /** YYYY-MM-DD hợp lệ (có thật trên lịch) hay không — thay cho `pattern` trong schema. */
 export function validDate(v: unknown): string | null {
   if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return null;
@@ -117,7 +127,7 @@ async function runParsed(text: string, ctx: UserContext, o: Options): Promise<Dr
     const r = await chat(msgs, schema, 60 + 40 * segs.length);
     ms += r.ms; calls++;
     try {
-      const j = repairJson(r.content);
+      const j = asItems(repairJson(r.content));
       if (!Array.isArray(j.items) || j.items.length !== segs.length) throw new Error(`cần đúng ${segs.length} khoản`);
       const bad = j.items.findIndex((x: any, i: number) => !allowed[i].includes(canonCat(ctx, x.categoryName) ?? ''));
       if (bad >= 0) throw new Error(`categoryName "${j.items[bad].categoryName}" của khoản ${bad + 1} phải là một trong: ${allowed[bad].join(', ')}`);

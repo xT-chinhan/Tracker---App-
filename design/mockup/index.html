@@ -13,7 +13,7 @@
 <main class="gallery">
   <header class="gallery-head">
     <h1>Thu Chi · Mockup giao diện</h1>
-    <p>25 màn hình đã duyệt + 20 màn Trợ lý AI chờ duyệt (mục J), khung 390×844. Dữ liệu mẫu nhất quán: ngày Thứ Ba 22/09/2026, 4 ví tổng 26.022.000đ, chi tháng 9 là 8.680.000đ trên ngân sách 14.000.000đ (62%).
+    <p>25 màn hình đã duyệt + 20 màn Trợ lý AI chờ duyệt (mục J) + 8 màn Đọc hóa đơn chờ duyệt (mục K) + 14 màn Số điện thoại chờ duyệt (mục L), khung 390×844. Dữ liệu mẫu nhất quán: ngày Thứ Ba 22/09/2026, 4 ví tổng 26.022.000đ, chi tháng 9 là 8.680.000đ trên ngân sách 14.000.000đ (62%).
     Điều hướng (giống ảnh mẫu): <b>Trang chủ · Lịch sử · [＋ Ghi giao dịch] · Báo cáo · Cài đặt</b>. Cài đặt chứa Ví, Ngân sách, Tiết kiệm, Định kỳ, Danh mục, Mẫu nhập nhanh, Thông báo, CSV, mật khẩu. Các màn con giữ tab Cài đặt active và nút ‹ Cài đặt. Ví và Ngân sách còn mở được từ thẻ số dư ở Trang chủ; Thông báo mở từ chuông.<br>Nút ＋: <b>chạm 1 lần</b> mở màn Ghi giao dịch (mặc định Khoản chi, con trỏ ở ô số tiền); <b>nhấn giữ</b> mở menu nhanh (Thu nhập, Chuyển tiền, 3 mẫu nhập nhanh), nút ＋ chuyển thành ✕ để đóng.</p>
   </header>
 
@@ -1401,6 +1401,670 @@
           </div>
         </div>
       </div><div class="frame-cap"><span>M14</span>M14 Cài đặt › Trợ lý AI: lượt, điều đã học, riêng tư</div></div>
+
+    </div>
+  </section>
+
+  <!-- ===================== K. ĐỌC HÓA ĐƠN · OCR (chờ duyệt) ===================== -->
+  <section class="section" id="doc-hoa-don">
+    <div class="section-label"><b>K</b> Đọc hóa đơn (OCR) · chờ duyệt</div>
+    <p class="body-m" style="color:#55544f;max-width:980px;margin:-8px 0 24px;line-height:1.6">Chụp hoặc chọn ảnh hóa đơn / ảnh chụp màn hình chuyển khoản. Máy chủ Thu Chi đọc bằng model chạy nội bộ (~3 giây) rồi <b>xóa ảnh ngay</b>, không lưu lại. Kết quả luôn là <b>nháp</b> (viền nét đứt, “Nháp · chưa lưu”): người dùng sửa, lưu hoặc hủy, không có gì tự ghi. Thu hay chi: ảnh chuyển khoản có tên người dùng ở phía <b>người nhận</b> thì là khoản thu, còn lại là khoản chi. Lối vào: dòng <b>Quét hóa đơn</b> trong menu nhấn giữ ＋, ngay dưới Hỏi trợ lý. Mỗi người 20 ảnh/ngày.</p>
+    <div class="row-phones">
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-01-loi-vao" data-tab="home">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:48px">
+              <div class="logo sm">₫</div>
+              <span class="hstack" style="--gap:8px"><span class="icon-btn filled" aria-label="Trợ lý"><i data-lucide="sparkles"></i></span><span class="icon-btn filled"><i data-lucide="bell"></i><span class="dot-badge" style="top:8px;right:9px"></span></span></span>
+            </div>
+            <h1 class="headline mt-2">Thứ Ba, 22 tháng 9</h1>
+
+            <div class="card mt-4">
+              <div class="between">
+                <span class="label-s hstack" style="--gap:6px">Tổng số dư · 4 ví <i data-lucide="eye" class="ic-16" style="width:16px;height:16px"></i></span>
+                <span class="label-s hstack" style="--gap:2px">Ví <i data-lucide="chevron-right" style="width:16px;height:16px"></i></span>
+              </div>
+              <div class="display num mt-2">26.022.000đ</div>
+              <div class="progress mt-3"><i style="width:62%"></i></div>
+              <div class="between mt-2 body-s"><span class="muted">Ngân sách tháng đã dùng <b style="color:var(--color-on-surface);font-weight:600">62%</b></span><span class="muted num">còn 5.320.000đ</span></div>
+              <div class="divider"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr">
+                <div><div class="label-s">Hôm nay</div><div class="title-m num mt-1" style="margin-top:2px">120.000đ</div></div>
+                <div style="border-left:1px solid var(--color-outline-variant);padding-left:16px"><div class="label-s">Tháng này</div><div class="title-m num" style="margin-top:2px">8.680.000đ</div></div>
+              </div>
+            </div>
+
+            <div class="hstack mt-4" style="--gap:10px">
+              <button class="btn btn-primary" style="flex:1.45"><i data-lucide="plus"></i>Ghi giao dịch</button>
+              <button class="btn btn-secondary" style="flex:1"><i data-lucide="arrow-left-right"></i>Chuyển tiền</button>
+            </div>
+
+            <div class="label-s mt-5" style="margin-bottom:8px">Nhập nhanh</div>
+            <div class="chips" style="margin-right:-20px">
+              <span class="chip"><i data-lucide="coffee"></i>Cà phê <span class="amt-s num">45k</span></span>
+              <span class="chip"><i data-lucide="utensils"></i>Cơm trưa <span class="amt-s num">55k</span></span>
+              <span class="chip"><i data-lucide="car-taxi-front"></i>Grab <span class="amt-s num">38k</span></span>
+              <span class="chip"><i data-lucide="square-parking"></i>Gửi xe <span class="amt-s num">5k</span></span>
+            </div>
+
+            <div class="between mt-5"><span class="title-m">Gần đây</span><span class="label-s">Xem tất cả</span></div>
+            <div class="card flush list mt-2">
+              <div class="row"><span class="bubble"><i data-lucide="utensils"></i></span><div class="grow"><div class="t">Cơm trưa văn phòng</div><div class="s">Ăn uống · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>55.000đ</div><div class="time">12:10</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="coffee"></i></span><div class="grow"><div class="t">Cà phê sáng</div><div class="s">Ăn uống · MoMo</div></div><div class="r"><div class="amt num"><span class="sign">−</span>45.000đ</div><div class="time">08:15</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="square-parking"></i></span><div class="grow"><div class="t">Gửi xe tháng</div><div class="s">Di chuyển · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>20.000đ</div><div class="time">07:50</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="scrim" style="background:rgba(17,17,17,.38)"></div>
+        <div class="quick-menu">
+          <div class="qrow"><span class="bubble sm"><i data-lucide="sparkles"></i></span><span class="grow">Hỏi trợ lý</span></div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="scan-line"></i></span><span class="grow">Quét hóa đơn</span><span class="later" style="margin-left:0">Mới</span></div>
+          <div class="qsep"></div>
+          <div class="qrow"><span class="bubble sm ok"><i data-lucide="arrow-down-left"></i></span><span class="grow">Thu nhập</span></div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="arrow-left-right"></i></span><span class="grow">Chuyển tiền</span></div>
+          <div class="qsep"></div>
+          <div class="qlabel">Mẫu nhập nhanh</div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="coffee"></i></span><span class="grow">Cà phê</span><span class="qv num">45.000đ</span></div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="utensils"></i></span><span class="grow">Cơm trưa</span><span class="qv num">55.000đ</span></div>
+          <div class="qrow"><span class="bubble sm"><i data-lucide="car-taxi-front"></i></span><span class="grow">Grab</span><span class="qv num">38.000đ</span></div>
+        </div>
+        <span class="fab-open" aria-label="Đóng"><i data-lucide="x"></i></span>
+      </div><div class="frame-cap"><span>40a</span>Lối vào: nhấn giữ ＋, dòng “Quét hóa đơn”</div></div>
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-02-chon-anh" data-tab="home">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:48px">
+              <div class="logo sm">₫</div>
+              <span class="hstack" style="--gap:8px"><span class="icon-btn filled" aria-label="Trợ lý"><i data-lucide="sparkles"></i></span><span class="icon-btn filled"><i data-lucide="bell"></i><span class="dot-badge" style="top:8px;right:9px"></span></span></span>
+            </div>
+            <h1 class="headline mt-2">Thứ Ba, 22 tháng 9</h1>
+
+            <div class="card mt-4">
+              <div class="between">
+                <span class="label-s hstack" style="--gap:6px">Tổng số dư · 4 ví <i data-lucide="eye" class="ic-16" style="width:16px;height:16px"></i></span>
+                <span class="label-s hstack" style="--gap:2px">Ví <i data-lucide="chevron-right" style="width:16px;height:16px"></i></span>
+              </div>
+              <div class="display num mt-2">26.022.000đ</div>
+              <div class="progress mt-3"><i style="width:62%"></i></div>
+              <div class="between mt-2 body-s"><span class="muted">Ngân sách tháng đã dùng <b style="color:var(--color-on-surface);font-weight:600">62%</b></span><span class="muted num">còn 5.320.000đ</span></div>
+              <div class="divider"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr">
+                <div><div class="label-s">Hôm nay</div><div class="title-m num mt-1" style="margin-top:2px">120.000đ</div></div>
+                <div style="border-left:1px solid var(--color-outline-variant);padding-left:16px"><div class="label-s">Tháng này</div><div class="title-m num" style="margin-top:2px">8.680.000đ</div></div>
+              </div>
+            </div>
+
+            <div class="hstack mt-4" style="--gap:10px">
+              <button class="btn btn-primary" style="flex:1.45"><i data-lucide="plus"></i>Ghi giao dịch</button>
+              <button class="btn btn-secondary" style="flex:1"><i data-lucide="arrow-left-right"></i>Chuyển tiền</button>
+            </div>
+
+            <div class="label-s mt-5" style="margin-bottom:8px">Nhập nhanh</div>
+            <div class="chips" style="margin-right:-20px">
+              <span class="chip"><i data-lucide="coffee"></i>Cà phê <span class="amt-s num">45k</span></span>
+              <span class="chip"><i data-lucide="utensils"></i>Cơm trưa <span class="amt-s num">55k</span></span>
+              <span class="chip"><i data-lucide="car-taxi-front"></i>Grab <span class="amt-s num">38k</span></span>
+              <span class="chip"><i data-lucide="square-parking"></i>Gửi xe <span class="amt-s num">5k</span></span>
+            </div>
+
+            <div class="between mt-5"><span class="title-m">Gần đây</span><span class="label-s">Xem tất cả</span></div>
+            <div class="card flush list mt-2">
+              <div class="row"><span class="bubble"><i data-lucide="utensils"></i></span><div class="grow"><div class="t">Cơm trưa văn phòng</div><div class="s">Ăn uống · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>55.000đ</div><div class="time">12:10</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="coffee"></i></span><div class="grow"><div class="t">Cà phê sáng</div><div class="s">Ăn uống · MoMo</div></div><div class="r"><div class="amt num"><span class="sign">−</span>45.000đ</div><div class="time">08:15</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="square-parking"></i></span><div class="grow"><div class="t">Gửi xe tháng</div><div class="s">Di chuyển · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>20.000đ</div><div class="time">07:50</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="between"><span class="sheet-title">Quét hóa đơn</span><span class="icon-btn" style="margin-right:-10px"><i data-lucide="x"></i></span></div>
+          <p class="body-m muted mt-1">Hóa đơn giấy hoặc ảnh chụp màn hình chuyển khoản. Thu Chi đọc số tiền, ngày, nơi bán rồi tạo nháp để bạn xem lại.</p>
+          <div class="card flush set mt-4">
+            <div class="srow"><span class="bubble sm"><i data-lucide="camera"></i></span><span class="grow">Chụp ảnh</span><i data-lucide="chevron-right" class="chev"></i></div>
+            <div class="srow"><span class="bubble sm"><i data-lucide="images"></i></span><div class="grow" style="padding:8px 0"><div>Chọn từ thư viện</div><div class="s" style="margin-top:0">Kể cả ảnh chụp màn hình</div></div><i data-lucide="chevron-right" class="chev"></i></div>
+          </div>
+          <div class="note mt-3"><i data-lucide="lightbulb"></i><span>Chụp thẳng, đủ sáng, thấy rõ dòng <b style="font-weight:600;color:#3A3935">Tổng tiền</b> hoặc số tiền chuyển. Mỗi ảnh một hóa đơn.</span></div>
+          <div class="hstack body-s muted mt-4" style="--gap:8px;align-items:flex-start"><i data-lucide="lock-keyhole" style="width:14px;height:14px;flex:none;margin-top:2px"></i><span>Ảnh chỉ dùng để đọc rồi xóa ngay, không lưu trên máy chủ.</span></div>
+          <div class="hstack body-s faint mt-2" style="--gap:8px"><i data-lucide="hourglass" style="width:14px;height:14px;flex:none"></i><span class="num">Còn 17/20 ảnh hôm nay</span></div>
+        </div>
+      </div><div class="frame-cap"><span>40b</span>Chọn nguồn ảnh · quyền riêng tư · gợi ý chụp</div></div>
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-03-dang-doc">
+        <div class="ai-screen">
+<div class="ai-bar"><span class="back"><i data-lucide="chevron-left"></i>Trang chủ</span><div class="ttl"><b>Quét hóa đơn</b><span><i data-lucide="lock-keyhole"></i>Ảnh không lưu trên máy chủ</span></div><div class="right"></div></div>
+<div class="ai-thread top">
+            <div class="hstack" style="--gap:14px">
+              <span class="ocr-thumb"><div class="receipt"><div class="rh">HIGHLANDS COFFEE</div><div>Vincom Bà Triệu</div><div>22/09/2026 19:32 · HĐ 0412</div><div class="rl"></div><div class="ri"><span>Phin sữa đá</span><span>39.000</span></div><div class="ri"><span>Trà sen vàng</span><span>45.000</span></div><div class="ri"><span>Bánh mì que</span><span>29.000</span></div><div class="rl"></div><div class="ri rt"><span>TỔNG</span><span>113.000</span></div><div>Cảm ơn quý khách</div></div></span>
+              <div class="grow">
+                <div class="ai-status"><i data-lucide="scan-line"></i><span class="shimmer-t">Đang đọc hóa đơn…</span></div>
+                <div class="body-s faint mt-1" style="padding-left:24px">Thường mất khoảng 3 giây</div>
+              </div>
+            </div>
+            <div class="ai-draft">
+              <div class="ai-draft-h"><div class="sk pill" style="width:128px;height:26px"></div><div class="sk pill" style="width:84px;height:26px;margin-left:auto"></div></div>
+              <div class="sk mt-4" style="width:96px;height:11px"></div>
+              <div class="sk mt-2" style="width:190px;height:34px;border-radius:10px"></div>
+              <div class="sk mt-2" style="width:150px;height:10px"></div>
+              <div class="form mt-2">
+                <div class="frow"><div class="sk round" style="width:20px;height:20px"></div><div class="sk" style="width:64px;height:11px"></div><div class="sk" style="width:120px;height:12px;margin-left:auto"></div></div>
+                <div class="frow"><div class="sk round" style="width:20px;height:20px"></div><div class="sk" style="width:72px;height:11px"></div><div class="sk" style="width:96px;height:12px;margin-left:auto"></div></div>
+                <div class="frow"><div class="sk round" style="width:20px;height:20px"></div><div class="sk" style="width:40px;height:11px"></div><div class="sk" style="width:78px;height:12px;margin-left:auto"></div></div>
+                <div class="frow"><div class="sk round" style="width:20px;height:20px"></div><div class="sk" style="width:48px;height:11px"></div><div class="sk" style="width:132px;height:12px;margin-left:auto"></div></div>
+                <div class="frow"><div class="sk round" style="width:20px;height:20px"></div><div class="sk" style="width:86px;height:11px"></div><div class="sk" style="width:52px;height:12px;margin-left:auto"></div></div>
+              </div>
+              <div class="ai-acts"><div class="sk pill" style="width:64px;height:44px"></div><div class="sk pill" style="width:72px;height:44px"></div><div class="sk pill" style="flex:1;height:44px"></div></div>
+            </div>
+          </div>
+<div class="ai-composer"><button class="btn btn-secondary" style="height:48px;font-size:15px">Hủy</button></div>
+        </div>
+      </div><div class="frame-cap"><span>40c</span>Đang đọc (~3 giây): ảnh thu nhỏ + khung nháp skeleton</div></div>
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-04-ket-qua-hoa-don">
+        <div class="ai-screen">
+<div class="ai-bar"><span class="back"><i data-lucide="chevron-left"></i>Trang chủ</span><div class="ttl"><b>Quét hóa đơn</b><span><i data-lucide="lock-keyhole"></i>Ảnh không lưu trên máy chủ</span></div><div class="right"></div></div>
+<div class="ai-thread top">
+          <div class="ai-a"><p>Đọc xong hóa đơn. Chưa có gì được lưu.</p>
+            <div class="ai-draft">
+              <div class="ai-draft-h"><span class="badge"><i data-lucide="circle-dashed"></i>Nháp · chưa lưu</span><span class="tag line" style="margin-left:auto"><i data-lucide="arrow-up-right"></i>Khoản chi</span></div>
+              <div class="hstack mt-3" style="--gap:14px;align-items:flex-start">
+                <div class="grow">
+                  <div class="label-s">Highlands Coffee</div>
+                  <div class="num" style="font-size:32px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;margin-top:2px"><span class="sign">−</span>113.000đ</div>
+                  <div class="body-s muted">Một trăm mười ba nghìn đồng</div>
+                </div>
+                <span class="ocr-thumb" aria-label="Xem lại ảnh"><div class="receipt"><div class="rh">HIGHLANDS COFFEE</div><div>Vincom Bà Triệu</div><div>22/09/2026 19:32 · HĐ 0412</div><div class="rl"></div><div class="ri"><span>Phin sữa đá</span><span>39.000</span></div><div class="ri"><span>Trà sen vàng</span><span>45.000</span></div><div class="ri"><span>Bánh mì que</span><span>29.000</span></div><div class="rl"></div><div class="ri rt"><span>TỔNG</span><span>113.000</span></div><div>Cảm ơn quý khách</div></div><span class="ex"><i data-lucide="maximize-2"></i></span></span>
+              </div>
+              <div class="form mt-2">
+                <div class="frow"><span class="ico"><i data-lucide="store"></i></span><span class="lbl">Nơi bán</span><span class="val">Highlands Coffee<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="shapes"></i></span><span class="lbl">Danh mục</span><span class="val"><span class="bubble sm" style="width:26px;height:26px"><i data-lucide="utensils" style="width:14px;height:14px"></i></span>Ăn uống<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="wallet"></i></span><span class="lbl">Ví</span><span class="val">MoMo<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="calendar"></i></span><span class="lbl">Ngày</span><span class="val num">Hôm nay, 22/09 · 19:32<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="list"></i></span><span class="lbl">Món đọc được</span><span class="val" style="font-weight:500;color:var(--color-on-surface-variant)">3 món<i data-lucide="chevron-down" class="chev"></i></span></div>
+              </div>
+              <div class="foot"><i data-lucide="info"></i>Danh mục và ví đoán theo thói quen của bạn. Chạm một dòng để sửa.</div>
+              <div class="ai-src"><i data-lucide="scan-line"></i>Đọc từ ảnh · 2,6 giây<span class="go">Xem ảnh<i data-lucide="chevron-right" style="width:14px;height:14px"></i></span></div>
+              <div class="ai-acts"><button class="btn btn-text">Hủy</button><button class="btn btn-secondary" style="width:auto;padding:0 18px">Sửa</button><button class="btn btn-primary" style="flex:1">Lưu khoản chi</button></div>
+            </div>
+          </div></div>
+        </div>
+      </div><div class="frame-cap"><span>40d</span>Kết quả hóa đơn: nháp 1 khoản chi, món thu gọn</div></div>
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-05-ket-qua-chuyen-khoan">
+        <div class="ai-screen">
+<div class="ai-bar"><span class="back"><i data-lucide="chevron-left"></i>Trang chủ</span><div class="ttl"><b>Quét hóa đơn</b><span><i data-lucide="lock-keyhole"></i>Ảnh không lưu trên máy chủ</span></div><div class="right"></div></div>
+<div class="ai-thread top">
+          <div class="ai-a"><p>Đọc xong ảnh chuyển khoản. Chưa có gì được lưu.</p>
+            <div class="ai-draft">
+              <div class="ai-draft-h"><span class="badge"><i data-lucide="circle-dashed"></i>Nháp · chưa lưu</span><span class="tag line" style="margin-left:auto"><i data-lucide="arrow-up-right"></i>Khoản chi</span></div>
+              <div class="hstack mt-3" style="--gap:14px;align-items:flex-start">
+                <div class="grow">
+                  <div class="label-s">Chuyển tới KHUONG BA SON</div>
+                  <div class="num" style="font-size:32px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;margin-top:2px"><span class="sign">−</span>16.900đ</div>
+                  <div class="body-s muted">Từ VietinBank · 18:42</div>
+                </div>
+                <span class="ocr-thumb" aria-label="Xem lại ảnh"><div class="bankshot"><div class="bh">VietinBank iPay</div><div class="bc"><i data-lucide="check"></i></div><div class="bt">Giao dịch thành công</div><div class="ba">16.900 VND</div><div class="bd">22/09/2026 18:42:07</div><div class="br"><span>Người nhận</span><b>KHUONG BA SON</b></div><div class="br"><span>Ngân hàng</span><b>Techcombank</b></div><div class="br"><span>Nội dung</span><b>MINH ANH chuyen tien</b></div></div><span class="ex"><i data-lucide="maximize-2"></i></span></span>
+              </div>
+              <div class="form mt-2">
+                <div class="frow"><span class="ico"><i data-lucide="user-round"></i></span><span class="lbl">Người nhận</span><span class="val">KHUONG BA SON<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="notebook-pen"></i></span><span class="lbl">Nội dung</span><span class="val">MINH ANH chuyen tien<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="shapes"></i></span><span class="lbl">Danh mục</span><span class="val ph">Chọn danh mục<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="wallet"></i></span><span class="lbl">Ví</span><span class="val"><span class="tag warn"><i data-lucide="triangle-alert"></i>Chọn ví</span><i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="calendar"></i></span><span class="lbl">Ngày</span><span class="val num">Hôm nay, 22/09 · 18:42<i data-lucide="chevron-right" class="chev"></i></span></div>
+              </div>
+              <div class="foot" style="align-items:flex-start"><i data-lucide="info" style="margin-top:2px;flex:none"></i><span>Bạn là người chuyển nên đây là khoản chi. VietinBank chưa có trong 4 ví của bạn. Chọn ví và danh mục trước khi lưu.</span></div>
+              <div class="ai-src"><i data-lucide="scan-line"></i>Đọc từ ảnh · 2,4 giây<span class="go">Xem ảnh<i data-lucide="chevron-right" style="width:14px;height:14px"></i></span></div>
+              <div class="ai-acts"><button class="btn btn-text">Hủy</button><button class="btn btn-secondary" style="width:auto;padding:0 18px">Sửa</button><button class="btn btn-primary" style="flex:1" disabled>Lưu khoản chi</button></div>
+            </div>
+          </div></div>
+        </div>
+      </div><div class="frame-cap"><span>40e</span>Ảnh chuyển khoản (bạn chuyển) → khoản chi, chưa chắc ví</div></div>
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-05b-ket-qua-nhan-tien">
+        <div class="ai-screen">
+<div class="ai-bar"><span class="back"><i data-lucide="chevron-left"></i>Trang chủ</span><div class="ttl"><b>Quét hóa đơn</b><span><i data-lucide="lock-keyhole"></i>Ảnh không lưu trên máy chủ</span></div><div class="right"></div></div>
+<div class="ai-thread top">
+          <div class="ai-a"><p>Đọc xong ảnh chuyển khoản. Chưa có gì được lưu.</p>
+            <div class="ai-draft">
+              <div class="ai-draft-h"><span class="badge"><i data-lucide="circle-dashed"></i>Nháp · chưa lưu</span><span class="tag line" style="margin-left:auto"><i data-lucide="arrow-down-left"></i>Khoản thu</span></div>
+              <div class="hstack mt-3" style="--gap:14px;align-items:flex-start">
+                <div class="grow">
+                  <div class="label-s">Nhận từ TRAN THI LAN</div>
+                  <div class="num income" style="font-size:32px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;margin-top:2px">+250.000đ</div>
+                  <div class="body-s muted">Vào MB Bank · 12:40</div>
+                </div>
+                <span class="ocr-thumb" aria-label="Xem lại ảnh"><div class="bankshot"><div class="bh">Vietcombank</div><div class="bc"><i data-lucide="check"></i></div><div class="bt">Giao dịch thành công</div><div class="ba">250.000 VND</div><div class="bd">22/09/2026 12:40:15</div><div class="br"><span>Người nhận</span><b>NGUYEN MINH ANH</b></div><div class="br"><span>Ngân hàng</span><b>MB Bank</b></div><div class="br"><span>Nội dung</span><b>Lan tra tien com</b></div></div><span class="ex"><i data-lucide="maximize-2"></i></span></span>
+              </div>
+              <div class="form mt-2">
+                <div class="frow"><span class="ico"><i data-lucide="user-round"></i></span><span class="lbl">Người gửi</span><span class="val">TRAN THI LAN<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="notebook-pen"></i></span><span class="lbl">Nội dung</span><span class="val">Lan tra tien com<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="shapes"></i></span><span class="lbl">Danh mục</span><span class="val"><span class="bubble sm" style="width:26px;height:26px"><i data-lucide="briefcase" style="width:14px;height:14px"></i></span>Thu nhập khác<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="wallet"></i></span><span class="lbl">Ví</span><span class="val">MB Bank<i data-lucide="chevron-right" class="chev"></i></span></div>
+                <div class="frow"><span class="ico"><i data-lucide="calendar"></i></span><span class="lbl">Ngày</span><span class="val num">Hôm nay, 22/09 · 12:40<i data-lucide="chevron-right" class="chev"></i></span></div>
+              </div>
+              <div class="foot" style="align-items:flex-start"><i data-lucide="info" style="margin-top:2px;flex:none"></i><span>Người nhận là NGUYEN MINH ANH (bạn) nên đây là khoản thu. Ví chọn theo ngân hàng nhận.</span></div>
+              <div class="ai-src"><i data-lucide="scan-line"></i>Đọc từ ảnh · 2,5 giây<span class="go">Xem ảnh<i data-lucide="chevron-right" style="width:14px;height:14px"></i></span></div>
+              <div class="ai-acts"><button class="btn btn-text">Hủy</button><button class="btn btn-secondary" style="width:auto;padding:0 18px">Sửa</button><button class="btn btn-primary" style="flex:1">Lưu khoản thu</button></div>
+            </div>
+          </div></div>
+        </div>
+      </div><div class="frame-cap"><span>40e</span>Biến thể: bạn là người nhận → khoản thu (số xanh)</div></div>
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-06-khong-doc-duoc">
+        <div class="ai-screen">
+<div class="ai-bar"><span class="back"><i data-lucide="chevron-left"></i>Trang chủ</span><div class="ttl"><b>Quét hóa đơn</b><span><i data-lucide="lock-keyhole"></i>Ảnh không lưu trên máy chủ</span></div><div class="right"></div></div>
+<div class="ai-thread top">
+          <div class="hstack" style="--gap:14px">
+            <span class="ocr-thumb blur"><div class="receipt"><div class="rh">HIGHLANDS COFFEE</div><div>Vincom Bà Triệu</div><div>22/09/2026 19:32 · HĐ 0412</div><div class="rl"></div><div class="ri"><span>Phin sữa đá</span><span>39.000</span></div><div class="ri"><span>Trà sen vàng</span><span>45.000</span></div><div class="ri"><span>Bánh mì que</span><span>29.000</span></div><div class="rl"></div><div class="ri rt"><span>TỔNG</span><span>113.000</span></div><div>Cảm ơn quý khách</div></div></span>
+            <div class="grow"><div class="title-m">Chưa đọc được số tiền</div><div class="body-s muted mt-1">Ảnh hơi mờ nên chưa đọc được dòng tổng tiền. Không có gì được lưu.</div></div>
+          </div>
+          <div class="ai-a">
+            <div class="card ai-card" style="padding:14px 16px 6px">
+              <div class="label-s">Đọc được trong ảnh</div>
+              <div class="ai-mini mt-1"><i data-lucide="store" style="width:16px;height:16px;color:var(--color-on-surface-variant)"></i><span class="grow">Nơi bán</span><span class="v">Highlands Coffee</span></div>
+              <div class="ai-mini"><i data-lucide="calendar" style="width:16px;height:16px;color:var(--color-on-surface-variant)"></i><span class="grow">Ngày</span><span class="v">Hôm nay, 22/09</span></div>
+              <div class="ai-mini"><i data-lucide="banknote" style="width:16px;height:16px;color:var(--color-on-surface-variant)"></i><span class="grow">Số tiền</span><span class="faint" style="font-size:14px">Chưa đọc được</span></div>
+            </div>
+            <div class="note"><i data-lucide="lightbulb"></i><span>Đặt hóa đơn trên mặt phẳng, chụp thẳng, đủ sáng và thấy rõ dòng Tổng tiền. Ảnh chụp màn hình chuyển khoản thường đọc tốt hơn ảnh chụp giấy.</span></div>
+          </div>
+          </div>
+<div class="ai-composer">
+            <button class="btn btn-primary" style="height:48px;font-size:15px"><i data-lucide="camera"></i>Chụp lại</button>
+            <button class="btn btn-secondary mt-2" style="height:48px;font-size:15px"><i data-lucide="keyboard"></i>Nhập tay</button>
+            <div class="body-s faint center mt-2">Nhập tay mở Ghi giao dịch, điền sẵn nơi bán và ngày.</div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>40f</span>Không đọc được: trung tính, chụp lại hoặc nhập tay</div></div>
+
+      <div class="frame"><div class="phone" data-shot="40-ocr-07-het-luot" data-tab="home">
+        <div class="screen">
+          <div class="pad">
+            <div class="between" style="height:48px">
+              <div class="logo sm">₫</div>
+              <span class="hstack" style="--gap:8px"><span class="icon-btn filled" aria-label="Trợ lý"><i data-lucide="sparkles"></i></span><span class="icon-btn filled"><i data-lucide="bell"></i><span class="dot-badge" style="top:8px;right:9px"></span></span></span>
+            </div>
+            <h1 class="headline mt-2">Thứ Ba, 22 tháng 9</h1>
+
+            <div class="card mt-4">
+              <div class="between">
+                <span class="label-s hstack" style="--gap:6px">Tổng số dư · 4 ví <i data-lucide="eye" class="ic-16" style="width:16px;height:16px"></i></span>
+                <span class="label-s hstack" style="--gap:2px">Ví <i data-lucide="chevron-right" style="width:16px;height:16px"></i></span>
+              </div>
+              <div class="display num mt-2">26.022.000đ</div>
+              <div class="progress mt-3"><i style="width:62%"></i></div>
+              <div class="between mt-2 body-s"><span class="muted">Ngân sách tháng đã dùng <b style="color:var(--color-on-surface);font-weight:600">62%</b></span><span class="muted num">còn 5.320.000đ</span></div>
+              <div class="divider"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr">
+                <div><div class="label-s">Hôm nay</div><div class="title-m num mt-1" style="margin-top:2px">120.000đ</div></div>
+                <div style="border-left:1px solid var(--color-outline-variant);padding-left:16px"><div class="label-s">Tháng này</div><div class="title-m num" style="margin-top:2px">8.680.000đ</div></div>
+              </div>
+            </div>
+
+            <div class="hstack mt-4" style="--gap:10px">
+              <button class="btn btn-primary" style="flex:1.45"><i data-lucide="plus"></i>Ghi giao dịch</button>
+              <button class="btn btn-secondary" style="flex:1"><i data-lucide="arrow-left-right"></i>Chuyển tiền</button>
+            </div>
+
+            <div class="label-s mt-5" style="margin-bottom:8px">Nhập nhanh</div>
+            <div class="chips" style="margin-right:-20px">
+              <span class="chip"><i data-lucide="coffee"></i>Cà phê <span class="amt-s num">45k</span></span>
+              <span class="chip"><i data-lucide="utensils"></i>Cơm trưa <span class="amt-s num">55k</span></span>
+              <span class="chip"><i data-lucide="car-taxi-front"></i>Grab <span class="amt-s num">38k</span></span>
+              <span class="chip"><i data-lucide="square-parking"></i>Gửi xe <span class="amt-s num">5k</span></span>
+            </div>
+
+            <div class="between mt-5"><span class="title-m">Gần đây</span><span class="label-s">Xem tất cả</span></div>
+            <div class="card flush list mt-2">
+              <div class="row"><span class="bubble"><i data-lucide="utensils"></i></span><div class="grow"><div class="t">Cơm trưa văn phòng</div><div class="s">Ăn uống · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>55.000đ</div><div class="time">12:10</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="coffee"></i></span><div class="grow"><div class="t">Cà phê sáng</div><div class="s">Ăn uống · MoMo</div></div><div class="r"><div class="amt num"><span class="sign">−</span>45.000đ</div><div class="time">08:15</div></div></div>
+              <div class="row"><span class="bubble"><i data-lucide="square-parking"></i></span><div class="grow"><div class="t">Gửi xe tháng</div><div class="s">Di chuyển · Tiền mặt</div></div><div class="r"><div class="amt num"><span class="sign">−</span>20.000đ</div><div class="time">07:50</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="between"><span class="sheet-title">Quét hóa đơn</span><span class="icon-btn" style="margin-right:-10px"><i data-lucide="x"></i></span></div>
+          <div class="card mt-4" style="padding:16px">
+            <div class="hstack" style="--gap:12px;align-items:flex-start"><span class="bubble"><i data-lucide="hourglass"></i></span>
+              <div class="grow"><div class="title-m">Hết 20 ảnh hôm nay</div><div class="body-s muted mt-1">Lượt mới mở lúc 00:00, còn 4 giờ 9 phút. Nháp đang chờ vẫn lưu được.</div></div></div>
+            <button class="btn btn-secondary mt-4" style="height:44px;font-size:15px"><i data-lucide="plus"></i>Ghi giao dịch thủ công</button>
+          </div>
+          <div class="card flush set mt-4" style="opacity:.45">
+            <div class="srow"><span class="bubble sm"><i data-lucide="camera"></i></span><span class="grow">Chụp ảnh</span></div>
+            <div class="srow"><span class="bubble sm"><i data-lucide="images"></i></span><span class="grow">Chọn từ thư viện</span></div>
+          </div>
+          <div class="hstack body-s faint mt-4" style="--gap:8px"><i data-lucide="hourglass" style="width:14px;height:14px;flex:none"></i><span class="num">Đã dùng 20/20 ảnh hôm nay</span></div>
+        </div>
+      </div><div class="frame-cap"><span>40g</span>Hết lượt ảnh trong ngày: giờ mở lại + ghi thủ công</div></div>
+
+    </div>
+  </section>
+  <!-- ===================== L. SỐ ĐIỆN THOẠI (chờ duyệt) ===================== -->
+  <section class="section" id="so-dien-thoai">
+    <div class="section-label"><b>L</b> Số điện thoại · chờ duyệt</div>
+    <p class="body-m" style="color:#55544f;max-width:980px;margin:-8px 0 24px;line-height:1.6">Xác thực kiểu <b>tự nhắn</b>: người dùng nhập số, app hiện mã 6 số và nút <b>Gửi yêu cầu xác nhận</b>, mở ứng dụng Tin nhắn với yêu cầu soạn sẵn. Người dùng chỉ bấm Gửi. <b>App không bao giờ hiện số máy cổng</b>, số này chỉ dùng để điền sẵn người nhận. Máy cổng chuyển tin về máy chủ, máy chủ so <b>số gửi do nhà mạng gắn</b> với số đã nhập và so mã. <b>Thu Chi không gửi SMS, không gọi điện</b>, người dùng không phải gõ mã. App tự hỏi trạng thái và tự chuyển màn. Mã hết hạn sau 5 phút, tối đa 3 lần xin mã / 10 phút, mỗi tài khoản một số. Dùng cho: gắn số ở Cài đặt › Tài khoản (cần mật khẩu hiện tại) và Quên mật khẩu qua số điện thoại (song song với email). Gắn / đổi / gỡ số và đặt lại mật khẩu bằng số đều có email báo.</p>
+    <div class="row-phones">
+
+      <!-- 50-01 Cài đặt: chưa gắn số -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-01-cai-dat" data-tab="more">
+        <div class="screen">
+          <div class="pad">
+            <div style="height:56px;display:flex;align-items:center"><h1 class="headline">Cài đặt</h1></div>
+            <div class="card tight mt-2"><div class="hstack" style="--gap:12px"><span class="avatar">MA</span><div class="grow"><div class="title-m">Nguyễn Minh Anh</div><div class="body-s muted">minhanh.nguyen@gmail.com</div></div><span class="body-s muted">Sửa</span><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="group-h"><span>Tài khoản</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="lock-keyhole"></i></span><span class="grow">Đổi mật khẩu</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="smartphone"></i></span><span class="grow">Số điện thoại</span><span class="sv">Chưa gắn</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <p class="body-s muted mt-2" style="padding:0 4px">Dùng để lấy lại mật khẩu khi quên.</p>
+            <div class="group-h"><span>Quản lý tiền</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="wallet"></i></span><span class="grow">Ví</span><span class="sv num">26.022.000đ</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="target"></i></span><span class="grow">Ngân sách</span><span class="sv">Đã dùng 62%</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="piggy-bank"></i></span><span class="grow">Mục tiêu tiết kiệm</span><span class="sv">3 mục tiêu</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="repeat"></i></span><span class="grow">Giao dịch định kỳ</span><span class="sv">5</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="group-h"><span>Nhập liệu</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="shapes"></i></span><span class="grow">Danh mục</span><span class="sv">16</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow"><span class="bubble sm"><i data-lucide="zap"></i></span><span class="grow">Mẫu nhập nhanh</span><span class="sv">4</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50a</span>Cài đặt: nhóm Tài khoản, Số điện thoại “Chưa gắn”</div></div>
+
+      <!-- 50-02 Nhập số -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-02-nhap-so">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gắn số điện thoại</h1>
+            <p class="body-m muted mt-2">Dùng để lấy lại mật khẩu khi quên. Mỗi tài khoản gắn một số.</p>
+            <div class="mt-8">
+              <label class="field-label">Số điện thoại</label>
+              <div class="input focus"><i data-lucide="smartphone"></i><span class="num">0912 345 678</span></div>
+            </div>
+            <div class="mt-4">
+              <label class="field-label">Mật khẩu hiện tại</label>
+              <div class="input"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span><i data-lucide="eye-off"></i></div>
+            </div>
+            <div class="note mt-5"><i data-lucide="message-square"></i><span>Bước sau, bạn <b style="color:var(--color-on-surface);font-weight:600">gửi yêu cầu xác nhận từ số của bạn</b> bằng 1 tin nhắn, phí như tin nhắn thường của nhà mạng. Thu Chi không bao giờ nhắn tin hay gọi cho bạn.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Tiếp tục</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50b</span>Nhập số + mật khẩu hiện tại, báo trước sẽ nhắn 1 tin</div></div>
+
+      <!-- 50-03 Gửi yêu cầu xác nhận -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-03-gui-tin">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Ứng dụng Tin nhắn sẽ mở với yêu cầu soạn sẵn. Bạn chỉ cần bấm Gửi từ chính số điện thoại vừa nhập.</p>
+            <div class="field-label mt-8">Nội dung xác nhận</div>
+            <div class="otp show num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="center body-s muted mt-3 num">Mã hết hạn sau <b style="color:var(--color-on-surface);font-weight:600">4:32</b></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="send"></i>Gửi yêu cầu xác nhận</button>
+            <div class="body-s faint center mt-3">Phí 1 tin nhắn thường theo nhà mạng.</div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50c</span>iOS: hiện khung soạn tin trong app, bấm Gửi</div></div>
+
+      <!-- 50-04 Đang chờ -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-04-dang-cho">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <div class="card mt-5" style="padding:22px 18px 18px">
+              <div class="ai-status"><i data-lucide="message-square-more"></i><span class="shimmer-t">Đang chờ xác nhận…</span></div>
+              <div class="indet mt-4"><i></i></div>
+              <p class="body-s muted mt-3" style="line-height:1.5">Thường mất vài giây sau khi bấm Gửi. Màn này tự chuyển khi xác nhận xong.</p>
+            </div>
+            <div class="card flush mt-4" style="padding:2px 16px">
+              <div class="kv"><span class="k">Mã</span><span class="v num grow">482910</span><span class="body-s muted num">còn 3:58</span></div>
+            </div>
+            <div class="note mt-4"><i data-lucide="lightbulb"></i><span>Chưa gửi được? Kiểm tra SIM còn tiền, có sóng và gửi từ chính số điện thoại bạn vừa nhập.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-secondary"><i data-lucide="send"></i>Gửi lại yêu cầu</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Đổi số khác</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50d</span>Quay lại từ Tin nhắn: đang chờ xác nhận, tự chuyển khi xong</div></div>
+
+      <!-- 50-05 Thành công -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-05-thanh-cong">
+        <div class="screen">
+          <div class="pad">
+            <div class="empty" style="padding-top:150px">
+              <span class="bubble xl ok"><i data-lucide="check"></i></span>
+              <div class="title-l mt-6">Đã xác thực số điện thoại</div>
+              <p class="body-m muted mt-2" style="max-width:300px">Từ nay bạn lấy lại mật khẩu được bằng số này, ngoài cách qua email.</p>
+              <div class="note mt-6" style="text-align:left;max-width:340px"><i data-lucide="mail-check"></i><span>Chúng tôi đã gửi email xác nhận tới <b style="color:var(--color-on-surface);font-weight:600">minhanh.nguyen@gmail.com</b>.</span></div>
+            </div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Xong</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50e</span>Đã gắn số, báo đã gửi email xác nhận</div></div>
+
+      <!-- 50-06 Lỗi: mã hết hạn -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-06-loi">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Mã cũ không dùng được nữa. Yêu cầu đã gửi bằng mã này sẽ không được tính.</p>
+            <div class="otp show dead mt-6 num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="card mt-5" style="padding:16px">
+              <div class="hstack" style="--gap:12px;align-items:flex-start"><span class="bubble"><i data-lucide="timer-off"></i></span>
+                <div class="grow"><div class="title-m">Mã đã hết hạn</div><div class="body-s muted mt-1">Mỗi mã dùng được 5 phút. Lấy mã mới rồi gửi lại yêu cầu.</div></div></div>
+            </div>
+            <div class="hstack body-s faint mt-4" style="--gap:8px"><i data-lucide="hourglass" style="width:14px;height:14px;flex:none"></i><span class="num">Còn 2 lần lấy mã trong 10 phút</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="rotate-ccw"></i>Lấy mã mới</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Đổi số khác</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50f</span>Mã hết hạn: thẻ trung tính, Lấy mã mới</div></div>
+
+      <!-- 50-06b Lỗi: số đã dùng -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-06b-loi-so-da-dung">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Cài đặt</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gắn số điện thoại</h1>
+            <p class="body-m muted mt-2">Dùng để lấy lại mật khẩu khi quên. Mỗi tài khoản gắn một số.</p>
+            <div class="mt-8">
+              <label class="field-label">Số điện thoại</label>
+              <div class="input error"><i data-lucide="smartphone"></i><span class="num">0912 345 678</span></div>
+              <div class="err-t"><i data-lucide="circle-alert"></i><span>Số này đã được dùng cho tài khoản khác. Gỡ số ở tài khoản kia trước, hoặc dùng số khác.</span></div>
+            </div>
+            <div class="mt-4">
+              <label class="field-label">Mật khẩu hiện tại</label>
+              <div class="input"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span><i data-lucide="eye-off"></i></div>
+            </div>
+            <div class="note mt-5"><i data-lucide="message-square"></i><span>Bước sau, bạn <b style="color:var(--color-on-surface);font-weight:600">gửi yêu cầu xác nhận từ số của bạn</b> bằng 1 tin nhắn, phí như tin nhắn thường của nhà mạng. Thu Chi không bao giờ nhắn tin hay gọi cho bạn.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Tiếp tục</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50f</span>Biến thể: số đã gắn với tài khoản khác (lỗi dưới ô)</div></div>
+
+      <!-- 50-07 Quên mật khẩu: chọn cách -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-07-quen-mk-chon">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Đăng nhập</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Quên mật khẩu</h1>
+            <p class="body-m muted mt-2">Chọn cách xác nhận để đặt lại mật khẩu.</p>
+            <div class="card tight mt-8"><div class="opt"><span class="bubble"><i data-lucide="mail"></i></span><div class="grow"><div class="title-m">Qua email</div><div class="body-s muted" style="margin-top:2px">Nhận mã 6 số trong email</div></div><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="card tight mt-3"><div class="opt"><span class="bubble"><i data-lucide="smartphone"></i></span><div class="grow"><div class="title-m">Qua số điện thoại</div><div class="body-s muted" style="margin-top:2px">Gửi yêu cầu xác nhận từ số đã gắn</div></div><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="note mt-5"><i data-lucide="info"></i><span>Cách qua số điện thoại chỉ dùng được nếu bạn đã gắn số trong Cài đặt › Tài khoản. Thu Chi không gửi tin nhắn, bạn gửi yêu cầu xác nhận từ số của bạn.</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50g</span>Quên mật khẩu: chọn Qua email hoặc Qua số điện thoại</div></div>
+
+      <!-- 50-08 Quên mật khẩu qua SĐT: đặt mật khẩu mới -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-08-quen-mk-sdt">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Đăng nhập</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <div class="ok-banner"><i data-lucide="circle-check"></i><span>Đã xác nhận số điện thoại</span></div>
+            <h1 class="headline mt-6">Đặt mật khẩu mới</h1>
+            <p class="body-m muted mt-2">Cho tài khoản <span style="color:var(--color-on-surface);font-weight:600">minh•••@gmail.com</span>.</p>
+            <div class="mt-6">
+              <label class="field-label">Mật khẩu mới</label>
+              <div class="input focus"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">•••••••••</span><i data-lucide="eye-off"></i></div>
+              <div class="body-s faint mt-2">Ít nhất 8 ký tự.</div>
+            </div>
+            <div class="mt-4">
+              <label class="field-label">Nhập lại mật khẩu mới</label>
+              <div class="input"><i data-lucide="lock-keyhole"></i><span class="grow ph">Nhập lại để chắc chắn</span></div>
+            </div>
+            <div class="note mt-5"><i data-lucide="mail"></i><span>Sau khi đặt lại, chúng tôi gửi email báo tới minh•••@gmail.com.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary">Đặt mật khẩu mới</button>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50h</span>Quên MK qua SĐT: nhập số → gửi yêu cầu xác nhận (như 50c) → đặt mật khẩu mới</div></div>
+
+      <!-- 50-09 Gỡ số -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-09-go-so" data-tab="more">
+        <div class="screen">
+          <div class="pad">
+            <div style="height:56px;display:flex;align-items:center"><h1 class="headline">Cài đặt</h1></div>
+            <div class="card tight mt-2"><div class="hstack" style="--gap:12px"><span class="avatar">MA</span><div class="grow"><div class="title-m">Nguyễn Minh Anh</div><div class="body-s muted">minhanh.nguyen@gmail.com</div></div><span class="body-s muted">Sửa</span><i data-lucide="chevron-right" class="chev"></i></div></div>
+            <div class="group-h"><span>Tài khoản</span></div>
+            <div class="card flush set">
+              <div class="srow"><span class="bubble sm"><i data-lucide="lock-keyhole"></i></span><span class="grow">Đổi mật khẩu</span><i data-lucide="chevron-right" class="chev"></i></div>
+              <div class="srow" style="min-height:62px"><span class="bubble sm"><i data-lucide="smartphone"></i></span><div class="grow"><div>Số điện thoại</div><div class="s num" style="margin-top:1px">0912 ••• 678 · <span class="income">Đã xác thực</span></div></div><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:8px">
+            <span class="bubble lg danger"><i data-lucide="phone-off"></i></span>
+            <div class="sheet-title mt-4 num" style="font-size:20px">Gỡ số điện thoại?</div>
+            <p class="body-m muted mt-2" style="max-width:320px">Bạn sẽ không lấy lại mật khẩu bằng số này được nữa. Cách qua email vẫn dùng bình thường.</p>
+          </div>
+          <label class="field-label mt-5">Nhập mật khẩu để xác nhận</label>
+          <div class="input focus"><i data-lucide="lock-keyhole"></i><span class="grow" style="letter-spacing:3px">••••••••••</span></div>
+          <div class="body-s faint mt-2">Chúng tôi sẽ gửi email báo đã gỡ số.</div>
+          <button class="btn btn-danger-soft mt-5">Gỡ số</button>
+          <button class="btn mt-2" style="background:none">Hủy</button>
+        </div>
+      </div><div class="frame-cap"><span>50i</span>Đã gắn số · sheet Gỡ số cần mật khẩu</div></div>
+
+      <!-- 50-10 Android: hộp quyền gửi SMS -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-10-android-quyen">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Thu Chi gửi yêu cầu bằng 1 tin nhắn từ máy này. Bạn không cần mở ứng dụng Tin nhắn.</p>
+            <div class="field-label mt-8">Nội dung xác nhận</div>
+            <div class="otp show num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="center body-s muted mt-3 num">Mã hết hạn sau <b style="color:var(--color-on-surface);font-weight:600">4:32</b></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="send"></i>Gửi yêu cầu xác nhận</button>
+            <div class="body-s faint center mt-3">Phí 1 tin nhắn thường theo nhà mạng.</div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="why"><i data-lucide="shield-check"></i><span>Thu Chi chỉ gửi <b style="font-weight:600;color:var(--color-on-surface)">1 tin chứa 6 số xác nhận</b>, một lần, khi bạn bấm Gửi. Phí như tin nhắn thường của nhà mạng.</span></div>
+        <div class="adlg">
+          <i data-lucide="message-square" class="ai"></i>
+          <div class="at">Cho phép <b>Thu Chi</b> gửi và xem tin nhắn SMS?</div>
+          <div class="ab"><span>Cho phép</span><span>Không cho phép</span></div>
+        </div>
+      </div><div class="frame-cap"><span>50j</span>Android lần đầu: hộp quyền gửi SMS của hệ thống + lý do của app</div></div>
+
+      <!-- 50-11 Android: chọn SIM -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-11-android-chon-sim">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Thu Chi gửi yêu cầu bằng 1 tin nhắn từ máy này. Bạn không cần mở ứng dụng Tin nhắn.</p>
+            <div class="field-label mt-8">Nội dung xác nhận</div>
+            <div class="otp show num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="between"><span class="sheet-title">Gửi từ SIM nào?</span><span class="icon-btn" style="margin-right:-10px"><i data-lucide="x"></i></span></div>
+          <p class="body-s muted mt-1">Chọn SIM của số điện thoại bạn vừa nhập.</p>
+          <div class="card flush set mt-4">
+            <div class="srow"><span class="bubble sm"><i data-lucide="card-sim"></i></span><span class="grow">SIM 1 · Viettel</span><span class="radio on"></span></div>
+            <div class="srow"><span class="bubble sm"><i data-lucide="card-sim"></i></span><span class="grow">SIM 2 · Vinaphone</span><span class="radio"></span></div>
+          </div>
+          <div class="hstack body-s faint mt-3" style="--gap:8px"><i data-lucide="info" style="width:14px;height:14px;flex:none"></i><span>Gửi từ SIM khác sẽ không được xác nhận.</span></div>
+          <button class="btn btn-primary mt-5"><i data-lucide="send"></i>Gửi yêu cầu xác nhận</button>
+          <div class="body-s faint center mt-3">Phí 1 tin nhắn thường theo nhà mạng.</div>
+        </div>
+      </div><div class="frame-cap"><span>50k</span>Android máy 2 SIM: chọn SIM (tên nhà mạng + khe, không hiện số)</div></div>
+
+      <!-- 50-12 Android: đã tự gửi, đang chờ -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-12-android-dang-gui">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <div class="card mt-5" style="padding:18px">
+              <div class="ai-status" style="color:var(--color-income)"><i data-lucide="circle-check" style="color:var(--color-income)"></i><span>Đã gửi yêu cầu</span><span class="body-s faint num" style="margin-left:auto;font-weight:400">19:51</span></div>
+              <div class="body-s muted mt-1" style="padding-left:24px;line-height:1.5">Thu Chi tự gửi từ SIM 1 · Viettel, không mở ứng dụng Tin nhắn.</div>
+              <div class="divider"></div>
+              <div class="ai-status"><i data-lucide="message-square-more"></i><span class="shimmer-t">Đang chờ xác nhận…</span></div>
+              <div class="indet mt-4"><i></i></div>
+              <p class="body-s muted mt-3" style="line-height:1.5">Thường mất vài giây. Màn này tự chuyển khi xác nhận xong.</p>
+            </div>
+            <div class="card flush mt-4" style="padding:2px 16px">
+              <div class="kv"><span class="k">Mã</span><span class="v num grow">482910</span><span class="body-s muted num">còn 4:20</span></div>
+            </div>
+            <div class="note mt-4"><i data-lucide="lightbulb"></i><span>Quá 1 phút chưa xong? Kiểm tra SIM còn tiền, có sóng, rồi bấm Gửi lại yêu cầu.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-secondary"><i data-lucide="send"></i>Gửi lại yêu cầu</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Đổi số khác</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50l</span>Android: app đã tự gửi, đang chờ xác nhận (không mở Tin nhắn)</div></div>
+
+      <!-- 50-13 Android: từ chối quyền -->
+      <div class="frame"><div class="phone" data-shot="50-sdt-13-android-tu-choi">
+        <div class="screen">
+          <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Quay lại</span><span></span><span></span></div>
+          <div class="pad" style="padding-top:12px">
+            <h1 class="headline">Gửi yêu cầu xác nhận</h1>
+            <p class="body-m muted mt-2">Ứng dụng Tin nhắn sẽ mở với yêu cầu soạn sẵn. Bạn chỉ cần bấm Gửi từ chính số điện thoại vừa nhập.</p>
+            <div class="field-label mt-8">Nội dung xác nhận</div>
+            <div class="otp show num"><div>4</div><div>8</div><div>2</div><div>9</div><div>1</div><div>0</div></div>
+            <div class="center body-s muted mt-3 num">Mã hết hạn sau <b style="color:var(--color-on-surface);font-weight:600">4:05</b></div>
+            <div class="note mt-6"><i data-lucide="message-square-off"></i><span>Không có quyền gửi SMS. Mở ứng dụng Tin nhắn để gửi, yêu cầu đã soạn sẵn.</span></div>
+          </div>
+          <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
+            <button class="btn btn-primary"><i data-lucide="message-square"></i>Mở Tin nhắn để gửi</button>
+            <div class="center mt-2"><span class="link muted" style="font-size:14px">Cấp quyền trong Cài đặt</span></div>
+          </div>
+        </div>
+      </div><div class="frame-cap"><span>50m</span>Android từ chối quyền: mở Tin nhắn để gửi, hoặc cấp quyền</div></div>
 
     </div>
   </section>

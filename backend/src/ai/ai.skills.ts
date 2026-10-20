@@ -34,28 +34,25 @@ export function monthFromText(text: string, now: string, preferPast = true): str
   return cur;
 }
 
-const MONEY_IN_TITLE = /\s*\b\d[\d.,]*\s*(k|tr|triệu|trieu|củ|nghìn|ngàn|đ|vnd|lít|xị)?\d*\b/giu;
-const WALLET_WORDS = /\s*\b(trả|tra|ck|chuyển khoản|qua|bằng|bang)\s*$/iu;
-/** Bỏ số tiền + tên ví (và "trả / ck" đứng trước) khỏi tên khoản do LLM đặt. */
-export function cleanTitle(title: string, walletName: string | null): string {
-  let t = title.replace(MONEY_IN_TITLE, ' ');
-  if (walletName) {
-    const f = fold(t), w = fold(walletName);
-    const k = f.lastIndexOf(w);
-    if (k > 0) t = t.slice(0, k);
-  }
-  for (const short of ['mb', 'tcb', 'vcb', 'momo']) t = t.replace(new RegExp(`\\s+(ck\\s+|trả\\s+)?${short}\\s*$`, 'iu'), '');
-  return t.replace(WALLET_WORDS, '').replace(/\s+/g, ' ').trim();
-}
-
 const EMAIL_RE = /[^\s@<>()"',;:]+@[^\s@<>()"',;:]+\.[a-z]{2,}/i;
-const INCOME_HINT = /\b(luong|thuong|duoc (cho|tang)|ban |lai |co tuc|hoan tien|nhan|thu nhap)/;
 
 /* ============================== ghi-giao-dich (dùng ai/ parser + prompt + schema) ============================== */
 
 interface RuleRow { id: string; scope: string; pattern: string; value: string; support: number }
 interface SimRow { input: string; output: any; scope: string; score: number }
 
+const ASK_REPLY: Record<'transfer' | 'loan' | 'empty', { reply: string; followUps: string[] }> = {
+  transfer: { reply: 'Đây là chuyển tiền giữa các ví của bạn, không phải khoản thu/chi. Bạn ghi ở màn Chuyển tiền (nhấn giữ nút ＋) để số dư hai ví đúng nhé.', followUps: ['số dư các ví'] },
+  loan: { reply: 'Khoản vay / cho vay / trả nợ chưa ghi được bằng trợ lý. Nếu đây là chi tiêu thật, bạn nói rõ hơn, ví dụ "trả tiền điện 500k".', followUps: ['trả tiền điện 500k'] },
+  empty: { reply: 'Khoản này là gì vậy? Bạn thêm nội dung giúp mình, ví dụ "ăn trưa 50k" hoặc "đổ xăng 80k".', followUps: ['ăn trưa 50k', 'đổ xăng 80k'] },
+};
+
+/**
+ * Pipeline Track A (ai/skills/ghi-giao-dich, xem SKILL.md) với dữ liệu học trong DB:
+ *  parser (tiền/ngày/ví/tín hiệu thu-chi, hỏi lại khi chuyển ví / vay nợ / thiếu nội dung)
+ *  → chốt danh mục bằng code: luật đã học (không trái tín hiệu thu/chi) → tín hiệu THU → từ điển
+ *  → kNN few-shot → LLM điền title + danh mục với enum RIÊNG từng khoản → hậu kiểm (loại theo danh mục, tiền/ngày/ví theo parser).
+ */
 const ghiGiaoDich: Skill = {
   name: 'ghi-giao-dich',
   scope: 'USER',
@@ -65,20 +62,35 @@ const ghiGiaoDich: Skill = {
     const lib = await aiLib();
     if (!lib) return { reply: 'Chức năng ghi giao dịch bằng AI chưa sẵn sàng trên máy chủ. Bạn ghi tay giúp mình nhé.', askBack: true, meta: { unavailable: true } };
     const uctx: AiUserContext = { ...(context.data.userContext as AiUserContext), now };
-    const segs = lib.parse(input, uctx).slice(0, 20);
+    const { segs: all, ask } = lib.analyze(input, uctx);
+    const segs = all.slice(0, 20);
     if (!segs.length) return { reply: 'Bạn muốn ghi khoản gì, bao nhiêu tiền? Ví dụ: "cà phê 45k hôm qua trả momo".', askBack: true, followUps: ['cà phê 45k', 'ăn trưa 50k hôm qua'] };
+    if (ask) return { ...ASK_REPLY[ask], askBack: true, meta: { reason: ask } };
     const catType = new Map(uctx.categories.map((c) => [c.name, c.type]));
+    const names = (t?: 'INCOME' | 'EXPENSE') => uctx.categories.filter((c) => !t || c.type === t).map((c) => c.name);
+    // Khóa luật + câu kNN giữ như cũ (luật / embedding đã lưu trong DB dựa trên chuỗi này)
     const acc = segs.map((s) => accentedClean(s.text, s.clean));
 
-    // 1) Luật học được (user trước, rồi chung) — chạy TRƯỚC model, khóa theo chuỗi còn dấu
+    // 1) Luật học được (user trước, rồi chung) — chỉ dùng khi loại thu/chi của luật không trái tín hiệu parser
     const rules = await context.get<RuleRow[]>('userRules', { kind: 'category', skill: 'ghi-giao-dich' });
-    const hits = acc.map((a) => {
+    const hits = acc.map((a, i) => {
       const keys = ruleKeys(a);
-      const cands = rules.filter((r) => keys.includes(r.pattern) && catType.has(r.value));
+      const dir = segs[i].dir?.dir;
+      const cands = rules.filter((r) => keys.includes(r.pattern) && catType.has(r.value) && (!dir || catType.get(r.value) === dir));
       return cands.sort((x, y) => y.pattern.split(' ').length - x.pattern.split(' ').length)[0] ?? null;
     });
+    // 2) Tín hiệu THU → danh mục thu; 3) từ điển (thực phẩm đi chợ / đồ cho con / sức khỏe)
+    const decided = segs.map((s, i): { categoryName: string; by: string } | null => {
+      if (hits[i]) return { categoryName: hits[i]!.value, by: 'rule' };
+      const inc = lib.incomeCategory(s, uctx);
+      if (inc) return { categoryName: inc, by: `income:${s.dir?.kind ?? 'other'}` };
+      const lex = lib.lexiconCategory(s, uctx);
+      return lex ? { categoryName: lex.categoryName, by: lex.why } : null;
+    });
+    // Enum riêng từng khoản: đã chốt → đúng 1 danh mục; có tín hiệu thu/chi → chỉ danh mục loại đó; còn lại → tất cả
+    const allowed = segs.map((s, i) => (decided[i] ? [decided[i]!.categoryName] : names(s.dir?.dir)));
 
-    // 2) kNN few-shot từ kho ví dụ (riêng user + chung)
+    // 4) kNN few-shot từ kho ví dụ (riêng user + chung), chỉ lấy ví dụ có danh mục hợp lệ
     const sims = await context.get<SimRow[][]>('similarExamples', { skill: 'ghi-giao-dich', texts: acc.map((a, i) => a || segs[i].text), k: 5 });
     const picked: SimRow[] = [];
     for (let r = 0; picked.length < 5 && r < 5; r++)
@@ -88,47 +100,141 @@ const ghiGiaoDich: Skill = {
       }
     picked.sort((a, b) => a.score - b.score);
 
-    // 3) LLM chỉ đặt tên ngắn + chọn danh mục (enum khóa theo danh mục của user); tiền/ngày/ví do parser
-    let llmOut: { title: string; categoryName: string }[] | null = null;
-    let stats = { calls: 0, ms: 0, promptTokens: 0, evalTokens: 0, retried: false, error: undefined as string | undefined };
-    {
-      const msgs: ChatMsg[] = [
-        { role: 'system', content: lib.systemV1(uctx) },
-        ...picked.flatMap((ex): ChatMsg[] => [
-          { role: 'user', content: lib.userV1(ex.input, [ex.input]) },
-          { role: 'assistant', content: JSON.stringify({ items: [{ title: ex.output.title, categoryName: ex.output.categoryName }] }) },
-        ]),
-        { role: 'user', content: lib.userV1(input, segs.map((s) => s.text)) },
-      ];
-      const canon = (name: unknown) => (typeof name === 'string' ? uctx.categories.find((c) => fold(c.name) === fold(name.trim()))?.name : undefined);
-      const r = await chatJson(llm, msgs, lib.schemaV1(uctx, segs.length), (j) => {
-        if (!Array.isArray(j.items) || j.items.length !== segs.length) throw new Error(`cần đúng ${segs.length} khoản`);
-        const bad = j.items.findIndex((x: any) => !canon(x.categoryName));
-        if (bad >= 0) throw new Error(`categoryName "${j.items[bad].categoryName}" không có trong danh sách`);
-        return j.items.map((x: any) => ({ title: String(x.title ?? '').trim(), categoryName: canon(x.categoryName)! }));
-      }, { numPredict: 60 + 40 * segs.length });
-      llmOut = r.value;
-      stats = { calls: r.calls, ms: Math.round(r.ms), promptTokens: r.promptTokens, evalTokens: r.evalTokens, retried: r.retried, error: r.error };
-    }
+    // 5) LLM chỉ đặt tên ngắn + chọn danh mục trong enum của từng khoản; tiền/ngày/ví do parser
+    const msgs: ChatMsg[] = [
+      { role: 'system', content: lib.systemV1(uctx) },
+      ...picked.flatMap((ex): ChatMsg[] => [
+        { role: 'user', content: lib.userV1(ex.input, [ex.input]) },
+        { role: 'assistant', content: JSON.stringify({ items: [{ title: ex.output.title, categoryName: ex.output.categoryName }] }) },
+      ]),
+      { role: 'user', content: lib.userV1(input, segs.map((s) => s.text), segs.map((s) => (s.dir?.dir === 'INCOME' ? 'THU' : undefined))) },
+    ];
+    const canon = (name: unknown) => (typeof name === 'string' ? uctx.categories.find((c) => fold(c.name) === fold(name.trim()))?.name : undefined);
+    const r = await chatJson(llm, msgs, lib.schemaV1(uctx, segs.length, allowed), (raw) => {
+      // qwen3.5 hay bỏ lớp {items: [...]} khi chỉ có 1 khoản → chấp nhận object / mảng trần
+      const j = Array.isArray(raw) ? { items: raw } : raw && !Array.isArray(raw.items) && (raw.title !== undefined || raw.categoryName !== undefined) ? { items: [raw] } : raw;
+      if (!Array.isArray(j.items) || j.items.length !== segs.length) throw new Error(`cần đúng ${segs.length} khoản`);
+      const bad = j.items.findIndex((x: any, i: number) => !allowed[i].includes(canon(x.categoryName) ?? ''));
+      if (bad >= 0) throw new Error(`categoryName "${j.items[bad].categoryName}" của khoản ${bad + 1} phải là một trong: ${allowed[bad].join(', ')}`);
+      return j.items.map((x: any) => ({ title: String(x.title ?? '').trim(), categoryName: canon(x.categoryName)! }));
+    }, { numPredict: 60 + 40 * segs.length });
+    const llmOut: { title: string; categoryName: string }[] | null = r.value;
+    const stats = { calls: r.calls, ms: Math.round(r.ms), promptTokens: r.promptTokens, evalTokens: r.evalTokens, retried: r.retried, error: r.error };
 
-    // 4) Hậu kiểm: loại thu/chi theo danh mục; luật thắng model; model hỏng → danh mục mặc định
+    // 6) Hậu kiểm: code đã chốt thắng model; model hỏng → Thu khác / Chi khác theo tín hiệu parser
     let fallback = 0;
     const items = segs.map((s, i) => {
-      let categoryName = hits[i]?.value ?? llmOut?.[i]?.categoryName;
+      let categoryName = decided[i]?.categoryName ?? llmOut?.[i]?.categoryName;
       if (!categoryName || !catType.has(categoryName)) {
-        categoryName = INCOME_HINT.test(fold(s.text)) && catType.has('Thu khác') ? 'Thu khác' : catType.has('Chi khác') ? 'Chi khác' : uctx.categories[0].name;
+        const want = s.dir?.dir === 'INCOME' ? 'Thu khác' : 'Chi khác';
+        categoryName = catType.has(want) ? want : allowed[i][0] ?? uctx.categories[0].name;
         fallback++;
       }
-      // gemma2:2b hay chép cả số tiền / ví vào tên ("Cà phê 45k", "… ck mb") dù prompt cấm → bỏ phần đó bằng code
-      const raw = llmOut?.[i]?.title || cap(acc[i] || s.text);
-      const title = (cleanTitle(raw, s.walletName) || cap(acc[i] || s.text)).slice(0, 120);
+      // model nhỏ hay chép số tiền / ví / ngày vào tên ("Cà phê 45k", "Cơm trưa ví") → bỏ bằng bộ tìm của parser
+      const title = lib.cleanTitle(llmOut?.[i]?.title || '', s, uctx).slice(0, 120) || cap(acc[i] || s.text);
       return { title, amount: s.amount, categoryName, type: catType.get(categoryName)!, date: s.date, walletName: s.walletName, source: s.text, clean: acc[i], ruleId: hits[i]?.id ?? null };
     });
     const lines = items.map((it) => `• ${it.title} — ${fmtVnd(it.amount)} · ${it.categoryName} · ${vnDay(it.date)}${it.walletName ? ` · ${it.walletName}` : ''}`);
     return {
       reply: `Mình ghi nháp ${items.length} khoản:\n${lines.join('\n')}\nBấm Xác nhận để lưu, hoặc sửa trước khi lưu.`,
       draft: { kind: 'transactions', payload: { items } },
-      meta: { ...stats, shots: picked.length, rules: hits.map((h) => h?.pattern ?? null), fallback },
+      meta: { ...stats, shots: picked.length, rules: hits.map((h) => h?.pattern ?? null), decidedBy: decided.map((d) => d?.by ?? null), fallback },
+    };
+  },
+};
+
+/* ============================== doc-hoa-don (đọc ảnh hóa đơn / chuyển khoản) ============================== */
+
+// Không đưa tên người dùng vào prompt: model sẽ tự điền tên đó vào sai ô người chuyển / người nhận.
+const OCR_PROMPT =
+  'Đây là ảnh hóa đơn mua hàng hoặc ảnh chụp màn hình giao dịch ngân hàng / ví điện tử ở Việt Nam. ' +
+  'Trả JSON: {"kind": "receipt" nếu là hóa đơn cửa hàng, "transfer" nếu là chuyển khoản / thanh toán qua ngân hàng hoặc ví, ' +
+  '"amount": TỔNG số tiền, số nguyên đồng (16,900 hay 16.900 đều là 16900), "date": "YYYY-MM-DD", ' +
+  '"merchant": tên cửa hàng (hóa đơn), "recipient": tên người / đơn vị NHẬN tiền (trên màn hình chuyển tiền thành công là tên in đậm ngay dưới số tiền), ' +
+  '"sender": tên ở dòng "Từ tài khoản" / người chuyển (nếu có), "note": nguyên văn dòng "Nội dung", "bank": tên ngân hàng hoặc ví hiển thị trên ảnh}. Trường nào không thấy thì để chuỗi rỗng. Chỉ trả JSON.';
+
+/** Gỡ khối ```json, lấy object đầu tiên. */
+function ocrJson(content: string): Record<string, unknown> {
+  const a = content.indexOf('{'), b = content.lastIndexOf('}');
+  if (a < 0 || b < a) return {};
+  try {
+    const j = JSON.parse(content.slice(a, b + 1));
+    return j && typeof j === 'object' ? j : {};
+  } catch {
+    return {};
+  }
+}
+
+const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+/** So tên không dấu, không phân biệt hoa thường, bỏ khoảng trắng ("NGUYEN CHI NHAN" ≈ "Nguyễn Chí Nhân"). */
+const sameName = (a: string, b: string) => !!a && !!b && fold(a).replace(/[^a-z0-9]/g, '') === fold(b).replace(/[^a-z0-9]/g, '');
+/** Nội dung chuyển khoản dạng mã ("HIHIIDK0EK49P6CFC") không dùng làm tên khoản. */
+const looksLikeCode = (s: string) => !s || (!/\s/.test(s) && /\d/.test(s) && s.length > 8);
+/** Nội dung chuyển khoản không dùng làm tiêu đề được: mã giao dịch, nội dung mặc định của ngân hàng ("<tên> chuyen tien"). */
+const uselessNote = (s: string, names: string[]) =>
+  looksLikeCode(s) || /chuy[eể]n (tien|tiền)|chuyen khoan|chuyển khoản/i.test(fold(s)) || names.some((n) => n && fold(s).includes(fold(n)));
+
+const docHoaDon: Skill = {
+  name: 'doc-hoa-don',
+  scope: 'USER',
+  description: 'Đọc ảnh hóa đơn / ảnh chụp màn hình chuyển khoản thành nháp giao dịch để xác nhận',
+  context: ['userContext'],
+  async run(args) {
+    const { context, llm, now, image } = args;
+    if (!image) return { reply: 'Bạn gửi ảnh hóa đơn hoặc ảnh chụp màn hình chuyển khoản giúp mình nhé.', askBack: true };
+    if (!llm.vision) return { reply: 'Máy chủ chưa hỗ trợ đọc ảnh. Bạn ghi tay giúp mình nhé.', askBack: true, meta: { unavailable: true } };
+    const uctx = context.data.userContext as AiUserContext;
+    const user = context.principal.name;
+    const r = await llm.vision(OCR_PROMPT, image, { timeoutMs: args.imageTimeoutMs });
+    const j = ocrJson(r.content);
+    // model đôi khi trả chuỗi "50,000" / "16.900 VND": dấu phân cách hàng nghìn ở VN, bỏ hết ký tự không phải số
+    const amount = Math.abs(Math.round(typeof j.amount === 'string' ? Number(j.amount.replace(/\D/g, '')) : Number(j.amount) || 0));
+    const today = new Date(new Date(now).getTime() + 7 * 3600_000).toISOString().slice(0, 10);
+    const dateRaw = str(j.date).slice(0, 10);
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(dateRaw) && !Number.isNaN(Date.parse(dateRaw)) && dateRaw <= today ? dateRaw : today;
+    const ocr = { kind: str(j.kind), amount, date, merchant: str(j.merchant), sender: str(j.sender), recipient: str(j.recipient), note: str(j.note), bank: str(j.bank) };
+    const meta = { ocr, ms: Math.round(r.ms), promptTokens: r.promptTokens, evalTokens: r.evalTokens };
+    if (amount <= 0) {
+      return {
+        reply: 'Mình chưa đọc được số tiền trong ảnh. Bạn chụp lại rõ phần tổng tiền, hoặc ghi tay giúp mình.',
+        askBack: true, followUps: ['ghi tay'],
+        // lý do cho thống kê admin: model không nhận ra hóa đơn / chuyển khoản, hay nhận ra mà không thấy số tiền
+        meta: { ...meta, unreadable: true, reason: ocr.kind === 'receipt' || ocr.kind === 'transfer' ? 'no_amount' : 'not_document' },
+      };
+    }
+    // Thu hay chi do CODE quyết: ảnh chuyển khoản mà người dùng là người nhận → THU; còn lại → CHI
+    const income = ocr.kind === 'transfer' && sameName(ocr.recipient, user) && !sameName(ocr.sender, user);
+    const counterpart = income ? ocr.sender : ocr.kind === 'transfer' ? ocr.recipient || ocr.merchant : ocr.merchant || ocr.recipient;
+    const title = (income ? `Nhận tiền ${counterpart || ''}` : ocr.kind === 'transfer' && !uselessNote(ocr.note, [user, ocr.sender, ocr.recipient]) ? ocr.note : counterpart || 'Giao dịch từ ảnh').trim().slice(0, 120);
+
+    // Danh mục: mượn ghi-giao-dich (luật đã học, kNN, model) trên câu dựng từ ảnh; tiền / ngày / loại lấy từ ảnh
+    let categoryName: string | undefined;
+    try {
+      const g = await ghiGiaoDich.run({ ...args, input: `${income ? 'nhận tiền ' : ''}${title} ${amount}` });
+      const it = (g.draft?.payload as any)?.items?.[0];
+      if (it?.categoryName) categoryName = it.categoryName;
+    } catch {
+      // không gợi ý được danh mục → dùng mặc định bên dưới
+    }
+    const typeOf = new Map(uctx.categories.map((c) => [c.name, c.type]));
+    const want = income ? 'INCOME' : 'EXPENSE';
+    if (!categoryName || typeOf.get(categoryName) !== want) {
+      const fb = income ? 'Thu khác' : 'Chi khác';
+      categoryName = typeOf.has(fb) ? fb : uctx.categories.find((c) => c.type === want)?.name;
+    }
+    // Ví: khớp tên ngân hàng / ví trên ảnh với ví của người dùng ("VietinBank" ↔ "Vietinbank", "MB Bank"); không khớp → ví mặc định
+    const bank = fold(ocr.bank).replace(/[^a-z0-9]/g, '');
+    const wallet = bank ? uctx.wallets.find((w) => { const n = fold(w.name).replace(/[^a-z0-9]/g, ''); return n.length > 1 && (bank.includes(n) || n.includes(bank)); }) : undefined;
+    const item = {
+      title, amount, categoryName, type: want, date, walletName: wallet?.name ?? null,
+      note: [ocr.kind === 'transfer' && ocr.note ? `ND: ${ocr.note}` : '', 'Đọc từ ảnh'].filter(Boolean).join(' · ').slice(0, 500),
+      source: '[ảnh]', clean: fold(title), ruleId: null,
+    };
+    const line = `• ${title} — ${fmtVnd(amount)} · ${categoryName} · ${vnDay(date)}${wallet ? ` · ${wallet.name}` : ''}`;
+    return {
+      reply: `Mình đọc được từ ảnh${ocr.bank ? ` (${ocr.bank})` : ''}:\n${line}\n${income ? 'Đây là khoản tiền bạn nhận. ' : ''}Bấm Xác nhận để lưu, hoặc sửa trước khi lưu.`,
+      draft: { kind: 'transactions', payload: { items: [item] } },
+      meta,
     };
   },
 };
@@ -216,7 +322,7 @@ const datNganSach: Skill = {
   async run({ input, context, now }) {
     const lib = await aiLib();
     const uctx: AiUserContext = { ...(context.data.userContext as AiUserContext), now };
-    const amount = lib?.parse(input, uctx)[0]?.amount;
+    const amount = lib?.analyze(input, uctx).segs[0]?.amount;
     if (!amount) return { reply: 'Bạn muốn đặt ngân sách bao nhiêu? Ví dụ "đặt ngân sách ăn uống 3 triệu tháng này".', askBack: true };
     const f = fold(input);
     const cat = uctx.categories.filter((c) => c.type === 'EXPENSE').sort((a, b) => b.name.length - a.name.length).find((c) => f.includes(fold(c.name)));
@@ -341,7 +447,7 @@ const adminLichSuCauHinh: Skill = {
 export const DEPRECATED_ALIASES = ['admin-tong-quan', 'admin-tim-user', 'admin-khoa-user', 'admin-gui-thong-bao', 'admin-bat-thuong', 'admin-lich-su-cau-hinh'];
 
 export const BUILTIN_SKILLS: Skill[] = [
-  ghiGiaoDich, hoiSoDu, tongKetThang, kiemTraNganSach, tienDoTietKiem, timGiaoDich, datNganSach, huongDan, ngoaiPhamVi, hoiLai,
+  ghiGiaoDich, docHoaDon, hoiSoDu, tongKetThang, kiemTraNganSach, tienDoTietKiem, timGiaoDich, datNganSach, huongDan, ngoaiPhamVi, hoiLai,
   adminTongQuan, adminTimUser, adminKhoaUser, adminGuiThongBao, adminBatThuong, adminLichSuCauHinh,
 ];
 

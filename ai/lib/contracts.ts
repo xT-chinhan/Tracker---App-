@@ -114,8 +114,21 @@ export type DraftProposal =
   | { kind: 'broadcast'; payload: { title: string; body: string } }
   | { kind: 'lock_user'; payload: { userId: string; email: string; name: string; reasons: string[] } };
 
+/**
+ * Khối hiển thị kèm câu trả lời (giao diện vẽ thành thẻ số liệu / danh sách / bảng). `reply` vẫn là bản chữ đầy đủ
+ * (cho client không vẽ khối, nút Chép, lịch sử hội thoại). Chữ trong khối hỗ trợ **đậm**. Số liệu phải lấy từ dữ liệu provider.
+ */
+export type ReplyBlock =
+  | { type: 'text'; text: string }
+  | { type: 'stats'; items: { label: string; value: string; sub?: string }[] }
+  | { type: 'list'; items: string[] }
+  | { type: 'table'; columns: string[]; rows: string[][]; align?: ('left' | 'right')[]; /** đường dẫn admin cho từng dòng, vd /users/<id> */ links?: (string | null)[]; more?: string }
+  | { type: 'source'; text: string };
+
 export interface SkillResult {
   reply: string;
+  /** Khối hiển thị (tùy chọn), xem ReplyBlock */
+  blocks?: ReplyBlock[];
   draft?: DraftProposal;
   followUps?: string[];
   /** true = câu trả lời là câu hỏi lại (không có nháp) */

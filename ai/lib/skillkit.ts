@@ -1,10 +1,10 @@
 /** Tiện ích dùng chung cho các skill (Track B). Thuần; chỉ `llmSentence`/`llmJson` gọi model qua `Llm` được truyền vào. */
-import { chat } from './ollama.js';
+import { chat, LLM } from './ollama.js';
 import type { ChatMsg, LlmClient, SkillContext, SkillResult } from './contracts.js';
 import { fold } from './text.js';
 
-/** Adapter Ollama cho `LlmClient` khi chạy eval ngoài backend (gemma2:2b, temperature 0, xem lib/ollama.ts). */
-export const ollamaLlm: LlmClient = { provider: 'ollama', chatModel: 'gemma2:2b', chat: (m, o = {}) => chat(m, o.format ?? {}, o.numPredict ?? 120, o.stop) };
+/** Adapter Ollama cho `LlmClient` khi chạy eval ngoài backend (model theo LLM_MODEL, temperature 0, xem lib/ollama.ts). */
+export const ollamaLlm: LlmClient = { provider: 'ollama', chatModel: LLM, chat: (m, o = {}) => chat(m, o.format ?? {}, o.numPredict ?? 120, o.stop) };
 
 type Principal = SkillContext['principal'];
 
@@ -21,6 +21,14 @@ export async function fetchP<T>(ctx: SkillContext, name: string, args?: Record<s
 export const money = (n: number) => `${n < 0 ? '−' : ''}${Math.abs(Math.round(n)).toLocaleString('vi-VN')}đ`;
 export const pct = (n: number) => `${(Math.round(n * 10) / 10).toLocaleString('vi-VN')}%`;
 export const int = (n: number) => Math.round(n).toLocaleString('vi-VN');
+/** Số tiền gọn cho thẻ số liệu: 853.654.000 → "853,7 tr", 13.679.739.000 → "13,68 tỷ" (bản đầy đủ để ở `reply`). */
+export const moneyShort = (n: number) => {
+  const a = Math.abs(n), sign = n < 0 ? '−' : '';
+  const f = (x: number, d: number) => x.toLocaleString('vi-VN', { maximumFractionDigits: d });
+  return a >= 1e9 ? `${sign}${f(a / 1e9, 2)} tỷ` : a >= 1e6 ? `${sign}${f(a / 1e6, 1)} tr` : money(n);
+};
+/** "HH:mm" giờ VN của mốc ISO */
+export const vnHm = (iso: string) => new Date(new Date(iso).getTime() + 7 * 3600000).toISOString().slice(11, 16);
 
 // ───────── tìm tên trong câu (bỏ dấu, hoa thường) ─────────
 const ALIAS: Record<string, string[]> = {
@@ -71,7 +79,7 @@ export const isInjection = (text: string) => INJECT.some((re) => re.test(fold(te
 export function refusal(reason: 'other_user' | 'injection' | 'off_topic' | 'scope', scope: 'USER' | 'ADMIN' = 'USER'): SkillResult {
   const r = {
     other_user: 'Xin lỗi, mình chỉ xem được dữ liệu trong tài khoản của chính bạn, không thể cung cấp thông tin của người dùng khác.',
-    injection: 'Xin lỗi, mình không thể thay đổi cách hoạt động theo yêu cầu này. Mình chỉ hỗ trợ các việc trong ứng dụng Thu Chi.',
+    injection: 'Xin lỗi, mình không thể thay đổi cách hoạt động theo yêu cầu này. Mình chỉ hỗ trợ các việc trong ứng dụng TrackerX.',
     off_topic: scope === 'ADMIN'
       ? 'Xin lỗi, câu này nằm ngoài phạm vi trợ lý quản trị. Mình hỗ trợ tổng quan hệ thống, tra cứu người dùng, phát hiện bất thường, soạn thông báo và cấu hình.'
       : 'Xin lỗi, câu này nằm ngoài phạm vi của mình. Mình hỗ trợ ghi thu chi, xem số dư, báo cáo, ngân sách, tiết kiệm và cách dùng ứng dụng.',
@@ -111,6 +119,8 @@ export function checkSentence(s: string, maxLen = 220): string | null {
   if (/\d/.test(t)) return 'có chữ số';
   if (NUMBER_WORDS.test(fold(t))) return 'có số viết bằng chữ';
   if (/https?:|www\.|@/.test(t)) return 'có link/email';
+  // model chép khuôn mẫu: "[nhập thông tin thay đổi]", "{tên}", "<...>"
+  if (/[[\]{}<>]/.test(t)) return 'có chỗ trống chưa điền';
   if (!VI_CHARS.test(t)) return 'không phải tiếng Việt';
   return null;
 }
@@ -130,7 +140,9 @@ export async function llmSentence(llm: LlmClient, task: string, facts: string[],
   try {
     const r = await llm.chat(msgs, { format: schema, numPredict: 90 });
     const j = parseJson(r.content);
-    const s = typeof j?.sentence === 'string' ? j.sentence.trim() : '';
+    // qwen3.5 hay đổi tên khóa ("câu_hoàn_chỉnh"…) dù có schema → lấy chuỗi đầu tiên
+    const v = typeof j?.sentence === 'string' ? j.sentence : Object.values(j ?? {}).find((x) => typeof x === 'string');
+    const s = typeof v === 'string' ? v.trim() : '';
     const bad = checkSentence(s);
     return bad ? { text: fallback, accepted: false, ms: r.ms, calls: 1, reason: bad, raw: s } : { text: s, accepted: true, ms: r.ms, calls: 1 };
   } catch (e) {
@@ -145,10 +157,21 @@ export async function llmJson<T = any>(llm: LlmClient, system: string, user: str
   msgs.push({ role: 'user', content: user });
   try {
     const r = await llm.chat(msgs, { format: schema, numPredict });
-    return { data: parseJson(r.content), ms: r.ms };
+    return { data: withSchemaKeys(parseJson(r.content), schema), ms: r.ms };
   } catch {
     return { data: null, ms: 0 };
   }
+}
+
+/**
+ * qwen3.5 không luôn theo tên khóa của schema. Schema 1 khóa chuỗi (vd {name}) mà model trả khóa khác
+ * → gán chuỗi đầu tiên vào đúng khóa schema.
+ */
+function withSchemaKeys(j: any, schema: any): any {
+  const keys = Object.keys(schema?.properties ?? {});
+  if (!j || typeof j !== 'object' || keys.length !== 1 || keys[0] in j) return j;
+  const v = Object.values(j).find((x) => typeof x === 'string');
+  return v === undefined ? j : { [keys[0]]: v };
 }
 
 export function parseJson(s: string): any {

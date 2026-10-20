@@ -34,7 +34,7 @@ test('thông báo: soạn, xem trước, gửi tới user đang hoạt động (
     const phone = page.getByTestId('phone-preview')
     await expect(phone).toContainText(title)
     await expect(phone).toContainText(body)
-    await expect(phone).toContainText('Vừa xong · Từ đội ngũ Thu Chi')
+    await expect(phone).toContainText('Vừa xong · Từ đội ngũ TrackerX')
     await page.getByRole('tab', { name: 'Đẩy' }).click()
     await expect(phone).toContainText('THU CHI')
     await expect(phone).toContainText(title)

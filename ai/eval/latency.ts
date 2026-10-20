@@ -3,7 +3,7 @@
  * Đồng thời là phép đo DUY NHẤT chạy song song; không đổi cấu hình service Ollama.
  */
 import { execSync } from 'node:child_process';
-import { chat, embed, OLLAMA } from '../lib/ollama.js';
+import { chat, embed, LLM, OLLAMA } from '../lib/ollama.js';
 import { runGhi } from '../skills/ghi-giao-dich/pipeline.js';
 import { arg, bankOf, ctx, ghi, pctl, seedExamples, table, writeResult } from './common.js';
 
@@ -22,9 +22,9 @@ async function measure(label: string, fn: (i: number) => Promise<unknown>, n = N
 }
 
 const rows = [];
-rows.push(await measure('gemma2:2b V1 (1 lần gọi)', (i) => runGhi(texts[i % texts.length], ctx, { variant: 'V1' })));
-rows.push(await measure('gemma2:2b V3 (kNN 5-shot, gồm embed)', (i) => runGhi(texts[i % texts.length], ctx, { variant: 'V3', bank })));
-rows.push(await measure('gemma2:2b V0 (model tự làm hết)', (i) => runGhi(texts[i % texts.length], ctx, { variant: 'V0' }), 15));
+rows.push(await measure(`${LLM} V1 (1 lần gọi)`, (i) => runGhi(texts[i % texts.length], ctx, { variant: 'V1' })));
+rows.push(await measure(`${LLM} V3 (kNN 5-shot, gồm embed)`, (i) => runGhi(texts[i % texts.length], ctx, { variant: 'V3', bank })));
+rows.push(await measure(`${LLM} V0 (model tự làm hết)`, (i) => runGhi(texts[i % texts.length], ctx, { variant: 'V0' }), 15));
 rows.push(await measure('V1 không có stop "\\n\\n"', async (i) => {
   const { systemV1, userV1 } = await import('../skills/ghi-giao-dich/prompt.js');
   const { schemaV1 } = await import('../skills/ghi-giao-dich/schema.js');

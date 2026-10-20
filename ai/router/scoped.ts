@@ -34,6 +34,7 @@ const ADMIN_RULES: [string, RegExp][] = [
   ['soan-thong-bao', /\b(soan|viet|draft|nhap|tao|lam)\b.{0,25}\b(thong bao|broadcast|tin nhan|ban tin|announcement)\b|\bthong bao (cho|toi|den) (tat ca|moi nguoi|toan bo|cac)\b/],
   ['de-xuat-khoa', /\b(de xuat khoa|co nen khoa|nen khoa|khoa (giup|luon|ngay|tam|thu|tai khoan|user|nick|acc)|tam khoa|lock|ban (user|account|tai khoan)|suspend)\b/],
   ['tom-tat-cau-hinh', /\b(cau hinh|config|setting|settings)\b.{0,30}\b(lich su|thay doi|doi|sua|tom tat|gan day|changes?|history)\b|\b(lich su|thay doi|ai (da )?(doi|sua|bat|tat)|tom tat|summari[sz]e)\b.{0,30}\b(cau hinh|config|smtp|bao tri)\b/],
+  ['nguoi-dung-moi', /\b(nguoi|user|tai khoan|thanh vien|khach) moi\b|\bmoi (dang ky|tao tai khoan)\b|\bchua (ghi|nhap|co) (giao dich|khoan|gi)\b|\bchua dung app\b/],
   ['phat-hien-bat-thuong', /\b(bat thuong|dang ngo|kha nghi|gian lan|tang vot|dot bien|dot ngot|anomal\w*|suspicious|fraud|spam|dau hieu)\b/],
   ['tra-cuu-nguoi-dung', /\b(tim|tra cuu|liet ke|danh sach|search|find|list|look up)\b.{0,30}\b(user|users|nguoi dung|tai khoan|account|accounts|quan tri vien|admin)\b|[\w.]+@[\w-]+\.|\b(bi khoa|dang bi khoa|locked)\b|\b(user|nguoi dung|tai khoan) (nao )?ten\b/],
   ['tong-quan-he-thong', /\b(tong quan|bao nhieu (user|nguoi dung|tai khoan|giao dich|thanh vien)|thong ke|toan (bo )?he thong|overview|dashboard|tinh hinh)\b/],

@@ -53,7 +53,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-[448px] rounded-2xl p-10">
         <Logo size="lg" />
         <h1 className="mt-6 text-headline">Đăng nhập quản trị</h1>
-        <p className="mt-2 text-muted-foreground">Trang dành cho quản trị viên Thu Chi.</p>
+        <p className="mt-2 text-muted-foreground">Trang dành cho quản trị viên TrackerX.</p>
         <form onSubmit={submit} className="mt-8">
           {error && (
             <div role="alert" data-testid="login-error" className="mb-5 flex gap-2.5 rounded-md bg-destructive-soft px-3.5 py-3 text-[13.5px] text-destructive">
@@ -73,7 +73,7 @@ export default function LoginPage() {
         </form>
         <p className="mt-5 text-center text-body-s text-faint">Tài khoản người dùng thường không đăng nhập được ở đây.</p>
       </Card>
-      <p className="absolute bottom-7 text-body-s text-faint">© {YEAR} Thu Chi · Bảng quản trị v1.0</p>
+      <p className="absolute bottom-7 text-body-s text-faint">© {YEAR} TrackerX · Bảng quản trị v1.0</p>
     </div>
   )
 }

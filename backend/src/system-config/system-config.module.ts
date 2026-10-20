@@ -23,6 +23,7 @@ import { IsBoolean, IsIn, IsOptional, IsString } from 'class-validator';
 import { Prisma, Role } from '@prisma/client';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 import * as nodemailer from 'nodemailer';
+import { passwordResetByPhoneMail, phoneLinkedMail, phoneRemovedMail, resetOtpMail } from '../auth/mail-templates';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser, FeatureName, Public, Roles, SYSTEM_CONFIG } from '../common/auth';
 import { PageQuery, paged } from '../common/dto';
@@ -76,6 +77,9 @@ const FEATURE_FIELDS: Record<FeatureName, string> = {
   csvExport: 'featureCsvExport',
   quickTemplates: 'featureQuickTemplates',
   ai: 'featureAi',
+  // Chỉ app Android: đọc thông báo biến động số dư ngân hàng / ví (mobile/modules/bank_notification_listener) để gợi ý ghi giao dịch.
+  // Không có route riêng ở backend (app tạo giao dịch qua POST /transactions sau khi người dùng xác nhận); cờ chỉ để app ẩn / hiện.
+  bankNotifications: 'featureBankNotifications',
 };
 
 export const FEATURE_LABELS: Record<FeatureName, string> = {
@@ -85,12 +89,13 @@ export const FEATURE_LABELS: Record<FeatureName, string> = {
   csvExport: 'Xuất CSV',
   quickTemplates: 'Mẫu nhập nhanh',
   ai: 'Trợ lý AI',
+  bankNotifications: 'Ghi từ thông báo ngân hàng',
 };
 
 export const DEFAULT_MAINTENANCE_MESSAGE = 'Ứng dụng đang bảo trì để nâng cấp hệ thống. Dữ liệu của bạn vẫn an toàn, vui lòng quay lại sau ít phút.';
 
 const DEFS: Def[] = [
-  { section: 'general', field: 'appName', kind: 'string', required: true, maxLen: 50, def: () => 'Thu Chi' },
+  { section: 'general', field: 'appName', kind: 'string', required: true, maxLen: 50, def: () => 'TrackerX' },
   { section: 'general', field: 'supportEmail', kind: 'string', maxLen: 120, format: 'email', def: () => '' },
   { section: 'general', field: 'hotline', kind: 'string', maxLen: 20, format: 'phone', def: () => '' },
   { section: 'general', field: 'termsUrl', kind: 'string', maxLen: 300, format: 'https', def: () => '' },
@@ -102,6 +107,13 @@ const DEFS: Def[] = [
   { section: 'access', field: 'loginWindowMinutes', kind: 'int', min: 1, max: 60, def: () => 1 },
   { section: 'access', field: 'maintenanceMessage', kind: 'string', required: true, maxLen: 200, def: () => DEFAULT_MAINTENANCE_MESSAGE },
   { section: 'access', field: 'maintenanceEndsAt', kind: 'datetime', def: () => null },
+  // Xác thực số điện thoại kiểu tự nhắn (cách A): người dùng nhắn mã 6 số tới số cổng; máy cổng báo về /sms-gateway/inbound
+  { section: 'access', field: 'phoneOtpEnabled', kind: 'bool', def: () => false },
+  { section: 'access', field: 'smsGatewayNumber', kind: 'string', maxLen: 20, format: 'phone', def: () => '' },
+  { section: 'access', field: 'smsGatewayKey', kind: 'string', maxLen: 200, secret: true, def: () => '' },
+  { section: 'access', field: 'phoneCodeMinutes', kind: 'int', min: 1, max: 30, def: () => 5 },
+  { section: 'access', field: 'phoneMaxRequests', kind: 'int', min: 1, max: 20, def: () => 3 },
+  { section: 'access', field: 'smsGatewayLastInboundAt', kind: 'datetime', internal: true, def: () => null },
   { section: 'access', field: 'maintenanceEnabled', kind: 'bool', internal: true, def: () => false },
   { section: 'access', field: 'maintenanceStartedAt', kind: 'datetime', internal: true, def: () => null },
 
@@ -141,6 +153,11 @@ const DEFS: Def[] = [
   { section: 'ai', field: 'timeoutSeconds', kind: 'int', min: 5, max: 600, def: () => 15 },
   { section: 'ai', field: 'dailyMessageLimitPerUser', kind: 'int', min: 1, max: 100000, def: () => 30 },
   { section: 'ai', field: 'maxConversationsPerUser', kind: 'int', min: 1, max: 10000, def: () => 50 },
+  // Đọc hóa đơn / ảnh chuyển khoản (skill doc-hoa-don, model trả lời phải đọc được ảnh)
+  { section: 'ai', field: 'ocrEnabled', kind: 'bool', def: () => true },
+  { section: 'ai', field: 'ocrDailyLimitPerUser', kind: 'int', min: 1, max: 100, def: () => 20 },
+  { section: 'ai', field: 'ocrMaxSide', kind: 'int', min: 384, max: 1536, def: () => 768 },
+  { section: 'ai', field: 'ocrTimeoutSeconds', kind: 'int', min: 10, max: 120, def: () => 30 },
   // Ngưỡng tự bật luật / ví dụ CHUNG do chu trình học ban đêm đề xuất (không đạt => chờ admin duyệt)
   { section: 'ai', field: 'autoApproveEnabled', kind: 'bool', def: () => true },
   { section: 'ai', field: 'autoApproveMinUsers', kind: 'int', min: 5, max: 100000, def: () => 50 },
@@ -280,7 +297,7 @@ export class SystemConfigService {
       loginLimit: Number(config.get('THROTTLE_AUTH_LIMIT') ?? (test ? 200 : 10)),
       aiProvider: config.get<string>('AI_PROVIDER') === 'fake' || test ? 'fake' : 'ollama',
       ollamaUrl: config.get<string>('OLLAMA_URL') || 'http://localhost:11434',
-      aiChatModel: config.get<string>('AI_CHAT_MODEL') || 'gemma2:2b',
+      aiChatModel: config.get<string>('AI_CHAT_MODEL') || 'qwen3.5:4b',
       aiEmbedModel: config.get<string>('AI_EMBED_MODEL') || 'bge-m3',
     };
     this.key = secretKey(config);
@@ -372,6 +389,7 @@ export class SystemConfigService {
       timeoutMs: (v('timeoutSeconds') as number) * 1000,
       dailyMessageLimitPerUser: v('dailyMessageLimitPerUser') as number,
       maxConversationsPerUser: v('maxConversationsPerUser') as number,
+      ocr: { enabled: v('ocrEnabled') !== false, dailyLimitPerUser: v('ocrDailyLimitPerUser') as number, maxSide: v('ocrMaxSide') as number, timeoutMs: (v('ocrTimeoutSeconds') as number) * 1000 },
       autoApprove: {
         enabled: v('autoApproveEnabled') as boolean,
         minUsers: v('autoApproveMinUsers') as number,
@@ -398,6 +416,21 @@ export class SystemConfigService {
       expiryMinutes: s.values.get('password.otpExpiryMinutes') as number,
       maxAttempts: s.values.get('password.otpMaxAttempts') as number,
       resendSeconds: s.values.get('password.otpResendSeconds') as number,
+    };
+  }
+
+  /** Xác thực số điện thoại: bật khi công tắc bật VÀ đã có số cổng + khóa máy cổng. */
+  async phoneOtp() {
+    const s = await this.snapshot();
+    const v = (f: string) => s.values.get(`access.${f}`);
+    const gatewayNumber = (v('smsGatewayNumber') as string) ?? '';
+    const gatewayKey = (v('smsGatewayKey') as string) ?? '';
+    return {
+      enabled: v('phoneOtpEnabled') === true && !!gatewayNumber && !!gatewayKey,
+      gatewayNumber,
+      gatewayKey,
+      codeMinutes: v('phoneCodeMinutes') as number,
+      maxRequests: v('phoneMaxRequests') as number,
     };
   }
 
@@ -456,6 +489,8 @@ export class SystemConfigService {
       privacyUrl: v('general.privacyUrl') || null,
       currency: 'VND',
       registrationEnabled: v('access.registrationEnabled'),
+      // xác thực số điện thoại + quên mật khẩu bằng SĐT (song song email); số cổng app lấy khi bắt đầu phiên
+      phoneOtp: { enabled: v('access.phoneOtpEnabled') === true && !!v('access.smsGatewayNumber') && !!v('access.smsGatewayKey'), codeMinutes: v('access.phoneCodeMinutes') },
       maintenance: { enabled: m.enabled, message: m.enabled ? m.message : null, endsAt: m.enabled ? m.endsAt : null },
       // Trợ lý AI có khối riêng `ai` bên dưới (bật = ai.enabled && business.featureAi)
       features: Object.fromEntries((Object.keys(FEATURE_FIELDS) as FeatureName[]).filter((f) => f !== 'ai').map((f) => [f, v(`business.${FEATURE_FIELDS[f]}`) !== false])),
@@ -463,6 +498,12 @@ export class SystemConfigService {
         enabled: v('ai.enabled') !== false && v('business.featureAi') !== false,
         dailyMessageLimitPerUser: v('ai.dailyMessageLimitPerUser'),
         maxConversationsPerUser: v('ai.maxConversationsPerUser'),
+        // Quét hóa đơn: app ẩn lối vào khi tắt, thu nhỏ ảnh theo maxSide trước khi gửi
+        ocr: {
+          enabled: v('ai.enabled') !== false && v('business.featureAi') !== false && v('ai.ocrEnabled') !== false,
+          dailyLimitPerUser: v('ai.ocrDailyLimitPerUser'),
+          maxSide: v('ai.ocrMaxSide'),
+        },
       },
       budget: { warningPercent: v('business.budgetWarningPercent'), exceededPercent: v('business.budgetExceededPercent') },
       password: { minLength: v('password.minLength') },
@@ -489,11 +530,14 @@ export class SystemConfigService {
     values.smtp.hasPassword = hasPassword;
     const updated: Record<string, { at: Date; by: string | null }> = {};
     for (const r of s.rows.values()) if (!DEF_BY_KEY.get(r.key)?.internal) updated[r.key] = { at: r.updatedAt, by: r.updatedByName };
-    const [last, activeUsers, savingGoals, recurringRules] = await Promise.all([
+    const [last, activeUsers, savingGoals, recurringRules, gw, inboundRow] = await Promise.all([
       this.prisma.systemConfigChange.findFirst({ where: { actorId: { not: null } }, orderBy: { createdAt: 'desc' } }),
       this.prisma.user.count({ where: { status: 'ACTIVE', role: 'USER' } }),
       this.prisma.savingGoal.count(),
       this.prisma.recurringRule.count(),
+      this.prisma.phoneVerification.aggregate({ _max: { verifiedAt: true } }),
+      // đọc thẳng DB (không qua cache 15s) để admin bấm "Gửi tin thử" thấy ngay
+      this.prisma.systemSetting.findUnique({ where: { key: 'access.smsGatewayLastInboundAt' } }),
     ]);
     return {
       values,
@@ -506,6 +550,9 @@ export class SystemConfigService {
         /** db: đã lưu trong cấu hình; env: lấy từ SMTP_* của máy chủ; none: chưa cấu hình */
         source: [...s.rows.keys()].some((k) => k.startsWith('smtp.')) ? 'db' : this.env.smtpHost ? 'env' : 'none',
       },
+      /** Khóa máy cổng SMS: chỉ cho biết đã đặt hay chưa, không bao giờ trả về */
+      // lastVerifiedAt: lần gần nhất máy cổng chuyển về một tin khớp phiên → cho admin biết máy cổng còn chạy
+      smsGateway: { hasKey: !!s.values.get('access.smsGatewayKey'), lastInboundAt: (inboundRow?.value as string | null) ?? null, lastVerifiedAt: gw._max.verifiedAt },
       updated,
       lastSaved: last ? { at: last.createdAt, by: last.actorName } : null,
       stats: { activeUsers, savingGoals, recurringRules },
@@ -795,6 +842,20 @@ export class AdminConfigController {
   @Post('maintenance') @HttpCode(200)
   maintenance(@CurrentUser() u: AuthUser, @Body() dto: MaintenanceDto) {
     return this.sys.setMaintenance(actorOf(u), dto);
+  }
+
+  /** Xem trước các mẫu email hệ thống (dữ liệu mẫu, tên app + email hỗ trợ theo cấu hình) → [{key, label, when, subject, html}] */
+  @Get('email-templates')
+  async emailTemplates() {
+    const b = { appName: await this.sys.get<string>('general.appName'), supportEmail: (await this.sys.get<string>('general.supportEmail')) || null };
+    const at = new Date(), name = 'Nguyễn Minh Anh', phone = '0912345678';
+    return [
+      { key: 'reset-otp', label: 'Mã đặt lại mật khẩu', when: 'Quên mật khẩu qua email', ...resetOtpMail(b, { otp: '482910', minutes: (await this.sys.otp()).expiryMinutes, name }) },
+      { key: 'phone-linked', label: 'Đã gắn số điện thoại', when: 'Sau khi gắn số thành công', ...phoneLinkedMail(b, { name, phone, at }) },
+      { key: 'phone-changed', label: 'Số điện thoại đã được đổi', when: 'Sau khi đổi sang số mới', ...phoneLinkedMail(b, { name, phone: '0987654321', at, replaced: phone }) },
+      { key: 'phone-removed', label: 'Đã gỡ số điện thoại', when: 'Sau khi gỡ số', ...phoneRemovedMail(b, { name, phone, at }) },
+      { key: 'reset-by-phone', label: 'Mật khẩu vừa được đặt lại', when: 'Sau khi đặt lại mật khẩu bằng SĐT', ...passwordResetByPhoneMail(b, { name, phone, at }) },
+    ].map(({ text, ...m }) => m);
   }
 
   /** Gửi email thử tới email của admin đang đăng nhập bằng cấu hình đã lưu → `{ok, response | error, durationMs}`. Giới hạn 5 lần/phút */

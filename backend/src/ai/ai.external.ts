@@ -1,6 +1,6 @@
 /**
  * Nạp code từ thư mục `ai/` của repo (ESM + TypeScript) lúc chạy bằng `tsx` (tsImport) — không copy, không build riêng.
- *   - Thư viện: parser (tiền / ngày / ví), prompt + schema của ghi-giao-dich, router luật.
+ *   - Thư viện: parser (tiền / ngày / ví / tín hiệu thu-chi), prompt + schema + từ điển + làm sạch tên của ghi-giao-dich (Track A), router luật.
  *   - Skill ngoài: `ai/skills/index.ts` (export `skills` | default = Skill[]) và/hoặc `ai/skills/<tên>/index.ts`
  *     (export `skill` | default). Skill hợp lệ (có `name` + `run`) được đăng ký theo tên, ghi đè built-in cùng tên
  *     => thêm skill mới KHÔNG cần sửa backend.
@@ -33,17 +33,38 @@ export interface AiUserContext {
 
 export interface AiSegment {
   text: string;
+  /** Bỏ tiền/ngày/ví/từ đệm, BỎ DẤU */
   clean: string;
+  /** Như clean nhưng CÒN DẤU */
+  norm: string;
   amount: number;
   date: string;
   walletName: string | null;
+  /** Đoạn có dấu tiếng Việt */
+  dia: boolean;
+  /** Tín hiệu THU/CHI do parser bắt bằng code (ai/parser/cues.ts) */
+  dir: { dir: 'INCOME' | 'EXPENSE'; kind?: string; cue: string } | null;
+}
+
+export interface AiAnalysis {
+  segs: AiSegment[];
+  /** Phải hỏi lại dù có số tiền: chuyển giữa ví của mình, vay/nợ, không có nội dung */
+  ask: 'transfer' | 'loan' | 'empty' | null;
 }
 
 export interface AiLib {
-  parse(text: string, ctx: AiUserContext): AiSegment[];
+  analyze(text: string, ctx: AiUserContext): AiAnalysis;
   systemV1(ctx: AiUserContext): string;
-  userV1(text: string, segs: string[]): string;
-  schemaV1(ctx: AiUserContext, n: number): object;
+  /** tags[i] = 'THU' khi parser thấy tín hiệu thu */
+  userV1(text: string, segs: string[], tags?: (string | undefined)[]): string;
+  /** allowed[i] = enum danh mục riêng của khoản i (prefixItems) */
+  schemaV1(ctx: AiUserContext, n: number, allowed?: string[][]): object;
+  /** Danh mục THU theo tín hiệu parser (null nếu không phải khoản thu) */
+  incomeCategory(seg: AiSegment, ctx: AiUserContext): string | null;
+  /** Danh mục chốt bằng từ điển (thực phẩm đi chợ / đồ cho con / sức khỏe) hoặc null để model quyết */
+  lexiconCategory(seg: AiSegment, ctx: AiUserContext): { categoryName: string; why: string } | null;
+  /** Bỏ tiền / ví / ngày / từ nối treo khỏi tên khoản do model đặt */
+  cleanTitle(title: string, seg: Pick<AiSegment, 'text'>, ctx: AiUserContext): string;
   /** Router luật của ai/router (có thể không có) */
   routeRules?: (text: string, ctx: AiUserContext) => { skill: string; by: string } | null;
   /** Router theo scope (Track B): chặn chung + luật của scope; null = để kNN */
@@ -60,10 +81,12 @@ let libPromise: Promise<AiLib | null> | null = null;
 export function aiLib(): Promise<AiLib | null> {
   libPromise ??= (async () => {
     try {
-      const [parser, prompt, schema] = await Promise.all([
+      const [parser, prompt, schema, lexicon, title] = await Promise.all([
         load('parser/index.ts'),
         load('skills/ghi-giao-dich/prompt.ts'),
         load('skills/ghi-giao-dich/schema.ts'),
+        load('skills/ghi-giao-dich/lexicon.ts'),
+        load('skills/ghi-giao-dich/title.ts'),
       ]);
       let router: any = {};
       try {
@@ -72,7 +95,8 @@ export function aiLib(): Promise<AiLib | null> {
         logger.warn(`Không nạp được ai/router: ${(e as Error).message}`);
       }
       return {
-        parse: parser.parse, systemV1: prompt.systemV1, userV1: prompt.userV1, schemaV1: schema.schemaV1,
+        analyze: parser.analyze, systemV1: prompt.systemV1, userV1: prompt.userV1, schemaV1: schema.schemaV1,
+        incomeCategory: lexicon.incomeCategory, lexiconCategory: lexicon.lexiconCategory, cleanTitle: title.cleanTitle,
         routeRules: router.routeRules, routeRulesScoped: router.routeRulesScoped, DEFAULT_THRESHOLD: router.DEFAULT_THRESHOLD, SCOPED_BANK: router.SCOPED_BANK,
       };
     } catch (e) {
