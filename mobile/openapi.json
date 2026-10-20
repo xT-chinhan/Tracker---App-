@@ -1,0 +1,5484 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/api/config/public": {
+            "get": {
+                "operationId": "PublicConfigController_publicConfig",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "config"
+                ]
+            }
+        },
+        "/api/admin/config": {
+            "get": {
+                "operationId": "AdminConfigController_get",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin config"
+                ]
+            },
+            "patch": {
+                "operationId": "AdminConfigController_update",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "description": "Chỉ gửi các trường đổi. Lỗi => 400 `{message, errors: {\"section.field\": \"lý do\"}}`",
+                                "properties": {
+                                    "general": {
+                                        "type": "object",
+                                        "properties": {
+                                            "appName": {
+                                                "type": "string",
+                                                "maxLength": 50
+                                            },
+                                            "supportEmail": {
+                                                "type": "string",
+                                                "maxLength": 120,
+                                                "description": "email"
+                                            },
+                                            "hotline": {
+                                                "type": "string",
+                                                "maxLength": 20,
+                                                "description": "phone"
+                                            },
+                                            "termsUrl": {
+                                                "type": "string",
+                                                "maxLength": 300,
+                                                "description": "https"
+                                            },
+                                            "privacyUrl": {
+                                                "type": "string",
+                                                "maxLength": 300,
+                                                "description": "https"
+                                            }
+                                        }
+                                    },
+                                    "access": {
+                                        "type": "object",
+                                        "properties": {
+                                            "registrationEnabled": {
+                                                "type": "boolean"
+                                            },
+                                            "sessionDays": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 365
+                                            },
+                                            "loginMaxAttempts": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 1000
+                                            },
+                                            "loginWindowMinutes": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 60
+                                            },
+                                            "maintenanceMessage": {
+                                                "type": "string",
+                                                "maxLength": 200
+                                            },
+                                            "maintenanceEndsAt": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "nullable": true
+                                            },
+                                            "phoneOtpEnabled": {
+                                                "type": "boolean"
+                                            },
+                                            "smsGatewayNumber": {
+                                                "type": "string",
+                                                "maxLength": 20,
+                                                "description": "phone"
+                                            },
+                                            "smsGatewayKey": {
+                                                "type": "string",
+                                                "maxLength": 200,
+                                                "description": "Bí mật: chỉ ghi, không bao giờ trả về. Chuỗi rỗng = xóa"
+                                            },
+                                            "phoneCodeMinutes": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 30
+                                            },
+                                            "phoneMaxRequests": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 20
+                                            }
+                                        }
+                                    },
+                                    "smtp": {
+                                        "type": "object",
+                                        "properties": {
+                                            "host": {
+                                                "type": "string",
+                                                "maxLength": 200
+                                            },
+                                            "port": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 65535
+                                            },
+                                            "security": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "starttls",
+                                                    "ssl",
+                                                    "none"
+                                                ]
+                                            },
+                                            "user": {
+                                                "type": "string",
+                                                "maxLength": 200
+                                            },
+                                            "password": {
+                                                "type": "string",
+                                                "maxLength": 500,
+                                                "description": "Bí mật: chỉ ghi, không bao giờ trả về. Chuỗi rỗng = xóa"
+                                            },
+                                            "from": {
+                                                "type": "string",
+                                                "maxLength": 200,
+                                                "description": "from"
+                                            }
+                                        }
+                                    },
+                                    "password": {
+                                        "type": "object",
+                                        "properties": {
+                                            "minLength": {
+                                                "type": "integer",
+                                                "minimum": 6,
+                                                "maximum": 64
+                                            },
+                                            "otpExpiryMinutes": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 60
+                                            },
+                                            "otpMaxAttempts": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 10
+                                            },
+                                            "otpResendSeconds": {
+                                                "type": "integer",
+                                                "minimum": 30,
+                                                "maximum": 600
+                                            }
+                                        }
+                                    },
+                                    "business": {
+                                        "type": "object",
+                                        "properties": {
+                                            "budgetWarningPercent": {
+                                                "type": "integer",
+                                                "minimum": 10,
+                                                "maximum": 100
+                                            },
+                                            "budgetExceededPercent": {
+                                                "type": "integer",
+                                                "minimum": 50,
+                                                "maximum": 200
+                                            },
+                                            "defaultWalletName": {
+                                                "type": "string",
+                                                "maxLength": 100
+                                            },
+                                            "featureSavingGoals": {
+                                                "type": "boolean"
+                                            },
+                                            "featureRecurring": {
+                                                "type": "boolean"
+                                            },
+                                            "featureTransfers": {
+                                                "type": "boolean"
+                                            },
+                                            "featureCsvExport": {
+                                                "type": "boolean"
+                                            },
+                                            "featureQuickTemplates": {
+                                                "type": "boolean"
+                                            },
+                                            "featureAi": {
+                                                "type": "boolean"
+                                            },
+                                            "featureBankNotifications": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "mobile": {
+                                        "type": "object",
+                                        "properties": {
+                                            "androidLatestVersion": {
+                                                "type": "string",
+                                                "description": "version"
+                                            },
+                                            "androidMinVersion": {
+                                                "type": "string",
+                                                "description": "version"
+                                            },
+                                            "androidStoreUrl": {
+                                                "type": "string",
+                                                "maxLength": 300,
+                                                "description": "https"
+                                            },
+                                            "iosLatestVersion": {
+                                                "type": "string",
+                                                "description": "version"
+                                            },
+                                            "iosMinVersion": {
+                                                "type": "string",
+                                                "description": "version"
+                                            },
+                                            "iosStoreUrl": {
+                                                "type": "string",
+                                                "maxLength": 300,
+                                                "description": "https"
+                                            },
+                                            "releaseNotes": {
+                                                "type": "string",
+                                                "maxLength": 300
+                                            }
+                                        }
+                                    },
+                                    "ai": {
+                                        "type": "object",
+                                        "properties": {
+                                            "enabled": {
+                                                "type": "boolean"
+                                            },
+                                            "provider": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "ollama",
+                                                    "fake"
+                                                ]
+                                            },
+                                            "ollamaUrl": {
+                                                "type": "string",
+                                                "maxLength": 300,
+                                                "description": "url"
+                                            },
+                                            "chatModel": {
+                                                "type": "string",
+                                                "maxLength": 100
+                                            },
+                                            "embedModel": {
+                                                "type": "string",
+                                                "maxLength": 100
+                                            },
+                                            "timeoutSeconds": {
+                                                "type": "integer",
+                                                "minimum": 5,
+                                                "maximum": 600
+                                            },
+                                            "dailyMessageLimitPerUser": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 100000
+                                            },
+                                            "maxConversationsPerUser": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 10000
+                                            },
+                                            "ocrEnabled": {
+                                                "type": "boolean"
+                                            },
+                                            "ocrDailyLimitPerUser": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 100
+                                            },
+                                            "ocrMaxSide": {
+                                                "type": "integer",
+                                                "minimum": 384,
+                                                "maximum": 1536
+                                            },
+                                            "ocrTimeoutSeconds": {
+                                                "type": "integer",
+                                                "minimum": 10,
+                                                "maximum": 120
+                                            },
+                                            "autoApproveEnabled": {
+                                                "type": "boolean"
+                                            },
+                                            "autoApproveMinUsers": {
+                                                "type": "integer",
+                                                "minimum": 5,
+                                                "maximum": 100000
+                                            },
+                                            "autoApproveMinSupport": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 100000
+                                            },
+                                            "autoApproveMinPrecision": {
+                                                "type": "integer",
+                                                "minimum": 50,
+                                                "maximum": 100
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin config"
+                ]
+            }
+        },
+        "/api/admin/config/history": {
+            "get": {
+                "operationId": "AdminConfigController_history",
+                "parameters": [
+                    {
+                        "name": "section",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "general",
+                                "access",
+                                "smtp",
+                                "password",
+                                "business",
+                                "mobile",
+                                "ai"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin config"
+                ]
+            }
+        },
+        "/api/admin/config/maintenance": {
+            "post": {
+                "operationId": "AdminConfigController_maintenance",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MaintenanceDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin config"
+                ]
+            }
+        },
+        "/api/admin/config/email-templates": {
+            "get": {
+                "operationId": "AdminConfigController_emailTemplates",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin config"
+                ]
+            }
+        },
+        "/api/admin/config/smtp/test": {
+            "post": {
+                "operationId": "AdminConfigController_testSmtp",
+                "parameters": [],
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin config"
+                ]
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "operationId": "AuthController_register",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "operationId": "AuthController_login",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/forgot-password": {
+            "post": {
+                "operationId": "AuthController_forgotPassword",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/reset-password": {
+            "post": {
+                "operationId": "AuthController_resetPassword",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPasswordDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/logout-all": {
+            "post": {
+                "operationId": "AuthController_logoutAll",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me": {
+            "get": {
+                "operationId": "AuthController_me",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            },
+            "patch": {
+                "operationId": "AuthController_updateProfile",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProfileDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            },
+            "delete": {
+                "operationId": "AuthController_deleteAccount",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeleteAccountDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me/password": {
+            "post": {
+                "operationId": "AuthController_changePassword",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangePasswordDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me/phone/verifications": {
+            "post": {
+                "operationId": "PhoneController_startLink",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartLinkDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me/phone/verifications/{id}": {
+            "get": {
+                "operationId": "PhoneController_linkStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/me/phone": {
+            "delete": {
+                "operationId": "PhoneController_remove",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RemovePhoneDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/forgot-password/phone": {
+            "post": {
+                "operationId": "PhoneController_startReset",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartResetDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/forgot-password/phone/{id}": {
+            "get": {
+                "operationId": "PhoneController_resetStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/auth/reset-password/phone": {
+            "post": {
+                "operationId": "PhoneController_reset",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetByPhoneDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "429": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/sms-gateway/inbound": {
+            "post": {
+                "operationId": "PhoneController_inbound",
+                "parameters": [
+                    {
+                        "name": "x-gateway-key",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InboundSmsDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/api/wallets": {
+            "get": {
+                "operationId": "WalletsController_list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "wallets"
+                ]
+            },
+            "post": {
+                "operationId": "WalletsController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateWalletDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "wallets"
+                ]
+            }
+        },
+        "/api/wallets/{id}": {
+            "get": {
+                "operationId": "WalletsController_get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "wallets"
+                ]
+            },
+            "patch": {
+                "operationId": "WalletsController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateWalletDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "wallets"
+                ]
+            },
+            "delete": {
+                "operationId": "WalletsController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "wallets"
+                ]
+            }
+        },
+        "/api/wallets/{id}/restore": {
+            "post": {
+                "operationId": "WalletsController_restore",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "wallets"
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "operationId": "CategoriesController_list",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "INCOME",
+                                "EXPENSE"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "categories"
+                ]
+            },
+            "post": {
+                "operationId": "CategoriesController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCategoryDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "categories"
+                ]
+            }
+        },
+        "/api/categories/{id}": {
+            "patch": {
+                "operationId": "CategoriesController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCategoryDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "categories"
+                ]
+            },
+            "delete": {
+                "operationId": "CategoriesController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "categories"
+                ]
+            }
+        },
+        "/api/transactions": {
+            "get": {
+                "operationId": "TransactionsController_list",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "INCOME",
+                                "EXPENSE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "categoryId",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tìm trong tiêu đề / ghi chú",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "minAmount",
+                        "required": false,
+                        "in": "query",
+                        "description": "Khoảng số tiền (VND, bao gồm 2 đầu)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000000000000,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxAmount",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000000000000,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transactions"
+                ]
+            },
+            "post": {
+                "operationId": "TransactionsController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTransactionDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transactions"
+                ]
+            }
+        },
+        "/api/transactions/{id}": {
+            "get": {
+                "operationId": "TransactionsController_get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transactions"
+                ]
+            },
+            "patch": {
+                "operationId": "TransactionsController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTransactionDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transactions"
+                ]
+            },
+            "delete": {
+                "operationId": "TransactionsController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transactions"
+                ]
+            }
+        },
+        "/api/transactions/bulk": {
+            "post": {
+                "operationId": "TransactionsController_createMany",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BulkCreateDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transactions"
+                ]
+            }
+        },
+        "/api/budgets": {
+            "get": {
+                "operationId": "BudgetsController_list",
+                "parameters": [
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "budgets"
+                ]
+            },
+            "post": {
+                "operationId": "BudgetsController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateBudgetDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "budgets"
+                ]
+            }
+        },
+        "/api/budgets/copy": {
+            "post": {
+                "operationId": "BudgetsController_copy",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CopyBudgetsDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "budgets"
+                ]
+            }
+        },
+        "/api/budgets/{id}": {
+            "patch": {
+                "operationId": "BudgetsController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateBudgetDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "budgets"
+                ]
+            },
+            "delete": {
+                "operationId": "BudgetsController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "budgets"
+                ]
+            }
+        },
+        "/api/saving-goals": {
+            "get": {
+                "operationId": "SavingGoalsController_list",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ACTIVE",
+                                "COMPLETED",
+                                "WITHDRAWN",
+                                "EARLY_WITHDRAWN"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "saving-goals"
+                ]
+            },
+            "post": {
+                "operationId": "SavingGoalsController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateGoalDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "saving-goals"
+                ]
+            }
+        },
+        "/api/saving-goals/{id}": {
+            "get": {
+                "operationId": "SavingGoalsController_get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "saving-goals"
+                ]
+            },
+            "patch": {
+                "operationId": "SavingGoalsController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateGoalDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "saving-goals"
+                ]
+            },
+            "delete": {
+                "operationId": "SavingGoalsController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "saving-goals"
+                ]
+            }
+        },
+        "/api/saving-goals/{id}/deposit": {
+            "post": {
+                "operationId": "SavingGoalsController_deposit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DepositDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "saving-goals"
+                ]
+            }
+        },
+        "/api/saving-goals/{id}/withdraw": {
+            "post": {
+                "operationId": "SavingGoalsController_withdraw",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WithdrawDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "saving-goals"
+                ]
+            }
+        },
+        "/api/stats/balance": {
+            "get": {
+                "operationId": "StatsController_balance",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "stats"
+                ]
+            }
+        },
+        "/api/stats/summary": {
+            "get": {
+                "operationId": "StatsController_summary",
+                "parameters": [
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "description": "Chỉ tính giao dịch của ví này",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "stats"
+                ]
+            }
+        },
+        "/api/stats/by-category": {
+            "get": {
+                "operationId": "StatsController_byCategory",
+                "parameters": [
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "description": "Chỉ tính giao dịch của ví này",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "default": "EXPENSE",
+                            "type": "string",
+                            "enum": [
+                                "INCOME",
+                                "EXPENSE"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "stats"
+                ]
+            }
+        },
+        "/api/stats/daily": {
+            "get": {
+                "operationId": "StatsController_daily",
+                "parameters": [
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "YYYY-MM, mặc định tháng hiện tại",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "description": "Chỉ tính giao dịch của ví này",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "stats"
+                ]
+            }
+        },
+        "/api/stats/trend": {
+            "get": {
+                "operationId": "StatsController_trend",
+                "parameters": [
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "YYYY-MM, mặc định tháng hiện tại",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "description": "Chỉ tính giao dịch của ví này",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "months",
+                        "required": true,
+                        "in": "query",
+                        "description": "Số tháng lấy về (tính lùi từ month)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 36,
+                            "default": 6,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "stats"
+                ]
+            }
+        },
+        "/api/stats/report": {
+            "get": {
+                "operationId": "StatsController_report",
+                "parameters": [
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "YYYY-MM, mặc định tháng hiện tại",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "description": "Chỉ tính giao dịch của ví này",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "observationMonths",
+                        "required": true,
+                        "in": "query",
+                        "description": "Số tháng quan sát để dự báo tháng sau",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 24,
+                            "default": 6,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "stats"
+                ]
+            }
+        },
+        "/api/transfers": {
+            "get": {
+                "operationId": "TransfersController_list",
+                "parameters": [
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "description": "Lọc chuyển tiền có liên quan tới ví (vào hoặc ra)",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transfers"
+                ]
+            },
+            "post": {
+                "operationId": "TransfersController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTransferDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transfers"
+                ]
+            }
+        },
+        "/api/transfers/{id}": {
+            "get": {
+                "operationId": "TransfersController_get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transfers"
+                ]
+            },
+            "patch": {
+                "operationId": "TransfersController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTransferDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transfers"
+                ]
+            },
+            "delete": {
+                "operationId": "TransfersController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "transfers"
+                ]
+            }
+        },
+        "/api/notifications": {
+            "get": {
+                "operationId": "NotificationsController_list",
+                "parameters": [
+                    {
+                        "name": "unread",
+                        "required": false,
+                        "in": "query",
+                        "description": "true => chỉ thông báo chưa đọc",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "notifications"
+                ]
+            }
+        },
+        "/api/notifications/unread-count": {
+            "get": {
+                "operationId": "NotificationsController_unreadCount",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "notifications"
+                ]
+            }
+        },
+        "/api/notifications/read-all": {
+            "post": {
+                "operationId": "NotificationsController_readAll",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "notifications"
+                ]
+            }
+        },
+        "/api/notifications/{id}/read": {
+            "post": {
+                "operationId": "NotificationsController_read",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "notifications"
+                ]
+            }
+        },
+        "/api/quick-templates": {
+            "get": {
+                "operationId": "QuickTemplatesController_list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "quick-templates"
+                ]
+            },
+            "post": {
+                "operationId": "QuickTemplatesController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTemplateDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "quick-templates"
+                ]
+            }
+        },
+        "/api/quick-templates/{id}": {
+            "patch": {
+                "operationId": "QuickTemplatesController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTemplateDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "quick-templates"
+                ]
+            },
+            "delete": {
+                "operationId": "QuickTemplatesController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "quick-templates"
+                ]
+            }
+        },
+        "/api/quick-templates/{id}/use": {
+            "post": {
+                "operationId": "QuickTemplatesController_use",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UseTemplateDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "quick-templates"
+                ]
+            }
+        },
+        "/api/recurring": {
+            "get": {
+                "operationId": "RecurringController_list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            },
+            "post": {
+                "operationId": "RecurringController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateRuleDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            }
+        },
+        "/api/recurring/run-due": {
+            "post": {
+                "operationId": "RecurringController_runDue",
+                "parameters": [
+                    {
+                        "name": "now",
+                        "required": false,
+                        "in": "query",
+                        "description": "Mốc \"hiện tại\" giả lập (chỉ môi trường dev/test)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            }
+        },
+        "/api/recurring/{id}": {
+            "get": {
+                "operationId": "RecurringController_get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            },
+            "patch": {
+                "operationId": "RecurringController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateRuleDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            },
+            "delete": {
+                "operationId": "RecurringController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            }
+        },
+        "/api/recurring/{id}/preview": {
+            "get": {
+                "operationId": "RecurringController_preview",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "count",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 5,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            }
+        },
+        "/api/recurring/{id}/pause": {
+            "post": {
+                "operationId": "RecurringController_pause",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            }
+        },
+        "/api/recurring/{id}/resume": {
+            "post": {
+                "operationId": "RecurringController_resume",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "recurring"
+                ]
+            }
+        },
+        "/api/export/transactions.csv": {
+            "get": {
+                "operationId": "ExportController_transactions",
+                "parameters": [
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "export"
+                ]
+            }
+        },
+        "/api/admin/overview": {
+            "get": {
+                "operationId": "AdminController_overview",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/users": {
+            "get": {
+                "operationId": "AdminController_users",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tìm theo email / tên",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ACTIVE",
+                                "LOCKED"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "USER",
+                                "ADMIN"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/users/{id}": {
+            "get": {
+                "operationId": "AdminController_user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            },
+            "patch": {
+                "operationId": "AdminController_updateUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/transactions": {
+            "get": {
+                "operationId": "AdminController_transactions",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "INCOME",
+                                "EXPENSE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "categoryId",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "walletId",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tìm trong tiêu đề / ghi chú",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "minAmount",
+                        "required": false,
+                        "in": "query",
+                        "description": "Khoảng số tiền (VND, bao gồm 2 đầu)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000000000000,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxAmount",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000000000000,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "required": false,
+                        "in": "query",
+                        "description": "Tháng dạng YYYY-MM (ưu tiên hơn from/to)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/broadcasts": {
+            "post": {
+                "operationId": "AdminController_broadcast",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BroadcastDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            },
+            "get": {
+                "operationId": "AdminController_broadcasts",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/recurring/run-due": {
+            "post": {
+                "operationId": "AdminController_runRecurring",
+                "parameters": [
+                    {
+                        "name": "now",
+                        "required": false,
+                        "in": "query",
+                        "description": "Mốc \"hiện tại\" giả lập (chỉ môi trường dev/test)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/categories": {
+            "get": {
+                "operationId": "AdminController_listCategories",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "INCOME",
+                                "EXPENSE"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            },
+            "post": {
+                "operationId": "AdminController_createCategory",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCategoryDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/categories/{id}": {
+            "patch": {
+                "operationId": "AdminController_updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCategoryDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            },
+            "delete": {
+                "operationId": "AdminController_removeCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/admin/categories/{id}/restore": {
+            "post": {
+                "operationId": "AdminController_restoreCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin"
+                ]
+            }
+        },
+        "/api/ai/conversations": {
+            "get": {
+                "operationId": "AiController_list",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "archived",
+                        "required": false,
+                        "in": "query",
+                        "description": "true = danh sách đã lưu trữ",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            },
+            "post": {
+                "operationId": "AiController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateConversationDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/conversations/{id}": {
+            "get": {
+                "operationId": "AiController_get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            },
+            "patch": {
+                "operationId": "AiController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateConversationDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            },
+            "delete": {
+                "operationId": "AiController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/conversations/{id}/images": {
+            "post": {
+                "operationId": "AiController_postImage",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "required": [
+                                    "image"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/conversations/{id}/messages": {
+            "post": {
+                "operationId": "AiController_post",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostMessageDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/conversations/{id}/messages/stream": {
+            "post": {
+                "operationId": "AiController_stream",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostMessageDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/drafts/{id}/confirm": {
+            "post": {
+                "operationId": "AiController_confirm",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfirmDraftDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/drafts/{id}/cancel": {
+            "post": {
+                "operationId": "AiController_cancel",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/messages/{id}/feedback": {
+            "post": {
+                "operationId": "AiController_feedback",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FeedbackDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/messages/{id}/reroute": {
+            "post": {
+                "operationId": "AiController_reroute",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RerouteDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/skills": {
+            "get": {
+                "operationId": "AiController_skills",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/memory": {
+            "get": {
+                "operationId": "AiController_memory",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/memory/{id}": {
+            "delete": {
+                "operationId": "AiController_deleteMemory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/settings": {
+            "get": {
+                "operationId": "AiController_settings",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            },
+            "put": {
+                "operationId": "AiController_setSettings",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AiSettingsDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/ai/usage": {
+            "get": {
+                "operationId": "AiController_usage",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "ai"
+                ]
+            }
+        },
+        "/api/admin/ai/stats": {
+            "get": {
+                "operationId": "AiAdminController_stats",
+                "parameters": [
+                    {
+                        "name": "days",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 365,
+                            "default": 30,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/ocr-stats": {
+            "get": {
+                "operationId": "AiAdminController_ocrStats",
+                "parameters": [
+                    {
+                        "name": "days",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 365,
+                            "default": 30,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/rules": {
+            "get": {
+                "operationId": "AiAdminController_rules",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ACTIVE",
+                                "PROPOSED",
+                                "REJECTED"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "skill",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "maxLength": 60,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "Lọc theo pattern (luật) / input (ví dụ)",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/rules/{id}/approve": {
+            "post": {
+                "operationId": "AiAdminController_approveRule",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/rules/{id}/reject": {
+            "post": {
+                "operationId": "AiAdminController_rejectRule",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/examples": {
+            "get": {
+                "operationId": "AiAdminController_examples",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ACTIVE",
+                                "PROPOSED",
+                                "REJECTED"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "skill",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "maxLength": 60,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "Lọc theo pattern (luật) / input (ví dụ)",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/examples/{id}/approve": {
+            "post": {
+                "operationId": "AiAdminController_approveExample",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/examples/{id}/reject": {
+            "post": {
+                "operationId": "AiAdminController_rejectExample",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/learning/run": {
+            "post": {
+                "operationId": "AiAdminController_run",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/retention/run": {
+            "post": {
+                "operationId": "AiAdminController_retention",
+                "parameters": [
+                    {
+                        "name": "now",
+                        "required": false,
+                        "in": "query",
+                        "description": "Mốc \"bây giờ\" (dev/test)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/ollama/test": {
+            "post": {
+                "operationId": "AiAdminController_ollamaTest",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OllamaTestDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/learning/runs": {
+            "get": {
+                "operationId": "AiAdminController_runs",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/usage": {
+            "get": {
+                "operationId": "AiAdminController_usage",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": true,
+                        "in": "query",
+                        "description": "Tối đa 10000 trang (chặn offset khổng lồ => lỗi 500 / quét bảng)",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 10000,
+                            "default": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "Lọc theo email / tên",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/usage/{userId}": {
+            "get": {
+                "operationId": "AiAdminController_usageOf",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/admin/ai/integrity": {
+            "get": {
+                "operationId": "AiAdminController_integrity",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "tags": [
+                    "admin ai"
+                ]
+            }
+        },
+        "/api/health": {
+            "get": {
+                "operationId": "HealthController_check",
+                "parameters": [],
+                "responses": {
+                    "503": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "health"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "App Tracker API",
+        "description": "",
+        "version": "0.1.0",
+        "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+        "securitySchemes": {
+            "bearer": {
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "type": "http"
+            }
+        },
+        "schemas": {
+            "MaintenanceDto": {
+                "type": "object",
+                "properties": {
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Nội dung người dùng thấy (1–200 ký tự)"
+                    },
+                    "endsAt": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "ISO, tương lai; null = không hẹn giờ (chỉ tắt tay). Tới giờ => tự tắt"
+                    }
+                },
+                "required": [
+                    "enabled"
+                ]
+            },
+            "RegisterDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "minLength": 6,
+                        "maxLength": 72
+                    },
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                    }
+                },
+                "required": [
+                    "email",
+                    "password",
+                    "name"
+                ]
+            },
+            "LoginDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "ForgotPasswordDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    }
+                },
+                "required": [
+                    "email"
+                ]
+            },
+            "ResetPasswordDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "otp": {
+                        "type": "string",
+                        "description": "Mã 6 số gửi qua email",
+                        "pattern": "^\\d{6}$"
+                    },
+                    "newPassword": {
+                        "type": "string",
+                        "minLength": 6,
+                        "maxLength": 72
+                    }
+                },
+                "required": [
+                    "email",
+                    "otp",
+                    "newPassword"
+                ]
+            },
+            "UpdateProfileDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "ChangePasswordDto": {
+                "type": "object",
+                "properties": {
+                    "currentPassword": {
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "type": "string",
+                        "minLength": 6,
+                        "maxLength": 72
+                    }
+                },
+                "required": [
+                    "currentPassword",
+                    "newPassword"
+                ]
+            },
+            "DeleteAccountDto": {
+                "type": "object",
+                "properties": {
+                    "password": {
+                        "type": "string",
+                        "description": "Mật khẩu hiện tại để xác nhận"
+                    }
+                },
+                "required": [
+                    "password"
+                ]
+            },
+            "StartLinkDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "RemovePhoneDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "StartResetDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "ResetByPhoneDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "InboundSmsDto": {
+                "type": "object",
+                "properties": {}
+            },
+            "CreateWalletDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 50
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "CASH",
+                            "BANK",
+                            "EWALLET"
+                        ]
+                    },
+                    "initialBalance": {
+                        "type": "number",
+                        "description": "Số dư ban đầu (>= 0), mặc định 0",
+                        "minimum": 0,
+                        "maximum": 10000000000000
+                    },
+                    "icon": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$"
+                    }
+                },
+                "required": [
+                    "name",
+                    "type"
+                ]
+            },
+            "UpdateWalletDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 50
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "CASH",
+                            "BANK",
+                            "EWALLET"
+                        ]
+                    },
+                    "initialBalance": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 10000000000000
+                    },
+                    "icon": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$"
+                    }
+                }
+            },
+            "CreateCategoryDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 50
+                    },
+                    "type": {
+                        "enum": [
+                            "INCOME",
+                            "EXPENSE"
+                        ],
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$"
+                    }
+                },
+                "required": [
+                    "name",
+                    "type"
+                ]
+            },
+            "UpdateCategoryDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 50
+                    },
+                    "icon": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$"
+                    }
+                }
+            },
+            "CreateTransactionDto": {
+                "type": "object",
+                "properties": {
+                    "categoryId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "walletId": {
+                        "type": "string",
+                        "description": "Ví phát sinh (của user, chưa lưu trữ)",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Số tiền dương (VND). Loại thu/chi lấy theo danh mục.",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "occurredAt": {
+                        "type": "string",
+                        "description": "ISO 8601, mặc định là thời điểm hiện tại"
+                    }
+                },
+                "required": [
+                    "categoryId",
+                    "walletId",
+                    "amount",
+                    "title"
+                ]
+            },
+            "BulkCreateDto": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CreateTransactionDto"
+                        }
+                    }
+                },
+                "required": [
+                    "items"
+                ]
+            },
+            "UpdateTransactionDto": {
+                "type": "object",
+                "properties": {
+                    "categoryId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "walletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "occurredAt": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CreateBudgetDto": {
+                "type": "object",
+                "properties": {
+                    "categoryId": {
+                        "type": "string",
+                        "description": "Danh mục chi tiêu; bỏ trống => ngân sách tổng của tháng",
+                        "format": "uuid"
+                    },
+                    "month": {
+                        "type": "string",
+                        "description": "YYYY-MM"
+                    },
+                    "limitAmount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    }
+                },
+                "required": [
+                    "month",
+                    "limitAmount"
+                ]
+            },
+            "CopyBudgetsDto": {
+                "type": "object",
+                "properties": {
+                    "fromMonth": {
+                        "type": "string"
+                    },
+                    "toMonth": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "fromMonth",
+                    "toMonth"
+                ]
+            },
+            "UpdateBudgetDto": {
+                "type": "object",
+                "properties": {
+                    "limitAmount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    }
+                },
+                "required": [
+                    "limitAmount"
+                ]
+            },
+            "CreateGoalDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                    },
+                    "targetAmount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "description": "Mặc định hôm nay"
+                    },
+                    "targetDate": {
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$"
+                    }
+                },
+                "required": [
+                    "name",
+                    "targetAmount",
+                    "targetDate"
+                ]
+            },
+            "UpdateGoalDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                    },
+                    "targetAmount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "startDate": {
+                        "type": "string"
+                    },
+                    "targetDate": {
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$"
+                    }
+                }
+            },
+            "DepositDto": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "walletId": {
+                        "type": "string",
+                        "description": "Ví trích tiền (phải đủ số dư)",
+                        "format": "uuid"
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "Ngày nạp, mặc định hôm nay"
+                    }
+                },
+                "required": [
+                    "amount",
+                    "walletId"
+                ]
+            },
+            "WithdrawDto": {
+                "type": "object",
+                "properties": {
+                    "walletId": {
+                        "type": "string",
+                        "description": "Ví nhận lại tiền",
+                        "format": "uuid"
+                    }
+                },
+                "required": [
+                    "walletId"
+                ]
+            },
+            "CreateTransferDto": {
+                "type": "object",
+                "properties": {
+                    "fromWalletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "toWalletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "occurredAt": {
+                        "type": "string",
+                        "description": "ISO 8601, mặc định hiện tại"
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    }
+                },
+                "required": [
+                    "fromWalletId",
+                    "toWalletId",
+                    "amount"
+                ]
+            },
+            "UpdateTransferDto": {
+                "type": "object",
+                "properties": {
+                    "fromWalletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "toWalletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "occurredAt": {
+                        "type": "string"
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    }
+                }
+            },
+            "CreateTemplateDto": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string",
+                        "description": "Nhãn hiển thị trên nút, vd \"Cà phê sáng\"",
+                        "minLength": 1,
+                        "maxLength": 50
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "categoryId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "walletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    }
+                },
+                "required": [
+                    "label",
+                    "title",
+                    "amount",
+                    "categoryId",
+                    "walletId"
+                ]
+            },
+            "UpdateTemplateDto": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 50
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "categoryId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "walletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    }
+                }
+            },
+            "UseTemplateDto": {
+                "type": "object",
+                "properties": {
+                    "occurredAt": {
+                        "type": "string",
+                        "description": "Mặc định hiện tại"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Ghi đè số tiền của mẫu",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    }
+                }
+            },
+            "CreateRuleDto": {
+                "type": "object",
+                "properties": {
+                    "walletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "categoryId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "enum": [
+                            "DAILY",
+                            "WEEKLY",
+                            "MONTHLY",
+                            "YEARLY"
+                        ]
+                    },
+                    "interval": {
+                        "type": "number",
+                        "description": "Mỗi `interval` kỳ một lần (vd WEEKLY + 2 = 2 tuần/lần)",
+                        "minimum": 1,
+                        "maximum": 365
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "description": "Kỳ đầu tiên (ISO). Ngày + giờ theo giờ VN được giữ cho mọi kỳ. Ở quá khứ => các kỳ đã qua được sinh bù."
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "description": "Sinh tới hết ngày này (giờ VN), bỏ trống = không hạn"
+                    }
+                },
+                "required": [
+                    "walletId",
+                    "categoryId",
+                    "amount",
+                    "title",
+                    "frequency",
+                    "startDate"
+                ]
+            },
+            "UpdateRuleDto": {
+                "type": "object",
+                "properties": {
+                    "walletId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "categoryId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10000000000000
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "note": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "enum": [
+                            "DAILY",
+                            "WEEKLY",
+                            "MONTHLY",
+                            "YEARLY"
+                        ]
+                    },
+                    "interval": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 365
+                    },
+                    "startDate": {
+                        "type": "string"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "null => bỏ hạn"
+                    }
+                }
+            },
+            "UpdateUserDto": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "ACTIVE",
+                            "LOCKED"
+                        ]
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "USER",
+                            "ADMIN"
+                        ]
+                    }
+                }
+            },
+            "BroadcastDto": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "body": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                    }
+                },
+                "required": [
+                    "title",
+                    "body"
+                ]
+            },
+            "CreateConversationDto": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 120
+                    }
+                }
+            },
+            "UpdateConversationDto": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                    },
+                    "archived": {
+                        "type": "boolean"
+                    },
+                    "pinned": {
+                        "type": "boolean",
+                        "description": "Ghim: không bị tự lưu trữ khi đạt giới hạn số hội thoại"
+                    }
+                }
+            },
+            "PostMessageDto": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "description": "Câu của người dùng (1–2000 ký tự)",
+                        "minLength": 1,
+                        "maxLength": 2000
+                    }
+                },
+                "required": [
+                    "text"
+                ]
+            },
+            "ConfirmDraftDto": {
+                "type": "object",
+                "properties": {
+                    "payload": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Bản đã sửa (cùng dạng `payload` của nháp). Bỏ trống = xác nhận nguyên nháp"
+                    }
+                }
+            },
+            "FeedbackDto": {
+                "type": "object",
+                "properties": {
+                    "rating": {
+                        "type": "number",
+                        "description": "1 = thích, -1 = không thích",
+                        "enum": [
+                            1,
+                            -1
+                        ]
+                    },
+                    "comment": {
+                        "type": "string",
+                        "maxLength": 500
+                    }
+                },
+                "required": [
+                    "rating"
+                ]
+            },
+            "RerouteDto": {
+                "type": "object",
+                "properties": {
+                    "skill": {
+                        "type": "string",
+                        "description": "Tên skill đúng ý người dùng (xem GET /ai/skills)",
+                        "minLength": 1,
+                        "maxLength": 60
+                    }
+                },
+                "required": [
+                    "skill"
+                ]
+            },
+            "AiSettingsDto": {
+                "type": "object",
+                "properties": {
+                    "shareExamples": {
+                        "type": "boolean",
+                        "description": "Đồng ý góp ví dụ đã ẩn danh vào kho chung (lưu thời điểm đồng ý; tắt bất cứ lúc nào)"
+                    }
+                },
+                "required": [
+                    "shareExamples"
+                ]
+            },
+            "OllamaTestDto": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "Bỏ trống = dùng cấu hình đã lưu (cho phép thử địa chỉ / model đang sửa trước khi lưu)",
+                        "maxLength": 300
+                    },
+                    "chatModel": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "embedModel": {
+                        "type": "string",
+                        "maxLength": 100
+                    }
+                }
+            }
+        }
+    }
+}
