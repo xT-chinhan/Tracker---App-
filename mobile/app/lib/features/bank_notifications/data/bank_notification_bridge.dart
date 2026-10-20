@@ -59,7 +59,7 @@ class BankNotificationBridge {
     if (_native) await _call<bool>('openAppDetails');
   }
 
-  /// Danh sách tối ưu pin (người dùng tự chọn Thu Chi → Không tối ưu).
+  /// Danh sách tối ưu pin (người dùng tự chọn TrackerX → Không tối ưu).
   Future<void> openBatterySettings() async {
     if (_native) await _call<bool>('openBatterySettings');
   }

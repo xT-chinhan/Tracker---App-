@@ -11,7 +11,7 @@ PublicConfig publicConfigFixture({
   String latestVersion = '1.0.0',
   String minVersion = '1.0.0',
 }) => PublicConfig(
-  appName: 'Thu Chi',
+  appName: 'TrackerX',
   currency: 'VND',
   registrationEnabled: registrationEnabled,
   maintenance: MaintenanceConfig(

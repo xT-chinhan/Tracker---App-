@@ -27,7 +27,7 @@ class PendingBankTransaction {
   final DateTime occurredAt;
   final String title;
 
-  /// Danh mục gợi ý theo tên danh mục Thu Chi.
+  /// Danh mục gợi ý theo tên danh mục TrackerX.
   final String categoryName;
 
   /// Nội dung thông báo gốc, chỉ để hiển thị trên máy, không gửi lên máy chủ.
@@ -61,7 +61,7 @@ class PendingBankTransaction {
       );
 }
 
-/// Danh mục của module → danh mục Thu Chi (mobile/BANK-NOTIFICATIONS.md mục 3).
+/// Danh mục của module → danh mục TrackerX (mobile/BANK-NOTIFICATIONS.md mục 3).
 const _expenseCategory = {
   'Ăn uống': 'Ăn uống',
   'Mua sắm': 'Mua sắm',

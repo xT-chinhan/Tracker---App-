@@ -631,7 +631,7 @@ class _AiConversationsScreenState extends ConsumerState<AiConversationsScreen> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Quản trị viên đã tắt trợ lý trên Thu Chi. Ghi giao dịch, báo cáo và ngân sách vẫn dùng bình thường.',
+                'Quản trị viên đã tắt trợ lý trên TrackerX. Ghi giao dịch, báo cáo và ngân sách vẫn dùng bình thường.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

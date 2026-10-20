@@ -23,7 +23,7 @@ void main() {
       await tester.tap(find.text('mở'));
       await tester.pumpAndSettle();
       expect(
-        find.text('Cho phép Thu Chi đọc thông báo ngân hàng?'),
+        find.text('Cho phép TrackerX đọc thông báo ngân hàng?'),
         findsOneWidget,
       );
       expect(find.textContaining('bị bỏ qua ngay'), findsOneWidget);

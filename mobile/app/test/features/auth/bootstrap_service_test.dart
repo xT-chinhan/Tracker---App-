@@ -25,7 +25,7 @@ void main() {
     await service.start();
 
     expect(session.status, AppSessionStatus.unauthenticated);
-    expect(session.config?.appName, 'Thu Chi');
+    expect(session.config?.appName, 'TrackerX');
   });
 
   test('token hợp lệ khôi phục người dùng hiện tại', () async {

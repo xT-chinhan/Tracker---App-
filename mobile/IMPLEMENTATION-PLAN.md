@@ -1,4 +1,4 @@
-# Kế hoạch thực thi app mobile Thu Chi
+# Kế hoạch thực thi app mobile TrackerX
 
 Ngày lập: 17/10/2026. Nhánh nền: `app-mobile`, commit `fc2e0a3`.
 
@@ -8,7 +8,7 @@ Người dùng đã xác nhận bộ mockup hiện có được duyệt, bao g�
 
 ## 1. Kết quả cần bàn giao
 
-Xây dựng ứng dụng Flutter Android/iOS trong `mobile/app/`, bám sát thiết kế Thu Chi đã duyệt, sử dụng API thật của dự án và hoàn thành các gói M1–M10 trong `mobile/README.md`.
+Xây dựng ứng dụng Flutter Android/iOS trong `mobile/app/`, bám sát thiết kế TrackerX đã duyệt, sử dụng API thật của dự án và hoàn thành các gói M1–M10 trong `mobile/README.md`.
 
 Các sản phẩm bàn giao:
 

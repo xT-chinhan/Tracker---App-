@@ -1,4 +1,4 @@
-# Tích hợp "Ghi từ thông báo ngân hàng" vào app Thu Chi (Android)
+# Tích hợp "Ghi từ thông báo ngân hàng" vào app TrackerX (Android)
 
 > **Trạng thái (19/10/2026): đã tích hợp vào `mobile/app`.** Phần dưới là thiết kế ban đầu; code thật nằm ở:
 > - Android: `android/app/src/main/kotlin/vn/thuchi/app/banknotif/` (`BankNotificationListener.kt`, `BankNotificationChannels.kt`), service khai báo trong `AndroidManifest.xml`.
@@ -42,11 +42,11 @@ Thêm `uuid` vào `pubspec.yaml` của app (`intl` đã có).
 ### Đổi tên khi chép (bắt buộc)
 - Package Kotlin `com.chinhan.xt_manager` → `vn.thuchi.app.banknotif`. Lấy applicationId thật của app trong `android/app/build.gradle.kts`.
 - Tên kênh `com.chinhan.xt_manager/methods` / `/events` → `vn.thuchi.app/bank_notifications/methods` / `/events`. Sửa ở **cả** Kotlin lẫn `notification_bridge.dart`.
-- `android:label` của service → `Thu Chi`.
-- Chuỗi foreground, `PROPERTY_SPECIAL_USE_FGS_SUBTYPE` → nói rõ "Thu Chi đọc thông báo ngân hàng để gợi ý ghi giao dịch".
+- `android:label` của service → `TrackerX`.
+- Chuỗi foreground, `PROPERTY_SPECIAL_USE_FGS_SUBTYPE` → nói rõ "TrackerX đọc thông báo ngân hàng để gợi ý ghi giao dịch".
 
 ### Sửa bắt buộc vì quyền riêng tư
-Module gốc là bản thử nghiệm: nó **lưu mọi thông báo của mọi app** (tin nhắn, mạng xã hội…) vào SharedPreferences, tối đa 300 mục. Đồng thời service chạy 24/7, kể cả sau khi khởi động lại máy. Khi đưa vào Thu Chi phải sửa trong `NotificationMonitorService.kt`:
+Module gốc là bản thử nghiệm: nó **lưu mọi thông báo của mọi app** (tin nhắn, mạng xã hội…) vào SharedPreferences, tối đa 300 mục. Đồng thời service chạy 24/7, kể cả sau khi khởi động lại máy. Khi đưa vào TrackerX phải sửa trong `NotificationMonitorService.kt`:
 
 1. **Chỉ giữ thông báo tài chính.** Trong `onNotificationPosted`, trước khi lưu hay gửi lên Flutter:
    - giữ nếu `packageName` thuộc danh sách app ngân hàng / ví (chép từ `_bankPackageNames` trong `bank_notification_parser.dart`);
@@ -77,9 +77,9 @@ Tính năng chỉ chạy khi **cả ba** đều bật và `Platform.isAndroid`. 
 1. **Lấy thông báo.** Khi app mở / quay lại foreground: gọi `NotificationBridge.getSavedNotifications()` (thông báo đến lúc app đóng), rồi nghe tiếp `notificationStream`.
 2. **Bóc tách.** `BankNotificationParser.parse(raw)` → `ParsedTransaction?`. Bỏ qua nếu `null`, `amount <= 0`, hoặc `confidence < 0.6`.
 3. **Chống trùng.** Khóa = `packageName + amount + timestamp (làm tròn phút)`. Lưu các khóa đã xử lý (đã xác nhận hoặc đã bỏ qua) trong 30 ngày. Sau khi đưa vào danh sách chờ thì gọi `clearSavedNotifications()`.
-4. **Ánh xạ sang dữ liệu Thu Chi:**
+4. **Ánh xạ sang dữ liệu TrackerX:**
 
-| `ParsedTransaction` | Thu Chi |
+| `ParsedTransaction` | TrackerX |
 |---|---|
 | `type`: `credit` / `debit` | danh mục loại `INCOME` / `EXPENSE` |
 | `amount` | `amount` (số nguyên đồng) |
@@ -90,7 +90,7 @@ Tính năng chỉ chạy khi **cả ba** đều bật và `Platform.isAndroid`. 
 
 **Danh mục.** Tra theo tên trong `GET /categories?type=`; không thấy thì lùi về Chi khác / Thu khác.
 
-| Danh mục module | Thu Chi (`debit`) | Thu Chi (`credit`) |
+| Danh mục module | TrackerX (`debit`) | TrackerX (`credit`) |
 |---|---|---|
 | Ăn uống | Ăn uống | Thu khác |
 | Mua sắm | Mua sắm | Thu khác |
@@ -117,7 +117,7 @@ Theo quy tắc của dự án (`CLAUDE.md`), giao diện phải có mockup đư�
 
 1. **Cài đặt › Ghi từ thông báo ngân hàng**: công tắc, trạng thái quyền, danh sách ngân hàng ↔ ví đã ghép, nút xóa dữ liệu chờ.
 2. **Hướng dẫn cấp quyền**:
-   - Bật "Truy cập thông báo" cho Thu Chi.
+   - Bật "Truy cập thông báo" cho TrackerX.
    - Android 13+ với app không cài từ CH Play: mở "Cài đặt bị hạn chế" bằng dấu ⋮ trong thông tin ứng dụng (`openAppDetails`).
    - Tắt tối ưu pin (`requestIgnoreBatteryOptimizations`) và bật tự khởi chạy trên Xiaomi / Oppo / Vivo (`openAutostartSettings`).
    - Trước khi xin quyền, nói rõ app chỉ giữ thông báo ngân hàng / ví và không gửi nội dung thông báo lên máy chủ.

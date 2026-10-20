@@ -149,7 +149,7 @@ class _OcrScanSheetState extends ConsumerState<OcrScanSheet> {
           if (!out) ...[
             const SizedBox(height: 4),
             Text(
-              'Hóa đơn giấy hoặc ảnh chụp màn hình chuyển khoản. Thu Chi đọc số tiền, ngày, nơi bán rồi tạo nháp để bạn xem lại.',
+              'Hóa đơn giấy hoặc ảnh chụp màn hình chuyển khoản. TrackerX đọc số tiền, ngày, nơi bán rồi tạo nháp để bạn xem lại.',
               style: text.bodyLarge?.copyWith(color: muted, fontWeight: FontWeight.w400),
             ),
           ] else ...[

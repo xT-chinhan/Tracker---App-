@@ -62,7 +62,7 @@ object BankNotificationChannels {
 
     private fun permissionIntent(activity: Activity): Intent =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // Mở thẳng trang bật quyền của Thu Chi
+            // Mở thẳng trang bật quyền của TrackerX
             Intent(Settings.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS).putExtra(
                 Settings.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME,
                 ComponentName(activity, BankNotificationListener::class.java).flattenToString(),

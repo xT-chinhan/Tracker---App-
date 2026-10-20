@@ -472,7 +472,7 @@ void main() {
       expect(find.text('Xóa tài khoản'), findsOneWidget);
 
       // Phiên bản app
-      expect(find.text('Thu Chi · phiên bản 1.0.0 (42)'), findsOneWidget);
+      expect(find.text('TrackerX · phiên bản 1.0.0 (42)'), findsOneWidget);
     },
   );
 

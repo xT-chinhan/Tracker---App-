@@ -85,7 +85,7 @@ class _BankPendingScreenState extends ConsumerState<BankPendingScreen> {
       showDragHandle: true,
       builder: (_) => _PickerSheet(
         title: 'Ghi vào ví nào?',
-        subtitle: 'Thu Chi nhớ lựa chọn này cho ${t.bank}.',
+        subtitle: 'TrackerX nhớ lựa chọn này cho ${t.bank}.',
         children: [
           for (final w in wallets)
             ListTile(

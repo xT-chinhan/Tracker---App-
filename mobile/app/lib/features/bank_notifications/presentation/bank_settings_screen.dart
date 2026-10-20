@@ -167,7 +167,7 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
                     index: 1,
                     title: 'Bật quyền Truy cập thông báo',
                     body:
-                        'Trong trang mở ra, chọn Thu Chi và bật công tắc. Android sẽ hỏi lại, chọn Cho phép.',
+                        'Trong trang mở ra, chọn TrackerX và bật công tắc. Android sẽ hỏi lại, chọn Cho phép.',
                     done: st.permissionGranted,
                     action: st.permissionGranted ? null : 'Mở cài đặt',
                     onAction: _c.openPermissionSettings,
@@ -187,7 +187,7 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
                     index: 3,
                     title: 'Giữ chạy nền (khuyên dùng)',
                     body:
-                        'Một số máy (Xiaomi, Oppo, Vivo, Samsung) tắt ứng dụng chạy nền để tiết kiệm pin. Chọn Thu Chi › Không tối ưu hóa; với Xiaomi / Oppo bật thêm Tự khởi chạy.',
+                        'Một số máy (Xiaomi, Oppo, Vivo, Samsung) tắt ứng dụng chạy nền để tiết kiệm pin. Chọn TrackerX › Không tối ưu hóa; với Xiaomi / Oppo bật thêm Tự khởi chạy.',
                     done: st.batteryUnrestricted,
                     action: st.batteryUnrestricted ? null : 'Mở cài đặt pin',
                     onAction: _c.openBatterySettings,

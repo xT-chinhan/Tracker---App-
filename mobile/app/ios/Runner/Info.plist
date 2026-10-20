@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Chụp hóa đơn để Thu Chi đọc số tiền và tạo nháp giao dịch.</string>
+	<string>Chụp hóa đơn để TrackerX đọc số tiền và tạo nháp giao dịch.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Chọn ảnh hóa đơn hoặc ảnh chụp màn hình chuyển khoản để Thu Chi đọc.</string>
+	<string>Chọn ảnh hóa đơn hoặc ảnh chụp màn hình chuyển khoản để TrackerX đọc.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Thu Chi</string>
+	<string>TrackerX</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,7 +19,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Thu Chi</string>
+	<string>TrackerX</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

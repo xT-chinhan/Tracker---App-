@@ -19,7 +19,7 @@ import '../auth/presentation/auth_scaffold.dart';
 
 /*
  * Số điện thoại (mockup 50-sdt-*): người dùng tự gửi 1 tin chứa 6 số xác nhận từ SIM của mình tới máy cổng,
- * Thu Chi không nhắn tin. Luồng xác nhận KHÔNG hiện số điện thoại nào (kể cả số máy cổng, lấy từ smsLink chỉ để gửi).
+ * TrackerX không nhắn tin. Luồng xác nhận KHÔNG hiện số điện thoại nào (kể cả số máy cổng, lấy từ smsLink chỉ để gửi).
  * Android (APK, không qua Google Play): app tự gửi bằng SmsManager (quyền SEND_SMS), máy 2 SIM thì hỏi SIM.
  * iOS / từ chối quyền / web: mở ứng dụng Tin nhắn soạn sẵn (smsLink).
  */
@@ -432,7 +432,7 @@ class _PhoneNumberScreenState extends ConsumerState<PhoneNumberScreen> {
               children: [
                 const TextSpan(text: 'Bước sau, bạn '),
                 const TextSpan(text: 'gửi yêu cầu xác nhận từ số của bạn', style: TextStyle(fontWeight: FontWeight.w700, color: _ink)),
-                TextSpan(text: ' bằng 1 tin nhắn, phí như tin nhắn thường của nhà mạng.${_link ? ' Thu Chi không bao giờ nhắn tin hay gọi cho bạn.' : ''}'),
+                TextSpan(text: ' bằng 1 tin nhắn, phí như tin nhắn thường của nhà mạng.${_link ? ' TrackerX không bao giờ nhắn tin hay gọi cho bạn.' : ''}'),
               ],
             ),
           ),
@@ -697,7 +697,7 @@ class _PhoneConfirmScreenState extends ConsumerState<PhoneConfirmScreen> with Wi
       back: 'Quay lại',
       title: 'Gửi yêu cầu xác nhận',
       subtitle: _native
-          ? 'Thu Chi gửi yêu cầu bằng 1 tin nhắn từ máy này. Bạn không cần mở ứng dụng Tin nhắn.'
+          ? 'TrackerX gửi yêu cầu bằng 1 tin nhắn từ máy này. Bạn không cần mở ứng dụng Tin nhắn.'
           : 'Ứng dụng Tin nhắn sẽ mở với yêu cầu soạn sẵn. Bạn chỉ cần bấm Gửi từ chính số điện thoại vừa nhập.',
       bottom: [
         AppButton(
@@ -776,7 +776,7 @@ class _PhoneConfirmScreenState extends ConsumerState<PhoneConfirmScreen> with Wi
                             ],
                           ),
                           const SizedBox(height: 2),
-                          Text('Thu Chi tự gửi từ ${_sentFrom ?? 'máy này'}, không mở ứng dụng Tin nhắn.', style: text.bodyMedium?.copyWith(color: muted)),
+                          Text('TrackerX tự gửi từ ${_sentFrom ?? 'máy này'}, không mở ứng dụng Tin nhắn.', style: text.bodyMedium?.copyWith(color: muted)),
                         ],
                       ),
                     ),
@@ -1044,7 +1044,7 @@ class _PermissionReason extends StatelessWidget {
                   child: Text.rich(
                     const TextSpan(
                       children: [
-                        TextSpan(text: 'Thu Chi chỉ gửi '),
+                        TextSpan(text: 'TrackerX chỉ gửi '),
                         TextSpan(text: '1 tin chứa 6 số xác nhận', style: TextStyle(fontWeight: FontWeight.w700, color: _ink)),
                         TextSpan(text: ', một lần, khi bạn bấm Gửi. Phí như tin nhắn thường của nhà mạng.'),
                       ],
@@ -1196,7 +1196,7 @@ class ForgotPasswordChoiceScreen extends StatelessWidget {
         const SizedBox(height: 22),
         const _Note(
           icon: LucideIcons.info,
-          child: Text('Cách qua số điện thoại chỉ dùng được nếu bạn đã gắn số trong Cài đặt > Tài khoản. Thu Chi không gửi tin nhắn, bạn gửi yêu cầu xác nhận từ số của bạn.'),
+          child: Text('Cách qua số điện thoại chỉ dùng được nếu bạn đã gắn số trong Cài đặt > Tài khoản. TrackerX không gửi tin nhắn, bạn gửi yêu cầu xác nhận từ số của bạn.'),
         ),
       ],
     );

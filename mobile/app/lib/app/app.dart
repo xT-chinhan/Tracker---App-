@@ -51,7 +51,7 @@ class _ThuChiAppState extends ConsumerState<ThuChiApp>
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Thu Chi',
+      title: 'TrackerX',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: ref.watch(appRouterProvider),

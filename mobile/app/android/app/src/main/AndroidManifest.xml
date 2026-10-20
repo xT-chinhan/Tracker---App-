@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
     <application
-        android:label="Thu Chi"
+        android:label="TrackerX"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
@@ -42,7 +42,7 @@
              Không cần quyền nào khác (không foreground service, không khởi động cùng máy, không miễn tối ưu pin). -->
         <service
             android:name=".banknotif.BankNotificationListener"
-            android:label="Thu Chi · ghi từ thông báo ngân hàng"
+            android:label="TrackerX · ghi từ thông báo ngân hàng"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
             android:exported="true">
             <intent-filter>

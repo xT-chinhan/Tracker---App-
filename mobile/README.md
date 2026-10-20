@@ -1,4 +1,4 @@
-# App mobile Thu Chi (Flutter) — yêu cầu cho nhóm làm app
+# App mobile TrackerX (Flutter) — yêu cầu cho nhóm làm app
 
 Nhánh này (`app-mobile`) là nơi dựng app di động cho người dùng cuối. Backend, admin web và thiết kế đã xong trên `main`. App **chỉ gọi API có sẵn**: không cần sửa backend để làm hết các màn ở Giai đoạn 1–3.
 

@@ -26,7 +26,7 @@ class BankDisclosureSheet extends StatelessWidget {
   static const points = <(IconData, String)>[
     (
       LucideIcons.bell_ring,
-      'Thu Chi đọc thông báo biến động số dư từ app ngân hàng và ví điện tử trên máy này để gợi ý ghi thu chi cho bạn.',
+      'TrackerX đọc thông báo biến động số dư từ app ngân hàng và ví điện tử trên máy này để gợi ý ghi thu chi cho bạn.',
     ),
     (
       LucideIcons.eye_off,
@@ -34,7 +34,7 @@ class BankDisclosureSheet extends StatelessWidget {
     ),
     (
       LucideIcons.smartphone,
-      'Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản Thu Chi của bạn: số tiền, danh mục, ví, thời gian và mô tả.',
+      'Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản TrackerX của bạn: số tiền, danh mục, ví, thời gian và mô tả.',
     ),
     (
       LucideIcons.toggle_left,
@@ -66,7 +66,7 @@ class BankDisclosureSheet extends StatelessWidget {
           const IconBubble(icon: LucideIcons.bell_ring, size: 56),
           const SizedBox(height: 16),
           Text(
-            'Cho phép Thu Chi đọc thông báo ngân hàng?',
+            'Cho phép TrackerX đọc thông báo ngân hàng?',
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
             ),

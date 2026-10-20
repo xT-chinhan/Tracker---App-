@@ -455,7 +455,7 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             Center(
               child: Text(
-                'Thu Chi · phiên bản $appVersion',
+                'TrackerX · phiên bản $appVersion',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: const Color(0xFFA9A8A3),
                   fontSize: 13,

@@ -39,7 +39,7 @@ void main() {
   );
 
   test(
-    'lương → danh mục Lương; danh mục module không có ở Thu Chi → Thu khác / Chi khác',
+    'lương → danh mục Lương; danh mục module không có ở TrackerX → Thu khác / Chi khác',
     () {
       final salary = _pending(MockBankSamples.mbbankCredit);
       expect(pickCategory(_cats, salary)?.id, 'luong');

@@ -1,4 +1,6 @@
-# Đưa Thu Chi lên Google Play: khai báo cho tính năng "Ghi từ thông báo ngân hàng"
+# Đưa TrackerX lên Google Play: khai báo cho tính năng "Ghi từ thông báo ngân hàng"
+
+> App hiện phát hành bằng APK, không lên Google Play (tài liệu giữ để tham khảo).
 
 Tính năng đọc thông báo ngân hàng (`lib/features/bank_notifications`, `android/.../banknotif`) dùng quyền **Truy cập thông báo** (`BIND_NOTIFICATION_LISTENER_SERVICE`). Tài liệu này ghi cách viết và khai báo để người duyệt Google Play hiểu đúng mục đích, **không coi là thu thập dữ liệu trái phép**.
 
@@ -10,7 +12,7 @@ Nguyên tắc: nói thật, nói cụ thể, và ở mọi chỗ (trong app, ch�
 
 | Quyền / thành phần | Có dùng? | Lý do |
 |---|---|---|
-| `INTERNET` | Có | Gọi API Thu Chi |
+| `INTERNET` | Có | Gọi API TrackerX |
 | `BIND_NOTIFICATION_LISTENER_SERVICE` (service `BankNotificationListener`) | Có | Đọc thông báo biến động số dư. Người dùng tự bật trong Cài đặt Android, app không tự cấp được |
 | `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE` | **Không** | Bản module gốc có dùng. Đã bỏ vì loại `specialUse` phải khai báo kèm video trên Play Console và bị duyệt kỹ. NotificationListenerService do hệ thống tự gắn, không cần foreground service |
 | `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | **Không** | Quyền dễ bị gỡ app nếu không thuộc nhóm được phép. App chỉ mở trang danh sách tối ưu pin (`ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS`, không cần quyền) để người dùng tự chọn |
@@ -33,10 +35,10 @@ Trong app: Cài đặt › Ghi từ thông báo ngân hàng › bật công tắ
 
 Nội dung đang dùng (sửa trong `bank_disclosure_sheet.dart` thì sửa cả ở đây):
 
-> **Cho phép Thu Chi đọc thông báo ngân hàng?**
-> - Thu Chi đọc thông báo biến động số dư từ app ngân hàng và ví điện tử trên máy này để gợi ý ghi thu chi cho bạn.
+> **Cho phép TrackerX đọc thông báo ngân hàng?**
+> - TrackerX đọc thông báo biến động số dư từ app ngân hàng và ví điện tử trên máy này để gợi ý ghi thu chi cho bạn.
 > - Thông báo của app khác (tin nhắn, mạng xã hội, email…) bị bỏ qua ngay, không được lưu hay gửi đi.
-> - Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản Thu Chi của bạn: số tiền, danh mục, ví, thời gian và mô tả.
+> - Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản TrackerX của bạn: số tiền, danh mục, ví, thời gian và mô tả.
 > - Tắt bất cứ lúc nào trong Cài đặt › Ghi từ thông báo ngân hàng, hoặc thu hồi quyền trong Cài đặt Android.
 >
 > [Đồng ý và tiếp tục] [Không, cảm ơn] · Xem chính sách quyền riêng tư
@@ -61,7 +63,7 @@ Loại dữ liệu khai báo **thu thập**, không chia sẻ với bên thứ b
 
 | Loại (theo Play) | Dữ liệu cụ thể | Mục đích | Bắt buộc? |
 |---|---|---|---|
-| Thông tin cá nhân › Tên, Địa chỉ email | Tài khoản Thu Chi | Chức năng app, quản lý tài khoản | Bắt buộc |
+| Thông tin cá nhân › Tên, Địa chỉ email | Tài khoản TrackerX | Chức năng app, quản lý tài khoản | Bắt buộc |
 | Thông tin tài chính › Lịch sử mua hàng / Thông tin tài chính khác | Giao dịch thu chi người dùng ghi, kể cả khoản xác nhận từ thông báo ngân hàng | Chức năng app | Bắt buộc |
 | Tin nhắn trong app › Tin nhắn khác (nếu bật Trợ lý AI) | Câu hỏi gửi trợ lý | Chức năng app | Không bắt buộc |
 
@@ -73,7 +75,7 @@ Loại dữ liệu khai báo **thu thập**, không chia sẻ với bên thứ b
 
 Link chính sách đặt ở Play Console và trong admin › Cấu hình › Chung › "Chính sách bảo mật" (app đọc qua `config/public` → `privacyUrl` và hiện trong màn thông báo). Thêm nguyên đoạn:
 
-> **Ghi từ thông báo ngân hàng (chỉ Android, không bắt buộc).** Khi bạn bật tính năng này và cấp quyền Truy cập thông báo, ứng dụng Thu Chi đọc thông báo biến động số dư do ứng dụng ngân hàng và ví điện tử hiển thị trên thiết bị của bạn, để đề xuất các giao dịch thu chi. Thông báo của các ứng dụng khác bị bỏ qua và không được lưu. Nội dung thông báo chỉ được xử lý và lưu tạm trên thiết bị của bạn; Thu Chi không gửi nội dung thông báo lên máy chủ. Chỉ những giao dịch bạn chủ động xác nhận mới được lưu vào tài khoản Thu Chi của bạn, gồm số tiền, danh mục, ví, thời gian và mô tả. Chúng tôi không bán hay chia sẻ dữ liệu này với bên thứ ba. Bạn có thể tắt tính năng bất cứ lúc nào trong Cài đặt của ứng dụng (dữ liệu chờ trên thiết bị bị xóa ngay) hoặc thu hồi quyền trong Cài đặt Android, và có thể xóa toàn bộ dữ liệu bằng chức năng Xóa tài khoản.
+> **Ghi từ thông báo ngân hàng (chỉ Android, không bắt buộc).** Khi bạn bật tính năng này và cấp quyền Truy cập thông báo, ứng dụng TrackerX đọc thông báo biến động số dư do ứng dụng ngân hàng và ví điện tử hiển thị trên thiết bị của bạn, để đề xuất các giao dịch thu chi. Thông báo của các ứng dụng khác bị bỏ qua và không được lưu. Nội dung thông báo chỉ được xử lý và lưu tạm trên thiết bị của bạn; TrackerX không gửi nội dung thông báo lên máy chủ. Chỉ những giao dịch bạn chủ động xác nhận mới được lưu vào tài khoản TrackerX của bạn, gồm số tiền, danh mục, ví, thời gian và mô tả. Chúng tôi không bán hay chia sẻ dữ liệu này với bên thứ ba. Bạn có thể tắt tính năng bất cứ lúc nào trong Cài đặt của ứng dụng (dữ liệu chờ trên thiết bị bị xóa ngay) hoặc thu hồi quyền trong Cài đặt Android, và có thể xóa toàn bộ dữ liệu bằng chức năng Xóa tài khoản.
 
 ---
 
@@ -84,7 +86,7 @@ Người duyệt cần vào được app và hiểu vì sao app xin quyền đ�
 - **Tài khoản thử:** `demo@thuchi.vn` / `demo123`. Dùng máy chủ thật, tạo riêng tài khoản cho người duyệt và không dùng dữ liệu thật của khách hàng.
 - **Hướng dẫn ghi chú (dán nguyên văn):**
 
-> Thu Chi is a personal finance app. The optional feature "Ghi từ thông báo ngân hàng" (Record from bank notifications) uses NotificationListenerService only to read balance-change notifications posted by Vietnamese banking and e-wallet apps, so the user does not have to type each transaction. Notifications from any other app are ignored immediately and never stored. Notification content stays on the device; a transaction is sent to the user's own Thu Chi account only after the user taps "Xác nhận" (Confirm) on it. Before the system permission screen is opened, an in-app disclosure explains this and requires the user to tap "Đồng ý và tiếp tục" (Agree and continue). The feature is off by default and can be turned off in Settings, which deletes all pending data. The app does not use foreground services, Accessibility, SMS permissions, or battery-optimization exemptions. To test: log in with the account above → Cài đặt (Settings) → Ghi từ thông báo ngân hàng → turn on → agree → enable notification access for Thu Chi → when a bank app posts a notification, it appears under "Chờ xác nhận" (Pending) for confirmation.
+> TrackerX is a personal finance app. The optional feature "Ghi từ thông báo ngân hàng" (Record from bank notifications) uses NotificationListenerService only to read balance-change notifications posted by Vietnamese banking and e-wallet apps, so the user does not have to type each transaction. Notifications from any other app are ignored immediately and never stored. Notification content stays on the device; a transaction is sent to the user's own TrackerX account only after the user taps "Xác nhận" (Confirm) on it. Before the system permission screen is opened, an in-app disclosure explains this and requires the user to tap "Đồng ý và tiếp tục" (Agree and continue). The feature is off by default and can be turned off in Settings, which deletes all pending data. The app does not use foreground services, Accessibility, SMS permissions, or battery-optimization exemptions. To test: log in with the account above → Cài đặt (Settings) → Ghi từ thông báo ngân hàng → turn on → agree → enable notification access for TrackerX → when a bank app posts a notification, it appears under "Chờ xác nhận" (Pending) for confirmation.
 
 ---
 
@@ -93,7 +95,7 @@ Người duyệt cần vào được app và hiểu vì sao app xin quyền đ�
 Nhắc tính năng đúng như cách nó chạy, không hứa "tự động ghi" (app không tự ghi):
 
 - **Mô tả ngắn** (≤ 80 ký tự): `Ghi thu chi nhanh, ngân sách, tiết kiệm. Gợi ý giao dịch từ thông báo ngân hàng.`
-- **Một dòng trong mô tả dài:** `Tùy chọn trên Android: Thu Chi gợi ý giao dịch từ thông báo biến động số dư của ngân hàng và ví điện tử; bạn xác nhận từng khoản trước khi lưu. Thông báo của ứng dụng khác bị bỏ qua.`
+- **Một dòng trong mô tả dài:** `Tùy chọn trên Android: TrackerX gợi ý giao dịch từ thông báo biến động số dư của ngân hàng và ví điện tử; bạn xác nhận từng khoản trước khi lưu. Thông báo của ứng dụng khác bị bỏ qua.`
 
 ---
 
@@ -101,8 +103,8 @@ Nhắc tính năng đúng như cách nó chạy, không hứa "tự động ghi"
 
 Không bắt buộc (vì không dùng foreground service), nhưng nếu người duyệt hỏi lại thì nộp ngay được. Quay màn hình 30–60 giây:
 1. Cài đặt → Ghi từ thông báo ngân hàng → bật → màn thông báo → Đồng ý.
-2. Trang "Truy cập thông báo" của Android → bật Thu Chi.
-3. Một app ngân hàng hiện thông báo → mở Thu Chi → Trang chủ hiện "1 giao dịch chờ xác nhận" → Xác nhận.
+2. Trang "Truy cập thông báo" của Android → bật TrackerX.
+3. Một app ngân hàng hiện thông báo → mở TrackerX → Trang chủ hiện "1 giao dịch chờ xác nhận" → Xác nhận.
 4. Tắt tính năng → danh sách chờ trống.
 
 Tải lên YouTube để chế độ "Không công khai", dán link vào ghi chú duyệt.
