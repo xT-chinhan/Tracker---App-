@@ -6,11 +6,11 @@ Dữ liệu chạy trên máy dev của nhóm trưởng. Mọi tài khoản dư�
 
 | Phần | Địa chỉ | Ghi chú |
 |---|---|---|
-| Trang quản trị (admin) | `http://<IP-máy-dev>:5173` | Mở bằng Chrome trên máy tính |
-| API + tài liệu API | `http://<IP-máy-dev>:3000/docs` | Swagger, bấm "Try it out" để gọi thử |
-| App điện thoại | File APK (nhóm trưởng gửi) | Chỉ Android. Điện thoại phải cùng Wi-Fi với máy dev |
+| Trang quản trị (admin) | https://trackerx-admin.freepro.online | Mở bằng Chrome ở bất kỳ mạng nào |
+| API + tài liệu API | https://trackerx-api.freepro.online/docs | Swagger, bấm "Try it out" để gọi thử |
+| App điện thoại | APK hoặc `flutter run` từ `mobile/app` | Mặc định đã trỏ tới `https://trackerx-api.freepro.online/api`, dùng 4G hay Wi-Fi nào cũng được |
 
-IP máy dev hiện tại: `192.168.92.123` (đổi khi đổi mạng, hỏi lại nhóm trưởng).
+Máy chủ, dữ liệu và AI chạy trên laptop của nhóm trưởng qua Cloudflare Tunnel: **laptop phải bật** thì mới truy cập được. Không vào được thì báo nhóm trưởng.
 
 ## 2. Tài khoản
 

@@ -1068,6 +1068,8 @@ class SimPickerSheet extends StatefulWidget {
   final List<SimInfo> sims;
 
   static Future<SimInfo?> show(BuildContext context, List<SimInfo> sims) => showModalBottomSheet<SimInfo>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,

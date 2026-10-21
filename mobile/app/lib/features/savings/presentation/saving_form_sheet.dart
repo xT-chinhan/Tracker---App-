@@ -176,7 +176,7 @@ class _SavingFormSheetState extends ConsumerState<SavingFormSheet> {
         context.spacing.screenPadding,
         16,
         context.spacing.screenPadding,
-        MediaQuery.of(context).viewInsets.bottom + 24,
+        MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewPadding.bottom + 24,
       ),
       child: SingleChildScrollView(
         child: Column(

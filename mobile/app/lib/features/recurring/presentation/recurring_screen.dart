@@ -25,6 +25,8 @@ class RecurringScreen extends ConsumerStatefulWidget {
 class _RecurringScreenState extends ConsumerState<RecurringScreen> {
   void _openRecurringFormSheet([RecurringRuleItem? rule]) {
     showModalBottomSheet<bool>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
@@ -70,6 +72,8 @@ class _RecurringScreenState extends ConsumerState<RecurringScreen> {
     final colors = Theme.of(context).colorScheme;
 
     await showModalBottomSheet<void>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(

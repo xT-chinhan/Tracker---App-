@@ -12,6 +12,8 @@ class HistoryFilterSheet extends ConsumerStatefulWidget {
 
   static Future<void> show(BuildContext context) {
     return showModalBottomSheet<void>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

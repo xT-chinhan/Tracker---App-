@@ -16,6 +16,8 @@ class ConversationActionSheet extends ConsumerStatefulWidget {
     required AiConversationItem conversation,
   }) {
     return showModalBottomSheet<void>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

@@ -29,6 +29,8 @@ class CategoryPickerSheet extends ConsumerStatefulWidget {
     String? selectedCategoryId,
   }) {
     return showModalBottomSheet<CategoryItem>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

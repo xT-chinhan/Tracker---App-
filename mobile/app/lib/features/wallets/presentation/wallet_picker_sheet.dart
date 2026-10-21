@@ -24,6 +24,8 @@ class WalletPickerSheet extends ConsumerWidget {
     String? selectedWalletId,
   }) {
     return showModalBottomSheet<WalletItem>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

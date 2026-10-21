@@ -1,5 +1,10 @@
 // Fetch wrapper + kiểu dữ liệu cho API backend (NestJS).
-export const API_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api').replace(/\/$/, '')
+// Mở admin qua tên miền (vd tunnel trackerx-admin.freepro.online) → gọi /api cùng tên miền; chạy ở máy dev → localhost:3000
+// (VITE_API_URL trỏ localhost chỉ đúng khi trình duyệt ở chính máy dev)
+const LOCAL = ['localhost', '127.0.0.1']
+const envUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
+const remoteBrowser = typeof window !== 'undefined' && !LOCAL.includes(window.location.hostname)
+export const API_URL = (remoteBrowser && LOCAL.includes(new URL(envUrl).hostname) ? `${window.location.origin}/api` : envUrl).replace(/\/$/, '')
 
 const TOKEN_KEY = 'admin.token'
 const USER_KEY = 'admin.user'

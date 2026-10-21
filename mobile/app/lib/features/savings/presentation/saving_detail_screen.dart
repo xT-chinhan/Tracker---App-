@@ -30,6 +30,8 @@ class SavingDetailScreen extends ConsumerStatefulWidget {
 class _SavingDetailScreenState extends ConsumerState<SavingDetailScreen> {
   void _openDepositSheet(SavingGoalDetail goal) {
     showModalBottomSheet<bool>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
@@ -43,6 +45,8 @@ class _SavingDetailScreenState extends ConsumerState<SavingDetailScreen> {
 
   void _openEditSheet(SavingGoalDetail goal) {
     showModalBottomSheet<dynamic>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(

@@ -12,6 +12,8 @@ class EditProfileSheet extends ConsumerStatefulWidget {
 
   static Future<void> show(BuildContext context) {
     return showModalBottomSheet<void>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -94,7 +96,7 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
         left: 20,
         right: 20,
         top: 10,
-        bottom: mediaQuery.viewInsets.bottom + 24,
+        bottom: mediaQuery.viewInsets.bottom + mediaQuery.viewPadding.bottom + 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

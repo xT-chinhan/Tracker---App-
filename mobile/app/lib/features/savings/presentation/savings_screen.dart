@@ -27,6 +27,8 @@ class SavingsScreen extends ConsumerStatefulWidget {
 class _SavingsScreenState extends ConsumerState<SavingsScreen> {
   void _openCreateGoalSheet() {
     showModalBottomSheet<bool>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(

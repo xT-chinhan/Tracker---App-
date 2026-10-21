@@ -301,7 +301,7 @@ class _RecurringFormSheetState extends ConsumerState<RecurringFormSheet> {
         context.spacing.screenPadding,
         14,
         context.spacing.screenPadding,
-        MediaQuery.of(context).viewInsets.bottom + 24,
+        MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewPadding.bottom + 24,
       ),
       child: SingleChildScrollView(
         child: Column(

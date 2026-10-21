@@ -81,6 +81,8 @@ class _BankPendingScreenState extends ConsumerState<BankPendingScreen> {
         .where((w) => !w.isArchived)
         .toList();
     final picked = await showModalBottomSheet<WalletItem>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       showDragHandle: true,
       builder: (_) => _PickerSheet(
@@ -113,6 +115,8 @@ class _BankPendingScreenState extends ConsumerState<BankPendingScreen> {
         .where((c) => !c.isArchived && c.type == t.type)
         .toList();
     final picked = await showModalBottomSheet<CategoryItem>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       showDragHandle: true,
       isScrollControlled: true,

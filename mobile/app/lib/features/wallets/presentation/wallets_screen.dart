@@ -38,6 +38,8 @@ class WalletsScreen extends ConsumerStatefulWidget {
 class _WalletsScreenState extends ConsumerState<WalletsScreen> {
   void _openWalletFormSheet([WalletItem? wallet]) {
     showModalBottomSheet<bool>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(

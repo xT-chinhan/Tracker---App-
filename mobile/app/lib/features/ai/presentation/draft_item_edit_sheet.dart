@@ -33,6 +33,8 @@ class DraftItemEditSheet extends ConsumerStatefulWidget {
     required VoidCallback onRemove,
   }) {
     return showModalBottomSheet<void>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -173,6 +175,8 @@ class _DraftItemEditSheetState extends ConsumerState<DraftItemEditSheet> {
     if (wallets.isEmpty) return;
 
     final selected = await showModalBottomSheet<String>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

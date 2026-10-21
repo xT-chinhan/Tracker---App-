@@ -16,6 +16,8 @@ class BankDisclosureSheet extends StatelessWidget {
   /// `true` = người dùng đồng ý.
   static Future<bool> show(BuildContext context, {String? privacyUrl}) async =>
       await showModalBottomSheet<bool>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
         context: context,
         isScrollControlled: true,
         useSafeArea: true,

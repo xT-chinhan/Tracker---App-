@@ -94,6 +94,8 @@ class OcrScanSheet extends ConsumerStatefulWidget {
 
   static Future<OcrChoice?> show(BuildContext context) {
     return showModalBottomSheet<OcrChoice>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

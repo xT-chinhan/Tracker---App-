@@ -1,7 +1,9 @@
 abstract final class AppEnvironment {
+  /// Mặc định: API dev public qua Cloudflare Tunnel (máy chủ của nhóm, có AI).
+  /// Chạy backend riêng thì ghi đè: --dart-define=API_URL=http://<IP>:3000/api
   static const apiUrl = String.fromEnvironment(
     'API_URL',
-    defaultValue: 'http://localhost:3000/api',
+    defaultValue: 'https://trackerx-api.freepro.online/api',
   );
 
   static Uri requireApiUri() {

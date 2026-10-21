@@ -12,6 +12,8 @@ class ChangePasswordSheet extends ConsumerStatefulWidget {
 
   static Future<void> show(BuildContext context) {
     return showModalBottomSheet<void>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -131,7 +133,8 @@ class _ChangePasswordSheetState extends ConsumerState<ChangePasswordSheet> {
         left: 20,
         right: 20,
         top: 10,
-        bottom: mediaQuery.viewInsets.bottom + 24,
+        // bàn phím + thanh điều hướng hệ thống (cử chỉ / 3 nút) không che nút Đổi mật khẩu
+        bottom: mediaQuery.viewInsets.bottom + mediaQuery.viewPadding.bottom + 24,
       ),
       child: SingleChildScrollView(
         child: Column(

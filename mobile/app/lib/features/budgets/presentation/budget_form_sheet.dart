@@ -128,7 +128,7 @@ class _BudgetFormSheetState extends ConsumerState<BudgetFormSheet> {
         context.spacing.screenPadding,
         16,
         context.spacing.screenPadding,
-        MediaQuery.of(context).viewInsets.bottom + 24,
+        MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewPadding.bottom + 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

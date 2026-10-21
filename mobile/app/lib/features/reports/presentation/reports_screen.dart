@@ -78,6 +78,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
     // Show success sheet with copy option
     showModalBottomSheet<void>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(

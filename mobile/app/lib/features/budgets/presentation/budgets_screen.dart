@@ -57,6 +57,8 @@ class _BudgetsScreenState extends ConsumerState<BudgetsScreen> {
     required Set<String> takenIds,
   }) {
     showModalBottomSheet<bool>(
+      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
