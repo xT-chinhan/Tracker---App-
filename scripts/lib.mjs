@@ -30,7 +30,9 @@ export const log = (msg) => console.log(`\n\x1b[1;36m▶ ${msg}\x1b[0m`);
 
 /** Chạy lệnh đồng bộ, in output ra màn hình; lỗi => ném ngoại lệ (trừ khi allowFail). */
 export function run(cmd, args, { cwd = ROOT, env = {}, allowFail = false, quiet = false } = {}) {
-  const r = spawnSync(cmd, args, { cwd, env: { ...process.env, ...env }, stdio: quiet ? 'pipe' : 'inherit', encoding: 'utf8' });
+  const isWin = process.platform === 'win32';
+  const shell = isWin && (cmd === 'npm' || cmd === 'npx');
+  const r = spawnSync(cmd, args, { cwd, env: { ...process.env, ...env }, stdio: quiet ? 'pipe' : 'inherit', encoding: 'utf8', shell });
   if (r.status !== 0 && !allowFail) {
     if (quiet) process.stderr.write(`${r.stdout ?? ''}${r.stderr ?? ''}`);
     throw new Error(`Lệnh lỗi (${r.status}): ${cmd} ${args.join(' ')}`);
@@ -80,7 +82,15 @@ export async function startApi({ port, env, logFile }) {
   return () => new Promise((resolve) => {
     if (child.exitCode !== null) return resolve();
     child.once('exit', () => resolve());
-    try { process.kill(-child.pid, 'SIGTERM'); } catch { resolve(); }
-    setTimeout(() => { try { process.kill(-child.pid, 'SIGKILL'); } catch { /* đã dừng */ } }, 5000);
+    try {
+      if (process.platform === 'win32') child.kill();
+      else process.kill(-child.pid, 'SIGTERM');
+    } catch { resolve(); }
+    setTimeout(() => {
+      try {
+        if (process.platform === 'win32') child.kill('SIGKILL');
+        else process.kill(-child.pid, 'SIGKILL');
+      } catch { /* đã dừng */ }
+    }, 5000);
   });
 }

@@ -4,6 +4,7 @@
 //   3. khởi động lại API (xóa bộ đếm rate limit) -> admin e2e Playwright (tự bật Vite ở :5174)
 //   4. dừng API, xóa DB test (KEEP_TEST_DB=1 để giữ)
 // Tùy chọn: TEST_DB, TEST_API_PORT, E2E_PORT, SKIP_BACKEND=1, SKIP_ADMIN=1
+import os from 'node:os';
 import path from 'node:path';
 import { ADMIN, BACKEND, dbExec, dbUp, dbUrl, log, rootEnv, run, startApi } from './lib.mjs';
 
@@ -12,7 +13,7 @@ const DB = process.env.TEST_DB ?? 'tracker_test';
 const PORT = Number(process.env.TEST_API_PORT ?? 3001);
 const E2E_PORT = Number(process.env.E2E_PORT ?? 5174);
 const API_URL = `http://localhost:${PORT}/api`;
-const LOG = path.join('/tmp', `thuchi-test-api-${PORT}.log`);
+const LOG = path.join(os.tmpdir(), `thuchi-test-api-${PORT}.log`);
 const ADMIN_EMAIL = 'admin@thuchi.vn';
 const ADMIN_PASSWORD = 'admin123';
 const apiEnv = {

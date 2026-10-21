@@ -55,6 +55,7 @@ if (env.API_DB !== 'tracker') {
 const dbEnv = { DATABASE_URL: dbUrl(env.DB_PORT, env.API_DB), ADMIN_EMAIL: env.ADMIN_EMAIL, ADMIN_PASSWORD: env.ADMIN_PASSWORD };
 log(`Migrate + seed DB "${env.API_DB}"`);
 run('npx', ['prisma', 'migrate', 'deploy'], { cwd: BACKEND, env: dbEnv });
+run('npx', ['prisma', 'generate'], { cwd: BACKEND, env: dbEnv, allowFail: true });
 run('npm', ['run', 'db:seed'], { cwd: BACKEND, env: dbEnv });
 log('Nạp dữ liệu demo');
 run('npm', ['run', 'db:seed:demo'], { cwd: BACKEND, env: dbEnv });
