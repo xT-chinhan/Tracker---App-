@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -24,11 +26,32 @@ android {
         versionName = flutter.versionName
     }
 
+    // Khóa phát hành: android/key.properties (không commit) trỏ tới file .jks giữ ngoài repo.
+    // Không có file đó (máy dev khác) → ký bằng khóa debug như cũ.
+    val keyProps = Properties().apply {
+        val f = rootProject.file("key.properties")
+        if (f.exists()) f.inputStream().use { load(it) }
+    }
+    signingConfigs {
+        if (keyProps.getProperty("storeFile") != null) {
+            create("release") {
+                storeFile = file(keyProps.getProperty("storeFile"))
+                storePassword = keyProps.getProperty("storePassword")
+                keyAlias = keyProps.getProperty("keyAlias")
+                keyPassword = keyProps.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // Ký phát hành được cấu hình riêng khi chuẩn bị đưa lên store.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
+    }
+
+    // TRACKERX_LITE=1: bản "thường" không có dịch vụ đọc thông báo (xem src/lite/AndroidManifest.xml)
+    if (System.getenv("TRACKERX_LITE") == "1") {
+        sourceSets.getByName("release").manifest.srcFile("src/lite/AndroidManifest.xml")
     }
 }
 

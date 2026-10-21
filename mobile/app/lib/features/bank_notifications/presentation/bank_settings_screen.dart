@@ -117,6 +117,8 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
                   icon: LucideIcons.info,
                   text: bankNotificationsSupported
                       ? 'Tính năng đang tạm tắt. Bạn vẫn ghi giao dịch thủ công bình thường.'
+                      : !kBankNotificationsBuilt
+                      ? 'Bản cài này không kèm tính năng ghi từ thông báo ngân hàng. Cần dùng thì cài bản đầy đủ của TrackerX.'
                       : 'Chỉ có trên Android. iOS không cho ứng dụng đọc thông báo của ứng dụng khác.',
                 )
               else ...[

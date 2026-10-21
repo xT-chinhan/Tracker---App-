@@ -8,9 +8,13 @@ import 'raw_notification.dart';
 /// Chế độ thử trên web (`--dart-define=BANK_DEMO=true`): không có Android, bắn mẫu từ MockBankSamples.
 const bool kBankDemo = bool.fromEnvironment('BANK_DEMO');
 
+/// Bản APK "thường" (`TRACKERX_LITE=1 … --dart-define=BANK_NOTIFICATIONS=false`) không khai báo dịch vụ đọc thông báo,
+/// để Play Protect (chống lừa đảo nâng cao ở Việt Nam) không chặn khi cài từ Zalo / trình duyệt / quản lý tệp.
+const bool kBankNotificationsBuilt = bool.fromEnvironment('BANK_NOTIFICATIONS', defaultValue: true);
+
 /// Tính năng chỉ có trên Android (iOS không cho đọc thông báo của app khác).
 bool get bankNotificationsSupported =>
-    kBankDemo || (!kIsWeb && defaultTargetPlatform == TargetPlatform.android);
+    kBankDemo || (kBankNotificationsBuilt && !kIsWeb && defaultTargetPlatform == TargetPlatform.android);
 
 /// Cầu nối tới `BankNotificationListener` (android/app/src/main/kotlin/vn/thuchi/app/banknotif).
 class BankNotificationBridge {
