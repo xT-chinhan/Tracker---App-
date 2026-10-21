@@ -46,6 +46,12 @@ services:
       SMTP_FROM: ${SMTP_FROM:-TrackerX <no-reply@trackerx.app>}
       # Sau nginx của service admin: 1 hop (nginx ghi đè X-Forwarded-For bằng IP thật)
       TRUST_PROXY: ${TRUST_PROXY:-1}
+      # Trợ lý AI: Ollama chạy trên máy host (xem docs/CAI-DAT-AI.md)
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      AI_CHAT_MODEL: ${AI_CHAT_MODEL:-qwen3.5:4b}
+      AI_EMBED_MODEL: ${AI_EMBED_MODEL:-bge-m3}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "${API_PORT:-3000}:3000"
 
