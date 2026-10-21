@@ -1,5 +1,5 @@
 // Fetch wrapper + kiểu dữ liệu cho API backend (NestJS).
-// Mở admin qua tên miền (vd tunnel trackerx-admin.freepro.online) → gọi /api cùng tên miền; chạy ở máy dev → localhost:3000
+// Mở admin qua tên miền (vd tunnel tracker-xt.freepro.online) → gọi /api cùng tên miền; chạy ở máy dev → localhost:3000
 // (VITE_API_URL trỏ localhost chỉ đúng khi trình duyệt ở chính máy dev)
 const LOCAL = ['localhost', '127.0.0.1']
 const envUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'

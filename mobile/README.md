@@ -47,7 +47,7 @@ npm run dev       # API http://localhost:3000/api  (Swagger: http://localhost:30
 
 Tài khoản để dựng màn (dữ liệu khớp mockup): **`demo@thuchi.vn` / `demo123`** — 4 ví tổng 26.022.000đ, ngân sách tháng 14 triệu, 3 mục tiêu tiết kiệm, 5 định kỳ, mẫu Cà phê 45k / Cơm trưa 55k / Grab 38k.
 
-Base URL trong app: **mặc định `https://trackerx-api.freepro.online/api`** (API dev public của nhóm qua Cloudflare Tunnel, có AI; laptop nhóm trưởng phải bật). Chạy backend riêng thì ghi đè bằng `--dart-define=API_URL=...`:
+Base URL trong app: **mặc định `https://tracker-xt.freepro.online/api`** (API dev public của nhóm qua Cloudflare Tunnel, có AI; laptop nhóm trưởng phải bật). Chạy backend riêng thì ghi đè bằng `--dart-define=API_URL=...`:
 
 | Chạy app trên | API_URL |
 |---|---|

@@ -6,9 +6,9 @@ Dữ liệu chạy trên máy dev của nhóm trưởng. Mọi tài khoản dư�
 
 | Phần | Địa chỉ | Ghi chú |
 |---|---|---|
-| Trang quản trị (admin) | https://trackerx-admin.freepro.online | Mở bằng Chrome ở bất kỳ mạng nào |
-| API + tài liệu API | https://trackerx-api.freepro.online/docs | Swagger, bấm "Try it out" để gọi thử |
-| App điện thoại | APK hoặc `flutter run` từ `mobile/app` | Mặc định đã trỏ tới `https://trackerx-api.freepro.online/api`, dùng 4G hay Wi-Fi nào cũng được |
+| Trang quản trị (admin) | https://tracker-xt.freepro.online | Mở bằng Chrome ở bất kỳ mạng nào |
+| API + tài liệu API | https://tracker-xt.freepro.online/docs | Swagger, bấm "Try it out" để gọi thử |
+| App điện thoại | APK hoặc `flutter run` từ `mobile/app` | Mặc định đã trỏ tới `https://tracker-xt.freepro.online/api`, dùng 4G hay Wi-Fi nào cũng được |
 
 Máy chủ, dữ liệu và AI chạy trên laptop của nhóm trưởng qua Cloudflare Tunnel: **laptop phải bật** thì mới truy cập được. Không vào được thì báo nhóm trưởng.
 

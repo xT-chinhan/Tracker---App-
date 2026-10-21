@@ -3,7 +3,7 @@ abstract final class AppEnvironment {
   /// Chạy backend riêng thì ghi đè: --dart-define=API_URL=http://<IP>:3000/api
   static const apiUrl = String.fromEnvironment(
     'API_URL',
-    defaultValue: 'https://trackerx-api.freepro.online/api',
+    defaultValue: 'https://tracker-xt.freepro.online/api',
   );
 
   static Uri requireApiUri() {
