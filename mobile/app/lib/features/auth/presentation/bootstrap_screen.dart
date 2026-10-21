@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/widgets/app_state_view.dart';
 import '../../../core/widgets/app_skeleton.dart';
 import '../application/bootstrap_service.dart';
+import '../../../core/widgets/trackerx_logo.dart';
 
 class BootstrapScreen extends ConsumerStatefulWidget {
   const BootstrapScreen({super.key});
@@ -57,21 +58,7 @@ class _BootstrapLoading extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              'đ',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-          ),
+          const TrackerXLogo(size: 64),
           const SizedBox(height: 28),
           const AppSkeleton(width: 180, height: 14),
           const SizedBox(height: 10),

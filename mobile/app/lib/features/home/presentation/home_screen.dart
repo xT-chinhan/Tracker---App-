@@ -21,6 +21,7 @@ import '../data/home_models.dart';
 import '../../../core/widgets/dashed_box.dart';
 import '../../bank_notifications/application/bank_notifications_controller.dart';
 import '../../bank_notifications/data/bank_notification_bridge.dart';
+import '../../../core/widgets/trackerx_logo.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -56,23 +57,7 @@ class HomeScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(11),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'đ',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                    ),
+                    const TrackerXLogo(size: 38),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

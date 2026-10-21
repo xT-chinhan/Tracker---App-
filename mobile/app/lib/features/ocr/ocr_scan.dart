@@ -52,11 +52,20 @@ ApiException _apiError(Object e) {
 /// Lối vào chung (menu ＋, nút camera ở Ghi giao dịch, "Chụp lại"): sheet chọn nguồn ảnh → màn đọc.
 /// [replace] = thay màn hiện tại (đang ở Ghi giao dịch hoặc màn Quét).
 Future<void> startOcrScan(BuildContext context, {bool replace = false}) async {
+  // Lấy navigator TRƯỚC các bước chờ (chọn ảnh mở activity khác). Không dùng pushReplacement: màn Ghi giao dịch là
+  // trang của go_router, thay nó bằng route thường thì khi app quay lại từ camera / thư viện, go_router dựng lại
+  // danh sách trang và đưa Ghi giao dịch lên trên màn đọc ảnh. → đóng màn hiện tại rồi mở màn mới trên navigator gốc.
+  final nav = Navigator.of(context);
+  final rootNav = Navigator.of(context, rootNavigator: true);
+  void open(Route<void> route) {
+    if (replace && nav.canPop()) nav.pop();
+    rootNav.push(route);
+  }
+
   final source = await OcrScanSheet.show(context);
   if (source == null || !context.mounted) return;
   if (source == OcrChoice.manual) {
-    final route = MaterialPageRoute<bool>(builder: (_) => const TransactionEntryScreen());
-    replace ? Navigator.of(context).pushReplacement(route) : Navigator.of(context).push(route);
+    open(MaterialPageRoute<void>(builder: (_) => const TransactionEntryScreen()));
     return;
   }
   final container = ProviderScope.containerOf(context, listen: false);
@@ -81,8 +90,7 @@ Future<void> startOcrScan(BuildContext context, {bool replace = false}) async {
   if (file == null || !context.mounted) return;
   final bytes = await file.readAsBytes();
   if (!context.mounted) return;
-  final route = MaterialPageRoute<void>(builder: (_) => OcrScanScreen(bytes: bytes, filename: file!.name));
-  replace ? Navigator.of(context).pushReplacement(route) : Navigator.of(context).push(route);
+  open(MaterialPageRoute<void>(builder: (_) => OcrScanScreen(bytes: bytes, filename: file!.name)));
 }
 
 enum OcrChoice { camera, gallery, manual }
