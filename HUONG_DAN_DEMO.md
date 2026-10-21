@@ -122,23 +122,11 @@ flutter pub get
 ```
 
 ### Bước 3: Chạy ứng dụng trên thiết bị
-Tùy vào thiết bị bạn kết nối:
-* **Chạy trên Windows Desktop**:
-  ```powershell
-  flutter run -d windows --dart-define=API_URL=http://localhost:3000/api
-  ```
-* **Chạy trên trình duyệt Chrome**:
-  ```powershell
-  flutter run -d chrome --dart-define=API_URL=http://localhost:3000/api
-  ```
-* **Chạy trên Android Emulator**:
-  ```powershell
-  flutter run -d android --dart-define=API_URL=http://10.0.2.2:3000/api
-  ```
-* **Chạy trên Điện thoại thật (cắm USB / cùng mạng Wi-Fi)**:
-  ```powershell
-  flutter run --dart-define=API_URL=http://<IP-LAN-máy-tính>:3000/api
-  ```
+App đã trỏ cố định tới máy chủ của nhóm `https://tracker-xt.freepro.online/api` (có sẵn dữ liệu demo và trợ lý AI). Chỉ cần:
+```powershell
+flutter run              # chọn thiết bị: điện thoại thật / emulator / windows / chrome
+```
+Không truyền `--dart-define=API_URL` và không sửa địa chỉ API (xem `API-URL.md`). Máy chủ nằm trên laptop của nhóm trưởng: laptop tắt thì app không kết nối được.
 
 > Đăng nhập tài khoản mẫu trên app mobile: **`demo@thuchi.vn`** / **`demo123`** (khớp đầy đủ 4 ví, lịch sử 12 tháng, mục tiêu tiết kiệm).
 

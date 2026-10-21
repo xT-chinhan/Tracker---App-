@@ -154,7 +154,7 @@ Mỗi tính năng có `data/` cho model/repository và `presentation/` cho màn,
 - Kiểm tra nullable, enum, timestamp, ID và response phân trang.
 - Đối chiếu `mobile/openapi.json` với controller/DTO/service và response của API dev.
 - Tách base URL kết thúc `/api` khỏi path tương đối để không sinh `/api/api/...`.
-- API URL truyền qua `--dart-define`; không gắn IP cá nhân vào code.
+- API URL **cố định** `https://tracker-xt.freepro.online/api` trong `AppEnvironment.apiUrl` (xem `API-URL.md`); không dùng `--dart-define`, không gắn IP cá nhân.
 - Dùng model dùng chung cho pagination, lỗi API, public config và session.
 - Có fixture đã loại dữ liệu nhạy cảm để kiểm tra parse/serialize và null handling.
 
@@ -537,8 +537,8 @@ Trong `mobile/app/`:
 dart format --output=none --set-exit-if-changed lib test integration_test
 flutter analyze
 flutter test
-flutter test integration_test -d <android-device-id> --dart-define=API_URL=<test-api>
-flutter build apk --debug --dart-define=API_URL=<dev-api>
+flutter test integration_test -d <android-device-id>
+flutter build apk --debug
 ```
 
 Điều chỉnh path test theo thư mục thực tế đã tạo. Build iOS và test simulator chạy trên macOS. Release ký thật chỉ thực hiện trong bước phát hành riêng.

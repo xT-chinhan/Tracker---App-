@@ -23,7 +23,7 @@ Nguyên tắc: nói thật, nói cụ thể, và ở mọi chỗ (trong app, ch�
 
 ### Trước khi build bản phát hành
 - `android:usesCleartextTraffic="true"` trong `AndroidManifest.xml` chỉ để test với máy chủ HTTP nội bộ. **Bản đưa lên Play phải bỏ dòng này** và dùng `API_URL` HTTPS. Mục An toàn dữ liệu bên dưới khai "mã hóa khi truyền", nên phải đúng như vậy.
-- Bản release: `flutter build appbundle --release --dart-define=API_URL=https://<máy-chủ>/api` (cần keystore ký app).
+- Bản release: `flutter build appbundle --release` (API cố định trong `AppEnvironment.apiUrl`, xem `API-URL.md`) (cần keystore ký app).
 
 ---
 

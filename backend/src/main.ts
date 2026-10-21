@@ -16,8 +16,11 @@ async function bootstrap() {
   // Sau reverse proxy: TRUST_PROXY=1 (số hop) | true | danh sách IP => rate limit đếm theo IP thật của client
   const trustProxy = process.env.TRUST_PROXY;
   if (trustProxy) app.getHttpAdapter().getInstance().set('trust proxy', trustProxy === 'true' ? true : /^\d+$/.test(trustProxy) ? Number(trustProxy) : trustProxy);
+  // CORS_ORIGINS: danh sách cách nhau dấu phẩy; "*" là ký tự đại diện (vd http://localhost:* cho flutter run -d chrome, cổng đổi mỗi lần)
+  const origins = (process.env.CORS_ORIGINS ?? '').split(',').map((o) => o.trim()).filter(Boolean)
+    .map((o) => (o.includes('*') ? new RegExp(`^${o.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*')}$`) : o));
   app.enableCors({
-    origin: (process.env.CORS_ORIGINS ?? '').split(',').filter(Boolean),
+    origin: origins,
     exposedHeaders: ['Retry-After', 'Content-Disposition'],
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));

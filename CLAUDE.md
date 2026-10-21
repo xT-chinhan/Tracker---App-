@@ -15,6 +15,7 @@ Dự án độc lập. Bản Flutter + Firestore cũ (App_Quan_ly_chi_tieu_ca_nh
 - App phát hành bằng APK, không lên Google Play → Android được tự gửi SMS (xác thực số điện thoại).
 
 ## Quy tắc làm việc
+- **Địa chỉ API của app cố định `https://tracker-xt.freepro.online/api`** (`mobile/app/lib/core/config/app_environment.dart`), không đổi, không thêm cách ghi đè. Xem `API-URL.md`. Máy chủ (backend + DB + AI + admin) chạy trên laptop chủ dự án qua Cloudflare Tunnel `trackerx-dev` (service user `trackerx-tunnel`).
 - **Giao diện phải có mockup và được duyệt trước khi dựng** (web, mobile, admin). Backend/API thì làm thẳng. Mockup đặt trong `design/`, cùng style ảnh mẫu `design/reference.png` (tối giản, nền trắng ngà, gần đơn sắc).
 - Skill thiết kế có sẵn trên máy: `~/.agents/skills/` (minimalist-ui, ui-ux-pro-max, apple-design, emil-design-eng, high-end-visual-design, stitch-design-taste…) và `~/.gemini/antigravity/skills/` (mobile-design, design-md, kpi-dashboard-design…). Stitch MCP đã kết nối ở profile eduteam.
 - Việc nặng (Playwright/headless browser, build Docker, render) chạy **tuần tự**, tối đa 1 trình duyệt headless cùng lúc — máy từng khởi động lại vì chạy song song.

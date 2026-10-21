@@ -4,7 +4,7 @@ Nguồn: `mobile/openapi.json`, `backend/README.md` và controller/service backe
 
 ## Nền tảng
 
-- Base URL bắt buộc qua `--dart-define=API_URL=...`, giá trị phải có scheme/host và kết thúc ở `/api`.
+- Base URL **cố định** `https://tracker-xt.freepro.online/api` (`AppEnvironment.apiUrl`); không đổi, không ghi đè (xem `API-URL.md`).
 - Bearer token lưu trong secure storage. 401 hoặc thông báo tài khoản bị khóa xóa phiên; `FEATURE_DISABLED` không xóa phiên.
 - Tiền là số nguyên VND. Ngày giờ hiển thị theo `Asia/Ho_Chi_Minh`; `month` dùng `yyyy-MM`.
 - Phân trang chuẩn `{items,total,page,limit}`, page bắt đầu từ 1, limit tối đa 200.
