@@ -554,3 +554,45 @@ svg.lucide { width: 20px; height: 20px; stroke-width: 1.75; flex: none; }
 .adlg .ab span { height: 44px; border-radius: 22px; background: #DCE3F5; color: #1B2B4B; font-size: 14.5px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
 .why { position: absolute; left: 28px; right: 28px; top: 196px; z-index: 60; background: var(--color-surface); border-radius: 18px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; line-height: 1.5; color: #3A3935; box-shadow: var(--shadow-sheet); }
 .why svg.lucide { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--color-on-surface-variant); }
+
+/* ===================== M. Thông báo theo nhóm & tự ghi · chờ duyệt ===================== */
+/* Dải chip lọc nhóm: tràn mép phải (cuộn ngang), số chưa đọc trong chip */
+.tb-chips { margin-right: calc(-1 * var(--screen-padding)); }
+.chip .cnt { min-width: 18px; height: 18px; padding: 0 5px; margin-right: -4px; border-radius: var(--radius-pill); background: var(--color-primary); color: #fff; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
+.chip.on .cnt { background: #fff; color: var(--color-primary); }
+.link.tb-mark { font-size: 14px; padding: 0 8px; }
+/* Bubble Hệ thống = logo TrackerX (vuông bo, phân biệt với bubble tròn) */
+.bubble.brand { background: none; border-radius: 11px; overflow: hidden; }
+.bubble.brand svg { width: 40px; height: 40px; display: block; }
+.tb-hint { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 4px 0; font-size: 12.5px; color: var(--color-on-surface-variant); }
+.tb-hint .go { display: inline-flex; align-items: center; gap: 1px; font-weight: 600; color: var(--color-on-surface); flex: none; }
+.tb-hint .go svg.lucide { width: 14px; height: 14px; }
+.tb-acts { display: flex; gap: 8px; margin-top: 10px; }
+.tb-acts .btn { height: 36px; width: auto; padding: 0 14px; font-size: 13.5px; gap: 6px; }
+.tb-acts .btn svg.lucide { width: 15px; height: 15px; }
+.nrow.tb-undone .t, .nrow.tb-undone .s { color: var(--color-on-surface-faint); }
+.nrow.tb-undone .bubble { opacity: .55; }
+.nrow .badge { height: 22px; font-size: 11.5px; font-weight: 500; flex: none; }
+/* Cài đặt tự ghi: quy tắc gọn */
+.tb-rule { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; font-size: 13px; line-height: 1.45; color: #55544f; }
+.tb-rule svg.lucide { width: 16px; height: 16px; flex: none; margin-top: 1px; color: var(--color-on-surface-variant); }
+.srow.tb-cap { display: flex; align-items: center; gap: 8px; min-height: 48px; font-size: 14px; font-weight: 500; }
+.srow.tb-cap .sv { font-size: 13.5px; color: var(--color-on-surface-variant); }
+/* Sheet đồng ý */
+.tb-points > div { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.45; }
+.tb-points > div + div { margin-top: 10px; }
+.tb-points svg.lucide { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--color-on-surface-variant); }
+.tb-points b { font-weight: 600; }
+/* Danh sách Đã tự ghi / Chờ xác nhận */
+.tb-undo { font-size: 13px; font-weight: 600; color: var(--color-on-surface); margin-top: 2px; text-decoration: underline; text-decoration-color: #CFCDC7; text-underline-offset: 3px; }
+.tb-amt { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+.tb-why { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; border-radius: var(--radius-pill); background: var(--color-warning-container); color: var(--color-warning); font-size: 12.5px; font-weight: 600; }
+.tb-why svg.lucide { width: 14px; height: 14px; stroke-width: 2; }
+.tb-pchips { display: flex; gap: 8px; flex-wrap: wrap; }
+.pchip { height: 36px; padding: 0 10px 0 12px; border-radius: var(--radius-pill); background: var(--color-surface); border: 1px solid var(--color-outline); display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; }
+.pchip svg.lucide { width: 16px; height: 16px; }
+.pchip svg.lucide:last-child { width: 14px; height: 14px; margin-left: -2px; }
+.pchip.warn { background: var(--color-warning-container); border-color: var(--color-warning-bar); color: var(--color-warning); }
+#thong-bao-nhom .nrow .between { align-items: flex-start; }
+#thong-bao-nhom .nrow .between .unread { margin-top: 7px; }
+#thong-bao-nhom .nrow .between .badge { margin-top: 1px; }

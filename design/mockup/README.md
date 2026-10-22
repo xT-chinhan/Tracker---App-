@@ -1,6 +1,6 @@
 # Thu Chi · Mockup mobile
 
-Mở `index.html` trực tiếp. Ảnh 2x trong `shots/`, toàn bộ gallery ở `shots/overview.png`. Token ở `../tokens.md`, nguyên tắc ở `../DESIGN.md`. Mục A–I (25 màn, `shots/01…23`) đã duyệt. Mục **J · Trợ lý AI** (`shots/30-ai-*.png`) mục **K · Đọc hóa đơn** (`shots/40-ocr-*.png`) và mục **L · Số điện thoại** (`shots/50-sdt-*.png`) đang **chờ duyệt**.
+Mở `index.html` trực tiếp. Ảnh 2x trong `shots/`, toàn bộ gallery ở `shots/overview.png`. Token ở `../tokens.md`, nguyên tắc ở `../DESIGN.md`. Mục A–I (25 màn, `shots/01…23`) đã duyệt. Mục **J · Trợ lý AI** (`shots/30-ai-*.png`) mục **K · Đọc hóa đơn** (`shots/40-ocr-*.png`) mục **L · Số điện thoại** (`shots/50-sdt-*.png`) và mục **M · Thông báo theo nhóm & tự ghi** (`shots/60-tb-*.png`) đang **chờ duyệt**.
 
 ## J · Trợ lý AI (chờ duyệt)
 | # | File | Màn |
@@ -92,3 +92,32 @@ Admin tương ứng: `../admin-mockup/` mục K, ảnh `../admin-mockup/shots/50
 - **Quên mật khẩu** giữ đúng bố cục màn 02: app không biết người dùng đã gắn số hay chưa (không lộ thông tin tài khoản), nên luôn hiện cả hai cách kèm ghi chú. Bước nhập số và gửi yêu cầu xác nhận dùng lại màn 50b/50c (không có ô mật khẩu).
 - Dữ liệu: số người dùng 0912 345 678 (chỉ trong ô nhập; Cài đặt hiện che 0912 ••• 678), mã 482910 (số máy cổng 0901 234 567 chỉ có ở admin), email minhanh.nguyen@gmail.com / minh•••@gmail.com như các màn đã duyệt.
 - Thêm CSS ở cuối `styles.css`: `.otp.show`, `.input.error`, `.err-t`, `.ok-banner`, `.kv`, `.indet`, `.opt`, `.adlg` (hộp quyền Android), `.why`. Ảnh chụp bằng `../shoot.mjs` (`cd admin && node ../design/shoot.mjs mockup 50-sdt`).
+
+## M · Thông báo theo nhóm & tự ghi (chờ duyệt)
+Backend đã có nhóm thông báo (`system · balance · budget · reminder · security`) và số chưa đọc theo nhóm. Màn gốc: 19 Thông báo (mục H) và màn thật `bank_settings_screen.dart` / `bank_pending_screen.dart` (chưa có mockup riêng, nên M dựng lại đúng component của app: card công tắc, bubble, thẻ nét đứt, chip Chọn ví vàng).
+
+| # | File | Màn |
+|---|---|---|
+| 60a | `shots/60-tb-01-thong-bao-nhom.png` | Thông báo: dải chip cuộn ngang “Tất cả · Biến động số dư · Ngân sách · Hệ thống · Bảo mật · Nhắc nhở”, số chưa đọc trong chip, nhóm Hôm nay / Hôm qua, mỗi dòng có bubble theo nhóm (Biến động `landmark`, Ngân sách `target` vàng/đỏ theo 80%/100%, Bảo mật `shield-check`, Nhắc nhở `alarm-clock`, Hệ thống = logo TrackerX vuông bo), dòng giờ kèm tên nhóm, chấm chưa đọc, “Đánh dấu đã đọc” ở thanh trên (áp dụng cho nhóm đang chọn) |
+| 60b | `shots/60-tb-02-loc-bien-dong.png` | Lọc Biến động số dư: dòng gợi ý + link Cài đặt; mỗi khoản có số tiền có dấu (thu xanh), ví, nguồn (thông báo / SMS), danh mục; khoản vừa chạm mở rộng Hoàn tác · Xem giao dịch; khoản đã hoàn tác mờ + badge “Đã hoàn tác” |
+| 60c | `shots/60-tb-03-hoan-tac.png` | Sheet “Hoàn tác khoản tự ghi?”: số tiền, nội dung, ví, giờ; giao dịch bị xóa, ví cộng lại 45.000đ; Hoàn tác (đỏ nhạt) · Giữ lại |
+| 60c-b | `shots/60-tb-03b-da-hoan-tac.png` | Sau khi hoàn tác: dòng chuyển “Đã hoàn tác”, toast “Đã hoàn tác: Cà phê · 45.000đ đã trả lại ví MB Bank” + Xem ví |
+| 60d | `shots/60-tb-04-cai-dat-tu-ghi.png` | Ghi từ thông báo ngân hàng: công tắc Bật tính năng (giữ nguyên) + công tắc mới **Tự động ghi vào sổ** (“Đang bật trên máy này”), 3 quy tắc gọn, dòng đề xuất “Khoản lớn chờ xác nhận · Từ 5.000.000đ”, link Xem các khoản đã tự ghi / Chờ xác nhận, Ngân hàng đã ghép ví (VPBank chip vàng Chọn ví) |
+| 60e | `shots/60-tb-05-dong-y-tu-ghi.png` | Sheet đồng ý riêng khi bật: lưu ngay vào tài khoản như khi bấm Xác nhận, mỗi khoản có thông báo Biến động số dư + Hoàn tác, khoản chưa rõ vẫn chờ, ghi khi app chạy / lần mở tiếp theo, chỉ máy này, tắt lúc nào cũng được; Bật tự động ghi · Để sau |
+| 60f | `shots/60-tb-06-danh-sach-cho.png` | Màn “Từ thông báo ngân hàng” (thay màn Chờ xác nhận): **Đã tự ghi** hôm nay (mỗi dòng có Hoàn tác) và **Chờ xác nhận** (thẻ nét đứt như cũ + chip lý do vàng “Chưa chọn ví cho VPBank” / “Chưa rõ danh mục”, Bỏ qua · Xác nhận) |
+
+### Quyết định
+- Thông báo tự ghi dùng đúng mẫu backend: tiêu đề “−45.000đ · Cà phê”, thân “Đã tự ghi vào ví … · Từ thông báo …. Sai thì chạm để hoàn tác.”. Ví trong mockup đổi theo 4 ví mẫu (MB Bank, Techcombank, MoMo) để khớp dữ liệu các màn đã duyệt; VPBank là ngân hàng chưa ghép ví.
+- **Dải chip cuộn ngang là ngoại lệ thứ hai** của luật “không cuộn ngang” trong `../DESIGN.md` (cố ý tràn mép phải như dải Nhập nhanh). Chip đang chọn nền mực, số chưa đọc đổi thành nền trắng chữ mực. Nhóm không có thông báo chưa đọc thì không có số.
+- Bubble theo nhóm vẫn gần đơn sắc: chỉ Ngân sách giữ màu vàng / đỏ như màn 19 (màu mang nghĩa 80% / vượt). Hệ thống dùng logo TrackerX để người dùng nhận ra tin chính thức. Số tiền trong tiêu đề: thu xanh, chi mực.
+- **Hoàn tác có bước xác nhận** vì nó xóa giao dịch thật; nút đỏ nhạt giống sheet Xóa tài khoản / Gỡ số. Xong thì không xóa thông báo mà chuyển sang “Đã hoàn tác” để còn dấu vết. Không có “làm lại”: muốn ghi lại thì nhập tay.
+- Màn danh sách đổi tên “Chờ xác nhận” → **“Từ thông báo ngân hàng”** vì giờ có hai phần. Lý do không tự ghi hiện bằng chip vàng ngay trên thẻ; nút Xác nhận khi chưa có ví vẫn mở chọn ví như app hiện tại.
+- Thêm CSS ở cuối `styles.css`: `.tb-chips`, `.chip .cnt`, `.bubble.brand`, `.tb-hint`, `.tb-acts`, `.tb-undone`, `.tb-rule`, `.tb-cap`, `.tb-points`, `.tb-undo`, `.tb-amt`, `.tb-why`, `.pchip`. Ảnh chụp bằng `../shoot.mjs` (`cd admin && node ../design/shoot.mjs mockup 60-tb`). Không chụp lại `overview.png`.
+
+### Quyết định cần chốt (đề xuất)
+1. **5 nhóm, thứ tự chip**: Tất cả · Biến động số dư · Ngân sách · Hệ thống · Bảo mật · Nhắc nhở. Biến động số dư đứng đầu vì nhiều nhất và cần hành động (hoàn tác); Ngân sách thứ hai vì là cảnh báo tiền; Hệ thống / Bảo mật / Nhắc nhở ít, để sau. Bảo mật không bao giờ ẩn khỏi Tất cả.
+2. **Tự động ghi mặc định TẮT**, theo từng máy, bật phải qua sheet 60e. Lý do: thay đổi lời hứa cũ “chỉ khoản bạn Xác nhận mới được lưu”, nên cần đồng ý riêng; sheet đồng ý chung (bank_disclosure_sheet) cần thêm một câu “hoặc khoản app tự ghi khi bạn bật Tự động ghi”.
+3. **Ngưỡng số tiền: nên có, tùy chọn, mặc định bật ở 5.000.000đ** (khoản ≥ 5.000.000đ vẫn chờ xác nhận; chọn Tắt / 1.000.000đ / 5.000.000đ / 10.000.000đ). Một khoản lớn ghi sai làm lệch báo cáo và ngân sách cả tháng, trong khi khoản lớn ít nên bấm Xác nhận không phiền. Nếu muốn gọn cho bản đầu thì bỏ dòng này ở 60d và cố định 5.000.000đ trong code.
+4. **Chưa cho tắt tiếng từng nhóm** ở bản này. Chip lọc đã đủ để tìm; tắt nhóm dễ làm người dùng bỏ lỡ Biến động số dư (đường hoàn tác) và Bảo mật. Xem lại khi có thông báo đẩy (FCM).
+5. Khoản trùng app ngân hàng + SMS trong 3 phút: ghi 1 lần, không hiện gì thêm (không làm người dùng phải hiểu cơ chế). Nếu trùng nhưng số tiền khác nhau thì coi là 2 khoản.
+6. “Đánh dấu đã đọc” chỉ áp dụng cho nhóm đang chọn (ở Tất cả là toàn bộ); ẩn khi nhóm không còn tin chưa đọc.
