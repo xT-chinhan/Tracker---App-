@@ -12,7 +12,7 @@ class NotificationQuery extends PageQuery {
   /** true => chỉ thông báo chưa đọc */
   @IsOptional() @Transform(({ value }) => (value === 'true' ? true : value === 'false' ? false : value)) @IsBoolean()
   unread?: boolean;
-  /** Lọc theo nhóm: system | balance | budget | reminder | security */
+  /** Lọc theo nhóm: balance | budget | system | security */
   @IsOptional() @IsIn(NOTIFICATION_CATEGORIES) category?: NotificationCategory;
 }
 

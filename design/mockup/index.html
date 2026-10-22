@@ -2071,7 +2071,7 @@
   <!-- ===================== M. THÔNG BÁO THEO NHÓM & TỰ GHI (chờ duyệt) ===================== -->
   <section class="section" id="thong-bao-nhom">
     <div class="section-label"><b>M</b> Thông báo theo nhóm &amp; tự ghi · chờ duyệt</div>
-    <p class="body-m" style="color:#55544f;max-width:980px;margin:-8px 0 24px;line-height:1.6">Thông báo có <b>5 nhóm</b>: Biến động số dư (khoản app tự ghi từ thông báo ngân hàng), Ngân sách (80% / vượt hạn mức), Hệ thống (từ đội ngũ TrackerX), Bảo mật (mật khẩu, số điện thoại), Nhắc nhở (định kỳ tạm dừng…). Màn Thông báo thêm dải chip lọc có số chưa đọc theo nhóm. <b>Tự động ghi vào sổ</b> là công tắc mới trong Ghi từ thông báo ngân hàng (Android, bản cài đầy đủ), <b>mặc định tắt</b>, bật phải qua sheet đồng ý riêng. Chỉ ghi ngay khi app biết cả ví và danh mục; khoản trùng từ app ngân hàng và SMS trong 3 phút chỉ ghi 1 lần; ghi khi app đang chạy hoặc lần mở tiếp theo. Mỗi khoản tự ghi có thông báo Biến động số dư kèm <b>Hoàn tác</b>.</p>
+    <p class="body-m" style="color:#55544f;max-width:980px;margin:-8px 0 24px;line-height:1.6">Thông báo có <b>4 nhóm</b>: Số dư (khoản app tự ghi từ thông báo ngân hàng), Ngân sách (80% / vượt hạn mức), Hệ thống (từ đội ngũ TrackerX, kể cả định kỳ tạm dừng), Bảo mật (mật khẩu, số điện thoại). Màn Thông báo thêm menu 5 tab gọn, vừa khít chiều ngang, chấm nhỏ báo chưa đọc. <b>Tự động ghi vào sổ</b> là công tắc mới trong Ghi từ thông báo ngân hàng (Android, bản cài đầy đủ), <b>mặc định tắt</b>, bật phải qua sheet đồng ý riêng. Chỉ ghi ngay khi app biết cả ví và danh mục; khoản trùng từ app ngân hàng và SMS trong 3 phút chỉ ghi 1 lần; ghi khi app đang chạy hoặc lần mở tiếp theo. Mỗi khoản tự ghi có thông báo Biến động số dư kèm <b>Hoàn tác</b>.</p>
     <div class="row-phones">
 
       <!-- 60-01 Thông báo theo nhóm -->
@@ -2080,30 +2080,23 @@
           <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Trang chủ</span><span></span><span class="right"><span class="link tb-mark">Đánh dấu đã đọc</span></span></div>
           <div class="pad">
             <h1 class="headline">Thông báo</h1>
-            <div class="chips tb-chips mt-3">
-              <span class="chip on">Tất cả<span class="cnt num">3</span></span>
-              <span class="chip">Biến động số dư<span class="cnt num">2</span></span>
-              <span class="chip">Ngân sách<span class="cnt num">1</span></span>
-              <span class="chip">Hệ thống</span>
-              <span class="chip">Bảo mật</span>
-              <span class="chip">Nhắc nhở</span>
-            </div>
+            <div class="tb-tabs mt-3"><span class="tb-tab on">Tất cả<i class="tb-dot"></i></span><span class="tb-tab">Số dư<i class="tb-dot"></i></span><span class="tb-tab">Ngân sách<i class="tb-dot"></i></span><span class="tb-tab">Hệ thống</span><span class="tb-tab">Bảo mật</span></div>
             <div class="group-h"><span>Hôm nay</span></div>
             <div class="card flush list">
               <div class="nrow"><span class="bubble warn"><i data-lucide="target"></i></span><div class="grow"><div class="between"><span class="t">Ăn uống đã dùng 89% ngân sách</span><span class="unread"></span></div><div class="s">Đã chi 3.120.000đ / 3.500.000đ. Còn 380.000đ cho 8 ngày.</div><div class="time">12:10 · Ngân sách</div></div></div>
-              <div class="nrow"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="between"><span class="t"><span class="num income">+1.200.000đ</span> · Nhận tiền</span><span class="unread"></span></div><div class="s">Đã tự ghi vào ví Techcombank · Từ thông báo Techcombank.</div><div class="time">10:05 · Biến động số dư</div></div></div>
-              <div class="nrow"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="between"><span class="t"><span class="num">−45.000đ</span> · Cà phê</span><span class="unread"></span></div><div class="s">Đã tự ghi vào ví MB Bank · Từ thông báo MB Bank. Sai thì chạm để hoàn tác.</div><div class="time">08:12 · Biến động số dư</div></div></div>
+              <div class="nrow"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="between"><span class="t"><span class="num income">+1.200.000đ</span> · Nhận tiền</span><span class="unread"></span></div><div class="s">Đã tự ghi vào ví Techcombank · Từ thông báo Techcombank.</div><div class="time">10:05 · Số dư</div></div></div>
+              <div class="nrow"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="between"><span class="t"><span class="num">−45.000đ</span> · Cà phê</span><span class="unread"></span></div><div class="s">Đã tự ghi vào ví MB Bank · Từ thông báo MB Bank. Sai thì chạm để hoàn tác.</div><div class="time">08:12 · Số dư</div></div></div>
               <div class="nrow"><span class="bubble"><i data-lucide="shield-check"></i></span><div class="grow"><div class="t">Đã đổi mật khẩu</div><div class="s">Không phải bạn? Đặt lại mật khẩu ngay.</div><div class="time">07:30 · Bảo mật</div></div></div>
             </div>
             <div class="group-h"><span>Hôm qua</span></div>
             <div class="card flush list">
               <div class="nrow"><span class="bubble danger"><i data-lucide="target"></i></span><div class="grow"><div class="t">Vượt ngân sách Mua sắm</div><div class="s">Đã chi 1.380.000đ, vượt 180.000đ so với hạn mức.</div><div class="time">19:31 · Ngân sách</div></div></div>
               <div class="nrow"><span class="bubble brand"><svg viewBox="0 0 120 120" aria-label="TrackerX"><rect width="120" height="120" rx="26.4" fill="#111111"/><rect x="23" y="23" width="22" height="22" rx="5" fill="#FFFFFF"/><rect x="49" y="23" width="22" height="22" rx="5" fill="#FFFFFF"/><rect x="75" y="23" width="22" height="22" rx="5" fill="#FFFFFF"/><rect x="49" y="49" width="22" height="22" rx="5" fill="#FFFFFF"/><rect x="49" y="75" width="22" height="22" rx="5" fill="#FFFFFF"/><rect x="23" y="75" width="22" height="22" rx="5" fill="#5E5D59"/><rect x="75" y="75" width="22" height="22" rx="5" fill="#5E5D59"/></svg></span><div class="grow"><div class="t">Mới: quét hóa đơn bằng ảnh</div><div class="s">Nhấn giữ ＋, chọn Quét hóa đơn để ghi nhanh từ ảnh.</div><div class="time">09:00 · Từ đội ngũ TrackerX</div></div></div>
-              <div class="nrow"><span class="bubble"><i data-lucide="alarm-clock"></i></span><div class="grow"><div class="t">Đã tạm dừng: Spotify Premium</div><div class="s">Ví MoMo không đủ số dư. Chạm để tiếp tục.</div><div class="time">07:00 · Nhắc nhở</div></div></div>
+              <div class="nrow"><span class="bubble"><i data-lucide="circle-pause"></i></span><div class="grow"><div class="t">Đã tạm dừng: Spotify Premium</div><div class="s">Ví MoMo không đủ số dư. Chạm để tiếp tục.</div><div class="time">07:00 · Hệ thống</div></div></div>
             </div>
           </div>
         </div>
-      </div><div class="frame-cap"><span>60a</span>Thông báo: chip lọc theo nhóm + số chưa đọc, nhóm theo ngày</div></div>
+      </div><div class="frame-cap"><span>60a</span>Thông báo: menu 5 tab + chấm chưa đọc, nhóm theo ngày</div></div>
 
       <!-- 60-02 Lọc Biến động số dư -->
       <div class="frame"><div class="phone" data-shot="60-tb-02-loc-bien-dong">
@@ -2111,13 +2104,7 @@
           <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Trang chủ</span><span></span><span class="right"><span class="link tb-mark">Đánh dấu đã đọc</span></span></div>
           <div class="pad">
             <h1 class="headline">Thông báo</h1>
-            <div class="chips tb-chips mt-3">
-              <span class="chip">Tất cả<span class="cnt num">3</span></span>
-              <span class="chip on">Biến động số dư<span class="cnt num">2</span></span>
-              <span class="chip">Ngân sách<span class="cnt num">1</span></span>
-              <span class="chip">Hệ thống</span>
-              <span class="chip">Bảo mật</span>
-            </div>
+            <div class="tb-tabs mt-3"><span class="tb-tab">Tất cả<i class="tb-dot"></i></span><span class="tb-tab on">Số dư<i class="tb-dot"></i></span><span class="tb-tab">Ngân sách<i class="tb-dot"></i></span><span class="tb-tab">Hệ thống</span><span class="tb-tab">Bảo mật</span></div>
             <div class="tb-hint"><span>Khoản app tự ghi từ thông báo ngân hàng</span><span class="go">Cài đặt<i data-lucide="chevron-right"></i></span></div>
             <div class="group-h" style="margin-top:12px"><span>Hôm nay</span></div>
             <div class="card flush list">
@@ -2133,7 +2120,7 @@
             </div>
           </div>
         </div>
-      </div><div class="frame-cap"><span>60b</span>Lọc Biến động số dư: Hoàn tác + Xem giao dịch ngay trong thông báo</div></div>
+      </div><div class="frame-cap"><span>60b</span>Tab Số dư: Hoàn tác + Xem giao dịch ngay trong thông báo</div></div>
 
       <!-- 60-03 Hoàn tác: sheet xác nhận -->
       <div class="frame"><div class="phone" data-shot="60-tb-03-hoan-tac">
@@ -2141,12 +2128,7 @@
           <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Trang chủ</span><span></span><span class="right"><span class="link tb-mark">Đánh dấu đã đọc</span></span></div>
           <div class="pad">
             <h1 class="headline">Thông báo</h1>
-            <div class="chips tb-chips mt-3">
-              <span class="chip">Tất cả<span class="cnt num">3</span></span>
-              <span class="chip on">Biến động số dư<span class="cnt num">2</span></span>
-              <span class="chip">Ngân sách<span class="cnt num">1</span></span>
-              <span class="chip">Hệ thống</span>
-            </div>
+            <div class="tb-tabs mt-3"><span class="tb-tab">Tất cả<i class="tb-dot"></i></span><span class="tb-tab on">Số dư<i class="tb-dot"></i></span><span class="tb-tab">Ngân sách<i class="tb-dot"></i></span><span class="tb-tab">Hệ thống</span><span class="tb-tab">Bảo mật</span></div>
             <div class="group-h" style="margin-top:20px"><span>Hôm nay</span></div>
             <div class="card flush list">
               <div class="nrow"><span class="bubble"><i data-lucide="landmark"></i></span><div class="grow"><div class="between"><span class="t"><span class="num">−45.000đ</span> · Cà phê</span><span class="unread"></span></div><div class="s">Đã tự ghi vào ví MB Bank · Từ thông báo MB Bank. Sai thì chạm để hoàn tác.</div><div class="time">08:12 · Ăn uống</div></div></div>
@@ -2180,13 +2162,7 @@
           <div class="appbar"><span class="back left"><i data-lucide="chevron-left"></i>Trang chủ</span><span></span><span class="right"><span class="link tb-mark">Đánh dấu đã đọc</span></span></div>
           <div class="pad">
             <h1 class="headline">Thông báo</h1>
-            <div class="chips tb-chips mt-3">
-              <span class="chip">Tất cả<span class="cnt num">1</span></span>
-              <span class="chip on">Biến động số dư</span>
-              <span class="chip">Ngân sách<span class="cnt num">1</span></span>
-              <span class="chip">Hệ thống</span>
-              <span class="chip">Bảo mật</span>
-            </div>
+            <div class="tb-tabs mt-3"><span class="tb-tab">Tất cả<i class="tb-dot"></i></span><span class="tb-tab on">Số dư</span><span class="tb-tab">Ngân sách<i class="tb-dot"></i></span><span class="tb-tab">Hệ thống</span><span class="tb-tab">Bảo mật</span></div>
             <div class="tb-hint"><span>Khoản app tự ghi từ thông báo ngân hàng</span><span class="go">Cài đặt<i data-lucide="chevron-right"></i></span></div>
             <div class="group-h" style="margin-top:12px"><span>Hôm nay</span></div>
             <div class="card flush list">

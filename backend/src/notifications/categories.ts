@@ -1,7 +1,8 @@
 import { NotificationType } from '@prisma/client';
 
 /** Nhóm hiển thị trong app (suy ra từ `type`, không lưu DB → app cũ đọc `type` vẫn chạy). */
-export const NOTIFICATION_CATEGORIES = ['system', 'balance', 'budget', 'reminder', 'security'] as const;
+// 4 nhóm = 4 tab (cùng "Tất cả") vừa một hàng trên điện thoại; nhắc nhở (định kỳ tạm dừng) thuộc Hệ thống
+export const NOTIFICATION_CATEGORIES = ['balance', 'budget', 'system', 'security'] as const;
 export type NotificationCategory = (typeof NOTIFICATION_CATEGORIES)[number];
 
 export const CATEGORY_OF: Record<NotificationType, NotificationCategory> = {
@@ -9,7 +10,7 @@ export const CATEGORY_OF: Record<NotificationType, NotificationCategory> = {
   BALANCE_CHANGE: 'balance',
   BUDGET_WARNING: 'budget',
   BUDGET_EXCEEDED: 'budget',
-  RECURRING_PAUSED: 'reminder',
+  RECURRING_PAUSED: 'system',
   SECURITY: 'security',
 };
 

@@ -556,10 +556,6 @@ svg.lucide { width: 20px; height: 20px; stroke-width: 1.75; flex: none; }
 .why svg.lucide { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--color-on-surface-variant); }
 
 /* ===================== M. Thông báo theo nhóm & tự ghi · chờ duyệt ===================== */
-/* Dải chip lọc nhóm: tràn mép phải (cuộn ngang), số chưa đọc trong chip */
-.tb-chips { margin-right: calc(-1 * var(--screen-padding)); }
-.chip .cnt { min-width: 18px; height: 18px; padding: 0 5px; margin-right: -4px; border-radius: var(--radius-pill); background: var(--color-primary); color: #fff; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
-.chip.on .cnt { background: #fff; color: var(--color-primary); }
 .link.tb-mark { font-size: 14px; padding: 0 8px; }
 /* Bubble Hệ thống = logo TrackerX (vuông bo, phân biệt với bubble tròn) */
 .bubble.brand { background: none; border-radius: 11px; overflow: hidden; }
@@ -596,3 +592,9 @@ svg.lucide { width: 20px; height: 20px; stroke-width: 1.75; flex: none; }
 #thong-bao-nhom .nrow .between { align-items: flex-start; }
 #thong-bao-nhom .nrow .between .unread { margin-top: 7px; }
 #thong-bao-nhom .nrow .between .badge { margin-top: 1px; }
+/* M · menu tab nhóm thông báo (thay dải chip): vừa khít chiều ngang, không cuộn */
+.tb-tabs { display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-outline); padding: 0 2px 0 0; }
+.tb-tab { position: relative; display: inline-flex; align-items: center; height: 40px; font-size: 14px; font-weight: 500; color: var(--color-on-surface-variant); white-space: nowrap; }
+.tb-tab.on { color: var(--color-on-surface); font-weight: 600; }
+.tb-tab.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; border-radius: 1px; background: var(--color-on-surface); }
+.tb-dot { position: absolute; top: 10px; right: -6px; width: 4px; height: 4px; border-radius: 50%; background: var(--color-on-surface); }

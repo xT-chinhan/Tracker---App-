@@ -554,14 +554,14 @@ check('unread-count 0', r.data.byCategory.budget === 0, r.data);
 r = await req('POST', `/notifications/not-uuid/read`, { token: tA });
 check('read bad id 400', r.status === 400, r);
 
-group('notifications: nhóm (hệ thống / biến động số dư / ngân sách / nhắc / bảo mật) + tự ghi từ ngân hàng');
+group('notifications: nhóm (biến động số dư / ngân sách / hệ thống / bảo mật) + tự ghi từ ngân hàng');
 {
   const N = await newUser('ntfcat');
   const cats = (await req('GET', '/categories', { token: N.token })).data;
   const food = cats.find((c) => c.name === 'Ăn uống').id;
   const body = (ref, extra = {}) => ({ categoryId: food, walletId: N.cash, amount: 45000, title: 'Cà phê', note: 'Từ thông báo VCB', source: 'bank_auto', externalRef: ref, ...extra });
   r = await req('GET', '/notifications', { token: tA });
-  check('items carry derived category', r.data.items.length > 0 && r.data.items.every((x) => ['system', 'balance', 'budget', 'reminder', 'security'].includes(x.category)) && r.data.items.filter((x) => x.type.startsWith('BUDGET')).every((x) => x.category === 'budget'), r.data.items.map((x) => [x.type, x.category]));
+  check('items carry derived category', r.data.items.length > 0 && r.data.items.every((x) => ['balance', 'budget', 'system', 'security'].includes(x.category)) && r.data.items.filter((x) => x.type.startsWith('BUDGET')).every((x) => x.category === 'budget'), r.data.items.map((x) => [x.type, x.category]));
   r = await req('POST', '/transactions', { token: N.token, body: body(`k1-${S}`) });
   const t1 = r.data;
   check('bank_auto tx 201', r.status === 201 && !t1.duplicate, r.data);
@@ -584,7 +584,7 @@ group('notifications: nhóm (hệ thống / biến động số dư / ngân sác
   r = await req('GET', '/notifications?category=security', { token: N.token });
   check('change password => SECURITY notification', r.data.total === 1 && r.data.items[0].type === 'SECURITY' && r.data.items[0].title === 'Đã đổi mật khẩu', r.data.items);
   r = await req('GET', '/notifications/unread-count', { token: N.token });
-  check('unread-count byCategory', r.data.count === 3 && r.data.byCategory.balance === 2 && r.data.byCategory.security === 1 && r.data.byCategory.system === 0 && r.data.byCategory.budget === 0 && r.data.byCategory.reminder === 0, r.data);
+  check('unread-count byCategory', r.data.count === 3 && r.data.byCategory.balance === 2 && r.data.byCategory.security === 1 && r.data.byCategory.system === 0 && r.data.byCategory.budget === 0 && !('reminder' in r.data.byCategory), r.data);
   r = await req('POST', '/notifications/read-all?category=balance', { token: N.token });
   check('read-all?category=balance only marks that group', r.data.updated === 2, r.data);
   r = await req('GET', '/notifications/unread-count', { token: N.token });
