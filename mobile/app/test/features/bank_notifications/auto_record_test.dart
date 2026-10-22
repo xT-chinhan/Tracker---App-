@@ -74,6 +74,39 @@ void main() {
       );
     });
 
+    test('trùng với khoản đã xác nhận / bỏ qua trong 3 phút', () {
+      final done = ProcessedBankTransaction.of(base);
+      final sms = _tx(
+        key: 'k2',
+        at: base.occurredAt.add(const Duration(minutes: 1)),
+      );
+      expect(
+        isDuplicateOfKnown(
+          sms,
+          pending: const [],
+          autoRecorded: const [],
+          processed: [done],
+        ),
+        isTrue,
+      );
+      final later = _tx(
+        key: 'k3',
+        at: base.occurredAt.add(const Duration(minutes: 4)),
+      );
+      expect(
+        isDuplicateOfKnown(
+          later,
+          pending: const [],
+          autoRecorded: const [],
+          processed: [done],
+        ),
+        isFalse,
+      );
+      final back = ProcessedBankTransaction.fromJson('k1', done.toJson())!;
+      expect(back.amount, base.amount);
+      expect(back.occurredAt, base.occurredAt);
+    });
+
     test('không tự so với chính nó', () {
       expect(
         isDuplicateOfKnown(base, pending: [base], autoRecorded: const []),

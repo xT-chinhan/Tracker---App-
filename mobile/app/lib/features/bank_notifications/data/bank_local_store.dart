@@ -20,6 +20,10 @@ abstract interface class BankLocalStore {
   Future<Map<String, int>> readProcessed();
   Future<void> writeProcessed(Map<String, int> keys);
 
+  /// Số tiền / loại / thời điểm của khoản đã xử lý (khóa như [readProcessed]), để chống trùng app ngân hàng + SMS.
+  Future<Map<String, ProcessedBankTransaction>> readProcessedMeta();
+  Future<void> writeProcessedMeta(Map<String, ProcessedBankTransaction> meta);
+
   /// Ngân hàng → id ví người dùng đã chọn.
   Future<Map<String, String>> readWalletMap();
   Future<void> writeWalletMap(Map<String, String> map);
@@ -53,6 +57,7 @@ class SecureBankLocalStore implements BankLocalStore {
   static const _autoRecord = 'bank.autoRecord';
   static const _threshold = 'bank.threshold';
   static const _autoRecorded = 'bank.autoRecorded';
+  static const _processedMeta = 'bank.processedMeta';
 
   Future<dynamic> _json(String key) async {
     final raw = await _s.read(key: key);
@@ -104,6 +109,25 @@ class SecureBankLocalStore implements BankLocalStore {
   @override
   Future<void> writeProcessed(Map<String, int> keys) =>
       _s.write(key: _processed, value: jsonEncode(keys));
+
+  @override
+  Future<Map<String, ProcessedBankTransaction>> readProcessedMeta() async {
+    final m = await _json(_processedMeta);
+    if (m is! Map) return {};
+    final out = <String, ProcessedBankTransaction>{};
+    for (final e in m.entries) {
+      final p = ProcessedBankTransaction.fromJson('${e.key}', e.value);
+      if (p != null) out[p.key] = p;
+    }
+    return out;
+  }
+
+  @override
+  Future<void> writeProcessedMeta(Map<String, ProcessedBankTransaction> meta) =>
+      _s.write(
+        key: _processedMeta,
+        value: jsonEncode(meta.map((k, v) => MapEntry(k, v.toJson()))),
+      );
 
   @override
   Future<Map<String, String>> readWalletMap() async {
@@ -161,6 +185,7 @@ class SecureBankLocalStore implements BankLocalStore {
     for (final k in [
       _pending,
       _processed,
+      _processedMeta,
       _wallets,
       _autoRecord,
       _autoRecorded,

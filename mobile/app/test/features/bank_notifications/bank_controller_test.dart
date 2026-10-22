@@ -49,6 +49,7 @@ class _MemoryStore implements BankLocalStore {
   bool autoRecord = false;
   int threshold = defaultAutoRecordThreshold;
   List<AutoRecordedTransaction> autoRecorded = [];
+  Map<String, ProcessedBankTransaction> processedMeta = {};
 
   @override
   Future<bool> readEnabled() async => enabled;
@@ -74,6 +75,13 @@ class _MemoryStore implements BankLocalStore {
   Future<void> writeWalletMap(Map<String, String> v) async =>
       wallets = Map.of(v);
   @override
+  Future<Map<String, ProcessedBankTransaction>> readProcessedMeta() async =>
+      Map.of(processedMeta);
+  @override
+  Future<void> writeProcessedMeta(
+    Map<String, ProcessedBankTransaction> v,
+  ) async => processedMeta = Map.of(v);
+  @override
   Future<bool> readAutoRecord() async => autoRecord;
   @override
   Future<void> writeAutoRecord(bool v) async => autoRecord = v;
@@ -91,6 +99,7 @@ class _MemoryStore implements BankLocalStore {
   Future<void> clearAll() async {
     pending = [];
     processed = {};
+    processedMeta = {};
     wallets = {};
     autoRecord = false;
     autoRecorded = [];
@@ -352,5 +361,53 @@ void main() {
     await c.read(bankNotificationsProvider.notifier).sync();
     expect(server.posts, isEmpty);
     expect(c.read(bankNotificationsProvider).pending, hasLength(1));
+  });
+
+  test(
+    'push đã xác nhận tay → SMS cùng số tiền đến sau 1 phút: không thêm vào chờ',
+    () async {
+      final push = MockBankSamples.mbbankDebit;
+      bridge.saved = [push];
+      final ctrl = c.read(bankNotificationsProvider.notifier);
+      await ctrl.sync();
+      await ctrl.loadReferences();
+      final t = c.read(bankNotificationsProvider).pending.single;
+      final err = await ctrl.confirm(
+        t,
+        category: ctrl.categoryFor(t)!,
+        wallet: ctrl.walletFor(t)!,
+      );
+      expect(err, isNull);
+      expect(server.posts.single['source'], 'bank_manual');
+      expect(server.posts.single['externalRef'], t.key);
+      expect(store.processedMeta.keys, contains(t.key));
+      bridge.saved = [
+        _copy(
+          push,
+          packageName: 'com.google.android.apps.messaging',
+          shiftMs: 60000,
+        ),
+      ];
+      await ctrl.sync();
+      expect(c.read(bankNotificationsProvider).pending, isEmpty);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    },
+  );
+
+  test('khoản đã bỏ qua cũng chặn bản SMS trùng trong 3 phút', () async {
+    final push = MockBankSamples.mbbankDebit;
+    bridge.saved = [push];
+    final ctrl = c.read(bankNotificationsProvider.notifier);
+    await ctrl.sync();
+    await ctrl.skip(c.read(bankNotificationsProvider).pending.single);
+    bridge.saved = [
+      _copy(
+        push,
+        packageName: 'com.google.android.apps.messaging',
+        shiftMs: 90000,
+      ),
+    ];
+    await ctrl.sync();
+    expect(c.read(bankNotificationsProvider).pending, isEmpty);
   });
 }

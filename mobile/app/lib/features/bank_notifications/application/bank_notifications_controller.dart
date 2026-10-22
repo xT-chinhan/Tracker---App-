@@ -238,6 +238,8 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
     final now = DateTime.now().millisecondsSinceEpoch;
     final processed = await _store.readProcessed()
       ..removeWhere((_, at) => now - at > 30 * 86400000);
+    final meta = await _store.readProcessedMeta()
+      ..removeWhere((k, _) => !processed.containsKey(k));
     final pending = [...state.pending];
     final auto = [...state.autoRecorded];
     final seen = {...processed.keys, ...pending.map((p) => p.key)};
@@ -248,7 +250,12 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
       final item = toPending(parsed, packageName: raw.packageName);
       if (item == null || !seen.add(item.key)) continue;
       // Cùng một khoản báo qua app ngân hàng và SMS: chỉ lấy lần đầu
-      if (isDuplicateOfKnown(item, pending: pending, autoRecorded: auto)) {
+      if (isDuplicateOfKnown(
+        item,
+        pending: pending,
+        autoRecorded: auto,
+        processed: meta.values,
+      )) {
         continue;
       }
       pending.insert(0, item);
@@ -288,6 +295,7 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
           );
           pending.removeWhere((p) => p.key == t.key);
           processed[t.key] = now;
+          meta[t.key] = ProcessedBankTransaction.of(t);
           recorded = true;
         } catch (_) {
           // lỗi mạng / máy chủ: để lại trong Chờ xác nhận
@@ -300,6 +308,7 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
     }
     pending.sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
     await _store.writeProcessed(processed);
+    await _store.writeProcessedMeta(meta);
     await _store.writePending(pending);
     state = state.copyWith(pending: pending, autoRecorded: auto);
   }
@@ -363,12 +372,17 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
 
   Future<void> _removePending(Set<String> keys) async {
     final processed = await _store.readProcessed();
+    final meta = await _store.readProcessedMeta();
     final now = DateTime.now().millisecondsSinceEpoch;
     for (final k in keys) {
       processed[k] = now;
     }
+    for (final p in state.pending) {
+      if (keys.contains(p.key)) meta[p.key] = ProcessedBankTransaction.of(p);
+    }
     final pending = state.pending.where((p) => !keys.contains(p.key)).toList();
     await _store.writeProcessed(processed);
+    await _store.writeProcessedMeta(meta);
     await _store.writePending(pending);
     state = state.copyWith(pending: pending);
   }

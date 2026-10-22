@@ -262,11 +262,59 @@ String? autoRecordBlock(
   return null;
 }
 
-/// [item] trùng (khác nguồn) với một khoản đang chờ hoặc đã tự ghi.
+/// Thông tin tối thiểu của khoản đã xử lý (xác nhận / bỏ qua / tự ghi) để chống trùng khác nguồn.
+class ProcessedBankTransaction {
+  const ProcessedBankTransaction({
+    required this.key,
+    required this.amount,
+    required this.type,
+    required this.occurredAt,
+  });
+
+  factory ProcessedBankTransaction.of(PendingBankTransaction t) =>
+      ProcessedBankTransaction(
+        key: t.key,
+        amount: t.amount,
+        type: t.type,
+        occurredAt: t.occurredAt,
+      );
+
+  final String key;
+  final int amount;
+  final String type;
+  final DateTime occurredAt;
+
+  ({int amount, String type, DateTime occurredAt}) get shape =>
+      (amount: amount, type: type, occurredAt: occurredAt);
+
+  Map<String, dynamic> toJson() => {
+    'amount': amount,
+    'type': type,
+    'occurredAt': occurredAt.toUtc().toIso8601String(),
+  };
+
+  static ProcessedBankTransaction? fromJson(String key, Object? j) {
+    if (j is! Map) return null;
+    final amount = j['amount'], at = j['occurredAt'];
+    if (amount is! num || at is! String) return null;
+    final when = DateTime.tryParse(at);
+    if (when == null) return null;
+    return ProcessedBankTransaction(
+      key: key,
+      amount: amount.toInt(),
+      type: j['type'] as String? ?? 'EXPENSE',
+      occurredAt: when,
+    );
+  }
+}
+
+/// [item] trùng (khác nguồn) với một khoản đang chờ, đã tự ghi, hoặc đã xác nhận / bỏ qua.
 bool isDuplicateOfKnown(
   PendingBankTransaction item, {
   required Iterable<PendingBankTransaction> pending,
   required Iterable<AutoRecordedTransaction> autoRecorded,
+  Iterable<ProcessedBankTransaction> processed = const [],
 }) =>
     pending.any((p) => p.key != item.key && isSameTx(p.shape, item.shape)) ||
-    autoRecorded.any((a) => isSameTx(a.shape, item.shape));
+    autoRecorded.any((a) => isSameTx(a.shape, item.shape)) ||
+    processed.any((p) => p.key != item.key && isSameTx(p.shape, item.shape));
