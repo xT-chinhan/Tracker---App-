@@ -21,7 +21,8 @@ import { AuthUser, CurrentUser, Public } from '../common/auth';
 import { AppThrottlerGuard } from '../common/throttle';
 import { SystemConfigService } from '../system-config/system-config.module';
 import { MailService } from './mail.service';
-import { passwordResetByPhoneMail, phoneLinkedMail, phoneRemovedMail } from './mail-templates';
+import { maskPhone, passwordResetByPhoneMail, phoneLinkedMail, phoneRemovedMail } from './mail-templates';
+import { notifySecurity } from '../notifications/categories';
 
 class StartLinkDto {
   @IsString() @MaxLength(20) phone: string;
@@ -153,6 +154,7 @@ export class PhoneService {
     if (!user.phone) throw new NotFoundException('Tài khoản chưa gắn số điện thoại');
     await this.prisma.user.update({ where: { id: userId }, data: { phone: null, phoneVerifiedAt: null } });
     await this.mail.notify(user.email, (b) => phoneRemovedMail(b, { name: user.name, phone: user.phone!, at: new Date() }));
+    await notifySecurity(this.prisma, userId, 'Đã gỡ số điện thoại', `Số ${maskPhone(user.phone!)} không còn gắn với tài khoản. Bạn vẫn lấy lại mật khẩu được qua email.`);
   }
 
   /* ---------- quên mật khẩu bằng số điện thoại ---------- */
@@ -191,6 +193,7 @@ export class PhoneService {
     await this.prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(dto.newPassword, 10), tokenVersion: { increment: 1 } } });
     await this.prisma.passwordReset.deleteMany({ where: { userId: user.id } });
     await this.mail.notify(user.email, (b) => passwordResetByPhoneMail(b, { name: user.name, phone: v.phone, at: new Date() }));
+    await notifySecurity(this.prisma, user.id, 'Mật khẩu vừa được đặt lại', `Đặt lại bằng số điện thoại ${maskPhone(v.phone)}. Mọi thiết bị đã được đăng xuất.`);
   }
 
   /* ---------- máy cổng ---------- */
@@ -234,6 +237,7 @@ export class PhoneService {
       return { matched: true, purpose: v.purpose, linked: false };
     }
     await this.mail.notify(user.email, (b) => phoneLinkedMail(b, { name: user.name, phone, at: now, replaced: user.phone }));
+    await notifySecurity(this.prisma, user.id, user.phone ? 'Đã đổi số điện thoại' : 'Đã gắn số điện thoại', `Số ${maskPhone(phone)} đã được xác thực. Dùng để lấy lại mật khẩu khi quên.`);
     return { matched: true, purpose: v.purpose, linked: true };
   }
 

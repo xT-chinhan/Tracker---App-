@@ -13,6 +13,7 @@ import { AuthUser, CurrentUser, Public } from '../common/auth';
 import { SystemConfigService } from '../system-config/system-config.module';
 import { Trim } from '../common/dto';
 import { MailService } from './mail.service';
+import { notifySecurity } from '../notifications/categories';
 import { PhoneController, PhoneService } from './phone';
 
 export { MailService };
@@ -141,6 +142,7 @@ export class AuthService {
       where: { id: userId },
       data: { passwordHash: await bcrypt.hash(dto.newPassword, 10), tokenVersion: { increment: 1 } },
     });
+    await notifySecurity(this.prisma, userId, 'Đã đổi mật khẩu', 'Mọi thiết bị khác đã được đăng xuất. Không phải bạn? Đặt lại mật khẩu ngay bằng email.');
     return this.issue(updated);
   }
 
@@ -181,6 +183,7 @@ export class AuthService {
       this.prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(dto.newPassword, 10), tokenVersion: { increment: 1 } } }),
       this.prisma.passwordReset.delete({ where: { userId: user.id } }),
     ]);
+    await notifySecurity(this.prisma, user.id, 'Mật khẩu vừa được đặt lại', 'Đặt lại bằng mã gửi qua email. Mọi thiết bị đã được đăng xuất.');
   }
 
   /** Xóa tài khoản + toàn bộ dữ liệu (cascade). Admin cuối cùng không tự xóa được. */

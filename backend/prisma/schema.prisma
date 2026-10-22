@@ -45,6 +45,10 @@ enum NotificationType {
   BUDGET_EXCEEDED
   BROADCAST
   RECURRING_PAUSED
+  /// Biến động số dư: giao dịch app tự ghi từ thông báo ngân hàng (Android)
+  BALANCE_CHANGE
+  /// Bảo mật: đổi / đặt lại mật khẩu, gắn / đổi / gỡ số điện thoại
+  SECURITY
 }
 
 enum Frequency {
@@ -280,6 +284,10 @@ model Transaction {
   /// Sinh từ giao dịch định kỳ: rule + kỳ (unique => không sinh trùng)
   recurringRuleId String?
   scheduledFor    DateTime?
+  /// Nguồn: null = nhập tay / API; bank_auto = app tự ghi từ thông báo ngân hàng; bank_manual = người dùng xác nhận từ thông báo
+  source          String?
+  /// Khóa chống trùng do app gửi (vd khóa thông báo ngân hàng); gửi lại cùng khóa => trả giao dịch đã có
+  externalRef     String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -289,6 +297,7 @@ model Transaction {
   recurringRule RecurringRule? @relation(fields: [recurringRuleId], references: [id], onDelete: SetNull)
 
   @@unique([recurringRuleId, scheduledFor])
+  @@unique([userId, externalRef])
   @@index([userId, occurredAt])
   @@index([categoryId])
   @@index([walletId])

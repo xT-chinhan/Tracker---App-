@@ -1,7 +1,7 @@
 import { Body, ConflictException, Controller, Delete, Get, HttpCode, Injectable, Module, NotFoundException, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDateString, IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength, ValidateNested } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDateString, IsEnum, IsIn, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength, ValidateNested } from 'class-validator';
 import { Prisma, Transaction, TxType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser, CurrentUser } from '../common/auth';
@@ -10,6 +10,10 @@ import { monthOf, parseDate, resolveRange } from '../common/time';
 import { CategoriesModule, CategoriesService } from '../categories/categories.module';
 import { WalletsModule, WalletsService } from '../wallets/wallets.module';
 import { BudgetsModule, BudgetsService } from '../budgets/budgets.module';
+import { vnd } from '../notifications/categories';
+
+/** Nguồn giao dịch app gửi kèm. bank_auto = tự ghi từ thông báo ngân hàng (tạo thông báo Biến động số dư) */
+export const TX_SOURCES = ['bank_auto', 'bank_manual'] as const;
 
 export class CreateTransactionDto {
   @IsUUID() categoryId: string;
@@ -21,6 +25,10 @@ export class CreateTransactionDto {
   @IsOptional() @IsString() @MaxLength(500) note?: string;
   /** ISO 8601, mặc định là thời điểm hiện tại */
   @IsOptional() @IsDateString() occurredAt?: string;
+  /** bank_auto: app tự ghi từ thông báo ngân hàng · bank_manual: người dùng xác nhận từ thông báo */
+  @IsOptional() @IsIn(TX_SOURCES) source?: (typeof TX_SOURCES)[number];
+  /** Khóa chống trùng (vd khóa thông báo ngân hàng). Gửi lại cùng khóa → trả giao dịch đã có, không ghi thêm */
+  @IsOptional() @IsString() @MinLength(1) @MaxLength(200) externalRef?: string;
 }
 
 class UpdateTransactionDto {
@@ -102,6 +110,10 @@ export class TransactionsService {
    * `recurring` chỉ dùng nội bộ: gắn rule + kỳ để unique chặn sinh trùng.
    */
   async create(userId: string, dto: CreateTransactionDto, recurring?: { ruleId: string; scheduledFor: Date }) {
+    if (dto.externalRef) {
+      const existing = await this.prisma.transaction.findUnique({ where: { userId_externalRef: { userId, externalRef: dto.externalRef } }, include: TX_INCLUDE });
+      if (existing) return { ...withFlags(existing), duplicate: true };
+    }
     const category = await this.categories.usableForUser(userId, dto.categoryId);
     const wallet = await this.wallets.usable(userId, dto.walletId);
     const tx = await this.prisma.transaction.create({
@@ -116,11 +128,29 @@ export class TransactionsService {
         occurredAt: dto.occurredAt ? parseDate(dto.occurredAt) : new Date(),
         recurringRuleId: recurring?.ruleId,
         scheduledFor: recurring?.scheduledFor,
+        source: dto.source ?? null,
+        externalRef: dto.externalRef ?? null,
       },
       include: TX_INCLUDE,
     });
+    if (tx.source === 'bank_auto') await this.notifyBalanceChange(userId, [tx]);
     if (tx.type === 'EXPENSE') await this.budgets.checkThresholds(userId, monthOf(tx.occurredAt), tx.categoryId);
     return withFlags(tx);
+  }
+
+  /** Thông báo nhóm "Biến động số dư" cho giao dịch app tự ghi (kèm transactionId để Hoàn tác = xóa giao dịch). */
+  private async notifyBalanceChange(userId: string, txs: { id: string; type: TxType; amount: bigint; title: string; note: string | null; walletId: string }[]) {
+    if (!txs.length) return;
+    const names = new Map((await this.prisma.wallet.findMany({ where: { id: { in: [...new Set(txs.map((t) => t.walletId))] } }, select: { id: true, name: true } })).map((w) => [w.id, w.name]));
+    await this.prisma.notification.createMany({
+      data: txs.map((t) => ({
+        userId,
+        type: 'BALANCE_CHANGE' as const,
+        title: `${t.type === 'INCOME' ? '+' : '−'}${vnd(t.amount)} · ${t.title}`,
+        body: `Đã tự ghi vào ví ${names.get(t.walletId)}${t.note ? ` · ${t.note}` : ''}. Sai thì chạm để hoàn tác.`,
+        data: { transactionId: t.id, walletId: t.walletId, amount: Number(t.amount), txType: t.type, auto: true },
+      })),
+    });
   }
 
   async update(userId: string, id: string, dto: UpdateTransactionDto) {
@@ -173,7 +203,16 @@ export class TransactionsService {
     }
     for (const walletId of new Set(items.map((it) => it.walletId))) await this.wallets.usable(userId, walletId);
     const now = new Date();
-    const data = items.map((it) => ({
+    // khóa trùng trong cùng lô hoặc đã ghi trước đó → bỏ qua (gửi lại lô an toàn)
+    const refs = items.map((it) => it.externalRef).filter((r): r is string => !!r);
+    const known = new Set(refs.length ? (await this.prisma.transaction.findMany({ where: { userId, externalRef: { in: refs } }, select: { externalRef: true } })).map((t) => t.externalRef) : []);
+    const fresh = items.filter((it) => {
+      if (!it.externalRef) return true;
+      if (known.has(it.externalRef)) return false;
+      known.add(it.externalRef);
+      return true;
+    });
+    const data = fresh.map((it) => ({
       userId,
       categoryId: it.categoryId,
       walletId: it.walletId,
@@ -182,14 +221,18 @@ export class TransactionsService {
       title: it.title.trim(),
       note: it.note?.trim() || null,
       occurredAt: it.occurredAt ? parseDate(it.occurredAt) : now,
+      source: it.source ?? null,
+      externalRef: it.externalRef ?? null,
     }));
-    const { count } = await this.prisma.transaction.createMany({ data });
+    const created = data.length ? await this.prisma.transaction.createManyAndReturn({ data }) : [];
+    const count = created.length;
+    await this.notifyBalanceChange(userId, created.filter((t) => t.source === 'bank_auto'));
     const checks = new Set(data.filter((d) => d.type === 'EXPENSE').map((d) => `${monthOf(d.occurredAt)}|${d.categoryId}`));
     for (const key of checks) {
       const [month, categoryId] = key.split('|');
       await this.budgets.checkThresholds(userId, month, categoryId);
     }
-    return { created: count };
+    return { created: count, skipped: items.length - count };
   }
 }
 
