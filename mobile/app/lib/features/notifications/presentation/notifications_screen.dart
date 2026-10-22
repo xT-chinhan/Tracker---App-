@@ -347,59 +347,66 @@ class NotificationTabs extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            for (final (tab, label) in notificationTabs)
-              Flexible(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => onSelect(tab),
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 6, bottom: 10),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          width: 2,
-                          color: tab == selected ? ink : Colors.transparent,
+        // Dàn đều hết chiều ngang; máy hẹp quá thì thu nhỏ cả menu (không cuộn)
+        LayoutBuilder(
+          builder: (context, constraints) => FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: constraints.maxWidth),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  for (final (i, (tab, label)) in notificationTabs.indexed) ...[
+                    if (i > 0) const SizedBox(width: 8),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => onSelect(tab),
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 6, bottom: 10),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 2,
+                              color: tab == selected ? ink : Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              label,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: tab == selected ? ink : grey,
+                              ),
+                            ),
+                            if (summary.hasUnread(tab))
+                              Container(
+                                key: ValueKey('tab-dot-${tab ?? 'all'}'),
+                                width: 4,
+                                height: 4,
+                                margin: const EdgeInsets.only(left: 2, top: 2),
+                                decoration: BoxDecoration(
+                                  color: ink,
+                                  shape: BoxShape.circle,
+                                ),
+                              )
+                            else
+                              const SizedBox(width: 6),
+                          ],
                         ),
                       ),
                     ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            label,
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: tab == selected ? ink : grey,
-                            ),
-                          ),
-                          if (summary.hasUnread(tab))
-                            Container(
-                              key: ValueKey('tab-dot-${tab ?? 'all'}'),
-                              width: 4,
-                              height: 4,
-                              margin: const EdgeInsets.only(left: 2, top: 2),
-                              decoration: BoxDecoration(
-                                color: ink,
-                                shape: BoxShape.circle,
-                              ),
-                            )
-                          else
-                            const SizedBox(width: 6),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                  ],
+                ],
               ),
-          ],
+            ),
+          ),
         ),
         Divider(height: 1, thickness: 1, color: theme.colorScheme.outline),
       ],
@@ -653,7 +660,7 @@ class _NotificationRow extends StatelessWidget {
                             foregroundColor: theme.colorScheme.onSurface,
                             side: BorderSide(color: theme.colorScheme.outline),
                             shape: const StadiumBorder(),
-                            textStyle: const TextStyle(
+                            textStyle: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -664,7 +671,7 @@ class _NotificationRow extends StatelessWidget {
                             backgroundColor: theme.colorScheme.surfaceContainer,
                             foregroundColor: theme.colorScheme.onSurface,
                             shape: const StadiumBorder(),
-                            textStyle: const TextStyle(
+                            textStyle: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
