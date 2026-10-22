@@ -143,6 +143,7 @@ class NotificationsController extends Notifier<NotificationsState> {
       page: 1,
       totalPages: 1,
       isLoading: true,
+      isLoadingMore: false,
     );
     await load();
   }

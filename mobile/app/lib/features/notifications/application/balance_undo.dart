@@ -52,9 +52,11 @@ final undoneTransactionsProvider =
     );
 
 class UndoneTransactionsController extends Notifier<Set<String>> {
+  late Future<void> _loaded;
+
   @override
   Set<String> build() {
-    _load();
+    _loaded = _load();
     return const {};
   }
 
@@ -64,6 +66,7 @@ class UndoneTransactionsController extends Notifier<Set<String>> {
   }
 
   Future<void> add(String id) async {
+    await _loaded; // không ghi đè danh sách đã lưu khi chưa đọc xong
     state = {...state, id};
     await ref.read(undoneStoreProvider).write(state);
   }

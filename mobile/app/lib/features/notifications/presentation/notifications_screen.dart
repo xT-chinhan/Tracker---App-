@@ -95,6 +95,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
+    // Mỗi lần mở: tải lại từ đầu, về tab Tất cả
+    ref.invalidate(notificationsControllerProvider);
     _scrollController.addListener(_onScroll);
   }
 
