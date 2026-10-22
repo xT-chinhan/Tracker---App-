@@ -34,6 +34,8 @@ class UnreadCountNotifier extends AsyncNotifier<int> {
 class NotificationsState {
   const NotificationsState({
     this.items = const <NotificationItem>[],
+    this.tab,
+    this.summary = const UnreadSummary(),
     this.total = 0,
     this.page = 1,
     this.totalPages = 1,
@@ -43,6 +45,10 @@ class NotificationsState {
   });
 
   final List<NotificationItem> items;
+
+  /// Tab đang chọn: `null` = Tất cả, còn lại là nhóm (`balance`…).
+  final String? tab;
+  final UnreadSummary summary;
   final int total;
   final int page;
   final int totalPages;
@@ -50,8 +56,14 @@ class NotificationsState {
   final bool isLoadingMore;
   final String? errorMessage;
 
+  /// "Đánh dấu đã đọc" chỉ hiện khi tab đang chọn còn tin chưa đọc.
+  bool get canMarkAll =>
+      summary.hasUnread(tab) || items.any((i) => i.readAt == null);
+
   NotificationsState copyWith({
     List<NotificationItem>? items,
+    String? Function()? tab,
+    UnreadSummary? summary,
     int? total,
     int? page,
     int? totalPages,
@@ -60,6 +72,8 @@ class NotificationsState {
     String? errorMessage,
   }) => NotificationsState(
     items: items ?? this.items,
+    tab: tab != null ? tab() : this.tab,
+    summary: summary ?? this.summary,
     total: total ?? this.total,
     page: page ?? this.page,
     totalPages: totalPages ?? this.totalPages,
@@ -77,8 +91,20 @@ final notificationsControllerProvider =
 class NotificationsController extends Notifier<NotificationsState> {
   @override
   NotificationsState build() {
-    load();
+    Future.microtask(load);
     return const NotificationsState(isLoading: true);
+  }
+
+  Future<void> _loadSummary() async {
+    try {
+      final summary = await ref
+          .read(notificationRepositoryProvider)
+          .getUnreadSummary();
+      state = state.copyWith(
+        summary: summary,
+        errorMessage: state.errorMessage,
+      );
+    } catch (_) {}
   }
 
   Future<void> load({bool refresh = false}) async {
@@ -86,8 +112,11 @@ class NotificationsController extends Notifier<NotificationsState> {
       state = state.copyWith(isLoading: true, errorMessage: null);
     }
     final repo = ref.read(notificationRepositoryProvider);
+    final tab = state.tab;
+    final summary = _loadSummary();
     try {
-      final result = await repo.list(page: 1, limit: 20);
+      final result = await repo.list(page: 1, limit: 20, category: tab);
+      if (state.tab != tab) return; // đã đổi tab trong lúc tải
       state = state.copyWith(
         items: result.items,
         total: result.total,
@@ -97,11 +126,25 @@ class NotificationsController extends Notifier<NotificationsState> {
         errorMessage: null,
       );
     } catch (e) {
+      if (state.tab != tab) return;
       state = state.copyWith(
         isLoading: false,
         errorMessage: 'Không thể tải thông báo. Vui lòng thử lại.',
       );
     }
+    await summary;
+  }
+
+  Future<void> selectTab(String? tab) async {
+    if (tab == state.tab) return;
+    state = state.copyWith(
+      tab: () => tab,
+      items: const [],
+      page: 1,
+      totalPages: 1,
+      isLoading: true,
+    );
+    await load();
   }
 
   Future<void> loadMore() async {
@@ -112,9 +155,11 @@ class NotificationsController extends Notifier<NotificationsState> {
     }
     state = state.copyWith(isLoadingMore: true);
     final repo = ref.read(notificationRepositoryProvider);
+    final tab = state.tab;
     try {
       final nextPage = state.page + 1;
-      final result = await repo.list(page: nextPage, limit: 20);
+      final result = await repo.list(page: nextPage, limit: 20, category: tab);
+      if (state.tab != tab) return;
       state = state.copyWith(
         items: <NotificationItem>[...state.items, ...result.items],
         total: result.total,
@@ -128,17 +173,8 @@ class NotificationsController extends Notifier<NotificationsState> {
   }
 
   Future<void> markRead(String id) async {
-    final target = state.items.firstWhere(
-      (item) => item.id == id,
-      orElse: () => NotificationItem(
-        id: '',
-        type: '',
-        title: '',
-        body: '',
-        createdAt: DateTime.now(),
-      ),
-    );
-    if (target.id.isEmpty || target.readAt != null) return;
+    final target = state.items.where((item) => item.id == id).firstOrNull;
+    if (target == null || target.readAt != null) return;
 
     // Optimistic update
     final now = DateTime.now();
@@ -149,6 +185,7 @@ class NotificationsController extends Notifier<NotificationsState> {
         }
         return item;
       }).toList(),
+      summary: state.summary.decremented(target.group),
     );
     ref.read(unreadCountProvider.notifier).decrement();
 
@@ -160,21 +197,31 @@ class NotificationsController extends Notifier<NotificationsState> {
     }
   }
 
+  /// Đánh dấu đã đọc cho tab đang chọn (Tất cả = toàn bộ).
   Future<void> markReadAll() async {
-    final hasUnread = state.items.any((item) => item.readAt == null);
-    if (!hasUnread) return;
+    if (!state.canMarkAll) return;
+    final tab = state.tab;
 
     final now = DateTime.now();
     state = state.copyWith(
-      items: state.items.map((item) => item.copyWith(readAt: now)).toList(),
+      items: state.items
+          .map(
+            (item) => item.readAt == null && (tab == null || item.group == tab)
+                ? item.copyWith(readAt: now)
+                : item,
+          )
+          .toList(),
+      summary: state.summary.cleared(tab),
     );
-    ref.read(unreadCountProvider.notifier).clear();
+    if (tab == null) ref.read(unreadCountProvider.notifier).clear();
 
     try {
       final repo = ref.read(notificationRepositoryProvider);
-      await repo.markReadAll();
+      await repo.markReadAll(category: tab);
     } catch (_) {
       // Revert if error
     }
+    await _loadSummary();
+    if (tab != null) await ref.read(unreadCountProvider.notifier).refresh();
   }
 }

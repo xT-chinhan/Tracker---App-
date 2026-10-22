@@ -249,6 +249,7 @@ class FakeNotificationRepository implements NotificationRepository {
     int page = 1,
     int limit = 20,
     bool? unread,
+    String? category,
   }) async => NotificationPage(
     total: 2,
     page: 1,
@@ -278,7 +279,10 @@ class FakeNotificationRepository implements NotificationRepository {
   Future<NotificationItem> markRead(String id) async =>
       throw UnimplementedError();
   @override
-  Future<int> markReadAll() async => 2;
+  Future<UnreadSummary> getUnreadSummary() async =>
+      const UnreadSummary(count: 2, byCategory: {'system': 1, 'budget': 1});
+  @override
+  Future<int> markReadAll({String? category}) async => 2;
 }
 
 class FakeQuickTemplateRepository implements QuickTemplateRepository {

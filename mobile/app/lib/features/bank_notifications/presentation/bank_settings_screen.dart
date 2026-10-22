@@ -8,9 +8,11 @@ import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/icon_bubble.dart';
 import '../../auth/application/app_session.dart';
+import '../../notifications/application/balance_undo.dart';
 import '../application/bank_notifications_controller.dart';
 import '../data/bank_notification_bridge.dart';
 import '../data/mock_bank_samples.dart';
+import 'auto_record_sheets.dart';
 import 'bank_disclosure_sheet.dart';
 
 /// Cài đặt › Ghi từ thông báo ngân hàng (chỉ Android).
@@ -65,9 +67,31 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
     }
   }
 
+  Future<void> _toggleAuto(bool on) async {
+    if (!on) return _c.setAutoRecord(false);
+    final ok = await AutoRecordConsentSheet.show(context);
+    if (ok) await _c.setAutoRecord(true);
+  }
+
+  Future<void> _pickThreshold() async {
+    final v = await showThresholdPicker(
+      context,
+      ref.read(bankNotificationsProvider).threshold,
+    );
+    if (v != null) await _c.setThreshold(v);
+  }
+
   @override
   Widget build(BuildContext context) {
     final st = ref.watch(bankNotificationsProvider);
+    final undone = ref.watch(undoneTransactionsProvider);
+    final autoToday = todayAutoRecorded(st.autoRecorded, undone).length;
+    // Ngân hàng có khoản chờ nhưng chưa ghép ví
+    final unmapped = <String>{
+      for (final t in st.pending)
+        if (!st.walletMap.containsKey(t.bank) && _c.walletFor(t) == null)
+          t.bank,
+    };
     final theme = Theme.of(context);
     final colors = context.appColors;
     final adminOn =
@@ -106,7 +130,7 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
               ),
               const SizedBox(height: 6),
               Text(
-                'Chỉ Android · mọi khoản đều chờ bạn xác nhận',
+                'Chỉ Android · bản cài đầy đủ',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -161,8 +185,80 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
                   ),
                 ),
                 if (st.enabled) ...[
-                  const SizedBox(height: 16),
-                  _PendingRow(count: st.pending.length),
+                  const SizedBox(height: 12),
+                  _AutoRecordCard(
+                    on: st.autoRecord,
+                    threshold: st.threshold,
+                    onToggle: st.loaded ? _toggleAuto : null,
+                    onThreshold: _pickThreshold,
+                  ),
+                  const SizedBox(height: 12),
+                  _LinksCard(
+                    autoCount: autoToday,
+                    pendingCount: st.pending.length,
+                  ),
+                  if (st.walletMap.isNotEmpty || unmapped.isNotEmpty) ...[
+                    const SizedBox(height: 24),
+                    _SectionTitle('Ngân hàng đã ghép ví'),
+                    AppCard(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      child: Column(
+                        children: [
+                          for (final e in st.walletMap.entries)
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const IconBubble(
+                                icon: LucideIcons.landmark,
+                                size: 36,
+                              ),
+                              title: Text(e.key),
+                              trailing: Text(
+                                st.wallets
+                                        .where((w) => w.id == e.value)
+                                        .map((w) => w.name)
+                                        .firstOrNull ??
+                                    '—',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          for (final bank in unmapped)
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const IconBubble(
+                                icon: LucideIcons.landmark,
+                                size: 36,
+                              ),
+                              title: Text(bank),
+                              onTap: () =>
+                                  context.push('/bank-notifications/pending'),
+                              trailing: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: colors.warningContainer,
+                                  borderRadius: BorderRadius.circular(999),
+                                  border: Border.all(color: colors.warningBar),
+                                ),
+                                child: Text(
+                                  'Chọn ví',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: colors.warning,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   _SectionTitle('Cấp quyền'),
                   _Step(
@@ -194,39 +290,6 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
                     action: st.batteryUnrestricted ? null : 'Mở cài đặt pin',
                     onAction: _c.openBatterySettings,
                   ),
-                  if (st.walletMap.isNotEmpty) ...[
-                    const SizedBox(height: 16),
-                    _SectionTitle('Ngân hàng đã ghép ví'),
-                    AppCard(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 4,
-                      ),
-                      child: Column(
-                        children: [
-                          for (final e in st.walletMap.entries)
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: const IconBubble(
-                                icon: LucideIcons.landmark,
-                                size: 36,
-                              ),
-                              title: Text(e.key),
-                              trailing: Text(
-                                st.wallets
-                                        .where((w) => w.id == e.value)
-                                        .map((w) => w.name)
-                                        .firstOrNull ??
-                                    '—',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
                   if (kBankDemo) ...[
                     const SizedBox(height: 16),
                     AppButton(
@@ -246,7 +309,7 @@ class _BankSettingsScreenState extends ConsumerState<BankSettingsScreen>
                 const _Note(
                   icon: LucideIcons.shield_check,
                   text:
-                      'Chỉ giữ thông báo của ngân hàng, ví điện tử; thông báo khác bị bỏ qua. Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn Xác nhận mới được lưu vào tài khoản. Tắt tính năng sẽ xóa mọi dữ liệu chờ.',
+                      'Chỉ giữ thông báo của ngân hàng, ví điện tử; thông báo khác bị bỏ qua. Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn Xác nhận, hoặc khoản app tự ghi khi bạn bật Tự động ghi vào sổ, mới được lưu vào tài khoản; khoản tự ghi hoàn tác được. Tắt tính năng sẽ xóa mọi dữ liệu chờ.',
                 ),
               ],
             ],
@@ -274,33 +337,203 @@ class _SectionTitle extends StatelessWidget {
   );
 }
 
-class _PendingRow extends StatelessWidget {
-  const _PendingRow({required this.count});
-  final int count;
+class _AutoRecordCard extends StatelessWidget {
+  const _AutoRecordCard({
+    required this.on,
+    required this.threshold,
+    required this.onToggle,
+    required this.onThreshold,
+  });
+
+  final bool on;
+  final int threshold;
+  final ValueChanged<bool>? onToggle;
+  final VoidCallback onThreshold;
+
+  static const _rules = <(IconData, String)>[
+    (
+      LucideIcons.wallet,
+      'Chỉ ghi khi biết ví và danh mục. Còn lại vẫn chờ bạn xác nhận.',
+    ),
+    (
+      LucideIcons.copy_check,
+      'Cùng một khoản báo qua app ngân hàng và SMS chỉ ghi 1 lần.',
+    ),
+    (LucideIcons.clock, 'Ghi khi app đang chạy hoặc lần mở tiếp theo.'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
     return AppCard(
-      onTap: () => context.push('/bank-notifications/pending'),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconBubble(icon: LucideIcons.inbox),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              count > 0
-                  ? '$count giao dịch chờ xác nhận'
-                  : 'Chưa có giao dịch chờ xác nhận',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
+          Row(
+            children: [
+              const IconBubble(icon: LucideIcons.notebook_pen),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tự động ghi vào sổ',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      on ? 'Đang bật trên máy này' : 'Đang tắt',
+                      style: theme.textTheme.bodySmall?.copyWith(color: muted),
+                    ),
+                  ],
+                ),
+              ),
+              Switch(value: on, onChanged: onToggle),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Divider(height: 1),
+          const SizedBox(height: 12),
+          for (final (icon, text) in _rules) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 1),
+                  child: Icon(icon, size: 16, color: muted),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    text,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: muted,
+                      height: 1.45,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+          ],
+          if (on) ...[
+            const Divider(height: 1),
+            InkWell(
+              onTap: onThreshold,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 14, bottom: 2),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Khoản lớn chờ xác nhận',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      thresholdLabel(threshold),
+                      style: theme.textTheme.bodyMedium?.copyWith(color: muted),
+                    ),
+                    const SizedBox(width: 6),
+                    const Icon(
+                      LucideIcons.chevron_right,
+                      size: 18,
+                      color: Color(0xFFA9A8A3),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LinksCard extends StatelessWidget {
+  const _LinksCard({required this.autoCount, required this.pendingCount});
+  final int autoCount;
+  final int pendingCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    Widget row(IconData icon, String label, Widget trailing) => InkWell(
+      onTap: () => context.push('/bank-notifications/pending'),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          children: [
+            IconBubble(icon: icon, size: 36),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            trailing,
+            const SizedBox(width: 8),
+            const Icon(
+              LucideIcons.chevron_right,
+              size: 18,
+              color: Color(0xFFA9A8A3),
+            ),
+          ],
+        ),
+      ),
+    );
+    return AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Column(
+        children: [
+          row(
+            LucideIcons.list_checks,
+            'Xem các khoản đã tự ghi',
+            Text(
+              '$autoCount',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ),
-          const Icon(
-            LucideIcons.chevron_right,
-            size: 18,
-            color: Color(0xFFA9A8A3),
+          const Divider(height: 1, indent: 50),
+          row(
+            LucideIcons.inbox,
+            'Chờ xác nhận',
+            pendingCount > 0
+                ? Container(
+                    constraints: const BoxConstraints(minWidth: 22),
+                    height: 22,
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onSurface,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      '$pendingCount',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.surface,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  )
+                : Text(
+                    '0',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
           ),
         ],
       ),

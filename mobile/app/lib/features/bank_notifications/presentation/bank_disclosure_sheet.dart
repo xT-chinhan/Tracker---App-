@@ -16,8 +16,8 @@ class BankDisclosureSheet extends StatelessWidget {
   /// `true` = người dùng đồng ý.
   static Future<bool> show(BuildContext context, {String? privacyUrl}) async =>
       await showModalBottomSheet<bool>(
-      // mở trên navigator gốc: không bị thanh menu dưới (shell) che
-      useRootNavigator: true,
+        // mở trên navigator gốc: không bị thanh menu dưới (shell) che
+        useRootNavigator: true,
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
@@ -36,7 +36,7 @@ class BankDisclosureSheet extends StatelessWidget {
     ),
     (
       LucideIcons.smartphone,
-      'Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản TrackerX của bạn: số tiền, danh mục, ví, thời gian và mô tả.',
+      'Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản TrackerX của bạn: số tiền, danh mục, ví, thời gian và mô tả. Nếu bạn bật Tự động ghi vào sổ, khoản đã rõ ví và danh mục được lưu tự động và hoàn tác được.',
     ),
     (
       LucideIcons.toggle_left,

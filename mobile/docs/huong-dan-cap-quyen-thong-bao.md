@@ -43,5 +43,5 @@ Một số máy tắt ứng dụng chạy nền để tiết kiệm pin, nên c�
 
 ## Quyền riêng tư
 - TrackerX chỉ giữ thông báo của ngân hàng và ví điện tử. Thông báo của ứng dụng khác (tin nhắn, mạng xã hội, email…) bị bỏ qua ngay.
-- Nội dung thông báo chỉ nằm trên điện thoại của bạn. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản.
+- Nội dung thông báo chỉ nằm trên điện thoại của bạn. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản. Nếu bật Tự động ghi vào sổ, khoản đã rõ ví và danh mục được lưu tự động và hoàn tác được.
 - Muốn dừng: tắt công tắc trong TrackerX (dữ liệu chờ bị xóa ngay), hoặc tắt quyền Truy cập thông báo trong Cài đặt Android.

@@ -38,7 +38,7 @@ Nội dung đang dùng (sửa trong `bank_disclosure_sheet.dart` thì sửa cả
 > **Cho phép TrackerX đọc thông báo ngân hàng?**
 > - TrackerX đọc thông báo biến động số dư từ app ngân hàng và ví điện tử trên máy này để gợi ý ghi thu chi cho bạn.
 > - Thông báo của app khác (tin nhắn, mạng xã hội, email…) bị bỏ qua ngay, không được lưu hay gửi đi.
-> - Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản TrackerX của bạn: số tiền, danh mục, ví, thời gian và mô tả.
+> - Nội dung thông báo chỉ nằm trên máy. Chỉ khoản bạn bấm Xác nhận mới được lưu vào tài khoản TrackerX của bạn: số tiền, danh mục, ví, thời gian và mô tả. Nếu bạn bật Tự động ghi vào sổ, khoản đã rõ ví và danh mục được lưu tự động và hoàn tác được.
 > - Tắt bất cứ lúc nào trong Cài đặt › Ghi từ thông báo ngân hàng, hoặc thu hồi quyền trong Cài đặt Android.
 >
 > [Đồng ý và tiếp tục] [Không, cảm ơn] · Xem chính sách quyền riêng tư

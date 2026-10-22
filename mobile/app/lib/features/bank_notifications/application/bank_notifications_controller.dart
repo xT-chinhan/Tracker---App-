@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/formatting/vietnam_time.dart';
 import '../../../core/network/network_providers.dart';
 import '../../auth/application/app_session.dart';
 import '../../categories/data/category_models.dart';
 import '../../categories/data/category_repository.dart';
 import '../../history/application/history_service.dart';
 import '../../home/application/home_service.dart';
+import '../../notifications/application/balance_undo.dart';
 import '../../wallets/data/wallet_models.dart';
 import '../../wallets/data/wallet_repository.dart';
 import '../data/bank_local_store.dart';
@@ -31,6 +33,9 @@ class BankNotificationsState {
     this.permissionGranted = false,
     this.batteryUnrestricted = false,
     this.pending = const [],
+    this.autoRecord = false,
+    this.threshold = defaultAutoRecordThreshold,
+    this.autoRecorded = const [],
     this.categories = const [],
     this.wallets = const [],
     this.walletMap = const {},
@@ -46,6 +51,15 @@ class BankNotificationsState {
   final bool permissionGranted;
   final bool batteryUnrestricted;
   final List<PendingBankTransaction> pending;
+
+  /// Tự động ghi vào sổ (theo máy).
+  final bool autoRecord;
+
+  /// Khoản từ ngưỡng này trở lên vẫn chờ xác nhận; 0 = Tắt.
+  final int threshold;
+
+  /// Khoản đã tự ghi (30 ngày gần nhất, mới nhất trước).
+  final List<AutoRecordedTransaction> autoRecorded;
   final List<CategoryItem> categories;
   final List<WalletItem> wallets;
   final Map<String, String> walletMap;
@@ -62,6 +76,9 @@ class BankNotificationsState {
     bool? permissionGranted,
     bool? batteryUnrestricted,
     List<PendingBankTransaction>? pending,
+    bool? autoRecord,
+    int? threshold,
+    List<AutoRecordedTransaction>? autoRecorded,
     List<CategoryItem>? categories,
     List<WalletItem>? wallets,
     Map<String, String>? walletMap,
@@ -75,12 +92,28 @@ class BankNotificationsState {
     permissionGranted: permissionGranted ?? this.permissionGranted,
     batteryUnrestricted: batteryUnrestricted ?? this.batteryUnrestricted,
     pending: pending ?? this.pending,
+    autoRecord: autoRecord ?? this.autoRecord,
+    threshold: threshold ?? this.threshold,
+    autoRecorded: autoRecorded ?? this.autoRecorded,
     categories: categories ?? this.categories,
     wallets: wallets ?? this.wallets,
     walletMap: walletMap ?? this.walletMap,
     busy: busy ?? this.busy,
     error: clearError ? null : error ?? this.error,
   );
+}
+
+/// Khoản tự ghi hôm nay (giờ Việt Nam), bỏ khoản đã hoàn tác.
+List<AutoRecordedTransaction> todayAutoRecorded(
+  List<AutoRecordedTransaction> all,
+  Set<String> undone,
+) {
+  final now = VietnamTime.now();
+  return all.where((a) {
+    if (undone.contains(a.transactionId)) return false;
+    final d = VietnamTime.fromDateTime(a.recordedAt);
+    return d.year == now.year && d.month == now.month && d.day == now.day;
+  }).toList();
 }
 
 final bankNotificationsProvider =
@@ -129,11 +162,17 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
       return;
     }
     final enabled = await _store.readEnabled();
+    final cutoff = DateTime.now().toUtc().subtract(const Duration(days: 30));
     state = state.copyWith(
       loaded: true,
       enabled: enabled,
       consent: await _store.readConsent(),
       pending: await _store.readPending(),
+      autoRecord: await _store.readAutoRecord(),
+      threshold: await _store.readThreshold(),
+      autoRecorded: (await _store.readAutoRecorded())
+          .where((a) => a.recordedAt.isAfter(cutoff))
+          .toList(),
       walletMap: await _store.readWalletMap(),
       permissionGranted: await _bridge.isPermissionGranted(),
       batteryUnrestricted: await _bridge.isIgnoringBatteryOptimizations(),
@@ -158,11 +197,28 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
       _sub = null;
       await _bridge.clearSaved();
       await _store.clearAll();
-      state = state.copyWith(enabled: false, pending: [], walletMap: {});
+      state = state.copyWith(
+        enabled: false,
+        pending: [],
+        walletMap: {},
+        autoRecord: false,
+        autoRecorded: [],
+      );
       return;
     }
     state = state.copyWith(enabled: true);
     await sync();
+  }
+
+  /// Bật / tắt Tự động ghi vào sổ (bật chỉ sau khi người dùng đồng ý ở sheet riêng).
+  Future<void> setAutoRecord(bool value) async {
+    await _store.writeAutoRecord(value);
+    state = state.copyWith(autoRecord: value);
+  }
+
+  Future<void> setThreshold(int value) async {
+    await _store.writeThreshold(value);
+    state = state.copyWith(threshold: value);
   }
 
   Future<void> openPermissionSettings() => _bridge.openPermissionSettings();
@@ -183,18 +239,99 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
     final processed = await _store.readProcessed()
       ..removeWhere((_, at) => now - at > 30 * 86400000);
     final pending = [...state.pending];
+    final auto = [...state.autoRecorded];
     final seen = {...processed.keys, ...pending.map((p) => p.key)};
+    final fresh = <PendingBankTransaction>[];
     for (final raw in raws) {
       final parsed = BankNotificationParser.parse(raw);
       if (parsed == null) continue;
       final item = toPending(parsed, packageName: raw.packageName);
       if (item == null || !seen.add(item.key)) continue;
+      // Cùng một khoản báo qua app ngân hàng và SMS: chỉ lấy lần đầu
+      if (isDuplicateOfKnown(item, pending: pending, autoRecorded: auto)) {
+        continue;
+      }
       pending.insert(0, item);
+      fresh.add(item);
+    }
+    if (state.autoRecord && fresh.isNotEmpty) {
+      if (state.categories.isEmpty || state.wallets.isEmpty) {
+        await loadReferences();
+      }
+      var recorded = false;
+      for (final t in fresh) {
+        final c = categoryFor(t), w = walletFor(t);
+        final block = autoRecordBlock(
+          t,
+          category: c,
+          wallet: w,
+          threshold: state.threshold,
+        );
+        if (block != null || c == null || w == null) continue;
+        try {
+          final res = await ref
+              .read(dioProvider)
+              .post<Map<String, dynamic>>(
+                'transactions',
+                data: _body(t, c, w, source: 'bank_auto'),
+              );
+          final id = res.data?['id'];
+          if (id is! String || id.isEmpty) continue;
+          auto.insert(
+            0,
+            AutoRecordedTransaction.of(
+              t,
+              transactionId: id,
+              category: c,
+              wallet: w,
+            ),
+          );
+          pending.removeWhere((p) => p.key == t.key);
+          processed[t.key] = now;
+          recorded = true;
+        } catch (_) {
+          // lỗi mạng / máy chủ: để lại trong Chờ xác nhận
+        }
+      }
+      if (recorded) {
+        await _store.writeAutoRecorded(auto);
+        _refreshMoneyScreens();
+      }
     }
     pending.sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
     await _store.writeProcessed(processed);
     await _store.writePending(pending);
-    state = state.copyWith(pending: pending);
+    state = state.copyWith(pending: pending, autoRecorded: auto);
+  }
+
+  /// Lý do khoản chờ chưa được tự ghi (chỉ khi đang bật Tự động ghi).
+  String? blockReason(
+    PendingBankTransaction t, {
+    CategoryItem? category,
+    WalletItem? wallet,
+  }) => state.autoRecord
+      ? autoRecordBlock(
+          t,
+          category: category ?? categoryFor(t),
+          wallet: wallet ?? walletFor(t),
+          threshold: state.threshold,
+        )
+      : null;
+
+  /// Hoàn tác khoản đã tự ghi: xóa giao dịch, bỏ khỏi danh sách. Trả về lỗi hoặc null.
+  Future<String?> undoAuto(AutoRecordedTransaction a) async {
+    final err = await ref
+        .read(undoneTransactionsProvider.notifier)
+        .undo(a.transactionId);
+    if (err != null) return err;
+    await _serial(() async {
+      final list = state.autoRecorded
+          .where((x) => x.transactionId != a.transactionId)
+          .toList();
+      await _store.writeAutoRecorded(list);
+      state = state.copyWith(autoRecorded: list);
+    });
+    return null;
   }
 
   /// Danh mục + ví để ghép khi xác nhận.
@@ -245,14 +382,17 @@ class BankNotificationsController extends Notifier<BankNotificationsState> {
   Map<String, dynamic> _body(
     PendingBankTransaction t,
     CategoryItem category,
-    WalletItem wallet,
-  ) => {
+    WalletItem wallet, {
+    String source = 'bank_manual',
+  }) => {
     'categoryId': category.id,
     'walletId': wallet.id,
     'amount': t.amount,
     'title': t.title,
     'note': 'Từ thông báo ${t.bank}',
     'occurredAt': t.occurredAt.toUtc().toIso8601String(),
+    'source': source,
+    'externalRef': t.key.length > 200 ? t.key.substring(0, 200) : t.key,
   };
 
   void _refreshMoneyScreens() {

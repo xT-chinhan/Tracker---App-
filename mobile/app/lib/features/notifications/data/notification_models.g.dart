@@ -12,6 +12,7 @@ _NotificationItem _$NotificationItemFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String,
       title: json['title'] as String,
       body: json['body'] as String,
+      category: json['category'] as String?,
       data: json['data'] as Map<String, dynamic>?,
       readAt: json['readAt'] == null
           ? null
@@ -25,6 +26,7 @@ Map<String, dynamic> _$NotificationItemToJson(_NotificationItem instance) =>
       'type': instance.type,
       'title': instance.title,
       'body': instance.body,
+      'category': instance.category,
       'data': instance.data,
       'readAt': instance.readAt?.toIso8601String(),
       'createdAt': instance.createdAt.toIso8601String(),

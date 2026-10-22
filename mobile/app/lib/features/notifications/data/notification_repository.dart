@@ -18,11 +18,13 @@ class NotificationRepository {
     int page = 1,
     int limit = 20,
     bool? unread,
+    String? category,
   }) async {
     final query = <String, dynamic>{
       'page': page,
       'limit': limit,
       'unread': ?unread,
+      'category': ?category,
     };
     final response = await _dio.get<Map<String, dynamic>>(
       'notifications',
@@ -44,6 +46,13 @@ class NotificationRepository {
     return 0;
   }
 
+  Future<UnreadSummary> getUnreadSummary() async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      'notifications/unread-count',
+    );
+    return UnreadSummary.fromJson(response.data ?? const <String, dynamic>{});
+  }
+
   Future<NotificationItem> markRead(String id) async {
     final response = await _dio.post<Map<String, dynamic>>(
       'notifications/$id/read',
@@ -53,9 +62,11 @@ class NotificationRepository {
     );
   }
 
-  Future<int> markReadAll() async {
+  /// [category] = chỉ một nhóm; `null` = tất cả.
+  Future<int> markReadAll({String? category}) async {
     final response = await _dio.post<Map<String, dynamic>>(
       'notifications/read-all',
+      queryParameters: {'category': ?category},
     );
     final data = response.data;
     if (data != null && data['updated'] is num) {

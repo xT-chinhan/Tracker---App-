@@ -10,12 +10,15 @@ import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_icon_helper.dart';
 import '../../../core/widgets/dashed_box.dart';
 import '../../../core/widgets/icon_bubble.dart';
+import '../../../core/widgets/app_card.dart';
 import '../../categories/data/category_models.dart';
+import '../../notifications/application/balance_undo.dart';
+import '../../notifications/presentation/undo_confirm_sheet.dart';
 import '../../wallets/data/wallet_models.dart';
 import '../application/bank_mapping.dart';
 import '../application/bank_notifications_controller.dart';
 
-/// Giao dịch phát hiện từ thông báo ngân hàng, chờ xác nhận (viền nét đứt = chưa lưu).
+/// Từ thông báo ngân hàng: khoản đã tự ghi hôm nay + khoản chờ xác nhận (viền nét đứt = chưa lưu).
 class BankPendingScreen extends ConsumerStatefulWidget {
   const BankPendingScreen({super.key});
 
@@ -138,14 +141,42 @@ class _BankPendingScreenState extends ConsumerState<BankPendingScreen> {
     if (picked != null) setState(() => _category[t.key] = picked);
   }
 
+  Future<void> _undoAuto(AutoRecordedTransaction a) async {
+    final ok = await UndoConfirmSheet.show(
+      context,
+      amount: a.amount,
+      isIncome: a.isIncome,
+      content: '${a.title} · ${a.categoryName}',
+      walletName: a.walletName,
+      when:
+          '${VietnamTime.timeOnly(a.occurredAt)} · ${VietnamTime.dayMonth(a.occurredAt)}',
+    );
+    if (!ok || !mounted) return;
+    final err = await _c.undoAuto(a);
+    if (!mounted) return;
+    if (err != null) return _snack(err);
+    showUndoneSnack(
+      context,
+      title: a.title,
+      amount: a.amount,
+      isIncome: a.isIncome,
+      walletName: a.walletName,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final st = ref.watch(bankNotificationsProvider);
+    final undone = ref.watch(undoneTransactionsProvider);
+    final auto = todayAutoRecorded(st.autoRecorded, undone);
     final theme = Theme.of(context);
     final pad = context.spacing.screenPadding;
     final readyCount = st.pending
         .where((t) => _cat(t) != null && _wal(t) != null)
         .length;
+    final summary = st.autoRecord || auto.isNotEmpty
+        ? 'Hôm nay · ${auto.length} khoản đã tự ghi, ${st.pending.length} khoản chờ bạn'
+        : 'Chưa lưu cho tới khi bạn xác nhận';
 
     return Scaffold(
       body: SafeArea(
@@ -173,14 +204,14 @@ class _BankPendingScreenState extends ConsumerState<BankPendingScreen> {
                       ),
                     ),
                     Text(
-                      'Chờ xác nhận',
+                      'Từ thông báo ngân hàng',
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Từ thông báo ngân hàng · chưa lưu cho tới khi bạn xác nhận',
+                      summary,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -193,7 +224,27 @@ class _BankPendingScreenState extends ConsumerState<BankPendingScreen> {
                       ),
                       const SizedBox(height: 12),
                     ],
-                    if (st.pending.isEmpty)
+                    if (auto.isNotEmpty) ...[
+                      _Section('Đã tự ghi', '${auto.length} khoản'),
+                      AppCard(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [
+                            for (var i = 0; i < auto.length; i++) ...[
+                              if (i > 0) const Divider(height: 1, indent: 52),
+                              _AutoRow(
+                                a: auto[i],
+                                onUndo: () => _undoAuto(auto[i]),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                    if (st.pending.isNotEmpty && auto.isNotEmpty)
+                      _Section('Chờ xác nhận', '${st.pending.length} khoản'),
+                    if (st.pending.isEmpty && auto.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 48),
                         child: Column(
@@ -223,6 +274,11 @@ class _BankPendingScreenState extends ConsumerState<BankPendingScreen> {
                           t: t,
                           category: _cat(t),
                           wallet: _wal(t),
+                          reason: _c.blockReason(
+                            t,
+                            category: _cat(t),
+                            wallet: _wal(t),
+                          ),
                           busy: st.busy,
                           onCategory: () => _pickCategory(t),
                           onWallet: () => _pickWallet(t),
@@ -256,6 +312,7 @@ class _PendingCard extends StatelessWidget {
     required this.t,
     required this.category,
     required this.wallet,
+    required this.reason,
     required this.busy,
     required this.onCategory,
     required this.onWallet,
@@ -266,6 +323,7 @@ class _PendingCard extends StatelessWidget {
   final PendingBankTransaction t;
   final CategoryItem? category;
   final WalletItem? wallet;
+  final String? reason;
   final bool busy;
   final VoidCallback onCategory;
   final VoidCallback onWallet;
@@ -321,6 +379,36 @@ class _PendingCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyMedium,
           ),
+          if (reason != null) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: colors.warningContainer,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    LucideIcons.circle_alert,
+                    size: 14,
+                    color: colors.warning,
+                  ),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      reason!,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: colors.warning,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -354,6 +442,101 @@ class _PendingCard extends StatelessWidget {
                 child: AppButton(
                   label: 'Xác nhận',
                   onPressed: busy ? null : onConfirm,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  const _Section(this.title, this.trailing);
+  final String title;
+  final String trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.labelLarge?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+      fontWeight: FontWeight.w500,
+    );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+      child: Row(
+        children: [
+          Expanded(child: Text(title, style: style)),
+          Text(trailing, style: style),
+        ],
+      ),
+    );
+  }
+}
+
+class _AutoRow extends StatelessWidget {
+  const _AutoRow({required this.a, required this.onUndo});
+  final AutoRecordedTransaction a;
+  final VoidCallback onUndo;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = context.appColors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          IconBubble(icon: AppIconHelper.fromName(a.categoryIcon)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  a.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${a.bank} · ${VietnamTime.timeOnly(a.occurredAt)}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                MoneyFormatter.format(
+                  a.isIncome ? a.amount : -a.amount,
+                  signed: true,
+                ),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: a.isIncome ? colors.income : colors.expense,
+                  fontFeatures: MoneyFormatter.tabularFeatures,
+                ),
+              ),
+              const SizedBox(height: 2),
+              InkWell(
+                onTap: onUndo,
+                child: Text(
+                  'Hoàn tác',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
             ],

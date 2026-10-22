@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
+
 import 'package:app/core/config/public_config.dart';
+import 'package:app/core/network/network_providers.dart';
+import 'package:app/features/notifications/application/balance_undo.dart';
 import 'package:app/features/auth/application/app_session.dart';
 import 'package:app/features/bank_notifications/application/bank_mapping.dart';
 import 'package:app/features/bank_notifications/application/bank_notifications_controller.dart';
@@ -42,6 +46,9 @@ class _MemoryStore implements BankLocalStore {
   List<PendingBankTransaction> pending = [];
   Map<String, int> processed = {};
   Map<String, String> wallets = {};
+  bool autoRecord = false;
+  int threshold = defaultAutoRecordThreshold;
+  List<AutoRecordedTransaction> autoRecorded = [];
 
   @override
   Future<bool> readEnabled() async => enabled;
@@ -67,19 +74,125 @@ class _MemoryStore implements BankLocalStore {
   Future<void> writeWalletMap(Map<String, String> v) async =>
       wallets = Map.of(v);
   @override
+  Future<bool> readAutoRecord() async => autoRecord;
+  @override
+  Future<void> writeAutoRecord(bool v) async => autoRecord = v;
+  @override
+  Future<int> readThreshold() async => threshold;
+  @override
+  Future<void> writeThreshold(int v) async => threshold = v;
+  @override
+  Future<List<AutoRecordedTransaction>> readAutoRecorded() async =>
+      List.of(autoRecorded);
+  @override
+  Future<void> writeAutoRecorded(List<AutoRecordedTransaction> v) async =>
+      autoRecorded = List.of(v);
+  @override
   Future<void> clearAll() async {
     pending = [];
     processed = {};
     wallets = {};
+    autoRecord = false;
+    autoRecorded = [];
   }
 }
+
+class _MemoryUndone implements UndoneStore {
+  Set<String> ids = {};
+  @override
+  Future<Set<String>> read() async => Set.of(ids);
+  @override
+  Future<void> write(Set<String> v) async => ids = Set.of(v);
+}
+
+/// Máy chủ giả: danh mục, ví, ghi giao dịch.
+class _FakeServer {
+  final posts = <Map<String, dynamic>>[];
+  var failPosts = false;
+
+  Dio dio() {
+    final dio = Dio(BaseOptions(baseUrl: 'http://fake/api/'));
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (o, h) {
+          Response<dynamic> ok(Object? data, [int code = 200]) =>
+              Response<dynamic>(
+                requestOptions: o,
+                data: data,
+                statusCode: code,
+              );
+          if (o.method == 'GET' && o.path == 'categories') {
+            return h.resolve(
+              ok([
+                {'id': 'c-food', 'name': 'Ăn uống', 'type': 'EXPENSE'},
+                {'id': 'c-other', 'name': 'Chi khác', 'type': 'EXPENSE'},
+                {'id': 'c-in', 'name': 'Thu khác', 'type': 'INCOME'},
+              ]),
+            );
+          }
+          if (o.method == 'GET' && o.path == 'wallets') {
+            return h.resolve(
+              ok({
+                'totalBalance': 0,
+                'items': [
+                  {'id': 'w-mb', 'name': 'MB Bank', 'type': 'BANK'},
+                ],
+              }),
+            );
+          }
+          if (o.method == 'POST' && o.path == 'transactions') {
+            if (failPosts) {
+              return h.reject(
+                DioException(
+                  requestOptions: o,
+                  response: Response<dynamic>(
+                    requestOptions: o,
+                    statusCode: 500,
+                  ),
+                  type: DioExceptionType.badResponse,
+                ),
+              );
+            }
+            posts.add(Map<String, dynamic>.from(o.data as Map));
+            return h.resolve(ok({'id': 'tx-${posts.length}'}, 201));
+          }
+          return h.reject(
+            DioException(
+              requestOptions: o,
+              response: Response<dynamic>(requestOptions: o, statusCode: 404),
+              type: DioExceptionType.badResponse,
+            ),
+          );
+        },
+      ),
+    );
+    return dio;
+  }
+}
+
+RawNotification _copy(
+  RawNotification n, {
+  String? id,
+  String? packageName,
+  int shiftMs = 0,
+}) => RawNotification(
+  id: id ?? '${n.id}-copy',
+  packageName: packageName ?? n.packageName,
+  title: n.title,
+  text: n.text,
+  subText: n.subText,
+  timestamp: n.timestamp + shiftMs,
+  isBankNotification: n.isBankNotification,
+);
 
 void main() {
   late _FakeBridge bridge;
   late _MemoryStore store;
   late ProviderContainer c;
+  late _FakeServer server;
 
   setUp(() {
+    server = _FakeServer();
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
     bridge = _FakeBridge();
     store = _MemoryStore()..enabled = true;
@@ -92,6 +205,8 @@ void main() {
         bankNotificationBridgeProvider.overrideWithValue(bridge),
         bankLocalStoreProvider.overrideWithValue(store),
         appSessionProvider.overrideWithValue(session),
+        dioProvider.overrideWithValue(server.dio()),
+        undoneStoreProvider.overrideWithValue(_MemoryUndone()),
       ],
     );
   });
@@ -160,5 +275,82 @@ void main() {
     expect(store.enabled, isFalse);
     expect(store.pending, isEmpty);
     expect(bridge.enabled, isFalse);
+  });
+
+  test(
+    'cùng một khoản báo qua app ngân hàng và SMS trong 3 phút: chỉ giữ một',
+    () async {
+      final push = MockBankSamples.mbbankDebit;
+      bridge.saved = [
+        push,
+        _copy(
+          push,
+          packageName: 'com.google.android.apps.messaging',
+          shiftMs: 90000,
+        ),
+      ];
+      await c.read(bankNotificationsProvider.notifier).sync();
+      expect(c.read(bankNotificationsProvider).pending, hasLength(1));
+      expect(
+        c.read(bankNotificationsProvider).pending.single.packageName,
+        push.packageName,
+      );
+    },
+  );
+
+  test(
+    'tự động ghi: khoản đủ ví + danh mục được ghi, khoản thiếu ví vẫn chờ',
+    () async {
+      store.autoRecord = true;
+      bridge.saved = [
+        MockBankSamples.mbbankDebit,
+        MockBankSamples.vietcombankDebit,
+      ];
+      await c.read(bankNotificationsProvider.notifier).sync();
+      final st = c.read(bankNotificationsProvider);
+      expect(server.posts, hasLength(1));
+      expect(server.posts.single['source'], 'bank_auto');
+      expect(server.posts.single['walletId'], 'w-mb');
+      expect(st.autoRecorded, hasLength(1));
+      expect(st.autoRecorded.single.transactionId, 'tx-1');
+      expect(server.posts.single['externalRef'], st.autoRecorded.single.key);
+      expect(st.pending, hasLength(1));
+      expect(
+        c
+            .read(bankNotificationsProvider.notifier)
+            .blockReason(st.pending.single),
+        startsWith('Chưa chọn ví cho'),
+      );
+      expect(store.autoRecorded, hasLength(1));
+      // SMS của chính khoản đã tự ghi đến sau: không ghi lần hai
+      bridge.saved = [
+        _copy(
+          MockBankSamples.mbbankDebit,
+          packageName: 'com.google.android.apps.messaging',
+          shiftMs: 60000,
+        ),
+      ];
+      await c.read(bankNotificationsProvider.notifier).sync();
+      expect(server.posts, hasLength(1));
+      expect(c.read(bankNotificationsProvider).pending, hasLength(1));
+      // chờ Trang chủ tải lại xong (gọi sau khi tự ghi) trước khi hủy container
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    },
+  );
+
+  test('tự động ghi: lỗi máy chủ → để lại trong Chờ xác nhận', () async {
+    store.autoRecord = true;
+    server.failPosts = true;
+    bridge.saved = [MockBankSamples.mbbankDebit];
+    await c.read(bankNotificationsProvider.notifier).sync();
+    expect(c.read(bankNotificationsProvider).autoRecorded, isEmpty);
+    expect(c.read(bankNotificationsProvider).pending, hasLength(1));
+  });
+
+  test('tắt tự động ghi: không gọi máy chủ khi nhận thông báo', () async {
+    bridge.saved = [MockBankSamples.mbbankDebit];
+    await c.read(bankNotificationsProvider.notifier).sync();
+    expect(server.posts, isEmpty);
+    expect(c.read(bankNotificationsProvider).pending, hasLength(1));
   });
 }

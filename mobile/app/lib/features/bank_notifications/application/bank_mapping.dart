@@ -140,3 +140,133 @@ WalletItem? pickWallet(
   }
   return null;
 }
+
+/// Khoản app đã tự ghi vào sổ (lưu trên máy 30 ngày, để xem lại / hoàn tác).
+class AutoRecordedTransaction {
+  const AutoRecordedTransaction({
+    required this.key,
+    required this.transactionId,
+    required this.amount,
+    required this.type,
+    required this.title,
+    required this.bank,
+    required this.walletName,
+    required this.categoryName,
+    required this.occurredAt,
+    required this.recordedAt,
+    this.categoryIcon,
+  });
+
+  factory AutoRecordedTransaction.of(
+    PendingBankTransaction t, {
+    required String transactionId,
+    required CategoryItem category,
+    required WalletItem wallet,
+    DateTime? recordedAt,
+  }) => AutoRecordedTransaction(
+    key: t.key,
+    transactionId: transactionId,
+    amount: t.amount,
+    type: t.type,
+    title: t.title,
+    bank: t.bank,
+    walletName: wallet.name,
+    categoryName: category.name,
+    categoryIcon: category.icon,
+    occurredAt: t.occurredAt,
+    recordedAt: recordedAt ?? DateTime.now().toUtc(),
+  );
+
+  /// Khóa của khoản chờ gốc (= externalRef gửi máy chủ).
+  final String key;
+  final String transactionId;
+  final int amount;
+
+  /// `INCOME` | `EXPENSE`
+  final String type;
+  final String title;
+  final String bank;
+  final String walletName;
+  final String categoryName;
+  final String? categoryIcon;
+  final DateTime occurredAt;
+  final DateTime recordedAt;
+
+  bool get isIncome => type == 'INCOME';
+
+  Map<String, dynamic> toJson() => {
+    'key': key,
+    'transactionId': transactionId,
+    'amount': amount,
+    'type': type,
+    'title': title,
+    'bank': bank,
+    'walletName': walletName,
+    'categoryName': categoryName,
+    'categoryIcon': categoryIcon,
+    'occurredAt': occurredAt.toUtc().toIso8601String(),
+    'recordedAt': recordedAt.toUtc().toIso8601String(),
+  };
+
+  factory AutoRecordedTransaction.fromJson(Map<String, dynamic> j) =>
+      AutoRecordedTransaction(
+        key: j['key'] as String? ?? '',
+        transactionId: j['transactionId'] as String,
+        amount: (j['amount'] as num).toInt(),
+        type: j['type'] as String? ?? 'EXPENSE',
+        title: j['title'] as String? ?? '',
+        bank: j['bank'] as String? ?? '',
+        walletName: j['walletName'] as String? ?? '',
+        categoryName: j['categoryName'] as String? ?? '',
+        categoryIcon: j['categoryIcon'] as String?,
+        occurredAt: DateTime.parse(j['occurredAt'] as String),
+        recordedAt: DateTime.parse(j['recordedAt'] as String),
+      );
+}
+
+/// Cùng một giao dịch báo qua hai nguồn (app ngân hàng + SMS): cùng số tiền, cùng loại, cách nhau ≤ 3 phút.
+bool isSameTx(
+  ({int amount, String type, DateTime occurredAt}) a,
+  ({int amount, String type, DateTime occurredAt}) b,
+) =>
+    a.amount == b.amount &&
+    a.type == b.type &&
+    a.occurredAt.difference(b.occurredAt).abs() <= const Duration(minutes: 3);
+
+extension PendingTxShape on PendingBankTransaction {
+  ({int amount, String type, DateTime occurredAt}) get shape =>
+      (amount: amount, type: type, occurredAt: occurredAt);
+}
+
+extension AutoTxShape on AutoRecordedTransaction {
+  ({int amount, String type, DateTime occurredAt}) get shape =>
+      (amount: amount, type: type, occurredAt: occurredAt);
+}
+
+/// Ngưỡng "Khoản lớn chờ xác nhận": 0 = Tắt.
+const autoRecordThresholds = <int>[0, 1000000, 5000000, 10000000];
+const defaultAutoRecordThreshold = 5000000;
+
+/// `null` = được tự ghi; ngược lại là lý do vẫn chờ xác nhận.
+String? autoRecordBlock(
+  PendingBankTransaction t, {
+  required CategoryItem? category,
+  required WalletItem? wallet,
+  required int threshold,
+}) {
+  if (wallet == null) return 'Chưa chọn ví cho ${t.bank}';
+  if (category == null) return 'Chưa rõ danh mục';
+  if (threshold > 0 && t.amount >= threshold) {
+    return 'Khoản lớn, chờ bạn xác nhận';
+  }
+  return null;
+}
+
+/// [item] trùng (khác nguồn) với một khoản đang chờ hoặc đã tự ghi.
+bool isDuplicateOfKnown(
+  PendingBankTransaction item, {
+  required Iterable<PendingBankTransaction> pending,
+  required Iterable<AutoRecordedTransaction> autoRecorded,
+}) =>
+    pending.any((p) => p.key != item.key && isSameTx(p.shape, item.shape)) ||
+    autoRecorded.any((a) => isSameTx(a.shape, item.shape));

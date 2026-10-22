@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationItem {
 
- String get id; String get type; String get title; String get body; Map<String, dynamic>? get data; DateTime? get readAt; DateTime get createdAt;
+ String get id; String get type; String get title; String get body; String? get category; Map<String, dynamic>? get data; DateTime? get readAt; DateTime get createdAt;
 /// Create a copy of NotificationItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $NotificationItemCopyWith<NotificationItem> get copyWith => _$NotificationItemCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.readAt, readAt) || other.readAt == readAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.category, category) || other.category == category)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.readAt, readAt) || other.readAt == readAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,body,const DeepCollectionEquality().hash(data),readAt,createdAt);
+int get hashCode => Object.hash(runtimeType,id,type,title,body,category,const DeepCollectionEquality().hash(data),readAt,createdAt);
 
 @override
 String toString() {
-  return 'NotificationItem(id: $id, type: $type, title: $title, body: $body, data: $data, readAt: $readAt, createdAt: $createdAt)';
+  return 'NotificationItem(id: $id, type: $type, title: $title, body: $body, category: $category, data: $data, readAt: $readAt, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $NotificationItemCopyWith<$Res>  {
   factory $NotificationItemCopyWith(NotificationItem value, $Res Function(NotificationItem) _then) = _$NotificationItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String type, String title, String body, Map<String, dynamic>? data, DateTime? readAt, DateTime createdAt
+ String id, String type, String title, String body, String? category, Map<String, dynamic>? data, DateTime? readAt, DateTime createdAt
 });
 
 
@@ -65,13 +65,14 @@ class _$NotificationItemCopyWithImpl<$Res>
 
 /// Create a copy of NotificationItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? data = freezed,Object? readAt = freezed,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? category = freezed,Object? data = freezed,Object? readAt = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as String,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as String,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>?,readAt: freezed == readAt ? _self.readAt : readAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String type,  String title,  String body,  Map<String, dynamic>? data,  DateTime? readAt,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String type,  String title,  String body,  String? category,  Map<String, dynamic>? data,  DateTime? readAt,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationItem() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.body,_that.data,_that.readAt,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.title,_that.body,_that.category,_that.data,_that.readAt,_that.createdAt);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.id,_that.type,_that.title,_that.body,_that.data,_that.read
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String type,  String title,  String body,  Map<String, dynamic>? data,  DateTime? readAt,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String type,  String title,  String body,  String? category,  Map<String, dynamic>? data,  DateTime? readAt,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationItem():
-return $default(_that.id,_that.type,_that.title,_that.body,_that.data,_that.readAt,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.title,_that.body,_that.category,_that.data,_that.readAt,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.type,_that.title,_that.body,_that.data,_that.read
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String type,  String title,  String body,  Map<String, dynamic>? data,  DateTime? readAt,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String type,  String title,  String body,  String? category,  Map<String, dynamic>? data,  DateTime? readAt,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationItem() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.body,_that.data,_that.readAt,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.title,_that.body,_that.category,_that.data,_that.readAt,_that.createdAt);case _:
   return null;
 
 }
@@ -214,14 +215,15 @@ return $default(_that.id,_that.type,_that.title,_that.body,_that.data,_that.read
 /// @nodoc
 @JsonSerializable()
 
-class _NotificationItem implements NotificationItem {
-  const _NotificationItem({required this.id, required this.type, required this.title, required this.body, final  Map<String, dynamic>? data, this.readAt, required this.createdAt}): _data = data;
+class _NotificationItem extends NotificationItem {
+  const _NotificationItem({required this.id, required this.type, required this.title, required this.body, this.category, final  Map<String, dynamic>? data, this.readAt, required this.createdAt}): _data = data,super._();
   factory _NotificationItem.fromJson(Map<String, dynamic> json) => _$NotificationItemFromJson(json);
 
 @override final  String id;
 @override final  String type;
 @override final  String title;
 @override final  String body;
+@override final  String? category;
  final  Map<String, dynamic>? _data;
 @override Map<String, dynamic>? get data {
   final value = _data;
@@ -247,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.readAt, readAt) || other.readAt == readAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.category, category) || other.category == category)&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.readAt, readAt) || other.readAt == readAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,body,const DeepCollectionEquality().hash(_data),readAt,createdAt);
+int get hashCode => Object.hash(runtimeType,id,type,title,body,category,const DeepCollectionEquality().hash(_data),readAt,createdAt);
 
 @override
 String toString() {
-  return 'NotificationItem(id: $id, type: $type, title: $title, body: $body, data: $data, readAt: $readAt, createdAt: $createdAt)';
+  return 'NotificationItem(id: $id, type: $type, title: $title, body: $body, category: $category, data: $data, readAt: $readAt, createdAt: $createdAt)';
 }
 
 
@@ -267,7 +269,7 @@ abstract mixin class _$NotificationItemCopyWith<$Res> implements $NotificationIt
   factory _$NotificationItemCopyWith(_NotificationItem value, $Res Function(_NotificationItem) _then) = __$NotificationItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String type, String title, String body, Map<String, dynamic>? data, DateTime? readAt, DateTime createdAt
+ String id, String type, String title, String body, String? category, Map<String, dynamic>? data, DateTime? readAt, DateTime createdAt
 });
 
 
@@ -284,13 +286,14 @@ class __$NotificationItemCopyWithImpl<$Res>
 
 /// Create a copy of NotificationItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? data = freezed,Object? readAt = freezed,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? category = freezed,Object? data = freezed,Object? readAt = freezed,Object? createdAt = null,}) {
   return _then(_NotificationItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as String,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as String,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String?,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>?,readAt: freezed == readAt ? _self.readAt : readAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,

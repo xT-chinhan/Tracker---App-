@@ -24,6 +24,18 @@ abstract interface class BankLocalStore {
   Future<Map<String, String>> readWalletMap();
   Future<void> writeWalletMap(Map<String, String> map);
 
+  /// Tự động ghi vào sổ (theo từng máy, mặc định tắt).
+  Future<bool> readAutoRecord();
+  Future<void> writeAutoRecord(bool value);
+
+  /// Ngưỡng "Khoản lớn chờ xác nhận" (đồng); 0 = Tắt; chưa đặt = 5.000.000đ.
+  Future<int> readThreshold();
+  Future<void> writeThreshold(int value);
+
+  /// Khoản app đã tự ghi (giữ 30 ngày).
+  Future<List<AutoRecordedTransaction>> readAutoRecorded();
+  Future<void> writeAutoRecorded(List<AutoRecordedTransaction> items);
+
   /// Xóa toàn bộ (tắt tính năng, đăng xuất).
   Future<void> clearAll();
 }
@@ -38,6 +50,9 @@ class SecureBankLocalStore implements BankLocalStore {
   static const _pending = 'bank.pending';
   static const _processed = 'bank.processed';
   static const _wallets = 'bank.wallets';
+  static const _autoRecord = 'bank.autoRecord';
+  static const _threshold = 'bank.threshold';
+  static const _autoRecorded = 'bank.autoRecorded';
 
   Future<dynamic> _json(String key) async {
     final raw = await _s.read(key: key);
@@ -102,8 +117,54 @@ class SecureBankLocalStore implements BankLocalStore {
       _s.write(key: _wallets, value: jsonEncode(map));
 
   @override
+  Future<bool> readAutoRecord() async =>
+      (await _s.read(key: _autoRecord)) == 'true';
+
+  @override
+  Future<void> writeAutoRecord(bool value) =>
+      _s.write(key: _autoRecord, value: '$value');
+
+  @override
+  Future<int> readThreshold() async {
+    final raw = await _s.read(key: _threshold);
+    return raw == null
+        ? defaultAutoRecordThreshold
+        : int.tryParse(raw) ?? defaultAutoRecordThreshold;
+  }
+
+  @override
+  Future<void> writeThreshold(int value) =>
+      _s.write(key: _threshold, value: '$value');
+
+  @override
+  Future<List<AutoRecordedTransaction>> readAutoRecorded() async {
+    final list = await _json(_autoRecorded);
+    if (list is! List) return [];
+    final out = <AutoRecordedTransaction>[];
+    for (final e in list.whereType<Map<String, dynamic>>()) {
+      try {
+        out.add(AutoRecordedTransaction.fromJson(e));
+      } catch (_) {}
+    }
+    return out;
+  }
+
+  @override
+  Future<void> writeAutoRecorded(List<AutoRecordedTransaction> items) =>
+      _s.write(
+        key: _autoRecorded,
+        value: jsonEncode(items.map((e) => e.toJson()).toList()),
+      );
+
+  @override
   Future<void> clearAll() async {
-    for (final k in [_pending, _processed, _wallets]) {
+    for (final k in [
+      _pending,
+      _processed,
+      _wallets,
+      _autoRecord,
+      _autoRecorded,
+    ]) {
       await _s.delete(key: k);
     }
   }
