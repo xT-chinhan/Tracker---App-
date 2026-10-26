@@ -27,6 +27,7 @@ npm run dev                     # http://localhost:3000/api
 | `npm run db:deploy` / `db:migrate` | `prisma migrate deploy` / `migrate dev` |
 | `npm run db:seed` | Danh mục hệ thống + admin từ `ADMIN_*` (idempotent) |
 | `npm run db:seed:demo` | Dữ liệu demo (idempotent, xem dưới) |
+| `npm run db:seed:demo:ai` | Dữ liệu demo trợ lý AI (chạy ngay sau `db:seed:demo`, cần Ollama, ~1,5 phút) |
 | `npm run demo:verify` | Kiểm tra bất biến dữ liệu demo qua API đang chạy (`API_URL`, mặc định `http://localhost:3000/api`) |
 | `npm run test:e2e` | E2E toàn bộ API (xem dưới) |
 
@@ -63,6 +64,13 @@ Các giá trị `SMTP_*`, `JWT_EXPIRES_IN`, `THROTTLE_AUTH_LIMIT` là **mặc đ
 - `demo@thuchi.vn` / `demo123` (Nguyễn Minh Anh) khớp mockup mobile: 4 ví tổng 26.022.000đ (MB Bank 18.672.000đ), chi tháng này ~60% ngân sách 14 triệu, mẫu Cà phê 45k / Cơm trưa 55k / Grab 38k / Gửi xe 5k, 3 mục tiêu (52,2 triệu), 5 định kỳ, 2 thông báo chưa đọc.
 - Giữ mọi bất biến nhờ **mô phỏng theo thời gian**: chuyển tiền / nạp tiết kiệm chỉ xảy ra khi ví đủ tiền lúc đó (ví thiếu thì có giao dịch "Rút tiền mặt ATM" / "Nạp ví MoMo" ngay trước), `savedAmount` = nạp − rút, trạng thái mục tiêu suy ra từ sổ, `warnedAt`/`exceededAt` + thông báo sinh đúng như `checkThresholds` theo thứ tự tạo giao dịch, giao dịch định kỳ sinh bằng `occurrence()` của backend (unique `ruleId + scheduledFor`, `nextRunAt` > hiện tại), giờ theo giờ VN, không có phát sinh ở tương lai.
 - `npm run demo:verify` đăng nhập admin + 6 user qua API thật, phát lại toàn bộ sổ theo thời gian (không ví nào từng âm, số dư khớp API), kiểm tra mục tiêu, ngân sách, định kỳ, thống kê, báo cáo, admin overview (564 kiểm tra).
+
+### Dữ liệu demo AI (`prisma/seed-demo-ai.ts`)
+
+`npm run db:seed:demo:ai` chạy ngay sau `db:seed:demo` (báo lỗi nếu `demo@thuchi.vn` đã có hội thoại AI). Không chèn tay vào bảng `ai*`: script dựng Nest app context và đi qua đúng service (chat → nháp → xác nhận / sửa / "ý tôi là…" / 👍👎, đọc ảnh, giao dịch tự ghi từ thông báo ngân hàng, chu trình học, admin duyệt), rồi lùi mốc thời gian về 3 tuần gần đây.
+
+- `demo@thuchi.vn` (model thật trên Ollama): luật riêng **cf → Ăn uống** và **gửi mẹ → Gia đình** đã bật (các lần sau nháp ghi "luật đã học"), trí nhớ **ví mặc định = MoMo** (2 lần liền đổi ví cà phê sang MoMo), 1 lần sửa định tuyến (số dư → ngân sách), 👍/👎, 1 ảnh hóa đơn Bách Hóa Xanh, 3 giao dịch tự ghi từ thông báo ngân hàng (thông báo Số dư), 1 thông báo Bảo mật.
+- 6 user `@demo.thuchi.vn` đồng ý góp ví dụ ẩn danh (LLM giả lập) → 2 lần chạy học ban đêm, luật chung **grab**, **trà sữa** chờ duyệt, **cf** admin đã duyệt.
 
 ## Docker
 

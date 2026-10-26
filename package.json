@@ -10,6 +10,7 @@
     "build": "npm --prefix backend run build && npm --prefix admin run build",
     "db:up": "docker compose up -d --wait db",
     "db:seed:demo": "npm --prefix backend run db:seed:demo",
+    "db:seed:demo:ai": "npm --prefix backend run db:seed:demo:ai",
     "demo:verify": "npm --prefix backend run demo:verify",
     "docker:app": "docker compose --profile app up -d --build",
     "docker:down": "docker compose --profile app down"
