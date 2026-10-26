@@ -157,6 +157,234 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
 @keyframes grow{from{transform:scaleX(0)}}
 .bars-note{font-size:18px!important;color:#94a3b8!important;margin-top:4px!important}
 
+/* ===== v3: app-style phones + redesigned 5/7/9/12/13/14 ===== */
+.ph{position:relative;width:300px;height:600px;border-radius:46px;background:#F7F6F3;box-shadow:0 0 0 7px #fff,0 0 0 8.5px #d9d7d1,0 40px 70px -30px rgba(17,17,17,.35);overflow:hidden;font-family:"Be Vietnam Pro","Segoe UI","Noto Sans",sans-serif;color:#111;flex:none;line-height:1.35;text-align:left}
+.ph svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ph .isl{position:absolute;top:10px;left:50%;width:90px;height:26px;margin-left:-45px;background:#0b0b0b;border-radius:16px;z-index:9}
+.ph .sbar{height:46px;display:flex;align-items:center;justify-content:space-between;padding:2px 26px 0 32px;font-size:13px;font-weight:700}
+.ph .sys{display:flex;gap:5px;align-items:center}
+.ph .sig{width:14px;height:9px;background:linear-gradient(90deg,#111 0 2px,transparent 2px 4px,#111 4px 6px,transparent 6px 8px,#111 8px 10px,transparent 10px 12px,#111 12px 14px);clip-path:polygon(0 100%,100% 0,100% 100%)}
+.ph .bat{width:20px;height:10px;border:1.4px solid #111;border-radius:3px;padding:1px;display:block}
+.ph .bat u{display:block;height:100%;width:75%;background:#111;border-radius:1px}
+.ph .hbar{position:absolute;bottom:7px;left:50%;width:104px;height:4px;margin-left:-52px;background:#111;border-radius:4px;z-index:9}
+.ph .scr{padding:4px 14px 0}
+.ph .top{display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:10px;min-height:24px}
+.ph .bk{display:flex;align-items:center;gap:2px;font-size:14px}
+.ph .bk svg{width:16px;height:16px}
+.ph .sm{font-size:10.5px}
+.ph .mu{color:#787774}
+.ph .inc{color:#1F8A4C}
+.ph .ttl{font-size:23px;font-weight:700;letter-spacing:-.02em;margin:0 0 10px}
+.ph .crd{background:#fff;border:1px solid #EAEAEA;border-radius:16px;padding:11px 12px;margin-bottom:9px;box-shadow:0 1px 2px rgba(17,17,17,.03),0 6px 20px rgba(17,17,17,.035)}
+.ph .crd.dash{border:1.3px dashed #d4d2cc;box-shadow:none}
+.ph .big{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:2px 0 6px}
+.ph .trk{height:5px;border-radius:5px;background:#F1F0EC;margin-bottom:6px;overflow:hidden}
+.ph .trk i{display:block;height:100%;background:#111;border-radius:5px}
+.ph .bme{margin:0 0 8px auto;width:max-content;max-width:80%;background:#E9E8E3;border-radius:16px;padding:7px 12px;font-size:12.5px}
+.ph .bme.img{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px}
+.ph .rcp{width:34px;height:42px;background:#fff;border-radius:5px;padding:5px 5px;display:flex;flex-direction:column;gap:3px}
+.ph .rcp i{height:2px;background:#cfcdc6;border-radius:2px}.ph .rcp i.s{width:60%}
+.ph .bai{font-size:12.5px;margin:0 0 9px;line-height:1.45}
+.ph .rowx{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ph .rowx.g{margin-top:8px}.ph .rowx.g .btn{flex:1}.ph .rowx.g .btn.o{flex:.55}
+.ph .row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid #F0EFEC}
+.ph .crd>.row:first-child,.ph .rowx+.row{border-top:0}
+.ph .ci{width:32px;height:32px;border-radius:50%;background:#F1F0EC;display:flex;align-items:center;justify-content:center;flex:none}
+.ph .ci svg{width:16px;height:16px}
+.ph .ci.wa{background:#FBF3DB;color:#956400}
+.ph .ci.dk{background:#111;color:#fff}
+.ph .nm{flex:1;min-width:0;font-size:12.5px;font-weight:600}
+.ph .nm small{display:block;font-weight:400;font-size:10.5px;color:#787774;margin-top:2px}
+.ph .nm small .tg{margin-right:3px}
+.ph .am{font-size:12.5px;font-weight:700;white-space:nowrap}
+.ph .tg{display:inline-flex;font-size:10.5px;font-weight:600;background:#F1F0EC;border-radius:999px;padding:3px 8px;color:#111}
+.ph .btn{display:block;border-radius:999px;text-align:center;font-size:12.5px;font-weight:700;padding:8px 10px;white-space:nowrap}
+.ph .btn.f{background:#111;color:#fff}.ph .btn.o{background:#fff;color:#111;border:1px solid #EAEAEA}
+.ph .btn.wide{margin-top:4px}
+.ph .inp{position:absolute;left:12px;right:12px;bottom:22px;background:#fff;border:1px solid #EAEAEA;border-radius:999px;padding:6px 6px 6px 14px;font-size:11.5px;color:#A9A8A3;display:flex;align-items:center;justify-content:space-between}
+.ph .inp span{display:flex;align-items:center;gap:7px}.ph .inp span svg{width:16px;height:16px;color:#787774}
+.ph .inp b{width:26px;height:26px;border-radius:50%;background:#E9E8E3;display:flex;align-items:center;justify-content:center;color:#787774}.ph .inp b svg{width:14px;height:14px}
+.ph .hu{position:absolute;top:44px;left:9px;right:9px;z-index:8;background:rgba(255,255,255,.96);border-radius:18px;padding:9px 11px;box-shadow:0 12px 30px -8px rgba(17,17,17,.25),0 0 0 1px rgba(17,17,17,.05);display:flex;gap:10px;align-items:center;font-size:11.5px}
+.ph .hu b{display:block;font-size:12.5px}.ph .hu span{color:#787774}
+.ph .hu+.scr{padding-top:62px}
+.ph .learn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;background:#EDF3EC;color:#1F8A4C;border-radius:999px;padding:5px 10px}
+.ph .learn svg{width:13px;height:13px}
+.ph .shot{position:relative;height:150px;border-radius:14px;background:#2b2a28;display:flex;align-items:center;justify-content:center;margin-bottom:9px;overflow:hidden}
+.ph .paper{width:112px;height:128px;background:#fbfaf6;border-radius:3px;padding:10px 10px;display:flex;flex-direction:column;gap:6px;transform:rotate(-3deg)}
+.ph .paper b{font-size:8.5px;letter-spacing:.05em;text-align:center}
+.ph .paper i{height:3px;background:#d6d4cd;border-radius:2px}.ph .paper i.s{width:65%}
+.ph .paper u{text-decoration:none;font-size:8.5px;font-weight:700;margin-top:auto;border-top:1px dashed #bbb;padding-top:4px}
+.ph .cn{position:absolute;width:20px;height:20px;border:2.5px solid #fff}
+.ph .cn.a{left:72px;top:10px;border-right:0;border-bottom:0;border-radius:6px 0 0 0}.ph .cn.b{right:72px;top:10px;border-left:0;border-bottom:0;border-radius:0 6px 0 0}
+.ph .cn.c{left:72px;bottom:10px;border-right:0;border-top:0;border-radius:0 0 0 6px}.ph .cn.d{right:72px;bottom:10px;border-left:0;border-top:0;border-radius:0 0 6px 0}
+.ph .okc{font-size:11.5px;font-weight:600;color:#1F8A4C;margin-bottom:8px}
+.ph .kv{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-top:1px solid #F0EFEC}
+.ph .tabs{display:flex;gap:13px;font-size:12px;color:#A9A8A3;border-bottom:1px solid #EAEAEA;margin-bottom:10px;white-space:nowrap}
+.ph .tabs b{color:#111;border-bottom:2px solid #111;padding-bottom:6px}
+.ph .tgl{display:flex;align-items:center;gap:10px}
+.ph .sw{width:38px;height:22px;border-radius:999px;background:#111;position:relative;flex:none}
+.ph .sw i{position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph .tbar{position:absolute;left:0;right:0;bottom:0;height:62px;background:rgba(255,255,255,.96);border-top:1px solid #EAEAEA;display:grid;grid-template-columns:repeat(5,1fr);align-items:start;padding-top:8px;color:#A9A8A3}
+.ph .tbar span{display:flex;justify-content:center}.ph .tbar svg{width:20px;height:20px}.ph .tbar .on{color:#111}
+.ph .tbar .pl{width:40px;height:40px;margin:-14px auto 0;border-radius:50%;background:#111;color:#fff;align-items:center}
+.lgx{display:grid;grid-template-columns:repeat(3,7px);gap:2px;padding:6px;background:#0b2a5b;border-radius:8px}
+.lgx i{width:7px;height:7px;border-radius:2px;background:#fff}
+.lgx i:nth-child(4),.lgx i:nth-child(6){visibility:hidden}.lgx i.l{background:#7ea2e6}
+.lgx.sm{grid-template-columns:repeat(3,5px);padding:4px;border-radius:6px}.lgx.sm i{width:5px;height:5px;border-radius:1.5px}
+.ph .bell{width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid #EAEAEA;display:flex;align-items:center;justify-content:center}.ph .bell svg{width:15px;height:15px}
+/* s2 */
+.s2g{flex:1;min-height:0;display:grid;grid-template-columns:1fr 316px 1fr;gap:56px;align-items:center}
+.pains{display:flex;flex-direction:column;gap:18px}
+.phc{display:flex;justify-content:center}
+.sols{display:flex;flex-direction:column;gap:30px}
+.sol2{display:flex;gap:20px;align-items:flex-start}
+.sol2 em{font-style:normal;width:44px;height:44px;border-radius:50%;background:#0b2a5b;color:#fff;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:4px}
+.sol2 b{display:block;font-family:var(--serif);font-size:38px;color:var(--navy);line-height:1.15;letter-spacing:-.01em}
+.sol2 i{font-style:normal;font-size:21px;color:#64748b}
+.sol2f{font-size:18px;color:#64748b;border-top:1px solid #e2e8f0;padding-top:16px}
+/* s3 */
+.s3g{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;align-items:start}
+.s3g .col{display:flex;flex-direction:column;align-items:center;gap:22px}
+.s3g .ph{zoom:.98;height:548px}
+.cap{display:flex;align-items:center;gap:14px;align-self:center}
+.cap .ico{width:50px;height:50px;border-radius:15px}.cap .ico svg{width:26px;height:26px}
+.cap b{display:block;font-family:var(--serif);font-size:32px;color:var(--navy);line-height:1.1}
+.cap i{font-style:normal;font-size:18px;color:#64748b}
+.s3f{position:absolute;right:76px;top:62px;display:flex;gap:10px}
+.s3f span{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:600;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:999px;padding:7px 14px}
+.s3f svg{width:18px;height:18px;fill:none;stroke:#0b2a5b;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* s5 */
+.b5{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr}
+.b5 .ai5{grid-column:1/3}
+.tk{display:flex;flex-direction:column;gap:22px;padding:30px 32px!important}
+.tkh{display:flex;align-items:center;gap:18px}
+.tkh small{display:block;font-size:14px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#94a3b8}
+.tkh b{display:block;font-family:var(--serif);font-size:38px;color:var(--navy);line-height:1.1;letter-spacing:-.01em}
+.ai5 .tkh b{color:#fff}.ai5 .tkh small{color:#9fbaf0}
+.lgo,.mono{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex:none}
+.lgo svg{width:38px;height:38px}
+.lgo svg.w{fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.mono{font-family:var(--serif);font-size:34px;font-weight:700}
+.mono svg{width:34px;height:34px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tki{display:flex;flex-wrap:wrap;gap:9px}
+.tki span{font-size:18px;font-weight:600;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:999px;padding:6px 14px}
+.tki span.hl{background:#e3f4f8;border-color:#a5dbe8;color:#0e7490}
+.aim{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:auto}
+.aim div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:16px 18px}
+.aim b{display:block;font-size:24px;color:#fff}.aim i{font-style:normal;font-size:17px;color:#9fbaf0}
+/* s9 */
+.b9{grid-template-columns:1.25fr 1fr 290px}
+.skc{display:flex;flex-direction:column;padding:28px 30px!important}
+.skh{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.skh b{font-family:var(--serif);font-size:32px;color:var(--navy)}
+.dark .skh b{color:#fff}
+.skh em{font-style:normal;margin-left:auto;font-family:var(--serif);font-size:30px;font-weight:700;color:#1d4ed8;background:#eef4ff;border-radius:14px;padding:2px 14px}
+.dark .skh em{color:#fff;background:rgba(255,255,255,.12)}
+.skl{display:grid;gap:10px;flex:1;align-content:space-evenly}
+.skl.two{grid-template-columns:1fr 1fr}
+.sk{display:flex;align-items:center;gap:14px;font-size:21px;font-weight:600;color:#1e293b}
+.dark .sk{color:#e2ebff}
+.ski{width:46px;height:46px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex:none}
+.ski svg{width:21px;height:21px;fill:none;stroke:#0b2a5b;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sk.k .ski{background:#0b2a5b}.sk.k .ski svg{stroke:#fff}
+.dark .ski{background:rgba(255,255,255,.08)}.dark .ski svg{stroke:#cfe0ff}
+.st9{display:flex;flex-direction:column;gap:22px}
+.st9 .shell{flex:1}
+.s9{display:flex;flex-direction:column;justify-content:center;padding:18px 26px!important}
+.s9 b{font-family:var(--serif);font-size:58px;line-height:1;color:var(--navy)}
+.s9 span{font-size:18px;color:#64748b;margin-top:6px}
+/* s12 vault */
+.vault{flex:1;min-height:0;position:relative;border-radius:30px;padding:34px 40px;display:grid;grid-template-columns:1fr 420px 1fr;gap:30px;align-items:center;margin-bottom:8px;
+ background:radial-gradient(60% 70% at 50% 50%,rgba(37,99,235,.35),transparent 70%),linear-gradient(rgba(159,186,240,.06) 1px,transparent 1px) 0 0/34px 34px,linear-gradient(90deg,rgba(159,186,240,.06) 1px,transparent 1px) 0 0/34px 34px,#071a3d;box-shadow:inset 0 0 0 1px rgba(159,186,240,.15)}
+.vst{position:absolute;top:22px;right:28px;display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#86efac}
+.vst i{width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.vcol{display:flex;flex-direction:column;gap:16px}
+.vlb{font-size:14px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#7ea2e6;margin-bottom:2px}
+.sc{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.05);border:1px solid rgba(159,186,240,.18);border-radius:18px;padding:16px 18px;backdrop-filter:blur(4px)}
+.sci{width:48px;height:48px;border-radius:14px;background:rgba(37,99,235,.22);border:1px solid rgba(159,186,240,.3);display:flex;align-items:center;justify-content:center;flex:none}
+.sci svg{width:24px;height:24px;fill:none;stroke:#cfe0ff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sc b{display:block;font-size:22px;color:#fff;line-height:1.25}
+.sc i{font-style:normal;font-size:17px;color:#9fbaf0}
+.sc>div{flex:1}
+.sc .ok{width:28px;height:28px;border-radius:50%;background:rgba(34,197,94,.18);display:flex;align-items:center;justify-content:center;flex:none}
+.sc .ok svg{width:16px;height:16px;fill:none;stroke:#4ade80;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.vmid{display:flex;flex-direction:column;align-items:center;text-align:center}
+.shd{width:320px;height:320px}
+.shd .ring{fill:none;stroke:rgba(159,186,240,.25);stroke-width:1.5}
+.shd .r1{stroke-dasharray:4 7;animation:spin 30s linear infinite;transform-origin:150px 150px}
+.shd .r3{stroke:rgba(159,186,240,.12)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.vmid b{white-space:nowrap;font-family:var(--serif);font-size:30px;color:#fff;margin-top:6px}
+.vmid i{font-style:normal;font-size:18px;color:#9fbaf0;margin-top:4px}
+/* s13 */
+.b13{grid-template-columns:440px 1fr}
+.tot2{display:flex;flex-direction:column;justify-content:center;padding:36px 38px!important}
+.huge2{font-family:var(--serif);font-size:120px;line-height:1;color:#fff;letter-spacing:-.03em;margin:10px 0 16px}
+.tot2 .okpill{align-self:flex-start}
+.suites{margin-top:34px;display:flex;flex-direction:column;border-top:1px solid rgba(255,255,255,.14)}
+.suites div{display:flex;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.suites b{font-family:var(--serif);font-size:30px;color:#fff;min-width:96px}
+.suites span{font-size:18px;color:#9fbaf0}
+.clc{display:flex;flex-direction:column;padding:32px 38px!important}
+.clh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #e2e8f0}
+.clh b{font-family:var(--serif);font-size:30px;color:var(--navy)}
+.clh span{font-size:18px;font-weight:700;color:#15803d;background:#ecfdf3;border-radius:999px;padding:4px 14px}
+.cls{display:grid;grid-template-columns:1fr 1fr;gap:4px 34px;flex:1;align-content:center}
+.cl{display:flex;align-items:center;gap:14px;font-size:20px;color:#1e293b;padding:11px 0;border-bottom:1px dashed #e2e8f0}
+.cb{width:28px;height:28px;border-radius:8px;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;flex:none}
+.cb svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24}
+.slide.on .cb{animation:cbf .3s ease both;animation-delay:var(--d)}
+.slide.on .cb svg{animation:cbd .35s ease both;animation-delay:calc(var(--d) + .15s)}
+@keyframes cbf{to{background:#15803d;border-color:#15803d}}
+@keyframes cbd{to{stroke-dashoffset:0}}
+/* s14 */
+.s14{flex:1;min-height:0;display:grid;grid-template-columns:600px 70px 1fr 70px 1fr;align-items:center;gap:0}
+.cli{position:relative;height:600px}
+.cli .ph{position:absolute;left:10px;top:0;zoom:.86}
+.brw{position:absolute;right:0;top:150px;width:310px;height:270px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px #e2e8f0,0 30px 60px -24px rgba(11,42,91,.35);overflow:hidden;font-family:"Be Vietnam Pro","Segoe UI",sans-serif}
+.brt{height:34px;background:#f1f5f9;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid #e2e8f0}
+.brt>i{width:9px;height:9px;border-radius:50%;background:#cbd5e1}
+.brt span{margin-left:10px;flex:1;display:flex;align-items:center;gap:6px;font-size:11px;color:#475569;background:#fff;border-radius:8px;padding:3px 10px}
+.brt svg{width:11px;height:11px;fill:none;stroke:#15803d;stroke-width:2}
+.brb{display:flex;height:calc(100% - 34px)}
+.side{width:52px;background:#0b2a5b;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:12px}
+.side u{width:22px;height:5px;border-radius:3px;background:rgba(255,255,255,.25)}.side u.on{background:#fff}
+.main{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.main>b{font-size:15px;color:#0f172a}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.kp div{border:1px solid #e2e8f0;border-radius:10px;padding:7px 8px;font-size:17px;font-weight:700;color:#0b2a5b}
+.kp small{display:block;font-size:9px;font-weight:500;color:#64748b}
+.cht{flex:1;display:flex;align-items:flex-end;gap:7px;border:1px solid #e2e8f0;border-radius:10px;padding:10px}
+.cht i{flex:1;background:linear-gradient(#2563eb,#0b2a5b);border-radius:4px 4px 0 0}
+.clab{position:absolute;left:0;right:0;bottom:6px;display:flex;justify-content:space-between;padding:0 50px 0 60px}
+.clab span,.tpills span{display:inline-flex;align-items:center;gap:8px;font-size:18px;font-weight:700;color:var(--navy);background:#eef4ff;border:1px solid #dbe7ff;border-radius:999px;padding:7px 16px}
+.clab svg,.tpills svg{width:20px;height:20px;fill:none;stroke:#0b2a5b;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.arw{height:2px;position:relative}
+.arw i{position:absolute;left:8px;right:8px;top:0;height:2px;background:repeating-linear-gradient(90deg,#2563eb 0 8px,transparent 8px 14px);animation:flow 1s linear infinite;background-size:14px 2px}
+.arw::after{content:"";position:absolute;right:2px;top:-6px;border:7px solid transparent;border-left:10px solid #2563eb;border-right:0}
+@keyframes flow{to{background-position:14px 0}}
+.tun{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;background:radial-gradient(120% 90% at 100% 0%,#173f80 0%,#0b2a5b 55%,#08204a 100%);border-radius:30px;padding:34px 24px;box-shadow:0 30px 60px -28px rgba(11,42,91,.5)}
+.tci{width:80px;height:80px;border-radius:24px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center}
+.tci svg{width:44px;height:44px;fill:none;stroke:#fff;stroke-width:1.4}
+.tun b{font-size:24px;color:#fff;word-break:break-all}
+.tun>i{font-style:normal;font-size:17px;color:#9fbaf0;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.tpills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.tpills span{font-size:15px;padding:5px 12px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#dbe7ff}
+.tpills svg{width:15px;height:15px;stroke:#86efac}
+.srv{background:#fff8ec;border:1px solid #f3d9ac;border-radius:30px;padding:28px 26px}
+.srh{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.srh .ico{background:#fff;border-color:#f3d9ac}.srh .ico svg{stroke:#b45309}
+.srh b{display:block;font-family:var(--serif);font-size:28px;color:#9a4a07;line-height:1.15}
+.srh i{font-style:normal;font-size:16px;color:#b45309}
+.srg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.srg div{background:#fff;border:1px solid #f3e1c0;border-radius:18px;padding:14px 14px;display:flex;flex-direction:column;gap:2px}
+.srg svg{width:28px;height:28px;fill:none;stroke:#b45309;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:6px}
+.srg b{font-size:19px;color:#7c2d12}.srg i{font-style:normal;font-size:15px;color:#b45309}
+
+.aip{color:#cfe0ff!important;font-size:21px!important;margin-top:-6px!important}
+.kp div{font-size:15px}
+
 </style>
 </head>
 <body>
@@ -197,17 +425,32 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
 <section class="slide">
   <span class="pill rv" style="--i:0">Bài toán</span>
   <h2 class="rv" style="--i:1">Ghi chép chi tiêu luôn bị bỏ dở</h2>
-  <div class="bento b2">
-    <div class="shell rv" style="--i:2"><div class="core pain"><span class="ico "><svg viewBox="0 0 24 24"><path d="M15 4.5l4.5 4.5L9 19.5H4.5V15z"/></svg></span><div><h4>Nhập tay mệt</h4><p>5–6 thao tác cho mỗi khoản</p></div></div></div>
-    <div class="shell rv" style="--i:3"><div class="core pain"><span class="ico "><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2.5"/><path d="M3.5 10h17M16 14.5h1.5"/></svg></span><div><h4>Tiền nằm nhiều nơi</h4><p>Ngân hàng · ví điện tử · tiền mặt</p></div></div></div>
-    <div class="shell rv" style="--i:4"><div class="core pain"><span class="ico "><svg viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8 5.5 5.5 0 0 0-10.6-1.5A4.5 4.5 0 0 0 7 18z"/><path d="M4 4l16 16"/></svg></span><div><h4>AI cloud lộ dữ liệu</h4><p>Dữ liệu tài chính gửi ra ngoài</p></div></div></div>
-    <div class="shell dark rv sol" style="--i:5"><div class="core">
-      <span class="pill inv">TrackerX</span>
-      <div class="sol-row"><span class="ico inv"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg></span><div><b>Nói một câu</b><i>“cf 45k hôm qua” thành giao dịch</i></div></div>
-      <div class="sol-row"><span class="ico inv"><svg viewBox="0 0 24 24"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"/><path d="M8 10h8M8 13h6"/></svg></span><div><b>Chụp một tấm</b><i>hóa đơn, ảnh chuyển khoản</i></div></div>
-      <div class="sol-row"><span class="ico inv"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span><div><b>Không làm gì cả</b><i>tự ghi từ thông báo ngân hàng</i></div></div>
-      <div class="sol-foot">AI chạy nội bộ · dữ liệu không rời hệ thống</div>
-    </div></div>
+  <div class="s2g">
+    <div class="pains">
+      <div class="shell rv" style="--i:2"><div class="core pain"><span class="ico "><svg viewBox="0 0 24 24"><path d="M15 4.5l4.5 4.5L9 19.5H4.5V15z"/></svg></span><div><h4>Nhập tay mệt</h4><p>5–6 thao tác cho mỗi khoản</p></div></div></div>
+      <div class="shell rv" style="--i:3"><div class="core pain"><span class="ico "><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2.5"/><path d="M3.5 10h17M16 14.5h1.5"/></svg></span><div><h4>Tiền nằm nhiều nơi</h4><p>Ngân hàng · ví điện tử · tiền mặt</p></div></div></div>
+      <div class="shell rv" style="--i:4"><div class="core pain"><span class="ico "><svg viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8 5.5 5.5 0 0 0-10.6-1.5A4.5 4.5 0 0 0 7 18z"/><path d="M4 4l16 16"/></svg></span><div><h4>AI cloud lộ dữ liệu</h4><p>Dữ liệu tài chính gửi ra ngoài</p></div></div></div>
+    </div>
+    <div class="rv phc" style="--i:5"><div class="ph "><div class="isl"></div><div class="sbar"><span>9:41</span><span class="sys"><i class="sig"></i><i class="bat"><u></u></i></span></div><div class="hbar"></div><div class="hu"><span class="ci dk"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 4l9 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 20.5h18"/></svg></span><div><b>MB Bank · −350.000đ</b><span>Đã tự ghi vào sổ · chạm để hoàn tác</span></div></div><div class="scr">
+  <div class="top"><span class="bk"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Trợ lý</span><span class="mu sm">🔒 Chỉ dữ liệu của bạn</span></div>
+  <div class="bme">cf 45k hôm qua</div>
+  <div class="bai">Mình ghi được 1 khoản. <span class="mu">Chưa lưu.</span></div>
+  <div class="crd dash">
+    <div class="rowx"><span class="tg">◌ Nháp · chưa lưu</span><b class="am">−45.000đ</b></div>
+    <div class="row"><span class="ci "><svg viewBox="0 0 24 24"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16M8 3.5v2.5M11.5 3.5v2.5"/></svg></span><div class="nm">Cà phê<small><span class="tg">Ăn uống</span> <span class="tg">Tiền mặt</span></small></div></div>
+    <div class="rowx g"><span class="btn o">Sửa</span><span class="btn f">Xác nhận</span></div>
+  </div>
+  <div class="bme img"><span class="rcp"><i></i><i></i><i class="s"></i><i></i><i class="s"></i></span><span>hoa-don.jpg</span></div>
+  <div class="bai">Đọc xong: <b>Bách Hóa Xanh −125.000đ</b> · Ăn uống</div>
+  <div class="inp"><span><svg viewBox="0 0 24 24"><path d="M4 8h3l1.5-2.5h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Hỏi hoặc ghi: “cà phê 45k”</span><b><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></b></div>
+</div></div></div>
+    <div class="sols">
+      <span class="pill rv" style="--i:6">TrackerX</span>
+      <div class="sol2 rv" style="--i:7"><em>1</em><div><b>Nói một câu</b><i>“cf 45k hôm qua” thành giao dịch</i></div></div>
+      <div class="sol2 rv" style="--i:8"><em>2</em><div><b>Chụp một tấm</b><i>hóa đơn, ảnh chuyển khoản</i></div></div>
+      <div class="sol2 rv" style="--i:9"><em>3</em><div><b>Không làm gì cả</b><i>tự ghi từ thông báo ngân hàng</i></div></div>
+      <div class="sol2f rv" style="--i:10">AI chạy nội bộ · dữ liệu không rời hệ thống</div>
+    </div>
   </div>
   <div class="foot"><span>TrackerX</span><span>2</span></div>
 </section>
@@ -216,20 +459,49 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
 <section class="slide">
   <span class="pill rv" style="--i:0">Tổng quan</span>
   <h2 class="rv" style="--i:1">Ba trụ cột của TrackerX</h2>
-  <div class="bento b3">
-    <div class="shell dark rv big" style="--i:2"><div class="core">
-      <span class="ico inv"><svg viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M10 10h4v4h-4zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></span>
-      <h3 class="w">Trợ lý AI nội bộ</h3>
-      <p class="w2">qwen3.5:4b · bge-m3 · chạy trên máy chủ nhóm</p>
-      <div class="pillars">
-        <div><b>AI</b><i>ghi · hỏi · tự học</i></div>
-        <div><b>OCR</b><i>hóa đơn · chuyển khoản</i></div>
-        <div><b>Lắng nghe</b><i>thông báo ngân hàng</i></div>
-      </div>
-    </div></div>
-    <div class="shell rv" style="--i:3"><div class="core mini"><span class="ico "><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span><div><h4>App di động</h4><p>Flutter · Android / iOS</p><p class="sm2">Ví · Giao dịch · Ngân sách · Tiết kiệm · Báo cáo</p></div></div></div>
-    <div class="shell rv" style="--i:4"><div class="core mini"><span class="ico "><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20h6M12 16.5V20"/></svg></span><div><h4>Admin Web</h4><p>React 19</p><p class="sm2">Người dùng · Cấu hình · Trung tâm học AI</p></div></div></div>
+  <div class="s3g">
+    <div class="col rv" style="--i:2"><div class="cap"><span class="ico "><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg></span><div><b>AI</b><i>ghi · hỏi · tự học</i></div></div><div class="ph "><div class="isl"></div><div class="sbar"><span>9:41</span><span class="sys"><i class="sig"></i><i class="bat"><u></u></i></span></div><div class="hbar"></div><div class="scr">
+  <div class="top"><span class="bk"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Trợ lý</span><span class="mu sm">🔒 Chỉ dữ liệu của bạn</span></div>
+  <div class="bme">tháng này ăn uống hết bao nhiêu?</div>
+  <div class="crd">
+    <div class="mu sm">Ăn uống · tháng 10</div>
+    <div class="big">3.120.000đ</div>
+    <div class="trk"><i style="width:89%"></i></div>
+    <div class="mu sm">89% ngân sách · còn 380.000đ cho 8 ngày</div>
+    <div class="kv" style="margin-top:6px"><span class="mu">Cà phê</span><b>1.060.000đ</b></div><div class="kv"><span class="mu">Cơm trưa</span><b>1.280.000đ</b></div>
   </div>
+  <div class="bme">gợi ý tiết kiệm?</div>
+  <div class="bai">Cà phê chiếm 34% ăn uống. Pha ở nhà 3 buổi/tuần tiết kiệm khoảng <b>400.000đ</b>.</div>
+  <div class="learn"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 16.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>Đã học: “cf” → Cà phê</div>
+  <div class="inp"><span><svg viewBox="0 0 24 24"><path d="M4 8h3l1.5-2.5h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Hỏi hoặc ghi…</span><b><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></b></div>
+</div></div></div>
+    <div class="col rv" style="--i:3"><div class="cap"><span class="ico "><svg viewBox="0 0 24 24"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"/><path d="M8 10h8M8 13h6"/></svg></span><div><b>OCR</b><i>hóa đơn · chuyển khoản</i></div></div><div class="ph "><div class="isl"></div><div class="sbar"><span>9:41</span><span class="sys"><i class="sig"></i><i class="bat"><u></u></i></span></div><div class="hbar"></div><div class="scr">
+  <div class="top"><span class="bk"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Ghi giao dịch</span><span></span></div>
+  <div class="ttl">Đọc ảnh</div>
+  <div class="shot"><div class="paper"><b>BÁCH HÓA XANH</b><i></i><i class="s"></i><i></i><i class="s"></i><i></i><u>TỔNG 125.000</u></div><span class="cn a"></span><span class="cn b"></span><span class="cn c"></span><span class="cn d"></span></div>
+  <div class="okc">✓ Đã đọc xong · 4 giây</div>
+  <div class="crd">
+    <div class="mu sm">Hóa đơn · Bách Hóa Xanh</div>
+    <div class="big">−125.000đ</div>
+    <div class="kv"><span class="mu">Danh mục</span><b>Ăn uống</b></div>
+    <div class="kv"><span class="mu">Ví</span><b>MB Bank</b></div>
+  </div>
+  <div class="btn f wide">Lưu giao dịch</div>
+</div></div></div>
+    <div class="col rv" style="--i:4"><div class="cap"><span class="ico "><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span><div><b>Lắng nghe</b><i>thông báo ngân hàng</i></div></div><div class="ph "><div class="isl"></div><div class="sbar"><span>9:41</span><span class="sys"><i class="sig"></i><i class="bat"><u></u></i></span></div><div class="hbar"></div><div class="scr">
+  <div class="top"><span class="bk"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Trang chủ</span><span class="sm"><b>Đánh dấu đã đọc</b></span></div>
+  <div class="ttl">Thông báo</div>
+  <div class="tabs"><b>Tất cả</b><span>Số dư</span><span>Ngân sách</span><span>Hệ thống</span></div>
+  <div class="crd">
+    <div class="row"><span class="ci "><svg viewBox="0 0 24 24"><path d="M3 9.5L12 4l9 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 20.5h18"/></svg></span><div class="nm"><span class="inc">+1.200.000đ</span> · Nhận tiền<small>Đã tự ghi vào ví Techcombank</small></div></div>
+    <div class="row"><span class="ci "><svg viewBox="0 0 24 24"><path d="M3 9.5L12 4l9 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 20.5h18"/></svg></span><div class="nm">−45.000đ · Cà phê<small>Đã tự ghi vào ví MB Bank · chạm để hoàn tác</small></div></div>
+    <div class="row"><span class="ci "><svg viewBox="0 0 24 24"><path d="M3 9.5L12 4l9 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 20.5h18"/></svg></span><div class="nm">−350.000đ · Bách Hóa Xanh<small>Đã tự ghi vào ví MB Bank</small></div></div>
+    <div class="row"><span class="ci wa"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8"/></svg></span><div class="nm">Ăn uống đã dùng 89%<small>Còn 380.000đ cho 8 ngày</small></div></div>
+  </div>
+  <div class="crd tgl"><div class="nm">Tự ghi vào sổ<small>khoản dưới 5.000.000đ</small></div><span class="sw"><i></i></span></div>
+</div></div></div>
+  </div>
+  <div class="s3f rv" style="--i:5"><span><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>App Flutter</span><span><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20h6M12 16.5V20"/></svg>Admin React 19</span><span><svg viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M10 10h4v4h-4zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg>AI nội bộ qwen3.5:4b · bge-m3</span></div>
   <div class="foot"><span>TrackerX</span><span>3</span></div>
 </section>
 
@@ -250,16 +522,15 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
 
 <!-- 5 CÔNG NGHỆ -->
 <section class="slide">
-  <div class="kick">Tech stack</div>
-  <h2>Công nghệ sử dụng</h2>
-  <div class="body">
-    <div class="lay">
-      <div class="lb">Mobile</div><div class="v"><span class="chip k">Flutter 3.44</span><span class="chip">Dart 3.12</span><span class="chip">Riverpod</span><span class="chip">go_router</span><span class="chip">Dio</span><span class="chip">Freezed</span><span class="chip t">Kotlin · NotificationListener</span></div>
-      <div class="lb">Backend</div><div class="v"><span class="chip k">NestJS 11</span><span class="chip">TypeScript</span><span class="chip">Prisma 6</span><span class="chip">PostgreSQL 16</span><span class="chip">JWT</span><span class="chip">Swagger</span></div>
-      <div class="lb">Admin</div><div class="v"><span class="chip k">React 19</span><span class="chip">Vite</span><span class="chip">Tailwind</span><span class="chip">shadcn/ui</span><span class="chip">TanStack Query</span><span class="chip">Recharts</span></div>
-      <div class="lb">AI</div><div class="v"><span class="chip k">Ollama</span><span class="chip">qwen3.5:4b</span><span class="chip">bge-m3</span><span class="chip">kNN embedding</span><span class="chip">JSON schema</span></div>
-      <div class="lb">Vận hành</div><div class="v"><span class="chip k">Docker</span><span class="chip">Cloudflare Tunnel</span><span class="chip">systemd</span><span class="chip">Playwright</span><span class="chip">E2E API</span></div>
-    </div>
+  <span class="pill rv" style="--i:0">Tech stack</span>
+  <h2 class="rv" style="--i:1">Công nghệ sử dụng</h2>
+  <div class="bento b5">
+    <div class="shell rv" style="--i:2"><div class="core tk"><div class="tkh"><span class="lgo" style="background:#e9f6fe"><svg viewBox="0 0 24 24"><path fill="#54C5F8" d="M14.3 1.5 3.6 12.2l3.3 3.3L20.9 1.5z"/><path fill="#54C5F8" d="M14.3 11.4 8.6 17.1l3.3 3.3 2.4-2.4 6.6-6.6z"/><path fill="#01579B" d="M11.9 20.4l2.4 2.1h6.6l-5.7-5.8z"/><path fill="#29B6F6" d="M8.6 17.1l3.3-3.3 3.3 3.3-3.3 3.3z"/></svg></span><div><small>Mobile</small><b>Flutter 3.44</b></div></div><div class="tki"><span>Dart 3.12</span><span>Riverpod</span><span>go_router</span><span>Dio</span><span>Freezed</span><span class="hl">Kotlin · NotificationListener</span></div></div></div>
+    <div class="shell rv" style="--i:3"><div class="core tk"><div class="tkh"><span class="mono" style="background:#E0234E;color:#fff">N</span><div><small>Backend</small><b>NestJS 11</b></div></div><div class="tki"><span>TypeScript</span><span>Prisma 6</span><span>PostgreSQL 16</span><span>JWT</span><span>Swagger</span></div></div></div>
+    <div class="shell rv" style="--i:4"><div class="core tk"><div class="tkh"><span class="lgo" style="background:#20232a"><svg viewBox="-12 -12 24 24"><g fill="none" stroke="#61DAFB" stroke-width="1.1"><ellipse rx="10" ry="4"/><ellipse rx="10" ry="4" transform="rotate(60)"/><ellipse rx="10" ry="4" transform="rotate(120)"/></g><circle r="2" fill="#61DAFB"/></svg></span><div><small>Admin web</small><b>React 19</b></div></div><div class="tki"><span>Vite</span><span>Tailwind</span><span>shadcn/ui</span><span>TanStack Query</span><span>Recharts</span></div></div></div>
+    <div class="shell dark rv ai5" style="--i:5"><div class="core tk"><div class="tkh"><span class="lgo" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)"><svg viewBox="0 0 24 24" class="w"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M10 10h4v4h-4zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></span><div><small>AI · chạy nội bộ</small><b>Ollama</b></div></div>
+      <p class="aip">Một máy chủ phục vụ mọi người dùng · không gọi API bên ngoài</p><div class="aim"><div><b>qwen3.5:4b</b><i>trò chuyện · đọc ảnh</i></div><div><b>bge-m3</b><i>embedding · tìm ví dụ gần</i></div><div><b>JSON schema</b><i>ép đầu ra đúng khuôn</i></div></div></div></div>
+    <div class="shell rv" style="--i:6"><div class="core tk"><div class="tkh"><span class="mono" style="background:#2496ED;color:#fff"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="2"/><rect x="4" y="13" width="16" height="7" rx="2"/><path d="M8 7.5h.1M8 16.5h.1M12 7.5h4M12 16.5h4"/></svg></span><div><small>Vận hành</small><b>Docker</b></div></div><div class="tki"><span>Cloudflare Tunnel</span><span>systemd</span><span>Playwright</span><span>E2E API</span></div></div></div>
   </div>
   <div class="foot"><span>TrackerX</span><span>5</span></div>
 </section>
@@ -316,10 +587,10 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
   <path d="M430 95h70v185h40M430 280h110M430 465h70V280h40" fill="none" stroke="#1d4ed8" stroke-width="2.6"/>
   <!-- guard -->
   <rect x="544" y="170" width="300" height="220" rx="20" fill="#0b2a5b"/>
-  <text x="694" y="238" text-anchor="middle" font-size="27" font-weight="800" fill="#fff">AiRepo</text>
-  <text x="694" y="274" text-anchor="middle" font-size="20" fill="#9fbaf0">ràng buộc theo</text>
-  <text x="694" y="302" text-anchor="middle" font-size="20" fill="#9fbaf0">người đang đăng nhập</text>
-  <text x="694" y="346" text-anchor="middle" font-size="19" fill="#fff">không có tham số userId</text>
+  <text x="694" y="252" text-anchor="middle" font-size="27" font-weight="800" fill="#fff">Khóa theo tài khoản</text>
+  <text x="694" y="296" text-anchor="middle" font-size="20" fill="#9fbaf0">AI chỉ đọc được dữ liệu</text>
+  <text x="694" y="326" text-anchor="middle" font-size="20" fill="#9fbaf0">của người đang hỏi</text>
+  
   <line x1="844" y1="280" x2="928" y2="280" stroke="#1d4ed8" stroke-width="3" marker-end="url(#c)"/>
   <!-- model -->
   <rect x="932" y="170" width="250" height="220" rx="20" fill="#fff4e0" stroke="#b45309" stroke-width="2.6"/>
@@ -375,27 +646,15 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
 
 <!-- 9 AI LÀM ĐƯỢC GÌ -->
 <section class="slide">
-  <div class="kick">Trợ lý AI</div>
-  <h2>18 kỹ năng, hai vai trò</h2>
-  <div class="body">
-    <div class="row">
-      <div class="card fill f1">
-        <h3 style="margin-bottom:18px">Người dùng</h3>
-        <div style="display:flex;flex-wrap:wrap;gap:12px">
-          <span class="chip k">Ghi giao dịch bằng câu</span><span class="chip k">Đọc ảnh hóa đơn</span><span class="chip">Hỏi số dư</span><span class="chip">Tổng kết tháng</span><span class="chip">Kiểm tra ngân sách</span><span class="chip">Gợi ý ngân sách</span><span class="chip">Tiến độ tiết kiệm</span><span class="chip">Tìm giao dịch</span><span class="chip">Mẹo tiết kiệm</span><span class="chip">Hướng dẫn</span><span class="chip">Người dùng mới</span>
-        </div>
-      </div>
-      <div class="card f1">
-        <h3 style="margin-bottom:18px">Quản trị viên</h3>
-        <div style="display:flex;flex-wrap:wrap;gap:12px">
-          <span class="chip k">Tổng quan hệ thống</span><span class="chip k">Soạn thông báo</span><span class="chip">Tra cứu người dùng</span><span class="chip">Đề xuất khóa</span><span class="chip">Phát hiện bất thường</span><span class="chip">Tóm tắt cấu hình</span><span class="chip">Hướng dẫn quản trị</span>
-        </div>
-      </div>
-    </div>
-    <div class="row" style="margin-top:34px;justify-content:center;gap:90px">
-      <div class="stat"><b>3–5s</b><span>mỗi câu trả lời</span></div>
-      <div class="stat"><b>98%</b><span>định tuyến đúng kỹ năng</span></div>
-      <div class="stat"><b>0</b><span>dữ liệu gửi ra ngoài</span></div>
+  <span class="pill rv" style="--i:0">Trợ lý AI</span>
+  <h2 class="rv" style="--i:1">18 kỹ năng, hai vai trò</h2>
+  <div class="bento b9">
+    <div class="shell rv" style="--i:2"><div class="core skc"><div class="skh"><span class="ico "><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/></svg></span><b>Người dùng</b><em>11</em></div><div class="skl two"><div class="sk k"><span class="ski"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg></span>Ghi bằng một câu</div><div class="sk k"><span class="ski"><svg viewBox="0 0 24 24"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"/><path d="M8 10h8M8 13h6"/></svg></span>Đọc ảnh hóa đơn</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2.5"/><path d="M3.5 10h17M16 14.5h1.5"/></svg></span>Hỏi số dư</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span>Tổng kết tháng</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8"/></svg></span>Kiểm tra ngân sách</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 16.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></span>Gợi ý ngân sách</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span>Tiến độ tiết kiệm</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></span>Tìm giao dịch</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></span>Mẹo tiết kiệm</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></span>Hướng dẫn</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="4"/><path d="M3 20c0-3.5 3-6 7-6s7 2.5 7 6M19 8v6M16 11h6"/></svg></span>Người dùng mới</div></div></div></div>
+    <div class="shell dark rv" style="--i:3"><div class="core skc"><div class="skh"><span class="ico inv"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20h6M12 16.5V20"/></svg></span><b>Quản trị viên</b><em>7</em></div><div class="skl"><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span>Tổng quan hệ thống</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6L7 10z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></svg></span>Soạn thông báo</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c2.1.6 3.5 2.4 3.5 5.2"/></svg></span>Tra cứu người dùng</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></span>Đề xuất khóa</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M12 3.5L21.5 20h-19z"/><path d="M12 10v4.5M12 17.2v.1"/></svg></span>Phát hiện bất thường</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Tóm tắt cấu hình</div><div class="sk"><span class="ski"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></span>Hướng dẫn quản trị</div></div></div></div>
+    <div class="st9">
+      <div class="shell rv" style="--i:4"><div class="core s9"><b>3–5s</b><span>mỗi câu trả lời</span></div></div>
+      <div class="shell rv" style="--i:5"><div class="core s9"><b>98%</b><span>chọn đúng kỹ năng</span></div></div>
+      <div class="shell rv" style="--i:6"><div class="core s9"><b>0</b><span>dữ liệu gửi ra ngoài</span></div></div>
     </div>
   </div>
   <div class="foot"><span>TrackerX</span><span>9</span></div>
@@ -471,20 +730,26 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
 <section class="slide">
   <span class="pill rv" style="--i:0">An toàn</span>
   <h2 class="rv" style="--i:1">Bảo mật và quyền riêng tư</h2>
-  <div class="bento b12">
-    <div class="shell dark rv tall" style="--i:2"><div class="core">
-      <span class="ico inv"><svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/><path d="M4 4l16 16"/></svg></span>
-      <h3 class="w">Dữ liệu ở lại hệ thống</h3>
-      <ul class="ul-inv">
-        <li>AI chạy nội bộ, không gọi API ngoài</li>
-        <li>Ảnh hóa đơn đọc xong xóa ngay</li>
-        <li>Nội dung thông báo ngân hàng không rời điện thoại</li>
-        <li>Prompt chỉ chứa dữ liệu của chính người hỏi</li>
-      </ul>
-    </div></div>
-    <div class="shell rv" style="--i:3"><div class="core mini"><span class="ico "><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></span><div><h4>tokenVersion</h4><p>Đổi mật khẩu, bị khóa → mọi phiên cũ hết hiệu lực ngay</p></div></div></div>
-    <div class="shell rv" style="--i:4"><div class="core mini"><span class="ico "><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M16 6.5l2.5 2.5"/></svg></span><div><h4>AES-256-GCM</h4><p>Bí mật cấu hình mã hóa trong CSDL</p></div></div></div>
-    <div class="shell rv" style="--i:5"><div class="core mini"><span class="ico "><svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l4-5"/></svg></span><div><h4>Giới hạn theo ngày</h4><p>Đăng nhập · OTP · tin nhắn AI · ảnh OCR</p></div></div></div>
+  <div class="vault rv" style="--i:2">
+    <div class="vst"><i></i>Đang bảo vệ</div>
+    <div class="vcol">
+      <span class="vlb">Quyền riêng tư</span>
+      <div class="sc rv" style="--i:3"><span class="sci"><svg viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M10 10h4v4h-4zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></span><div><b>AI chạy nội bộ</b><i>không gọi API bên ngoài</i></div><span class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+      <div class="sc rv" style="--i:4"><span class="sci"><svg viewBox="0 0 24 24"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"/><path d="M8 10h8M8 13h6"/></svg></span><div><b>Ảnh đọc xong xóa ngay</b><i>không lưu ảnh hóa đơn</i></div><span class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+      <div class="sc rv" style="--i:5"><span class="sci"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span><div><b>Thông báo ở lại máy</b><i>chỉ gửi số tiền đã tách</i></div><span class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+    </div>
+    <div class="vmid"><svg viewBox="0 0 300 300" class="shd">
+  <circle cx="150" cy="150" r="140" class="ring r3"/><circle cx="150" cy="150" r="110" class="ring r2"/><circle cx="150" cy="150" r="80" class="ring r1"/>
+  <path d="M150 82l52 20v40c0 34-22 60-52 72-30-12-52-38-52-72v-40z" fill="url(#shg)" stroke="#9fd5ff" stroke-width="2"/>
+  <rect x="129" y="140" width="42" height="34" rx="7" fill="#fff"/><path d="M137 140v-9a13 13 0 0 1 26 0v9" fill="none" stroke="#fff" stroke-width="5"/><circle cx="150" cy="155" r="4.5" fill="#0b2a5b"/><path d="M150 158v8" stroke="#0b2a5b" stroke-width="3.5" stroke-linecap="round"/>
+  <defs><linearGradient id="shg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#0b2a5b"/></linearGradient></defs>
+</svg><b>Dữ liệu không rời hệ thống</b><i>AI chỉ thấy dữ liệu của người đang hỏi</i></div>
+    <div class="vcol">
+      <span class="vlb">Bảo mật</span>
+      <div class="sc rv" style="--i:6"><span class="sci"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></span><div><b>Thu hồi phiên tức thì</b><i>đổi mật khẩu → đăng xuất mọi máy</i></div><span class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+      <div class="sc rv" style="--i:7"><span class="sci"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M16 6.5l2.5 2.5"/></svg></span><div><b>Mã hóa AES-256-GCM</b><i>khóa bí mật cấu hình trong CSDL</i></div><span class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+      <div class="sc rv" style="--i:8"><span class="sci"><svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l4-5"/></svg></span><div><b>Giới hạn theo ngày</b><i>đăng nhập · OTP · AI · ảnh OCR</i></div><span class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+    </div>
   </div>
   <div class="foot"><span>TrackerX</span><span>12</span></div>
 </section>
@@ -494,15 +759,15 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
   <span class="pill rv" style="--i:0">Chất lượng</span>
   <h2 class="rv" style="--i:1">Kiểm thử tự động</h2>
   <div class="bento b13">
-    <div class="shell dark rv" style="--i:2"><div class="core tot">
+    <div class="shell dark rv" style="--i:2"><div class="core tot2">
       <span class="kick2">Tổng số ca kiểm thử</span>
-      <b class="huge">1.185</b>
-      <span class="okpill">100% pass</span>
+      <b class="huge2">1.185</b>
+      <span class="okpill">✓ 100% pass</span>
+      <div class="suites"><div><b>1.024</b><span>API end-to-end</span></div><div><b>107</b><span>Flutter unit + widget</span></div><div><b>54</b><span>Playwright admin</span></div></div>
     </div></div>
-    <div class="shell rv" style="--i:3"><div class="core bars">
-      <div class="bar"><div class="bl"><b>1.024</b><span>API end-to-end</span></div><div class="track"><i style="width:100%"></i></div></div>
-      <div class="bar"><div class="bl"><b>107</b><span>Flutter (unit + widget)</span></div><div class="track"><i style="width:10.4%"></i></div></div>
-      <div class="bar"><div class="bl"><b>54</b><span>Playwright admin</span></div><div class="track"><i style="width:5.3%"></i></div></div>
+    <div class="shell rv" style="--i:3"><div class="core clc">
+      <div class="clh"><b>Danh sách kiểm tra</b><span>12 / 12</span></div>
+      <div class="cls"><div class="cl" style="--d:0.50s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Đăng ký · đăng nhập · OTP email</div><div class="cl" style="--d:0.62s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Phân quyền người dùng / admin</div><div class="cl" style="--d:0.74s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Ví · giao dịch · chuyển tiền</div><div class="cl" style="--d:0.86s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Ngân sách · tiết kiệm · định kỳ</div><div class="cl" style="--d:0.98s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Báo cáo và thống kê</div><div class="cl" style="--d:1.10s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Thông báo theo loại</div><div class="cl" style="--d:1.22s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>AI chọn đúng kỹ năng</div><div class="cl" style="--d:1.34s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>AI tạo nháp, chờ xác nhận</div><div class="cl" style="--d:1.46s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Cách ly dữ liệu giữa người dùng</div><div class="cl" style="--d:1.58s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Đọc ảnh OCR</div><div class="cl" style="--d:1.70s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Lắng nghe ngân hàng · chống trùng</div><div class="cl" style="--d:1.82s"><span class="cb"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Giao diện admin trên trình duyệt</div></div>
       <p class="bars-note">CSDL test riêng · AI dùng model giả lập tất định · chạy lại trước mỗi lần merge</p>
     </div></div>
   </div>
@@ -511,20 +776,41 @@ h4{font-size:27px;color:var(--navy);line-height:1.25;letter-spacing:-.01em}
 
 <!-- 14 TRIỂN KHAI -->
 <section class="slide">
-  <div class="kick">Triển khai</div>
-  <h2>Chạy thật, truy cập mọi nơi</h2>
-  <div class="fig">
-<svg viewBox="0 0 1448 420">
-  <defs><marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#1d4ed8"/></marker></defs>
-  <g text-anchor="middle">
-    <rect x="0" y="120" width="300" height="140" rx="18" fill="#eef4ff" stroke="#1d4ed8" stroke-width="2.6"/><text x="150" y="180" font-size="27" font-weight="800" fill="#0b2a5b">APK Android</text><text x="150" y="216" font-size="20" fill="#475569">bản thường · bản đầy đủ</text>
-    <line x1="300" y1="190" x2="400" y2="190" stroke="#1d4ed8" stroke-width="3" marker-end="url(#g)"/>
-    <rect x="404" y="110" width="640" height="160" rx="80" fill="#0b2a5b"/><text x="724" y="182" font-size="34" font-weight="800" fill="#fff">tracker-xt.freepro.online</text><text x="724" y="222" font-size="21" fill="#9fbaf0">/ admin · /api · /docs</text>
-    <line x1="1044" y1="190" x2="1144" y2="190" stroke="#1d4ed8" stroke-width="3" marker-end="url(#g)"/>
-    <rect x="1148" y="120" width="300" height="140" rx="18" fill="#fff4e0" stroke="#b45309" stroke-width="2.6"/><text x="1298" y="180" font-size="27" font-weight="800" fill="#b45309">Máy chủ nhóm</text><text x="1298" y="216" font-size="20" fill="#b45309">API · CSDL · AI · GPU</text>
-  </g>
-  <text x="724" y="360" text-anchor="middle" font-size="25" font-weight="700" fill="#0b2a5b">Cloudflare Tunnel · HTTPS · tự khởi động cùng máy</text>
-</svg>
+  <span class="pill rv" style="--i:0">Triển khai</span>
+  <h2 class="rv" style="--i:1">Chạy thật, truy cập mọi nơi</h2>
+  <div class="s14">
+    <div class="cli rv" style="--i:2"><div class="ph z14"><div class="isl"></div><div class="sbar"><span>9:41</span><span class="sys"><i class="sig"></i><i class="bat"><u></u></i></span></div><div class="hbar"></div><div class="scr">
+  <div class="top"><span class="lgx"><i></i><i></i><i></i><i></i><i></i><i class="l"></i><i></i><i class="l"></i><i></i></span><span class="bell"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span></div>
+  <div class="ttl">Chủ Nhật, 26 tháng 10</div>
+  <div class="crd">
+    <div class="mu sm">Tổng số dư · 4 ví</div>
+    <div class="big">26.022.000đ</div>
+    <div class="trk"><i style="width:62%"></i></div>
+    <div class="mu sm">Ngân sách tháng đã dùng 62%</div>
+  </div>
+  <div class="rowx g" style="margin:10px 0"><span class="btn f">＋ Ghi giao dịch</span><span class="btn o">Chuyển tiền</span></div>
+  <div class="crd">
+    <div class="row"><span class="ci "><svg viewBox="0 0 24 24"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16M8 3.5v2.5M11.5 3.5v2.5"/></svg></span><div class="nm">Cà phê sáng<small>Ăn uống · MoMo</small></div><b class="am">−45.000đ</b></div>
+    <div class="row"><span class="ci "><svg viewBox="0 0 24 24"><path d="M3 4h2.5l2 11h11l2-8H7"/><circle cx="9" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg></span><div class="nm">Bách Hóa Xanh<small>Ăn uống · MB Bank</small></div><b class="am">−125.000đ</b></div>
+  </div>
+  <div class="tbar"><span class="on"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5v9h-5.5v-5.5h-5V20H4z"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.5M4 4v4.5h4.5M12 8v4.5l3 2"/></svg></span><span class="pl"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M5 20V10M10 20V5M15 20v-7M20 20v-4M3 20.5h18"/></svg></span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></span></div>
+</div></div><div class="brw"><div class="brt"><i></i><i></i><i></i><span><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>tracker-xt.freepro.online</span></div>
+  <div class="brb"><div class="side"><span class="lgx sm"><i></i><i></i><i></i><i></i><i></i><i class="l"></i><i></i><i class="l"></i><i></i></span><u class="on"></u><u></u><u></u><u></u><u></u></div>
+  <div class="main"><b>Tổng quan</b><div class="kp"><div><small>Người dùng</small>128</div><div><small>Giao dịch hôm nay</small>342</div><div><small>AI trả lời</small>1.2k</div></div>
+  <div class="cht"><i style="height:40%"></i><i style="height:55%"></i><i style="height:35%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:50%"></i><i style="height:75%"></i><i style="height:90%"></i><i style="height:65%"></i></div></div></div></div>
+      <div class="clab"><span><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>APK Android</span><span><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20h6M12 16.5V20"/></svg>Admin web</span></div></div>
+    <div class="arw rv" style="--i:3"><i></i></div>
+    <div class="tun rv" style="--i:4">
+      <div class="tci"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.5 5.4 3.5 8.5s-1 5.9-3.5 8.5c-2.5-2.6-3.5-5.4-3.5-8.5s1-5.9 3.5-8.5z"/></svg></div>
+      <b>tracker-xt.freepro.online</b>
+      <div class="tpills"><span><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>HTTPS</span><span>/api</span><span>/admin</span></div>
+      <i>Cloudflare Tunnel</i>
+    </div>
+    <div class="arw rv" style="--i:5"><i></i></div>
+    <div class="srv rv" style="--i:6">
+      <div class="srh"><span class="ico "><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="2"/><rect x="4" y="13" width="16" height="7" rx="2"/><path d="M8 7.5h.1M8 16.5h.1M12 7.5h4M12 16.5h4"/></svg></span><div><b>Máy chủ nhóm</b><i>một laptop · GPU 6 GB</i></div></div>
+      <div class="srg"><div><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><b>API</b><i>NestJS</i></div><div><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7.5" ry="2.8"/><path d="M4.5 6v12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V6M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/></svg><b>CSDL</b><i>PostgreSQL</i></div><div><svg viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M10 10h4v4h-4zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><b>AI</b><i>Ollama</i></div><div><svg viewBox="0 0 24 24"><path d="M12 3v8M7 6.5a7 7 0 1 0 10 0"/></svg><b>Tự chạy</b><i>systemd</i></div></div>
+    </div>
   </div>
   <div class="foot"><span>TrackerX</span><span>14</span></div>
 </section>
