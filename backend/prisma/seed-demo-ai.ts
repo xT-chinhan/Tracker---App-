@@ -117,8 +117,9 @@ async function main() {
   const wallets = await prisma.wallet.findMany({ where: { userId: demo.id } });
   const wal = (name: string) => wallets.find((w) => w.name === name)!.id;
   const log: string[] = [];
-  // Nạp MoMo từ MB Bank trước khi bắt đầu dùng MoMo cho cà phê (ví MoMo của showcase vốn ít tiền)
-  await app.get(TransfersService).create(demo.id, { fromWalletId: wal('MB Bank'), toWalletId: wal('MoMo'), amount: 500_000, occurredAt: new Date(Date.now() - 22 * DAY).toISOString(), note: 'Nạp MoMo' } as any);
+  // Nạp MoMo từ Techcombank trước khi bắt đầu dùng MoMo cho cà phê (ví MoMo của showcase vốn ít tiền)
+  await app.get(TransfersService).create(demo.id, { fromWalletId: wal('Techcombank'), toWalletId: wal('MoMo'), amount: 300_000, occurredAt: new Date(Date.now() - 21 * DAY).toISOString(), note: 'Nạp MoMo' } as any);
+  await app.get(TransfersService).create(demo.id, { fromWalletId: wal('Techcombank'), toWalletId: wal('Tiền mặt'), amount: 500_000, occurredAt: new Date(Date.now() - 21 * DAY + 3600_000).toISOString(), note: 'Rút ATM' } as any);
 
   /* ======================= demo@thuchi.vn — model thật ======================= */
   llms.get = realGet;
@@ -143,14 +144,14 @@ async function main() {
     [21, 12, 'Ghi chi tiêu', [{ say: 'trưa cơm 55k, gửi xe 5k' }]],
     [20, 8, 'Cà phê sáng', [{ say: 'cf 45k', patch: toMomo }]],
     [19, 8, 'Cà phê', [{ say: 'cf 39k', patch: toMomo }]],
-    [17, 20, 'Gửi tiền nhà', [{ say: 'gửi mẹ 300k qua MB Bank', patch: toFamily }]],
-    [14, 21, 'Gửi mẹ tiền chợ', [{ say: 'gửi mẹ 200k qua MB Bank', patch: toFamily }]],
+    [17, 20, 'Gửi tiền nhà', [{ say: 'gửi mẹ 150k qua MB Bank', patch: toFamily }]],
+    [14, 21, 'Gửi mẹ tiền chợ', [{ say: 'gửi mẹ 100k qua MB Bank', patch: toFamily }]],
     [12, 19, 'Hỏi ngân sách', [{ say: 'ăn uống tháng này còn bao nhiêu', reroute: { unless: 'kiem-tra-ngan-sach', to: 'kiem-tra-ngan-sach' }, thumbs: 1 }]],
     [10, 12, 'Ghi trưa', [{ say: 'cf 35k, grab 42k', patch: (it) => (/^c/i.test(it.title) ? cafe(it) : null) }]],
-    [9, 20, 'Gửi mẹ', [{ say: 'gửi mẹ 250k qua MB Bank', patch: toFamily }]],
+    [9, 20, 'Gửi mẹ', [{ say: 'gửi mẹ 120k qua MB Bank', patch: toFamily }]],
     [7, 21, 'Tổng kết', [{ say: 'tổng kết tháng này giúp mình', thumbs: 1 }, { say: 'mẹo tiết kiệm tiền cà phê', thumbs: -1 }]],
     [3, 8, 'Cà phê', [{ say: 'cf 45k', patch: cafe }]],
-    [1, 20, 'Gửi mẹ', [{ say: 'gửi mẹ 300k qua MB Bank' }]],
+    [1, 20, 'Gửi mẹ', [{ say: 'gửi mẹ 150k qua MB Bank' }]],
   ];
   for (const [daysAgo, hour, title, steps] of plan) {
     const since = new Date();

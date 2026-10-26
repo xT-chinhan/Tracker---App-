@@ -816,6 +816,18 @@ function makeShowcase(): UserPlan {
     { label: 'Grab', title: 'Grab đi làm', amount: 38_000, cat: 'Di chuyển', wallet: 'ew' },
     { label: 'Gửi xe', title: 'Gửi xe', amount: 5_000, cat: 'Di chuyển', wallet: 'cash' },
   ];
+  // Tháng này: bỏ bớt khoản lẻ lớn nhất (dữ liệu sinh ngẫu nhiên vượt xa ngân sách), giữ ≤ 1,2tr khoản lẻ; phần hiệu chỉnh
+  // trong main() (giày + số dư ~26tr) và dữ liệu demo AI (~1,3tr) đưa tổng chi về ~60% ngân sách 14tr như mockup.
+  const curStart = dayStart(`${CUR_MONTH}-01`);
+  const cur = u.events.filter((e): e is TxEv => e.k === 'tx' && e.type === 'EXPENSE' && e.at >= curStart && !e.rule);
+  let spent = cur.reduce((s, e) => s + e.amount, 0);
+  const drop = new Set<Ev>();
+  for (const e of [...cur].sort((x, y) => y.amount - x.amount)) {
+    if (spent <= 1_200_000) break;
+    drop.add(e);
+    spent -= e.amount;
+  }
+  u.events = u.events.filter((e) => !drop.has(e));
   return u;
 }
 
@@ -883,11 +895,11 @@ async function main() {
 
     let overrides: Map<string, number> | undefined;
     if (u.showcase) {
-      // hiệu chỉnh: chi tháng này ~60% ngân sách 14tr, tổng số dư ~26tr phân bổ như mockup
+      // hiệu chỉnh: chi tháng này ~7,2tr (+ ~1,3tr dữ liệu demo AI ≈ 60% ngân sách 14tr), tổng số dư ~26tr phân bổ như mockup
       const { start } = monthRange(CUR_MONTH);
       const spentCur = () => sim.rows.tx.filter((t) => t.type === 'EXPENSE' && t.occurredAt >= start).reduce((s, t) => s + Number(t.amount), 0);
       const shoeDay = addDays(TODAY, -Math.min(2, dom(TODAY) - 1));
-      const need = Math.round((8_400_000 - spentCur()) / 10_000) * 10_000;
+      const need = Math.round((7_200_000 - spentCur()) / 10_000) * 10_000;
       // luôn có 1 khoản mua sắm làm ngân sách "Mua sắm" vượt (như mockup)
       addEvent(u, { k: 'tx', at: at(shoeDay, 20, 40), type: 'EXPENSE', cat: 'Mua sắm', amount: 1_690_000, title: 'Giày chạy bộ Nike Pegasus', pref: ['bank'], note: 'Sale cuối mùa' });
       if (need - 1_690_000 >= 300_000) addEvent(u, { k: 'tx', at: at(addDays(shoeDay, -1), 17, 30), type: 'EXPENSE', cat: 'Sức khỏe', amount: Math.min(need - 1_690_000, 3_000_000), title: 'Khám răng, cạo vôi', pref: ['bank'], note: 'Nha khoa Kim' });
