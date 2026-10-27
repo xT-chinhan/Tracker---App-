@@ -13,7 +13,8 @@
     "db:seed:demo:ai": "npm --prefix backend run db:seed:demo:ai",
     "demo:verify": "npm --prefix backend run demo:verify",
     "docker:app": "docker compose --profile app up -d --build",
-    "docker:down": "docker compose --profile app down"
+    "docker:down": "docker compose --profile app down",
+    "dev:tunnel": "docker compose up -d --wait db && concurrently -k -n api,admin -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix admin run dev -- --host 127.0.0.1 --port 5173 --strictPort\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
