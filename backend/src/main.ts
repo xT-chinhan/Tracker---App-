@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { PrismaExceptionFilter } from './common/prisma-exception.filter';
 import { APP_VERSION } from './health/health.module';
+import { decorateDocument, SWAGGER_UI_OPTIONS } from './openapi-docs';
 
 // Tiền lưu BigInt trong DB, trả ra JSON dạng number (an toàn tới ~9 triệu tỷ).
 (BigInt.prototype as unknown as { toJSON: () => number }).toJSON = function (this: bigint) {
@@ -26,9 +27,20 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
   app.useGlobalFilters(new PrismaExceptionFilter(app.get(HttpAdapterHost).httpAdapter));
 
-  const doc = new DocumentBuilder().setTitle('App Tracker API').setVersion(APP_VERSION).addBearerAuth().build();
-  SwaggerModule.setup('docs', app, () => SwaggerModule.createDocument(app, doc), {
+  // Swagger: không cho CDN (Cloudflare) / trình duyệt giữ bản cũ của tài liệu
+  app.use((req: { url: string }, res: { setHeader(k: string, v: string): void }, next: () => void) => {
+    if (req.url.startsWith('/docs') || req.url.startsWith('/api/docs')) res.setHeader('Cache-Control', 'no-store');
+    next();
+  });
+  const doc = new DocumentBuilder().setTitle('TrackerX API').setVersion(APP_VERSION).addBearerAuth().build();
+  SwaggerModule.setup('docs', app, () => decorateDocument(SwaggerModule.createDocument(app, doc)), {
     jsonDocumentUrl: 'docs/openapi.json',
+    ...SWAGGER_UI_OPTIONS,
+  });
+  // bản sao dưới /api/docs (cùng nội dung) — đi qua cùng đường tunnel với API
+  SwaggerModule.setup('api/docs', app, () => decorateDocument(SwaggerModule.createDocument(app, doc)), {
+    jsonDocumentUrl: 'api/docs/openapi.json',
+    ...SWAGGER_UI_OPTIONS,
   });
 
   await app.listen(process.env.PORT ?? 3000);
