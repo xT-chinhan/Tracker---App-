@@ -285,7 +285,15 @@ export class PhoneController {
 
   /** Máy cổng (app chuyển tiếp SMS trên Android) gọi khi nhận tin. Header x-gateway-key = khóa trong Cấu hình */
   @Public() @ApiHeader({ name: 'x-gateway-key', required: true }) @Post('sms-gateway/inbound') @HttpCode(200)
-  inbound(@Headers('x-gateway-key') key: string | undefined, @Req() req: Request, @Body() dto: InboundSmsDto) {
+  inbound(@Headers('x-gateway-key') key: string | undefined, @Req() req: Request, @Body() body: Record<string, unknown>) {
+    // Mỗi app chuyển tiếp gửi kèm trường riêng (sentStamp, sim, battery…) → nhận body thô, chỉ lấy các trường cần, bỏ phần thừa
+    const str = (v: unknown) => (typeof v === 'string' ? v : typeof v === 'number' ? String(v) : undefined);
+    const b = body && typeof body === 'object' && !Array.isArray(body) ? body : {};
+    const dto: InboundSmsDto = {};
+    for (const k of ['from', 'sender', 'phone', 'phoneNumber', 'text', 'message', 'body', 'content'] as const) {
+      const v = str(b[k]);
+      if (v !== undefined) dto[k] = v.slice(0, 2000);
+    }
     return this.phone.inbound(key ?? (req.query.key as string | undefined), dto);
   }
 }
