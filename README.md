@@ -20,7 +20,8 @@ Nói một câu, chụp một tấm, hoặc không làm gì cả — giao dịch
 [**Xem video**](https://github.com/xT-chinhan/Tracker---App-/releases/download/v1.0.0/TrackerX-intro-60s.mp4) ·
 [**Tải APK**](https://github.com/xT-chinhan/Tracker---App-/releases/latest) ·
 [**Trang quản trị**](https://tracker-xt.freepro.online) ·
-[**Tài liệu API**](https://tracker-xt.freepro.online/api/docs)
+[**Tài liệu API**](https://tracker-xt.freepro.online/api/docs) ·
+[**Báo cáo PDF**](docs/bao-cao/Bao-cao-Lap-trinh-di-dong.pdf)
 
 </div>
 
@@ -187,6 +188,8 @@ Dữ liệu demo: ~40 người dùng, 12 tháng, ~41.000 giao dịch, ngân sác
 
 | Tài liệu | Nội dung |
 |---|---|
+| [**Báo cáo đồ án (PDF, 59 trang)**](docs/bao-cao/Bao-cao-Lap-trinh-di-dong.pdf) | Báo cáo môn Lập trình di động: phân tích, thiết kế, cài đặt, kiểm thử |
+| [Slide thuyết trình (HTML)](docs/thuyet-trinh/index.html) | Bài thuyết trình 16 trang — tải về mở bằng trình duyệt |
 | [backend/README.md](backend/README.md) | Nghiệp vụ, endpoint, biến môi trường, dữ liệu demo |
 | [docs/CAI-DAT-AI.md](docs/CAI-DAT-AI.md) | Cài Ollama và model cho trợ lý AI |
 | [docs/AI-DECISIONS.md](docs/AI-DECISIONS.md) | Các quyết định thiết kế của trợ lý AI |
