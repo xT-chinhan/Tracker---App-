@@ -423,7 +423,7 @@ export async function aiTests({ req, check, group, newUser, sleep, tAd, S, ADMIN
       await confirm(A.token, r.data.draft.id, { items: [{ ...r.data.draft.payload.items[0], walletId: momoA, walletName: 'MoMo' }] });
     }
     r = await req('GET', '/ai/memory', { token: A.token });
-    const memA = r.data.find((m) => m.key === 'wallet.default');
+    const memA = r.data.find((m) => m.code === 'wallet.default');
     check('A memory: wallet.default = MoMo', r.status === 200 && memA?.value === 'MoMo', r.data);
     r = await say(A.token, cA.id, 'phở 50k');
     check('next draft without wallet uses remembered MoMo', r.data.draft.payload.items[0].walletId === momoA, r.data.draft.payload.items[0]);

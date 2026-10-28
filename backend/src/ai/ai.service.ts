@@ -90,6 +90,13 @@ export function messageView(m: AiMessage & { draft?: AiDraft | null }) {
   };
 }
 
+/** Tên kỹ năng hiển thị cho người dùng (luật định tuyến đã học) */
+const SKILL_LABEL: Record<string, string> = {
+  'ghi-giao-dich': 'Ghi giao dịch', 'doc-hoa-don': 'Đọc ảnh hóa đơn', 'hoi-so-du': 'Hỏi số dư', 'tong-ket-thang': 'Tổng kết tháng',
+  'kiem-tra-ngan-sach': 'Kiểm tra ngân sách', 'tien-do-tiet-kiem': 'Tiến độ tiết kiệm', 'tim-giao-dich': 'Tìm giao dịch',
+  'dat-ngan-sach': 'Đặt ngân sách', 'goi-y-ngan-sach': 'Gợi ý ngân sách', 'meo-tiet-kiem': 'Mẹo tiết kiệm', 'huong-dan': 'Hướng dẫn',
+};
+
 export type AiEvent = (event: string, data: unknown) => void;
 
 @Injectable()
@@ -390,8 +397,30 @@ export class AiService {
     return this.skills.list(p);
   }
 
+  /**
+   * "Trợ lý đã học về bạn": trí nhớ (ví hay dùng…) + luật riêng đã bật ("cf" → Ăn uống).
+   * key/source là chữ hiển thị cho người dùng; code = khóa gốc (wallet.default, rule:category…).
+   */
   async memory(p: Principal) {
-    return (await this.store.for(p).listMemory()).map((m) => ({ id: m.id, key: m.key, value: m.value, helpful: m.helpful, harmful: m.harmful, source: m.source, lastUsedAt: m.lastUsedAt, updatedAt: m.updatedAt }));
+    const repo = this.store.for(p);
+    const [mem, rules] = await Promise.all([repo.listMemory(), repo.ownActiveRules()]);
+    const MEM_LABEL: Record<string, string> = { 'wallet.default': 'Ví hay dùng' };
+    const items = mem
+      .filter((m) => !m.key.endsWith('.pending'))
+      .map((m) => ({
+        id: m.id, kind: 'memory', code: m.key, key: MEM_LABEL[m.key] ?? m.key, value: m.value,
+        source: m.key === 'wallet.default' ? `Học từ ${m.helpful} lần bạn xác nhận / đổi ví` : 'Từ thói quen của bạn',
+        helpful: m.helpful, harmful: m.harmful, lastUsedAt: m.lastUsedAt, createdAt: m.createdAt, updatedAt: m.updatedAt,
+      }));
+    const skillLabel = (name: string) => SKILL_LABEL[name] ?? this.skills.get(name)?.description ?? name;
+    for (const r of rules) {
+      items.push({
+        id: r.id, kind: 'rule', code: `rule:${r.kind}`, key: r.pattern, value: r.kind === 'route' ? skillLabel(r.value) : r.value,
+        source: r.kind === 'route' ? 'Bạn đã chỉ cách hiểu câu này ("Ý tôi là…")' : `Đã học sau ${r.support} lần bạn xác nhận`,
+        helpful: r.support, harmful: 0, lastUsedAt: null, createdAt: r.createdAt, updatedAt: r.updatedAt,
+      });
+    }
+    return items;
   }
 
   deleteMemory(p: Principal, id: string) {

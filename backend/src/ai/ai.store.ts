@@ -230,7 +230,20 @@ export class AiRepo {
 
   async deleteMemory(id: string) {
     const { count } = await this.db.aiMemory.deleteMany({ where: { id, userId: this.uid } });
-    if (!count) throw new NotFoundException('Không tìm thấy mục trí nhớ');
+    if (count) return;
+    // mục "đã học" trong danh sách trí nhớ có thể là luật riêng của user → quên luật đó
+    const r = await this.db.aiRule.deleteMany({ where: { id, userId: this.uid, scope: 'USER' } });
+    if (!r.count) throw new NotFoundException('Không tìm thấy mục trí nhớ');
+  }
+
+  /** Luật riêng đang bật của user (hiện trong "Trợ lý đã học về bạn") */
+  ownActiveRules() {
+    return this.db.aiRule.findMany({
+      where: { userId: this.uid, scope: 'USER', status: 'ACTIVE' },
+      orderBy: [{ support: 'desc' }, { updatedAt: 'desc' }],
+      take: 50,
+      select: { id: true, kind: true, pattern: true, value: true, support: true, createdAt: true, updatedAt: true },
+    });
   }
 
   /* ---------- ví dụ ---------- */
