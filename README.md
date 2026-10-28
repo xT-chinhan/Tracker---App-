@@ -70,39 +70,15 @@ Ghi chép chi tiêu luôn bị bỏ dở: nhập tay mệt, tiền nằm rải r
 ## 🏗️ Kiến trúc
 
 ```mermaid
-flowchart TB
-  subgraph Client["01 · Giao diện"]
-    APP["📱 App Flutter<br/>Android / iOS"]
-    LIS["🔔 Lắng nghe ngân hàng<br/>NotificationListener (Kotlin)"]
-    ADM["🖥️ Admin Web<br/>React 19 · Vite"]
-  end
-  subgraph Edge["02 · Kết nối"]
-    CF["Cloudflare Tunnel · HTTPS · JWT"]
-    SMTP["Gmail SMTP<br/>(OTP email)"]
-  end
-  subgraph API["03 · Máy chủ API — NestJS 11"]
-    MOD["Tài khoản · Ví · Giao dịch · Ngân sách · Tiết kiệm<br/>Định kỳ · Thông báo · Thống kê · Quản trị · Cấu hình"]
-  end
-  subgraph AI["04 · Trí tuệ nhân tạo (chạy nội bộ)"]
-    ORC["Bộ điều phối<br/>router luật + kNN · 18 kỹ năng · nháp"]
-    OCR["OCR hóa đơn"]
-    LRN["Học từ phản hồi<br/>(02:30 hằng đêm)"]
-    OLL["Ollama · qwen3.5:4b + bge-m3"]
-  end
-  DB[("05 · PostgreSQL 16<br/>Prisma ORM")]
-
-  APP --> CF
-  LIS --> APP
-  ADM --> CF
-  CF --> MOD
-  MOD --> ORC
-  ORC --> OCR
-  ORC --> LRN
-  ORC --> OLL
-  OCR --> OLL
-  MOD --> DB
-  LRN --> DB
-  MOD -.-> SMTP
+flowchart LR
+  APP["📱 App Flutter<br/>+ 🔔 lắng nghe ngân hàng"] --> CF
+  ADM["🖥️ Admin Web<br/>React 19"] --> CF
+  CF["☁️ Cloudflare Tunnel<br/>HTTPS · JWT"] --> API
+  API["⚙️ API NestJS 11<br/>ví · giao dịch · ngân sách<br/>tiết kiệm · định kỳ · quản trị"] --> DB[("🗄️ PostgreSQL 16<br/>Prisma")]
+  API --> AI["🤖 Trợ lý AI<br/>router · 18 kỹ năng<br/>OCR · tự học"]
+  AI --> OLL["🧠 Ollama nội bộ<br/>qwen3.5:4b · bge-m3"]
+  AI --> DB
+  API -.-> SMTP["✉️ Gmail SMTP<br/>OTP email"]
 ```
 
 **Luồng "nói một câu":** câu của người dùng → *router* (luật đã học + kNN embedding bge-m3) chọn kỹ năng → *parser tiếng Việt* bằng code bóc số tiền, ngày, ví → LLM chỉ chọn danh mục và đặt tên theo **JSON schema** → code kiểm tra lại → **nháp** chờ người dùng xác nhận. Số tiền và ngày luôn do code quyết định, không để model "bịa".
