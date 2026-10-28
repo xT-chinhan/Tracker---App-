@@ -223,7 +223,7 @@ Dữ liệu demo: ~40 người dùng, 12 tháng, ~41.000 giao dịch, ngân sác
 
 ## 👥 Nhóm thực hiện
 
-Đồ án môn **Lập trình di động** — Trường Đại học Công nghệ TP.HCM (**HUTECH**) · Nhóm **NgọngNL** · Lớp 23DTHC3
+Đồ án môn **Lập trình di động** — Trường Đại học Công nghệ TP.HCM (**HUTECH**) · Nhóm **NgọngNL** · Lớp 23DTHC3<br>
 Giảng viên hướng dẫn: **Thầy Nguyễn Mạnh Hùng**
 
 | Thành viên |
