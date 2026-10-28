@@ -1,156 +1,244 @@
-# TrackerX — Quản lý thu chi cá nhân
+<div align="center">
 
-Nền tảng giúp người Việt ghi chép thu chi hằng ngày: nhiều ví (tiền mặt, ngân hàng, ví điện tử), chuyển tiền giữa ví, ngân sách tháng có cảnh báo 80% / 100%, mục tiêu tiết kiệm, giao dịch định kỳ, mẫu nhập nhanh, báo cáo và dự báo. Người dùng dùng app di động; quản trị viên dùng trang admin web.
+<img src="design/brand/trackerx/c-grid/icon.svg" width="96" alt="TrackerX">
 
-## Kiến trúc
+# TrackerX
 
+**Quản lý thu chi cá nhân, tích hợp trợ lý AI chạy nội bộ.**<br>
+Nói một câu, chụp một tấm, hoặc không làm gì cả — giao dịch tự vào sổ.
+
+*Personal finance tracker with an on-premise AI assistant, receipt OCR and bank-notification auto-recording.*
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.44-02569B?logo=flutter&logoColor=white)](mobile/)
+[![NestJS](https://img.shields.io/badge/NestJS-11-E0234E?logo=nestjs&logoColor=white)](backend/)
+[![React](https://img.shields.io/badge/React-19-20232A?logo=react&logoColor=61DAFB)](admin/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](docker-compose.yml)
+[![Ollama](https://img.shields.io/badge/AI-Ollama%20·%20qwen3.5-111111)](ai/)
+[![Tests](https://img.shields.io/badge/tests-1.185%20passing-1F8A4C)](#-kiểm-thử)
+[![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+
+[**Xem video**](https://github.com/xT-chinhan/Tracker---App-/releases/download/v1.0.0/TrackerX-intro-60s.mp4) ·
+[**Tải APK**](https://github.com/xT-chinhan/Tracker---App-/releases/latest) ·
+[**Trang quản trị**](https://tracker-xt.freepro.online) ·
+[**Tài liệu API**](https://tracker-xt.freepro.online/api/docs)
+
+</div>
+
+---
+
+## 🎬 Giới thiệu
+
+<div align="center">
+
+<a href="https://github.com/xT-chinhan/Tracker---App-/releases/download/v1.0.0/TrackerX-intro-60s.mp4">
+  <img src="docs/media/demo.gif" width="720" alt="TrackerX demo">
+</a>
+
+<sub>Trích đoạn video giới thiệu · <a href="https://github.com/xT-chinhan/Tracker---App-/releases/download/v1.0.0/TrackerX-intro-60s.mp4">xem bản đầy đủ 60 giây (MP4)</a></sub>
+
+</div>
+
+Ghi chép chi tiêu luôn bị bỏ dở: nhập tay mệt, tiền nằm rải rác ở ngân hàng, ví điện tử, tiền mặt, còn nhờ AI trên mạng thì lộ dữ liệu tài chính. **TrackerX** giải bài toán đó bằng ba cách ghi giao dịch gần như không tốn công, và một trợ lý AI chạy hoàn toàn trên máy chủ của nhóm.
+
+<div align="center">
+  <img src="docs/media/screens.jpg" width="100%" alt="Giao diện app TrackerX">
+</div>
+
+## ✨ Tính năng nổi bật
+
+| | Tính năng | Mô tả |
+|---|---|---|
+| 💬 | **Nói một câu** | Gõ *"cf 45k hôm qua, trưa cơm 55k"* → AI tách từng khoản, đoán danh mục và ví theo thói quen của bạn, tạo **nháp** — chỉ lưu khi bạn xác nhận. |
+| 📷 | **Chụp một tấm** | Đọc hóa đơn và ảnh chuyển khoản (OCR bằng model vision nội bộ): số tiền, nơi bán / người nhận, tự biết **thu hay chi**. Ảnh đọc xong là xóa, không lưu trên máy chủ. |
+| 🔔 | **Không làm gì cả** | App Android lắng nghe thông báo ngân hàng / ví điện tử và **tự ghi vào sổ**, chống ghi trùng giữa thông báo app và SMS, có nút hoàn tác. |
+| 🧠 | **AI tự học thói quen** | Xác nhận / sửa nháp, "Ý tôi là…", 👍/👎 đều là tín hiệu học. Luật riêng bật sau 3 lần đúng (≥85%); ban đêm gom thành luật chung **ẩn danh** (≥5 người), qua cổng kiểm định hồi quy rồi mới áp dụng. |
+| 🔒 | **Riêng tư theo thiết kế** | Mỗi người dùng là một phiên AI riêng — mọi truy vấn dữ liệu AI gắn với người đang đăng nhập, prompt chỉ chứa dữ liệu của chính người hỏi. Không gọi API AI bên ngoài. |
+| 💰 | **Quản lý tài chính đầy đủ** | Nhiều ví, chuyển tiền, ngân sách tháng (cảnh báo 80% / 100%), mục tiêu tiết kiệm, giao dịch định kỳ, mẫu nhập nhanh, báo cáo, thông báo theo loại. |
+| 🛠️ | **Trang quản trị** | Tổng quan hệ thống, quản lý người dùng, cấu hình runtime (AI, OCR, SMTP, giới hạn…), **Trung tâm học AI** duyệt luật chung, trợ lý AI cho admin. |
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/media/admin-overview.jpg" alt="Trang quản trị — Tổng quan"></td>
+    <td width="50%"><img src="docs/media/admin-learning.jpg" alt="Trung tâm học AI"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Admin · Tổng quan hệ thống</sub></td>
+    <td align="center"><sub>Admin · Trung tâm học AI (luật chung chờ duyệt)</sub></td>
+  </tr>
+</table>
+
+## 🏗️ Kiến trúc
+
+```mermaid
+flowchart TB
+  subgraph Client["01 · Giao diện"]
+    APP["📱 App Flutter<br/>Android / iOS"]
+    LIS["🔔 Lắng nghe ngân hàng<br/>NotificationListener (Kotlin)"]
+    ADM["🖥️ Admin Web<br/>React 19 · Vite"]
+  end
+  subgraph Edge["02 · Kết nối"]
+    CF["Cloudflare Tunnel · HTTPS · JWT"]
+    SMTP["Gmail SMTP<br/>(OTP email)"]
+  end
+  subgraph API["03 · Máy chủ API — NestJS 11"]
+    MOD["Tài khoản · Ví · Giao dịch · Ngân sách · Tiết kiệm<br/>Định kỳ · Thông báo · Thống kê · Quản trị · Cấu hình"]
+  end
+  subgraph AI["04 · Trí tuệ nhân tạo (chạy nội bộ)"]
+    ORC["Bộ điều phối<br/>router luật + kNN · 18 kỹ năng · nháp"]
+    OCR["OCR hóa đơn"]
+    LRN["Học từ phản hồi<br/>(02:30 hằng đêm)"]
+    OLL["Ollama · qwen3.5:4b + bge-m3"]
+  end
+  DB[("05 · PostgreSQL 16<br/>Prisma ORM")]
+
+  APP --> CF
+  LIS --> APP
+  ADM --> CF
+  CF --> MOD
+  MOD --> ORC
+  ORC --> OCR
+  ORC --> LRN
+  ORC --> OLL
+  OCR --> OLL
+  MOD --> DB
+  LRN --> DB
+  MOD -.-> SMTP
 ```
-                ┌──────────────────────────┐
-  App mobile    │  Flutter (dự kiến)       │──┐
-  (người dùng)  │  design/mockup, tokens.md│  │
-                └──────────────────────────┘  │  HTTPS / JSON, JWT
-                ┌──────────────────────────┐  │
-  Admin web     │  admin/  Vite + React    │──┤
-  (quản trị)    │  shadcn/ui, TanStack     │  │   (Docker: nginx phục vụ tĩnh,
-                └──────────────────────────┘  │    /api proxy => cùng origin)
-                                              ▼
-                ┌───────────────────────────────────────────┐
-                │ backend/  NestJS 11 + Prisma 6 (/api)     │
-                │ auth · ví · giao dịch · chuyển tiền ·      │
-                │ ngân sách · tiết kiệm · định kỳ (cron) ·   │
-                │ thông báo · thống kê · CSV · admin         │
-                └───────────────────────┬───────────────────┘
-                                        ▼
-                               PostgreSQL 16 (Docker)
-```
 
-| Thành phần | Thư mục | Công nghệ | Trạng thái | Tài liệu |
-|---|---|---|---|---|
-| Backend API | `backend/` | NestJS 11, Prisma 6, PostgreSQL 16 | v1 | [backend/README.md](backend/README.md) |
-| Admin web | `admin/` | Vite, React 19, Tailwind 4, shadcn/ui, Recharts | v1 | [admin/README.md](admin/README.md) |
-| Thiết kế | `design/` | Mockup HTML đã duyệt (mobile 25 màn, admin), `tokens.md`, `DESIGN.md` | Đã duyệt | [design/DESIGN.md](design/DESIGN.md) |
-| App mobile | — | Flutter | Dự kiến | xem Lộ trình |
+**Luồng "nói một câu":** câu của người dùng → *router* (luật đã học + kNN embedding bge-m3) chọn kỹ năng → *parser tiếng Việt* bằng code bóc số tiền, ngày, ví → LLM chỉ chọn danh mục và đặt tên theo **JSON schema** → code kiểm tra lại → **nháp** chờ người dùng xác nhận. Số tiền và ngày luôn do code quyết định, không để model "bịa".
 
-## Chạy nhanh (3 lệnh)
+## 🧰 Công nghệ
 
-Cần Node 22+, npm, Docker (compose v2).
-
-```bash
-npm run setup     # cài dependency, tạo .env, bật PostgreSQL (Docker :5433), migrate, seed, nạp dữ liệu demo (~30s)
-npm run dev       # API http://localhost:3000/api (Swagger /docs) + Admin http://localhost:5173
-npm run test      # toàn bộ kiểm thử (backend e2e + admin e2e) trên DB test riêng có dữ liệu demo
-```
-
-`npm run setup` chạy lại được (không ghi đè `.env` đã có, seed idempotent). Lần đầu muốn đổi cổng / tên DB: `DB_PORT=5543 API_DB=tracker2 API_PORT=3100 npm run setup`.
-
-| Lệnh gốc | Việc |
+| Tầng | Công nghệ |
 |---|---|
-| `npm run setup` | Như trên |
-| `npm run dev` | Bật DB nếu chưa chạy, chạy backend (watch) + admin (Vite) cùng lúc |
-| `npm run test` | Xem [Kiểm thử](#kiểm-thử) |
-| `npm run build` | Build backend (`backend/dist`) + admin (`admin/dist`) |
-| `npm run db:seed:demo` | Nạp lại dữ liệu demo (chỉ user demo) |
-| `npm run demo:verify` | Kiểm tra bất biến dữ liệu demo qua API đang chạy |
-| `npm run docker:app` / `docker:down` | Bật / tắt stack Docker đầy đủ |
+| **Mobile** | Flutter 3.44 · Dart 3.12 · Riverpod · go_router · Dio · Freezed · Kotlin (NotificationListener) |
+| **Backend** | NestJS 11 · TypeScript · Prisma 6 · PostgreSQL 16 · JWT · Swagger / OpenAPI |
+| **Admin** | React 19 · Vite · Tailwind 4 · shadcn/ui · TanStack Query · Recharts |
+| **AI** | Ollama · qwen3.5:4b (chat + vision) · bge-m3 (embedding) · kNN · JSON schema |
+| **Vận hành** | Docker Compose · Cloudflare Tunnel · systemd · Playwright · e2e API |
 
-## Tài khoản demo
+## 🚀 Bắt đầu nhanh
 
-| Tài khoản | Mật khẩu | Ghi chú |
-|---|---|---|
-| `admin@thuchi.vn` | `admin123` | Admin web (đổi trong `.env`: `ADMIN_EMAIL` / `ADMIN_PASSWORD`) |
-| `demo@thuchi.vn` | `demo123` | Nguyễn Minh Anh — dữ liệu khớp mockup mobile: 4 ví tổng 26.022.000đ, chi tháng này ~60% ngân sách 14 triệu, 3 mục tiêu tiết kiệm, 5 định kỳ, mẫu Cà phê 45k / Cơm trưa 55k / Grab 38k |
-| `<tên>@demo.thuchi.vn` | `demo123` | ~39 user khác (vd `hung.vu89@demo.thuchi.vn`), 3 bị khóa, 1 là admin (`bao.tran91@demo.thuchi.vn`) |
-
-Dữ liệu demo: 12 tháng, ~41.000 giao dịch, ~3.000 lần chuyển tiền, 76 mục tiêu đủ 4 trạng thái, 116 quy tắc định kỳ, ~340 ngân sách, 3 broadcast. Mọi bất biến nghiệp vụ được giữ (xem [backend/README.md](backend/README.md#dữ-liệu-demo-prismaseed-demots)). `npm run db:seed:demo` chỉ xóa/tạo lại user demo, không đụng user thật.
-
-## Triển khai bằng Docker
+**Yêu cầu:** Node.js 22+, Docker (compose v2). Tùy chọn: [Ollama](https://ollama.com) cho trợ lý AI, Flutter 3.44 cho app mobile.
 
 ```bash
-cp .env.example .env              # đặt JWT_SECRET >= 16 ký tự (npm run setup tự sinh)
-docker compose --profile app up -d --build
-#   Admin: http://localhost:8080   (nginx phục vụ bản build tĩnh, /api và /docs proxy sang container api)
-#   API:   http://localhost:3000/api   (truy cập trực tiếp, vd cho app mobile)
-docker compose exec api npm run db:seed:demo    # (tùy chọn) nạp dữ liệu demo; hoặc SEED_DEMO=true trong .env
-docker compose --profile app down               # dừng, giữ dữ liệu (thêm -v để xóa volume)
+git clone https://github.com/xT-chinhan/Tracker---App-.git trackerx && cd trackerx
+npm run setup     # cài dependency, tạo .env, bật PostgreSQL (Docker :5433), migrate, seed, nạp dữ liệu demo
+npm run dev       # API  → http://localhost:3000/api   (Swagger: /api/docs)
+                  # Admin → http://localhost:5173
 ```
 
-- `docker compose up -d` (không profile): chỉ PostgreSQL cho dev. `--profile api`: DB + API (không có admin).
-- Container api: chờ DB → `prisma migrate deploy` → seed (danh mục + admin từ `ADMIN_*`) → `SEED_DEMO=true` thì nạp lại demo → chạy API. Có healthcheck cho cả 3 service.
-- Admin gọi API qua `/api` cùng origin nên không cần CORS; nginx ghi đè `X-Forwarded-For` bằng IP thật và API đặt `TRUST_PROXY=1` để rate limit đếm đúng IP.
+<details>
+<summary><b>Bật trợ lý AI (Ollama)</b></summary>
 
-### Biến môi trường (`.env` gốc, dùng cho Docker + `npm run setup`)
+```bash
+ollama pull qwen3.5:4b && ollama pull bge-m3
+npm run db:seed:demo && npm run db:seed:demo:ai   # dữ liệu demo + lịch sử AI đã học thói quen
+```
 
-| Biến | Mặc định | Ý nghĩa |
+Hướng dẫn đầy đủ (GPU, cấu hình, kiểm tra): [docs/CAI-DAT-AI.md](docs/CAI-DAT-AI.md).
+</details>
+
+<details>
+<summary><b>Chạy app mobile</b></summary>
+
+```bash
+cd mobile/app && flutter pub get && flutter run
+```
+
+App trỏ cố định tới máy chủ demo (xem [API-URL.md](API-URL.md)). Build APK phát hành, bản thường và bản có lắng nghe ngân hàng: [mobile/PHAT-HANH-APK.md](mobile/PHAT-HANH-APK.md).
+</details>
+
+<details>
+<summary><b>Triển khai bằng Docker</b></summary>
+
+```bash
+cp .env.example .env                       # đặt JWT_SECRET ≥ 16 ký tự
+docker compose --profile app up -d --build
+#   Admin: http://localhost:8080 (nginx, /api proxy sang container api)
+#   API:   http://localhost:3000/api
+```
+
+Biến môi trường và các profile: [backend/README.md](backend/README.md).
+</details>
+
+| Lệnh | Việc |
+|---|---|
+| `npm run setup` | Cài đặt lần đầu (chạy lại được, không ghi đè `.env`) |
+| `npm run dev` | Backend (watch) + Admin (Vite) |
+| `npm run test` | Toàn bộ kiểm thử trên DB test riêng |
+| `npm run build` | Build backend + admin |
+| `npm run db:seed:demo` · `db:seed:demo:ai` | Nạp lại dữ liệu demo · lịch sử AI demo |
+
+## 🔑 Tài khoản demo
+
+| Vai trò | Email | Mật khẩu |
 |---|---|---|
-| `DB_PORT` | 5433 | Cổng PostgreSQL trên máy host |
-| `API_PORT` | 3000 | Cổng API |
-| `ADMIN_PORT` | 8080 | Cổng admin (nginx, profile `app`) |
-| `API_DB` | tracker | Tên database (dev và container dùng chung) |
-| `JWT_SECRET` | — | Bắt buộc với container, ≥ 16 ký tự |
-| `JWT_EXPIRES_IN` | 30d | Hạn token |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | admin@thuchi.vn / admin123 | Admin được seed tạo / nâng quyền |
-| `SEED_DEMO` | false | `true`: mỗi lần container api khởi động nạp lại dữ liệu demo |
-| `CORS_ORIGINS` | — | Origin gọi API trực tiếp (admin qua nginx không cần) |
-| `TRUST_PROXY` | 1 | API đứng sau nginx; để trống nếu API ra Internet trực tiếp |
-| `SMTP_HOST` `SMTP_PORT` `SMTP_SECURE` `SMTP_USER` `SMTP_PASS` `SMTP_FROM` | | Gửi OTP quên mật khẩu; `SMTP_HOST` trống → OTP in ra log. Admin có thể cấu hình SMTP ngay trên trang Cấu hình (ưu tiên hơn env) |
-| `CONFIG_SECRET` | dẫn xuất từ `JWT_SECRET` | Khóa mã hóa mật khẩu SMTP lưu trong Cấu hình hệ thống |
+| Quản trị | `admin@thuchi.vn` | `admin123` |
+| Người dùng (AI đã học thói quen) | `demo@thuchi.vn` | `demo123` |
+| Người dùng khác | `<tên>@demo.thuchi.vn` — vd `hung.vu89@demo.thuchi.vn` | `demo123` |
 
-Biến riêng khi dev: `backend/.env` (xem [backend/README.md](backend/README.md#biến-môi-trường-backendenv)), `admin/.env` (`VITE_API_URL`).
+Dữ liệu demo: ~40 người dùng, 12 tháng, ~41.000 giao dịch, ngân sách, mục tiêu, định kỳ, cùng lịch sử trợ lý AI (luật riêng *"cf" → Ăn uống*, trí nhớ ví hay dùng, luật chung chờ duyệt).
 
-## Kiểm thử
+## ✅ Kiểm thử
 
-`npm run test` chạy tuần tự, tự lo server và DB rồi dọn dẹp:
+| Bộ kiểm thử | Số ca | Công cụ |
+|---|---:|---|
+| API end-to-end (gồm trợ lý AI với model giả lập tất định) | **1.024** | `backend/scripts/e2e.mjs` |
+| Ứng dụng Flutter (unit + widget) | **107** | `flutter test` |
+| Trang quản trị | **54** | Playwright |
+| Bất biến dữ liệu demo | ~560 | `npm run demo:verify` |
 
-1. Tạo lại DB `tracker_test` (cổng `DB_PORT`) → migrate → seed → **nạp dữ liệu demo** (để chứng minh test không cần DB rỗng).
-2. Bật API `NODE_ENV=test TZ=UTC` ở `:3001` → `verify-demo` (bất biến dữ liệu demo qua API, ~560 kiểm tra) → **backend e2e: 708 kiểm tra**.
-3. Khởi động lại API → **admin e2e Playwright: 44 test** (tự bật Vite ở `:5174`).
-4. Dừng API, xóa DB test (`KEEP_TEST_DB=1` để giữ). Tùy chọn: `TEST_DB`, `TEST_API_PORT`, `E2E_PORT`, `SKIP_BACKEND=1`, `SKIP_ADMIN=1`.
+`npm run test` tự tạo DB `tracker_test`, nạp dữ liệu demo, bật API ở chế độ test rồi chạy lần lượt các bộ trên và dọn dẹp sau khi xong.
 
-Kết quả gần nhất: verify-demo 0 lỗi, backend e2e 549/549, admin e2e 37/37 (~4 phút).
-
-## Cấu trúc thư mục
+## 📁 Cấu trúc thư mục
 
 ```
 .
-├── package.json            # script gốc: setup / dev / test / build (concurrently)
-├── scripts/                # setup.mjs, test.mjs, lib.mjs (chỉ dùng Node có sẵn)
-├── docker-compose.yml      # db | profile api | profile app (db + api + admin nginx)
-├── .env.example            # biến cho Docker + setup
-├── backend/
-│   ├── src/<module>/<module>.module.ts   # auth, wallets, transactions, transfers, budgets, saving-goals,
-│   │                                     # recurring, quick-templates, notifications, stats, export, admin, health
-│   ├── src/common/         # JWT guard, DTO, giờ VN, filter lỗi Prisma
-│   ├── prisma/             # schema, migrations, seed.ts, seed-demo.ts
-│   ├── scripts/            # e2e.mjs (708 kiểm tra), verify-demo.mjs
-│   └── Dockerfile
-├── admin/
-│   ├── src/pages/          # Đăng nhập, Tổng quan, Người dùng, Chi tiết, Giao dịch, Danh mục, Thông báo, Tài khoản
-│   ├── src/components/     # layout, biểu đồ, shadcn/ui đã chỉnh theo mockup
-│   ├── e2e/                # Playwright (44 test)
-│   ├── Dockerfile, nginx.conf
-└── design/
-    ├── mockup/             # mockup mobile 25 màn (390×844) + ảnh chụp
-    ├── admin-mockup/       # mockup admin + ảnh chụp
-    ├── tokens.md           # design token (màu, chữ, bo góc, khoảng cách)
-    └── DESIGN.md
+├── backend/        # NestJS API: src/<module>, prisma (schema, migrations, seed), scripts (e2e)
+├── admin/          # Trang quản trị React + e2e Playwright
+├── mobile/
+│   ├── app/        # App Flutter (lib/features/*, test/)
+│   └── modules/    # Module native: bank_notification_listener (Kotlin)
+├── ai/             # Thư viện AI: parser tiếng Việt, router, skills, đánh giá, nghiên cứu
+├── design/         # Mockup đã duyệt (mobile, admin), token thiết kế, thương hiệu
+├── docs/           # Hướng dẫn: cài AI, test, demo, Swagger, quyết định AI, thuyết trình
+├── scripts/        # setup / test cho cả repo
+└── docker-compose.yml
 ```
 
-## Nghiệp vụ chính
+## 📚 Tài liệu
 
-Chi tiết đầy đủ + danh sách endpoint: [backend/README.md](backend/README.md#nghiệp-vụ-v1).
+| Tài liệu | Nội dung |
+|---|---|
+| [backend/README.md](backend/README.md) | Nghiệp vụ, endpoint, biến môi trường, dữ liệu demo |
+| [docs/CAI-DAT-AI.md](docs/CAI-DAT-AI.md) | Cài Ollama và model cho trợ lý AI |
+| [docs/AI-DECISIONS.md](docs/AI-DECISIONS.md) | Các quyết định thiết kế của trợ lý AI |
+| [docs/HUONG_DAN_TEST_API.md](docs/HUONG_DAN_TEST_API.md) | Gọi thử API qua Swagger |
+| [docs/HUONG-DAN-TEST.md](docs/HUONG-DAN-TEST.md) | Kịch bản kiểm thử cho nhóm |
+| [docs/HUONG_DAN_DEMO.md](docs/HUONG_DAN_DEMO.md) | Quy trình chạy demo từng bước |
+| [mobile/BANK-NOTIFICATIONS.md](mobile/BANK-NOTIFICATIONS.md) | Lắng nghe thông báo ngân hàng |
+| [mobile/PHAT-HANH-APK.md](mobile/PHAT-HANH-APK.md) | Build và phát hành APK |
+| [design/DESIGN.md](design/DESIGN.md) | Hệ thống thiết kế |
 
-- **Giờ Việt Nam** cho mọi nhóm theo ngày/tháng; tiền là số nguyên VND (BigInt).
-- **Ví**: số dư luôn tính từ dữ liệu = ban đầu + thu − chi ± chuyển tiền ∓ tiết kiệm. Ví có phát sinh chỉ lưu trữ được khi số dư 0.
-- **Chuyển tiền / nạp tiết kiệm** không bao giờ làm ví âm (kiểm tra cả khi sửa/xóa); thu/chi thì ghi nhận thực tế, không chặn. Chuyển tiền không tính vào thu/chi.
-- **Ngân sách** theo danh mục + ngân sách tổng mỗi tháng; vượt 80% / 100% sinh 1 thông báo mỗi ngưỡng, tụt dưới ngưỡng thì reset.
-- **Tiết kiệm**: nạp bị cắt về số còn thiếu, đủ thì `COMPLETED`; rút trả hết về ví → `WITHDRAWN` / `EARLY_WITHDRAWN`.
-- **Định kỳ**: ngày/tuần/tháng/năm × interval, giữ ngày neo (31 → cuối tháng), cron 15 phút, sinh bù, idempotent; ví/danh mục lưu trữ hoặc user bị khóa → tự tạm dừng + thông báo.
-- **Tài khoản**: JWT có `tokenVersion` (đổi mật khẩu / khóa / đăng xuất mọi nơi → token cũ hết hạn), OTP quên mật khẩu, rate limit đăng nhập.
-- **Admin**: tổng quan, khóa/mở + phân quyền user, giao dịch toàn hệ thống + CSV, danh mục hệ thống, broadcast tới mọi user đang hoạt động.
-- **Cấu hình hệ thống** (trang "Cấu hình"): thông tin app, đăng ký, bảo trì (tự tắt theo giờ), SMTP, mật khẩu & OTP, ngưỡng ngân sách, bật/tắt tính năng, phiên bản app di động, lịch sử thay đổi. App đọc qua `GET /api/config/public`. Chi tiết: [backend/README.md](backend/README.md#cấu-hình-hệ-thống).
+## 👥 Nhóm thực hiện
 
-## Lộ trình
+Đồ án môn **Lập trình di động** — Trường Đại học Công nghệ TP.HCM (**HUTECH**) · Nhóm **NgọngNL** · Lớp 23DTHC3
+Giảng viên hướng dẫn: **Thầy Nguyễn Mạnh Hùng**
 
-1. **App mobile Flutter** (tiếp theo): thiết kế đã sẵn trong `design/mockup/` (25 màn, có ảnh chụp từng màn), `design/tokens.md` ánh xạ thẳng sang `ThemeData` (ColorScheme, TextTheme, bo góc, khoảng cách); API đã đủ cho mọi màn (Swagger `/docs`). Tài khoản `demo@thuchi.vn` có dữ liệu khớp mockup để dựng màn hình.
-2. **Push FCM**: thông báo ngân sách, định kỳ, broadcast đang lưu trong app → thêm đẩy qua Firebase Cloud Messaging.
-3. **Vay / nợ**: ghi khoản cho vay / đi vay, nhắc hạn, tất toán.
+| Thành viên |
+|---|
+| Bùi Nguyễn Công Nghiệp |
+| Nguyễn Chí Nhân |
+| Lưu Văn Lương |
+| Võ Thành Nhân |
+
+Đóng góp và báo lỗi: xem [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## 📄 Giấy phép
+
+Phát hành theo giấy phép [MIT](LICENSE).
+
+<div align="center">
+<sub><b>TrackerX</b> · Tiền rõ ràng, sống nhẹ nhàng.</sub>
+</div>
