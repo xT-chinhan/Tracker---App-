@@ -17,10 +17,10 @@ Nói một câu, chụp một tấm, hoặc không làm gì cả — giao dịch
 [![Tests](https://img.shields.io/badge/tests-1.185%20passing-1F8A4C)](#-kiểm-thử)
 [![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
-[**Xem video**](https://github.com/xT-chinhan/Tracker---App-/releases/download/v1.0.0/TrackerX-intro-60s.mp4) ·
+[**Xem video**](https://xt-chinhan.github.io/Tracker---App-/) ·
 [**Tải APK**](https://github.com/xT-chinhan/Tracker---App-/releases/latest) ·
 [**Trang quản trị**](https://tracker-xt.freepro.online) ·
-[**Tài liệu API**](https://tracker-xt.freepro.online/api/docs) ·
+[**Tài liệu API**](https://xt-chinhan.github.io/Tracker---App-/api/) ·
 [**Báo cáo PDF**](docs/bao-cao/Bao-cao-Lap-trinh-di-dong.pdf)
 
 </div>
@@ -31,11 +31,11 @@ Nói một câu, chụp một tấm, hoặc không làm gì cả — giao dịch
 
 <div align="center">
 
-<a href="https://github.com/xT-chinhan/Tracker---App-/releases/download/v1.0.0/TrackerX-intro-60s.mp4">
+<a href="https://xt-chinhan.github.io/Tracker---App-/">
   <img src="docs/media/demo.gif" width="720" alt="TrackerX demo">
 </a>
 
-<sub>Trích đoạn video giới thiệu · <a href="https://github.com/xT-chinhan/Tracker---App-/releases/download/v1.0.0/TrackerX-intro-60s.mp4">xem bản đầy đủ 60 giây (MP4)</a></sub>
+<sub>Trích đoạn video giới thiệu · <a href="https://xt-chinhan.github.io/Tracker---App-/">xem bản đầy đủ 60 giây (MP4)</a></sub>
 
 </div>
 
@@ -189,6 +189,8 @@ Dữ liệu demo: ~40 người dùng, 12 tháng, ~41.000 giao dịch, ngân sác
 | Tài liệu | Nội dung |
 |---|---|
 | [**Báo cáo đồ án (PDF, 59 trang)**](docs/bao-cao/Bao-cao-Lap-trinh-di-dong.pdf) | Báo cáo môn Lập trình di động: phân tích, thiết kế, cài đặt, kiểm thử |
+| [**Chức năng app (PDF)**](docs/Buoi%20s%C3%A1ng%20th%E1%BB%A9%204%20-%20Ng%E1%BB%8Dng%20LN%20-%20%E1%BB%A8ng%20D%E1%BB%A5ng%20Qu%E1%BA%A3n%20L%C3%BD%20Chi%20Ti%C3%AAu%20C%C3%A1%20Nh%C3%A2n.pdf) · [TXT](docs/Buoi%20s%C3%A1ng%20th%E1%BB%A9%204%20-%20Ng%E1%BB%8Dng%20LN%20-%20%E1%BB%A8ng%20D%E1%BB%A5ng%20Qu%E1%BA%A3n%20L%C3%BD%20Chi%20Ti%C3%AAu%20C%C3%A1%20Nh%C3%A2n.txt) | Danh sách chức năng app di động, trang quản trị, API |
+| [**Video giới thiệu · Tài liệu API (GitHub Pages)**](https://xt-chinhan.github.io/Tracker---App-/) | Xem video trực tiếp, Swagger 96 endpoint |
 | [Slide thuyết trình (HTML)](docs/thuyet-trinh/index.html) | Bài thuyết trình 16 trang — tải về mở bằng trình duyệt |
 | [backend/README.md](backend/README.md) | Nghiệp vụ, endpoint, biến môi trường, dữ liệu demo |
 | [docs/CAI-DAT-AI.md](docs/CAI-DAT-AI.md) | Cài Ollama và model cho trợ lý AI |
