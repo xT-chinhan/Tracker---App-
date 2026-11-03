@@ -1,0 +1,149 @@
+ỨNG DỤNG QUẢN LÝ CHI TIÊU CÁ NHÂN — TRACKERX
+Buổi sáng thứ 4 · Nhóm Ngọng LN (NgọngNL) · Lớp 23DTHC3
+Đồ án môn Lập trình di động — Trường Đại học Công nghệ TP.HCM (HUTECH)
+Giảng viên hướng dẫn: Thầy Nguyễn Mạnh Hùng
+Thành viên: Bùi Nguyễn Công Nghiệp · Nguyễn Chí Nhân · Lưu Văn Lương · Võ Thành Nhân
+
+Video giới thiệu : https://xt-chinhan.github.io/Tracker---App-/
+Tài liệu API     : https://xt-chinhan.github.io/Tracker---App-/api/
+Mã nguồn         : https://github.com/xT-chinhan/Tracker---App-
+
+======================================================================
+1. GIỚI THIỆU
+======================================================================
+TrackerX là ứng dụng quản lý thu chi cá nhân trên điện thoại (Flutter), có
+trang quản trị web (React) và máy chủ API (NestJS + PostgreSQL), tích hợp
+trợ lý AI chạy nội bộ (Ollama: qwen3.5:4b + bge-m3), không gửi dữ liệu tài
+chính ra dịch vụ AI bên ngoài.
+
+Ba cách ghi giao dịch gần như không tốn công:
+  - Nói một câu   : gõ "cf 45k hôm qua, trưa cơm 55k" → AI tách từng khoản.
+  - Chụp một tấm  : chụp hóa đơn / ảnh chuyển khoản → AI đọc số tiền.
+  - Không làm gì  : app tự ghi từ thông báo ngân hàng / ví điện tử.
+
+======================================================================
+2. CHỨC NĂNG CỦA APP DI ĐỘNG (NGƯỜI DÙNG)
+======================================================================
+2.1. Tài khoản
+  - Đăng ký, đăng nhập (JWT), đăng xuất mọi thiết bị.
+  - Quên mật khẩu: nhận mã OTP 6 số qua email, đặt lại mật khẩu.
+  - Gắn số điện thoại (phụ), khôi phục mật khẩu bằng số điện thoại.
+  - Sửa hồ sơ, đổi mật khẩu, xóa tài khoản cùng toàn bộ dữ liệu.
+
+2.2. Trang chủ
+  - Tổng số dư các ví, thu / chi trong tháng.
+  - Giao dịch gần đây, cảnh báo ngân sách, lối tắt nhập nhanh.
+
+2.3. Ví
+  - Tạo nhiều ví (tiền mặt, ngân hàng, ví điện tử…), sửa, lưu trữ, khôi phục.
+  - Xem số dư từng ví và tổng số dư.
+
+2.4. Giao dịch thu / chi
+  - Ghi, sửa, xóa giao dịch; chọn ví, danh mục, ngày, ghi chú.
+  - Lọc / tìm kiếm theo tháng, ví, danh mục, khoảng số tiền, từ khóa.
+  - Lịch sử giao dịch theo ngày.
+
+2.5. Danh mục
+  - Danh mục hệ thống có sẵn + danh mục riêng của người dùng (thêm, sửa, lưu trữ).
+
+2.6. Chuyển tiền giữa các ví
+  - Chuyển tiền từ ví này sang ví khác, xem lịch sử, sửa, xóa lần chuyển.
+
+2.7. Ngân sách tháng
+  - Đặt hạn mức chi theo danh mục, xem mức đã dùng.
+  - Cảnh báo khi chạm 80% và 100% hạn mức.
+  - Chép ngân sách từ tháng trước.
+
+2.8. Mục tiêu tiết kiệm
+  - Tạo mục tiêu (số tiền, hạn), nạp / rút tiền, xem tiến độ và lịch sử.
+
+2.9. Giao dịch định kỳ
+  - Khoản thu / chi lặp lại (hằng ngày, tuần, tháng…): tạo, sửa, tạm dừng,
+    chạy lại, xem trước các lần chạy sắp tới; tự ghi khi đến hạn.
+
+2.10. Mẫu nhập nhanh
+  - Lưu các khoản hay dùng thành mẫu, bấm một lần là tạo giao dịch.
+
+2.11. Báo cáo & thống kê
+  - Tổng thu / chi theo khoảng thời gian, chi tiêu theo danh mục (biểu đồ),
+    thu chi theo ngày, xu hướng nhiều tháng, báo cáo tháng.
+  - Xuất giao dịch ra file CSV.
+
+2.12. Thông báo
+  - Thông báo trong app theo loại (ngân sách, định kỳ, hệ thống, AI…),
+    đếm chưa đọc, đánh dấu đã đọc.
+
+2.13. Tự ghi từ thông báo ngân hàng (Android)
+  - Lắng nghe thông báo ngân hàng / ví điện tử (NotificationListener, Kotlin)
+    và tự ghi giao dịch vào sổ.
+  - Chống ghi trùng giữa thông báo app và SMS, có nút hoàn tác.
+
+2.14. Trợ lý AI
+  - Chat bằng tiếng Việt tự nhiên: "cf 45k hôm qua, trưa cơm 55k" → AI tách
+    từng khoản, đoán danh mục và ví theo thói quen, tạo NHÁP; chỉ lưu khi
+    người dùng xác nhận (có thể sửa trước khi lưu).
+  - Đọc ảnh (OCR) hóa đơn và ảnh chuyển khoản: số tiền, nơi bán / người nhận,
+    tự biết thu hay chi. Ảnh đọc xong là xóa, không lưu trên máy chủ.
+  - Hỏi đáp về tài chính của chính mình: còn bao nhiêu tiền, tháng này chi gì
+    nhiều nhất, ngân sách còn bao nhiêu… (18 kỹ năng).
+  - Trả lời dạng luồng (stream), quản lý hội thoại: đổi tên, ghim, lưu trữ, xóa.
+  - Tự học thói quen: xác nhận / sửa nháp, "Ý tôi là…", đánh giá 👍/👎 đều là
+    tín hiệu học; luật riêng bật sau 3 lần đúng (≥ 85%).
+  - Xem và xóa "trí nhớ" AI về mình; bật / tắt đồng ý góp ví dụ ẩn danh;
+    xem mức dùng AI trong ngày.
+  - Riêng tư: mỗi người dùng một phiên AI riêng, prompt chỉ chứa dữ liệu của
+    chính người hỏi; số tiền và ngày luôn do code quyết định, không để model bịa.
+
+2.15. Cài đặt
+  - Hồ sơ, bảo mật, thông báo, cài đặt AI, tự ghi từ ngân hàng.
+
+======================================================================
+3. CHỨC NĂNG TRANG QUẢN TRỊ (ADMIN WEB)
+======================================================================
+  - Tổng quan hệ thống: số người dùng, giao dịch, tăng trưởng, biểu đồ xu hướng.
+  - Quản lý người dùng: tìm kiếm, xem chi tiết, khóa / mở khóa, đổi vai trò.
+  - Xem giao dịch toàn hệ thống.
+  - Quản lý danh mục hệ thống: thêm, sửa, lưu trữ, khôi phục.
+  - Gửi thông báo cho toàn bộ người dùng, xem lịch sử thông báo.
+  - Chạy giao dịch định kỳ đến hạn cho mọi người dùng.
+  - Cấu hình hệ thống lúc chạy (AI, OCR, SMTP, giới hạn…), lịch sử thay đổi,
+    bật / tắt chế độ bảo trì, xem mẫu email, gửi email thử.
+  - Trung tâm học AI: thống kê kỹ năng / độ trễ / phản hồi, thống kê OCR,
+    duyệt / từ chối luật học chung và ví dụ chung (ẩn danh, ≥ 5 người),
+    chạy chu trình học ngay (bình thường 02:30 hằng đêm, có cổng kiểm định
+    hồi quy), dọn lịch sử chat quá hạn, kiểm tra kết nối Ollama, mức dùng AI,
+    kiểm tra toàn vẹn dữ liệu AI (cô lập theo người dùng).
+  - Trợ lý AI dành cho admin.
+
+======================================================================
+4. CÔNG NGHỆ
+======================================================================
+  Mobile  : Flutter 3.44 · Dart 3.12 · Riverpod · go_router · Dio · Freezed · Kotlin
+  Backend : NestJS 11 · TypeScript · Prisma 6 · PostgreSQL 16 · JWT · Swagger/OpenAPI
+  Admin   : React 19 · Vite · Tailwind 4 · shadcn/ui · TanStack Query · Recharts
+  AI      : Ollama · qwen3.5:4b (chat + vision) · bge-m3 (embedding) · kNN · JSON schema
+  Vận hành: Docker Compose · Cloudflare Tunnel · systemd · Playwright
+
+======================================================================
+5. API (96 ENDPOINT)
+======================================================================
+  Xác thực & tài khoản (16) · Ví (6) · Danh mục (4) · Giao dịch (6)
+  Chuyển tiền (5) · Ngân sách (5) · Tiết kiệm (7) · Định kỳ (9)
+  Mẫu nhập nhanh (5) · Thống kê & báo cáo (6) · Thông báo (4) · Xuất dữ liệu (1)
+  Trợ lý AI (18) · Quản trị người dùng & dữ liệu (13) · Quản trị cấu hình (6)
+  Trung tâm học AI (15) · Cấu hình công khai (1) · Hệ thống (1)
+  Chi tiết: https://xt-chinhan.github.io/Tracker---App-/api/
+
+======================================================================
+6. KIỂM THỬ
+======================================================================
+  - API end-to-end (gồm trợ lý AI với model giả lập): 1.024 ca
+  - Ứng dụng Flutter (unit + widget): 107 ca
+  - Trang quản trị (Playwright): 54 ca
+  - Bất biến dữ liệu demo: ~560 ca
+
+======================================================================
+7. TÀI KHOẢN DEMO
+======================================================================
+  Quản trị  : admin@thuchi.vn / admin123
+  Người dùng: demo@thuchi.vn  / demo123

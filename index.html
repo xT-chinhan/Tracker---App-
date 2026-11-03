@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrackerX — Video giới thiệu</title>
+<link rel="icon" href="icon.svg">
+<style>
+:root{--bg:#f6f8f7;--card:#fff;--fg:#14201a;--mut:#5b6b63;--acc:#0b7a4b;--line:#dfe7e2}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1411;--card:#16201b;--fg:#e8efeb;--mut:#9aaba2;--acc:#3ccf8e;--line:#25332c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:32px 16px 56px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+header img{width:52px;height:52px}
+h1{margin:0;font-size:26px} .sub{color:var(--mut);margin:2px 0 0;font-size:15px}
+video{width:100%;border-radius:14px;background:#000;display:block;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:22px 0}
+.links a{display:block;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--fg);text-decoration:none}
+.links a:hover{border-color:var(--acc)} .links b{display:block;color:var(--acc)} .links span{color:var(--mut);font-size:14px}
+.shot{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:8px}
+footer{color:var(--mut);font-size:14px;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <img src="icon.svg" alt="">
+  <div><h1>TrackerX</h1><p class="sub">Ứng dụng quản lý chi tiêu cá nhân · Nhóm Ngọng LN · Buổi sáng thứ 4</p></div>
+</header>
+
+<video controls playsinline preload="metadata" poster="screens.jpg">
+  <source src="TrackerX-intro-60s.mp4" type="video/mp4">
+</video>
+
+<div class="links">
+  <a href="api/"><b>Tài liệu API</b><span>Swagger · 96 endpoint</span></a>
+  <a href="Buoi%20s%C3%A1ng%20th%E1%BB%A9%204%20-%20Ng%E1%BB%8Dng%20LN%20-%20%E1%BB%A8ng%20D%E1%BB%A5ng%20Qu%E1%BA%A3n%20L%C3%BD%20Chi%20Ti%C3%AAu%20C%C3%A1%20Nh%C3%A2n.pdf"><b>Chức năng app (PDF)</b><span>Mở xem trên trình duyệt</span></a>
+  <a href="Buoi%20s%C3%A1ng%20th%E1%BB%A9%204%20-%20Ng%E1%BB%8Dng%20LN%20-%20%E1%BB%A8ng%20D%E1%BB%A5ng%20Qu%E1%BA%A3n%20L%C3%BD%20Chi%20Ti%C3%AAu%20C%C3%A1%20Nh%C3%A2n.txt"><b>Chức năng app (TXT)</b><span>Bản văn bản thuần</span></a>
+  <a href="https://github.com/xT-chinhan/Tracker---App-"><b>Mã nguồn</b><span>GitHub repository</span></a>
+</div>
+
+<img class="shot" src="screens.jpg" alt="Giao diện app TrackerX">
+
+<footer>Đồ án môn Lập trình di động — HUTECH · Lớp 23DTHC3 · GVHD: Thầy Nguyễn Mạnh Hùng<br>
+Bùi Nguyễn Công Nghiệp · Nguyễn Chí Nhân · Lưu Văn Lương · Võ Thành Nhân</footer>
+</div>
+</body>
+</html>
